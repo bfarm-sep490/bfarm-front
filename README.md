@@ -19,7 +19,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/bfarm-front.git
+   git clone https://github.com/bfarm-sep490/bfarm-front.git
    cd bfarm-front
    ```
 
@@ -61,8 +61,8 @@ The application can be configured through various configuration files:
 Create a `.env.local` file in the root directory with the following variables:
 
 ```env
-VITE_APP_API_URL=your_api_url
-VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+VITE_APP_API_URL=api_url
+VITE_GOOGLE_MAPS_API_KEY=google_maps_api_key
 ```
 
 ## 🤝 Contributing

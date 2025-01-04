@@ -21,11 +21,6 @@ export interface ISalesChart {
   value: number;
 }
 
-export interface IOrderStatus {
-  id: number;
-  text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
-}
-
 export interface IUser {
   id: number;
   firstName: string;
@@ -45,59 +40,6 @@ export interface IIdentity {
   avatar: string;
 }
 
-export interface IAddress {
-  text: string;
-  coordinate: [number, number];
-}
-
-export interface IFile {
-  name: string;
-  percent: number;
-  size: number;
-  status: "error" | "success" | "done" | "uploading" | "removed";
-  type: string;
-  uid: string;
-  url: string;
-}
-
-export interface IEvent {
-  date: string;
-  status: string;
-}
-
-export interface IStore {
-  id: number;
-  title: string;
-  isActive: boolean;
-  createdAt: string;
-  gsm: string;
-  email: string;
-  address: IAddress;
-  products: IProduct[];
-}
-
-export interface ICourierStatus {
-  id: number;
-  text: "Available" | "Offline" | "On delivery";
-}
-
-export interface ICourier {
-  id: number;
-  name: string;
-  surname: string;
-  email: string;
-  gender: string;
-  gsm: string;
-  createdAt: string;
-  accountNumber: string;
-  licensePlate: string;
-  address: string;
-  avatar: IFile[];
-  store: IStore;
-  status: ICourierStatus;
-  vehicle: IVehicle;
-}
-
 export interface IOrder {
   id: number;
   user: IUser;
@@ -111,36 +53,6 @@ export interface IOrder {
   orderNumber: number;
   amount: number;
 }
-
-export interface IProduct {
-  id: number;
-  name: string;
-  isActive: boolean;
-  description: string;
-  images: (IFile & { thumbnailUrl?: string })[];
-  createdAt: string;
-  price: number;
-  category: {
-    id: number;
-    title: string;
-  };
-  stock: number;
-}
-
-export interface ICategory {
-  id: number;
-  title: string;
-  isActive: boolean;
-}
-
-export interface IOrderFilterVariables {
-  q?: string;
-  store?: string;
-  user?: string;
-  createdAt?: [Dayjs, Dayjs];
-  status?: string;
-}
-
 export interface IUserFilterVariables {
   q: string;
   status: boolean;
@@ -149,27 +61,26 @@ export interface IUserFilterVariables {
   isActive: boolean;
 }
 
-export interface IReview {
-  id: number;
-  order: IOrder;
-  user: IUser;
-  star: number;
-  createDate: string;
-  status: "pending" | "approved" | "rejected";
-  comment: string[];
-}
-
-export type IVehicle = {
-  model: string;
-  vehicleType: string;
-  engineSize: number;
-  color: string;
-  year: number;
-  id: number;
-};
-
 export interface ITrendingProducts {
   id: number;
   product: IProduct;
   orderCount: number;
+}
+
+export interface IProductivityOverTimeEntry {
+  key: number;
+  timestamp: string;
+  value: number;
+}
+export interface IQuickStatsEntry {
+  key: number;
+  stat_name: string;
+  value: number;
+  description: string;
+}
+
+export interface ISeasonProgressEntry {
+  key: number;
+  timestamp: string;
+  progress: number;
 }

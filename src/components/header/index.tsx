@@ -30,7 +30,7 @@ import debounce from "lodash/debounce";
 
 import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
-import type { IOrder, IStore, ICourier, IIdentity } from "../../interfaces";
+import type { IIdentity } from "../../interfaces";
 import { useStyles } from "./styled";
 
 const { Header: AntdHeader } = AntdLayout;

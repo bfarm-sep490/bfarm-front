@@ -14,14 +14,7 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
-import {
-  ShoppingOutlined,
-  ShopOutlined,
-  DashboardOutlined,
-  UserOutlined,
-  UnorderedListOutlined,
-  TagsOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined, CarOutlined, CustomerServiceOutlined, DashboardOutlined, EnvironmentOutlined, FileTextOutlined, GoldOutlined, HddOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
 
@@ -36,18 +29,23 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
+import { FarmerManagementCreate, FarmerManagementEdit, FarmerManagementList, FarmerManagementShow } from "./pages/farmer-managements";
+import { DeviceList } from "./pages/devices";
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = "https://api.finefoods.refine.dev";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
   const dataProvider = jsonServerDataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
+  interface TranslationParams {
+    [key: string]: string | number;
+  }
 
   const i18nProvider = {
-    translate: (key: string, params: object) => t(key, params),
+    translate: (key: string, params?: TranslationParams) => t(key, params),
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
@@ -84,9 +82,99 @@ const App: React.FC = () => {
                 list: "/customers",
                 show: "/customers/:id",
                 meta: {
+                  label: "Farmer Management",
                   icon: <UserOutlined />,
                 },
               },
+              {
+                name: "device",
+                list: "/device",
+                create: "/device/create",
+                edit: "/device/edit/:id",
+                show: "/device/show/:id",
+                meta: {
+                  label: "Device",
+                  icon: <HddOutlined />,
+                },
+              },
+              {
+                name: "inspection",
+                list: "/inspection",
+                create: "/inspection/create",
+                edit: "/inspection/edit/:id",
+                show: "/inspection/show/:id",
+                meta: {
+                  label: "Inspection",
+                  icon: <SearchOutlined />,
+                },
+              },
+              {
+                name: "land-management",
+                list: "/land-management",
+                create: "/land-management/create",
+                edit: "/land-management/edit/:id",
+                show: "/land-management/show/:id",
+                meta: {
+                  label: "Land Management",
+                  icon: <EnvironmentOutlined />,
+                },
+              },
+              {
+                name: "material",
+                list: "/material",
+                create: "/material/create",
+                edit: "/material/edit/:id",
+                show: "/material/show/:id",
+                meta: {
+                  label: "Material",
+                  icon: <GoldOutlined />,
+                },
+              },
+              {
+                name: "season-management",
+                list: "/season-management",
+                create: "/season-management/create",
+                edit: "/season-management/edit/:id",
+                show: "/season-management/show/:id",
+                meta: {
+                  label: "Season Management",
+                  icon: <CalendarOutlined />,
+                },
+              },
+              {
+                name: "report",
+                list: "/report",
+                create: "/report/create",
+                edit: "/report/edit/:id",
+                show: "/report/show/:id",
+                meta: {
+                  label: "Report",
+                  icon: <FileTextOutlined />,
+                },
+              },
+              {
+                name: "support",
+                list: "/support",
+                create: "/support/create",
+                edit: "/support/edit/:id",
+                show: "/support/show/:id",
+                meta: {
+                  label: "Support",
+                  icon: <CustomerServiceOutlined />,
+                },
+              },
+              {
+                name: "transport",
+                list: "/transport",
+                create: "/transport/create",
+                edit: "/transport/edit/:id",
+                show: "/transport/show/:id",
+                meta: {
+                  label: "Transport",
+                  icon: <CarOutlined />,
+                },
+              },
+              
             ]}
           >
             <Routes>
@@ -122,6 +210,18 @@ const App: React.FC = () => {
                 >
                   <Route path=":id" element={<CustomerShow />} />
                 </Route>
+
+                <Route
+                  path="/device"
+                  element={
+                    <DeviceList />
+                  }
+                >
+                  <Route path=":id" element={<FarmerManagementShow />} />
+                  <Route path="new" element={<FarmerManagementCreate />} />
+                  <Route path=":id/edit" element={<FarmerManagementEdit />} />
+                </Route>
+
               </Route>
 
               <Route

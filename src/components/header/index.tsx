@@ -5,6 +5,7 @@ import {
   useGetIdentity,
   useTranslate,
   useList,
+  pickNotDeprecated,
 } from "@refinedev/core";
 import { Link } from "react-router";
 import { SearchOutlined, DownOutlined } from "@ant-design/icons";
@@ -32,6 +33,7 @@ import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
 import type { IIdentity } from "../../interfaces";
 import { useStyles } from "./styled";
+import { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
 
 const { Header: AntdHeader } = AntdLayout;
 const { useToken } = theme;
@@ -48,7 +50,10 @@ interface IOptions {
   options: IOptionGroup[];
 }
 
-export const Header: React.FC = () => {
+export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
+  isSticky,
+  sticky,
+}) => {
   const { token } = useToken();
   const { styles } = useStyles();
   const { mode, setMode } = useConfigProvider();
@@ -103,14 +108,20 @@ export const Header: React.FC = () => {
       ),
       label: lang === "en" ? "English" : "Tiếng Việt",
     }));
+const headerStyles: React.CSSProperties = {
+    backgroundColor: token.colorBgElevated,
+    padding: "0px 24px",
+  };
 
+  if (pickNotDeprecated(sticky, isSticky)) {
+    headerStyles.position = "sticky";
+    headerStyles.top = 0;
+    headerStyles.zIndex = 1000;
+  }
   return (
     <AntdHeader
-      style={{
-        backgroundColor: token.colorBgElevated,
-        padding: "0 24px",
-      }}
-    >
+    style={headerStyles}
+  >
       <Row
         align="middle"
         style={{

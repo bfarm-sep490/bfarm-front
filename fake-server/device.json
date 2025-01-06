@@ -1,13 +1,13 @@
 [
   {
-    "id": "device001",
+    "id": 1,
     "name": "Soil Moisture Sensor",
     "status": "active",
     "real_time_data": {
       "timestamp": "2025-01-04T10:00:00Z",
       "data": {
         "moisture_level": "45%",
-        "temperature": "22\u00b0C",
+        "temperature": "22°C",
         "humidity": "60%"
       }
     },
@@ -27,7 +27,7 @@
     ]
   },
   {
-    "id": "device002",
+    "id": 2,
     "name": "Weather Station",
     "status": "inactive",
     "real_time_data": {
@@ -50,7 +50,7 @@
     ]
   },
   {
-    "id": "device003",
+    "id": 3,
     "name": "Water Pump Controller",
     "status": "active",
     "real_time_data": {
@@ -74,5 +74,10 @@
         "description": "Unregister this device."
       }
     ]
+  },
+  {
+    "name": "Le Quoc Khanh",
+    "status": "VIP",
+    "id": 4
   }
 ]

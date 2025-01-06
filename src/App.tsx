@@ -1,11 +1,10 @@
 import React from "react";
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
 import {
   useNotificationProvider,
   ThemedLayoutV2,
   ErrorComponent,
-  RefineThemes,
 } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
@@ -14,7 +13,18 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
-import { CalendarOutlined, CarOutlined, CustomerServiceOutlined, DashboardOutlined, EnvironmentOutlined, FileTextOutlined, GoldOutlined, HddOutlined, SearchOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  CarOutlined,
+  CustomerServiceOutlined,
+  DashboardOutlined,
+  EnvironmentOutlined,
+  FileTextOutlined,
+  GoldOutlined,
+  HddOutlined,
+  SearchOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
 
@@ -29,8 +39,27 @@ import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
-import { FarmerManagementCreate, FarmerManagementEdit, FarmerManagementList, FarmerManagementShow } from "./pages/farmer-managements";
+import {
+  FarmerManagementCreate,
+  FarmerManagementEdit,
+  FarmerManagementList,
+  FarmerManagementShow,
+} from "./pages/farmer-managements";
 import { DeviceList } from "./pages/devices";
+import { themeConfig } from "./components/theme";
+import { ThemedSiderV2 } from "./components/layout/sider";
+
+interface TitleHandlerOptions {
+  resource?: IResourceItem;
+}
+
+const customTitleHandler = ({ resource }: TitleHandlerOptions): string => {
+  const baseTitle = "BFarm";
+  let titleSegment = resource?.meta?.label;
+
+  const title = titleSegment ? `${titleSegment} | ${baseTitle}` : baseTitle;
+  return title;
+};
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
@@ -56,7 +85,7 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <ConfigProvider theme={RefineThemes.Green}>
+      <ConfigProvider theme={themeConfig}>
         <RefineKbarProvider>
           <Refine
             routerProvider={routerProvider}
@@ -174,7 +203,6 @@ const App: React.FC = () => {
                   icon: <CarOutlined />,
                 },
               },
-              
             ]}
           >
             <Routes>
@@ -184,10 +212,13 @@ const App: React.FC = () => {
                     key="authenticated-routes"
                     fallback={<CatchAllNavigate to="/login" />}
                   >
-                    <ThemedLayoutV2 Header={Header} Title={Title}>
+                    <ThemedLayoutV2
+                      Sider={() => <ThemedSiderV2 Title={Title} fixed />}
+                      Header={() => <Header sticky />}
+                    >
                       <div
                         style={{
-                          maxWidth: "1200px",
+                          maxWidth: "1600px",
                           marginLeft: "auto",
                           marginRight: "auto",
                         }}
@@ -211,17 +242,11 @@ const App: React.FC = () => {
                   <Route path=":id" element={<CustomerShow />} />
                 </Route>
 
-                <Route
-                  path="/device"
-                  element={
-                    <DeviceList />
-                  }
-                >
+                <Route path="/device" element={<DeviceList />}>
                   <Route path=":id" element={<FarmerManagementShow />} />
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
-
               </Route>
 
               <Route
@@ -272,7 +297,10 @@ const App: React.FC = () => {
               <Route
                 element={
                   <Authenticated key="catch-all">
-                    <ThemedLayoutV2 Header={Header} Title={Title}>
+                    <ThemedLayoutV2
+                      Sider={() => <ThemedSiderV2 Title={Title} fixed />}
+                      Header={() => <Header sticky />}
+                    >
                       <Outlet />
                     </ThemedLayoutV2>
                   </Authenticated>
@@ -282,7 +310,7 @@ const App: React.FC = () => {
               </Route>
             </Routes>
             <UnsavedChangesNotifier />
-            <DocumentTitleHandler />
+            <DocumentTitleHandler handler={customTitleHandler} />
             <RefineKbar />
           </Refine>
         </RefineKbarProvider>

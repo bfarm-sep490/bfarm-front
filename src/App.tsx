@@ -150,14 +150,26 @@ const App: React.FC = () => {
               },
               {
                 name: "material",
-                list: "/material",
-                create: "/material/create",
-                edit: "/material/edit/:id",
-                show: "/material/show/:id",
                 meta: {
                   label: "Material",
                   icon: <GoldOutlined />,
                 },
+              },
+              {
+                name: "fertilizers",
+                list: "/fertilizers",
+                create: "/fertilizers/create",
+                edit: "/fertilizers/edit/:id",
+                show: "/fertilizers/show/:id",
+                meta: { parent: "material", canDelete: true },
+              },
+              {
+                name: "pesticide",
+                list: "/pesticide",
+                create: "/pesticide/create",
+                edit: "/pesticide/edit/:id",
+                show: "/pesticide/show/:id",
+                meta: { parent: "material", canDelete: true },
               },
               {
                 name: "season-management",

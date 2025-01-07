@@ -29,6 +29,7 @@
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
     "@googlemaps/react-wrapper": "latest",
+    "@refinedev/ably": "latest",
     "@refinedev/antd": "latest",
     "@refinedev/cli": "latest",
     "@refinedev/core": "latest",

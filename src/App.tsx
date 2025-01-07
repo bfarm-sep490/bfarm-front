@@ -49,6 +49,10 @@ import { DeviceList } from "./pages/devices";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
+import { liveProvider } from "@refinedev/ably";
+import { ablyClient } from "./utils/ablyClient";
+
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -66,6 +70,7 @@ const App: React.FC = () => {
   const { loading } = useAutoLoginForDemo();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
   const dataProvider = jsonServerDataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
@@ -95,8 +100,10 @@ const App: React.FC = () => {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
+              liveMode: "auto"
             }}
             notificationProvider={useNotificationProvider}
+            liveProvider={liveProvider(ablyClient)}
             resources={[
               {
                 name: "dashboard",

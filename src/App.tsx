@@ -100,7 +100,7 @@ const App: React.FC = () => {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
-              liveMode: "auto"
+              liveMode: "off"
             }}
             notificationProvider={useNotificationProvider}
             liveProvider={liveProvider(ablyClient)}

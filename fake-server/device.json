@@ -11,7 +11,7 @@
         "humidity": "60%"
       }
     },
-    "actions": [
+    "s": [
       {
         "action": "register",
         "description": "Register this device."
@@ -79,5 +79,10 @@
     "name": "Le Quoc Khanh",
     "status": "VIP",
     "id": 4
+  },
+  {
+    "name": "test",
+    "status": "real",
+    "id": 5
   }
 ]

@@ -15,3 +15,5 @@ export * from "./rank-4";
 export * from "./rank-5";
 export * from "./trend";
 export * from "./basic-marker";
+export * from "./edit";
+export * from "./delete";

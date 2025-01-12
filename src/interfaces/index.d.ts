@@ -33,6 +33,23 @@ export interface IUser {
   avatar: IFile[];
   addresses: IAddress[];
 }
+export interface IFertilizer {
+  id: number;                  
+  name: string;                
+  description: string;        
+  type: string;              
+  nutrient_content: string;     
+  storage_conditions: string;
+  quantity: number;             
+  unit: string;             
+  expired_date: string;          
+  status: string;               
+  created_at: string;         
+  created_by: string;            
+  farm_owner_id: number;       
+}
+
+
 
 export interface IIdentity {
   id: number;

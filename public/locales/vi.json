@@ -282,5 +282,47 @@
       "addresses": "Địa chỉ",
       "address": "Địa chỉ"
     }
+  },
+  "fertilizers": {
+  "fertilizers": "Fertilizers",
+  "titles": {
+    "list": "Danh sách phân bón",
+    "create": "Tạo phân bón mới",
+    "edit": "Chỉnh sửa phân bón",
+    "show": "Chi tiết phân bón"
+  },
+  "fields": {
+    "id": "ID",
+    "name": "Tên phân bón",
+    "type": "Loại phân bón",
+    "quantity": "Số lượng",
+    "unit": "Đơn vị",
+    "description": "Mô tả",
+    "createdAt": "Ngày tạo",
+    "updatedAt": "Ngày cập nhật"
+  },
+  "filter": {
+    "title": "Bộ lọc phân bón",
+    "id": {
+      "label": "ID",
+      "placeholder": "Tìm kiếm theo ID"
+    },
+    "name": {
+      "label": "Tên",
+      "placeholder": "Tìm kiếm theo tên"
+    },
+    "type": {
+      "label": "Loại phân bón",
+      "placeholder": "Chọn loại phân bón",
+      "organic": "Hữu cơ",
+      "chemical": "Hóa học"
+    },
+    "submit": "Áp dụng"
+  },
+  "actions": {
+    "add": "Thêm phân bón",
+    "delete": "Xóa phân bón",
+    "edit": "Chỉnh sửa phân bón"
   }
+}
 }

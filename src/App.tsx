@@ -37,7 +37,7 @@ import { useTranslation } from "react-i18next";
 import { Header, Title } from "./components";
 import { ConfigProvider } from "./context";
 import { useAutoLoginForDemo } from "./hooks";
-
+import { FertilizersList, FertilizersShow} from "./pages/fertilizers";
 import "@refinedev/antd/dist/reset.css";
 import {
   FarmerManagementCreate,
@@ -48,6 +48,8 @@ import {
 import { DeviceList } from "./pages/devices";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
+import { FertilizerCreate } from "./pages/fertilizers/create";
+import { FertilizerEdit } from "./pages/fertilizers/edit";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -161,7 +163,10 @@ const App: React.FC = () => {
                 create: "/fertilizers/create",
                 edit: "/fertilizers/edit/:id",
                 show: "/fertilizers/show/:id",
-                meta: { parent: "material", canDelete: true },
+                meta: {
+                  label: "Fertilizers",
+                  parent: "material", canDelete: true
+                },
               },
               {
                 name: "pesticide",
@@ -305,21 +310,51 @@ const App: React.FC = () => {
                   element={<AuthPage type="updatePassword" />}
                 />
               </Route>
-
               <Route
                 element={
-                  <Authenticated key="catch-all">
+                  <Authenticated key="authenticated-routes" fallback={<CatchAllNavigate to="/login" />}>
                     <ThemedLayoutV2
                       Sider={() => <ThemedSiderV2 Title={Title} fixed />}
                       Header={() => <Header sticky />}
                     >
-                      <Outlet />
+                      <div
+                        style={{
+                          maxWidth: "1600px",
+                          marginLeft: "auto",
+                          marginRight: "auto",
+                        }}
+                      >
+                        <Outlet />
+                      </div>
                     </ThemedLayoutV2>
                   </Authenticated>
                 }
               >
-                <Route path="*" element={<ErrorComponent />} />
-              </Route>
+                <Route index element={<DashboardPage />} />
+
+
+                <Route path="/fertilizers">
+                  <Route index element={<FertilizersList />} />
+                  <Route path="create" element={<FertilizerCreate />} />
+                  <Route path="edit/:id" element={<FertilizerEdit />} />
+                  <Route path="show/:id" element={<FertilizersShow />} />
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated key="catch-all">
+                      <ThemedLayoutV2
+                        Sider={() => <ThemedSiderV2 Title={Title} fixed />}
+                        Header={() => <Header sticky />}
+                      >
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route path="*" element={<ErrorComponent />} />
+                </Route>
+                </Route>
             </Routes>
             <UnsavedChangesNotifier />
             <DocumentTitleHandler handler={customTitleHandler} />

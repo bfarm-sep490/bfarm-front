@@ -51,7 +51,7 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
-
+import { PlanList, PlanShow } from "./pages/plans";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -100,10 +100,8 @@ const App: React.FC = () => {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
-              liveMode: "off"
+              liveMode: "off",
             }}
-            notificationProvider={useNotificationProvider}
-            liveProvider={liveProvider(ablyClient)}
             resources={[
               {
                 name: "dashboard",
@@ -190,6 +188,16 @@ const App: React.FC = () => {
                 },
               },
               {
+                name: "plans",
+                list: "/plans",
+                create: "/plans/create",
+                show: "/plans/:id",
+                meta: {
+                  label: "Plans",
+                  icon: <CalendarOutlined />,
+                },
+              },
+              {
                 name: "report",
                 list: "/report",
                 create: "/report/create",
@@ -262,10 +270,15 @@ const App: React.FC = () => {
                 </Route>
 
                 <Route path="/device" element={<DeviceList />}>
-                  <Route path=":id" element={<FarmerManagementShow />} />
+                  <Route path="show/:id" element={<FarmerManagementShow />} />
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
+                <Route path="/plans" element={<PlanList />}>
+                  <Route path="new" element={<FarmerManagementCreate />} />
+                  <Route path=":id/edit" element={<FarmerManagementEdit />} />
+                </Route>
+                <Route path="/plans/:id" element={<PlanShow />} />
               </Route>
 
               <Route

@@ -31,6 +31,7 @@ export const themeConfig = {
       colorPrimary: "#00b96b",
       algorithm: true,
     },
+
     Table: {
       colorPrimary: "#00b96b",
       algorithm: true,

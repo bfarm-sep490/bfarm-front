@@ -127,7 +127,28 @@ export const DashboardPage: React.FC = () => {
       <Row gutter={[16, 16]}>
         <Col md={24}>
           <Row gutter={[16, 16]}>
-            <Col xl={{ span: 24 }} lg={24} md={24} sm={24} xs={24}>
+            <Col xl={{ span: 12 }} lg={12} md={24} sm={24} xs={24}>
+              <CardWithPlot
+                icon={
+                  <ShoppingOutlined
+                    style={{
+                      fontSize: 14,
+                      color: token.colorPrimary,
+                    }}
+                  />
+                }
+                rightSlot={
+                  <Flex align="center" gap={8}>
+                    <NumberField value={quick.trend} />
+                    {quick.trend > 0 ? <RiseOutlined /> : <DownOutlined />}
+                  </Flex>
+                }
+                title={t("dashboard.quickStats.title")}
+              >
+                <QuickStatsChart height={170} data={quick.data} />
+              </CardWithPlot>
+            </Col>
+            <Col xl={{ span: 12 }} lg={12} md={24} sm={24} xs={24}>
               <CardWithPlot
                 icon={
                   <ShoppingOutlined

@@ -276,6 +276,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
         >
           <Layout>
             <Layout.Sider
+              width={240}
               style={{
                 height: "100vh",
                 backgroundColor: token.colorBgContainer,

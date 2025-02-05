@@ -174,10 +174,10 @@ const App: React.FC = () => {
               },
               {
                 name: "fertilizer",
-                list: "/fertilizers",
-                create: "/fertilizer/new",
-                edit: "/fertilizer/edit/:id",
-                show: "/fertilizer/:id",
+                list: "/fertilizer",
+                create: "/fertilizers/create",
+                edit: "/fertilizers/edit/:id",
+                show: "/fertilizers/show/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -198,6 +198,41 @@ const App: React.FC = () => {
               },
               {
                 name: "employees",
+                meta: {
+                  label: "Employees",
+                  icon: <GoldOutlined />,
+                },
+              },
+              {
+                name: "farmers",
+                list: "/farmers",
+                create: "/farmers/create",
+                edit: "/farmers/edit/:id",
+                show: "/farmers/show/:id",
+                meta: { parent: "employees", canDelete: true },
+              },
+              {
+                name: "experts",
+                list: "/experts",
+                create: "/experts/create",
+                edit: "/experts/edit/:id",
+                show: "/experts/show/:id",
+                meta: { parent: "employees", canDelete: true },
+              },
+              {
+                name: "drivers",
+                list: "/drivers",
+                create: "/drivers/create",
+                edit: "/drivers/edit/:id",
+                show: "/drivers/show/:id",
+                meta: { parent: "employees", canDelete: true },
+              },
+              {
+                name: "season-management",
+                list: "/season-management",
+                create: "/season-management/create",
+                edit: "/season-management/edit/:id",
+                show: "/season-management/show/:id",
                 meta: {
                   label: "Employees",
                   icon: <GoldOutlined />,

@@ -84,3 +84,18 @@ export interface ISeasonProgressEntry {
   timestamp: string;
   progress: number;
 }
+
+export type FertilizerStatus = "UnActived" | "InStock" | "OutStock";
+export type FertilizerType = "Organic" | "Chemical" | "Mixed";
+
+export interface IFertilizer {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  available_quantity: number;
+  unit: string;
+  total_quantity: number;
+  status: FertilizerStatus;
+  type: FertilizerType;
+}

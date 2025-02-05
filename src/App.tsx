@@ -51,6 +51,7 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
+import { FertilizersCreate, FertilizersEdit, FertilizersList, FertilizersShow } from "./pages/fertilizers";
 
 
 interface TitleHandlerOptions {
@@ -163,8 +164,8 @@ const App: React.FC = () => {
                 },
               },
               {
-                name: "fertilizers",
-                list: "/fertilizers",
+                name: "fertilizer",
+                list: "/fertilizer",
                 create: "/fertilizers/create",
                 edit: "/fertilizers/edit/:id",
                 show: "/fertilizers/show/:id",
@@ -265,6 +266,19 @@ const App: React.FC = () => {
                   <Route path=":id" element={<FarmerManagementShow />} />
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
+                </Route>
+
+                 <Route
+                  path="/fertilizer"
+                  element={
+                    <FertilizersList>
+                      <Outlet />
+                    </FertilizersList>
+                  }
+                >
+                  <Route path="new" element={<FertilizersCreate />} />
+                  <Route path=":id" element={<FertilizersShow />} />
+                  <Route path=":id/edit" element={<FertilizersEdit />} />
                 </Route>
               </Route>
 

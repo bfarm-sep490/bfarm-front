@@ -8,7 +8,6 @@
     "dev": "refine dev",
     "prepare": "husky",
     "refine": "refine",
-    "serve": "bun run fake-server/serve.ts",
     "start": "refine start"
   },
   "lint-staged": {

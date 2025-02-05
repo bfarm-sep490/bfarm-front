@@ -129,91 +129,106 @@
             "date" : "2024-01-01",
             "air_temp_value" : 25,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-02",
             "air_temp_value" : 26,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-03",
             "air_temp_value" : 25,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-04",
             "air_temp_value" : 27,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-05",
             "air_temp_value" : 28,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-06",
             "air_temp_value" : 22,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-07",
             "air_temp_value" : 21,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-08",
             "air_temp_value" : 20,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-09",
             "air_temp_value" : 29,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-10",
             "air_temp_value" : 30,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-11",
             "air_temp_value" : 31,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-12",
             "air_temp_value" : 33,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-13",
             "air_temp_value" : 34,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         },
         {
             "date" : "2024-01-14",
             "air_temp_value" : 32,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 2
         },
         {
             "date" : "2024-01-15",
             "air_temp_value" : 31,
             "air_humidity_value" : 70,
-            "soil_temp_value" : 25
+            "soil_temp_value" : 25,
+            "land_id" : 1
         }
 
     ]

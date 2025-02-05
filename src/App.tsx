@@ -51,8 +51,12 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
-import { FertilizersCreate, FertilizersEdit, FertilizersList, FertilizersShow } from "./pages/fertilizers";
-
+import {
+  FertilizersCreate,
+  FertilizersEdit,
+  FertilizersList,
+  FertilizersShow,
+} from "./pages/fertilizers";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -101,7 +105,7 @@ const App: React.FC = () => {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
-              liveMode: "off"
+              liveMode: "off",
             }}
             // notificationProvider={useNotificationProvider}
             // liveProvider={liveProvider(ablyClient)}
@@ -112,15 +116,6 @@ const App: React.FC = () => {
                 meta: {
                   label: "Dashboard",
                   icon: <DashboardOutlined />,
-                },
-              },
-              {
-                name: "users",
-                list: "/customers",
-                show: "/customers/:id",
-                meta: {
-                  label: "Farmer Management",
-                  icon: <UserOutlined />,
                 },
               },
               {
@@ -172,12 +167,51 @@ const App: React.FC = () => {
                 meta: { parent: "material", canDelete: true },
               },
               {
+                name: "item",
+                list: "/items",
+                create: "/items/create",
+                edit: "/items/edit/:id",
+                show: "/items/show/:id",
+                meta: { parent: "material", canDelete: true },
+              },
+              {
                 name: "pesticide",
                 list: "/pesticide",
                 create: "/pesticide/create",
                 edit: "/pesticide/edit/:id",
                 show: "/pesticide/show/:id",
                 meta: { parent: "material", canDelete: true },
+              },
+              {
+                name: "employees",
+                meta: {
+                  label: "Employees",
+                  icon: <GoldOutlined />,
+                },
+              },
+              {
+                name: "farmers",
+                list: "/farmers",
+                create: "/farmers/create",
+                edit: "/farmers/edit/:id",
+                show: "/farmers/show/:id",
+                meta: { parent: "employees", canDelete: true },
+              },
+              {
+                name: "experts",
+                list: "/experts",
+                create: "/experts/create",
+                edit: "/experts/edit/:id",
+                show: "/experts/show/:id",
+                meta: { parent: "employees", canDelete: true },
+              },
+              {
+                name: "drivers",
+                list: "/drivers",
+                create: "/drivers/create",
+                edit: "/drivers/edit/:id",
+                show: "/drivers/show/:id",
+                meta: { parent: "employees", canDelete: true },
               },
               {
                 name: "season-management",
@@ -268,7 +302,7 @@ const App: React.FC = () => {
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
 
-                 <Route
+                <Route
                   path="/fertilizer"
                   element={
                     <FertilizersList>

@@ -111,7 +111,7 @@ export const FertilizersListCard = () => {
                   <Tag
                     onClick={() => {
                       return go({
-                        to: `${showUrl("fertilizers", item.id)}`,
+                        to: `${showUrl("fertilizer", item.id)}`,
                         query: {
                           to: pathname,
                         },

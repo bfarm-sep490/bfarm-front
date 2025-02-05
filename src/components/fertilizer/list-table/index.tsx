@@ -246,7 +246,7 @@ export const FertilizersListTable: React.FC = () => {
             icon={<EyeOutlined />}
             onClick={() => {
               go({
-                to: `${showUrl("fertilizers", record.id)}`,
+                to: `${showUrl("fertilizer", record.id)}`,
                 query: {
                   to: pathname,
                 },

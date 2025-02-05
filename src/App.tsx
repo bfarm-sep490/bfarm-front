@@ -103,8 +103,8 @@ const App: React.FC = () => {
               warnWhenUnsavedChanges: true,
               liveMode: "off"
             }}
-            notificationProvider={useNotificationProvider}
-            liveProvider={liveProvider(ablyClient)}
+            // notificationProvider={useNotificationProvider}
+            // liveProvider={liveProvider(ablyClient)}
             resources={[
               {
                 name: "dashboard",
@@ -166,9 +166,9 @@ const App: React.FC = () => {
               {
                 name: "fertilizer",
                 list: "/fertilizer",
-                create: "/fertilizers/create",
-                edit: "/fertilizers/edit/:id",
-                show: "/fertilizers/show/:id",
+                create: "/fertilizer/new",
+                edit: "/fertilizer/edit/:id",
+                show: "/fertilizer/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -278,7 +278,7 @@ const App: React.FC = () => {
                 >
                   <Route path="new" element={<FertilizersCreate />} />
                   <Route path=":id" element={<FertilizersShow />} />
-                  <Route path=":id/edit" element={<FertilizersEdit />} />
+                  <Route path="edit/:id" element={<FertilizersEdit />} />
                 </Route>
               </Route>
 

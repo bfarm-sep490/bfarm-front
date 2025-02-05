@@ -1,16 +1,32 @@
 import { useShow, useTranslate } from "@refinedev/core";
 import mqtt, { IClientOptions } from "mqtt";
-import { Divider, Flex, Select, Space, Table } from "antd";
-import type { SelectProps, TabsProps } from "antd";
+import {
+  Col,
+  Divider,
+  Flex,
+  Layout,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Timeline,
+} from "antd";
+import type { GetProp, SelectProps, TabsProps } from "antd";
 import React, { useState, useEffect } from "react";
 import { AntdInferencer } from "@refinedev/inferencer/antd";
-import { Typography } from "antd";
+import { Typography, Button, MenuProps, Menu } from "antd";
 import { Tabs } from "antd";
 import {
   AndroidOutlined,
   AppleOutlined,
+  AppstoreOutlined,
   BulbOutlined,
   CloudOutlined,
+  ContainerOutlined,
+  DesktopOutlined,
+  MailOutlined,
+  PieChartOutlined,
   SunOutlined,
 } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,20 +34,85 @@ import {
   DateField,
   NumberField,
   Show,
+  Sider,
   TagField,
   TextField,
 } from "@refinedev/antd";
 import { Card } from "antd/lib";
 import TextArea from "antd/es/input/TextArea";
 import { set } from "lodash";
+import { Line } from "@ant-design/plots";
+import { color } from "bun";
+import { Content } from "antd/es/layout/layout";
 
 const { Title } = Typography;
 type LabelRender = SelectProps["labelRender"];
 
+type MenuItem = GetProp<MenuProps, "items">[number];
+
 type PlanGeneralInformationProps = {
   data: any;
 };
-
+const GanttData: object[] = [
+  {
+    TaskID: 1,
+    TaskName: "Project Initiation",
+    StartDate: new Date("04/02/2019"),
+    EndDate: new Date("04/21/2019"),
+    subtasks: [
+      {
+        TaskID: 2,
+        TaskName: "Identify Site location",
+        StartDate: new Date("04/02/2019"),
+        Duration: 4,
+        Progress: 50,
+      },
+      {
+        TaskID: 3,
+        TaskName: "Perform Soil test",
+        StartDate: new Date("04/02/2019"),
+        Duration: 4,
+        Progress: 50,
+      },
+      {
+        TaskID: 4,
+        TaskName: "Soil test approval",
+        StartDate: new Date("04/02/2019"),
+        Duration: 4,
+        Progress: 50,
+      },
+    ],
+  },
+  {
+    TaskID: 5,
+    TaskName: "Project Estimation",
+    StartDate: new Date("04/02/2019"),
+    EndDate: new Date("04/21/2019"),
+    subtasks: [
+      {
+        TaskID: 6,
+        TaskName: "Develop floor plan for estimation",
+        StartDate: new Date("04/04/2019"),
+        Duration: 3,
+        Progress: 50,
+      },
+      {
+        TaskID: 7,
+        TaskName: "List materials",
+        StartDate: new Date("04/04/2019"),
+        Duration: 3,
+        Progress: 50,
+      },
+      {
+        TaskID: 8,
+        TaskName: "Estimation approval",
+        StartDate: new Date("04/04/2019"),
+        Duration: 3,
+        Progress: 50,
+      },
+    ],
+  },
+];
 export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
   const [record, setRecord] = useState<any>(props?.data);
   useEffect(() => {
@@ -140,16 +221,10 @@ export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
       <Title level={4} style={{ fontWeight: "bold", textAlign: "center" }}>
         THÔNG TIN
       </Title>
-      <Card
-        style={{
-          height: "400px",
-          backgroundColor: "transparent",
-        }}
-      >
-        <>
-          <Tabs defaultActiveKey="1" items={items} />
-        </>
-      </Card>
+
+      <>
+        <Tabs defaultActiveKey="1" items={items} />
+      </>
     </>
   );
 };
@@ -163,6 +238,7 @@ export const PlanObservation = (props: PlanObservationProps) => {
   const [humidity, setHumidity] = useState(0);
   const [landHumidity, setLandHumidity] = useState(0);
   const [record, setRecord] = useState<any>(props?.data);
+  const [chartConfig, setChartConfig] = useState<any>({});
   useEffect(() => {
     setRecord(props.data);
     if (props.data?.lands) {
@@ -171,6 +247,16 @@ export const PlanObservation = (props: PlanObservationProps) => {
         label: land.name,
       }));
       setOptions(formattedOptions);
+      console.log(props?.data?.environment_data);
+      const config = {
+        data: props?.data.environment_data,
+        xField: "date",
+        yField: "air_temp_value",
+        smooth: true,
+        color: "#ff4d4f",
+        legend: false,
+      };
+      setChartConfig(config);
     }
   }, [props?.data]);
   const [chosenLand, setChosenLand] = useState<any>(null);
@@ -178,6 +264,7 @@ export const PlanObservation = (props: PlanObservationProps) => {
   const [dataSourceTable, setDataSourceTable] = useState<any[]>([]);
   const [codeDevice, setCodeDevice] = useState<string>("");
   const [options, setOptions] = useState<any[]>([]);
+
   useEffect(() => {
     const client = mqtt.connect("ws://broker.mqttdashboard.com:8000/mqtt");
     client.on("connect", () => {
@@ -229,151 +316,143 @@ export const PlanObservation = (props: PlanObservationProps) => {
   useEffect(() => {
     setDataSourceTable(props?.data?.tasks);
   }, props.data);
-  const table_1_column = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "status",
-      dataIndex: "status",
-      key: "status",
-    },
-  ];
-  const table_1_item = (
-    <Table dataSource={dataSourceTable} columns={table_1_column}></Table>
-  );
-  const items: TabsProps["items"] = [
-    {
-      key: "1",
-      label: "Tiến trình",
-      children: table_1_item,
-    },
-  ];
+
   return (
     <>
       <Title level={4} style={{ fontWeight: "bold", textAlign: "center" }}>
         THEO DÕI
       </Title>
-      <Card
-        style={{
-          backgroundColor: "transparent",
-        }}
-      >
-        <Space align="center" style={{ display: "flex", gap: "5px" }}>
-          <Title level={4}>Khu đất:</Title>
-          <Select
-            defaultActiveFirstOption={true}
-            defaultValue={1}
-            labelRender={labelRender}
-            options={options}
-            style={{ width: "300px" }}
-          />
-        </Space>
-        <Divider />
-        <Flex vertical={false} style={{ gap: "20px" }}>
-          <div style={{ flex: 0.4, gap: "5px" }}>
-            <div style={{ justifyContent: "space-between", display: "flex" }}>
-              <Title level={5}>{"Theo dõi môi trường"}</Title>
-              <a>{"Xem thêm"}</a>
-            </div>
-            <Flex vertical={true} style={{ gap: "20px" }}>
-              <Card
-                headStyle={{ color: "#FF9900" }}
-                title={
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span style={{ color: "#FF9900" }}>Nhiệt độ </span>
-                    <SunOutlined style={{ color: "#FF9900" }} />
-                  </div>
-                }
+      <Space align="center" style={{ display: "flex", gap: "5px" }}>
+        <Title level={4}>Khu đất:</Title>
+        <Select
+          defaultActiveFirstOption={true}
+          defaultValue={1}
+          labelRender={labelRender}
+          options={options}
+          style={{ width: "300px" }}
+        />
+      </Space>
+      <Divider />
+      <Flex vertical={false} style={{ gap: "20px" }}>
+        <div style={{ flex: 0.4, gap: "5px" }}>
+          <div style={{ justifyContent: "space-between", display: "flex" }}>
+            <Title level={5}>{"Theo dõi môi trường"}</Title>
+            <a>{"Xem thêm"}</a>
+          </div>
+          <Flex vertical={true} style={{ gap: "20px" }}>
+            <Card
+              headStyle={{ color: "#FF9900" }}
+              title={
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <span style={{ color: "#FF9900" }}>Nhiệt độ </span>
+                  <SunOutlined style={{ color: "#FF9900" }} />
+                </div>
+              }
+              style={{
+                color: "#FF9900",
+                border: "1px solid #FF9900",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Typography
+                id={`air-temperature`}
                 style={{
                   color: "#FF9900",
-                  border: "1px solid #FF9900",
-                  backgroundColor: "transparent",
+                  fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
-                <Typography
-                  id={`air-temperature`}
-                  style={{
-                    color: "#FF9900",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
+                {temperature || "Không tìm thấy dữ liệu"}
+              </Typography>
+            </Card>
+            <Card
+              headStyle={{ color: "#3366CC" }}
+              title={
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  {temperature || "Không tìm thấy dữ liệu"}
-                </Typography>
-              </Card>
-              <Card
-                headStyle={{ color: "#3366CC" }}
-                title={
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span style={{ color: "#3366CC" }}>Độ ẩm không khí</span>
-                    <CloudOutlined style={{ color: "#3366CC" }} />
-                  </div>
-                }
+                  <span style={{ color: "#3366CC" }}>Độ ẩm không khí</span>
+                  <CloudOutlined style={{ color: "#3366CC" }} />
+                </div>
+              }
+              style={{
+                color: "##3366CC",
+                border: "1px solid #3366CC",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Typography
+                id={`air-humidity`}
                 style={{
-                  color: "##3366CC",
-                  border: "1px solid #3366CC",
-                  backgroundColor: "transparent",
+                  color: "#3366CC",
+                  fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
-                <Typography
-                  id={`air-humidity`}
-                  style={{
-                    color: "#3366CC",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
+                {humidity || "Không tìm thấy dữ liệu"}
+              </Typography>
+            </Card>
+            <Card
+              headStyle={{ color: "#993333" }}
+              title={
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  {humidity || "Không tìm thấy dữ liệu"}
-                </Typography>
-              </Card>
-              <Card
-                headStyle={{ color: "#993333" }}
-                title={
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span style={{ color: "#993333" }}>Độ ẩm đất</span>
-                    <BulbOutlined style={{ color: "#993333" }} />
-                  </div>
-                }
+                  <span style={{ color: "#993333" }}>Độ ẩm đất</span>
+                  <BulbOutlined style={{ color: "#993333" }} />
+                </div>
+              }
+              style={{
+                color: "#993333",
+                border: "1px solid #993333",
+                backgroundColor: "transparent",
+              }}
+            >
+              <Typography
+                id={`land-humidity`}
                 style={{
                   color: "#993333",
-                  border: "1px solid #993333",
-                  backgroundColor: "transparent",
+                  fontWeight: "bold",
+                  textAlign: "center",
                 }}
               >
-                <Typography
-                  id={`land-humidity`}
-                  style={{
-                    color: "#993333",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  {landHumidity || "Không tìm thấy dữ liệu"}
-                </Typography>
-              </Card>
-            </Flex>
-          </div>
+                {landHumidity || "Không tìm thấy dữ liệu"}
+              </Typography>
+            </Card>
+          </Flex>
+        </div>
 
-          <div style={{ flex: 2.7 }}>
-            <Title level={5}>{"Theo dõi tiến độ"}</Title>
-            <Tabs defaultActiveKey="1" items={items}></Tabs>
-          </div>
-        </Flex>
-      </Card>
+        <div style={{ flex: 2.7 }}>
+          <Title level={5}>{"Theo dõi tiến độ"}</Title>
+          <Flex style={{ gap: "20px" }}>
+            <Select
+              defaultActiveFirstOption={true}
+              defaultValue="air_temp"
+              style={{ width: "300px" }}
+            >
+              <Select.Option value="air_temp">
+                Nhiệt độ môi trường
+              </Select.Option>
+              <Select.Option value="air_humidity">
+                Độ ẩm không khí
+              </Select.Option>
+              <Select.Option value="land_humidity">Độ ẩm đất</Select.Option>
+            </Select>
+            <Select
+              defaultActiveFirstOption={true}
+              defaultValue="day"
+              style={{ width: "300px" }}
+            >
+              <Select.Option value="day">Theo ngày</Select.Option>
+              <Select.Option value="week">Theo Tuần</Select.Option>
+              <Select.Option value="month">Theo tháng</Select.Option>
+            </Select>
+          </Flex>
+          <Line {...chartConfig} />
+        </div>
+      </Flex>
     </>
   );
 };
@@ -383,16 +462,92 @@ export const PlanShow: React.FC = () => {
   const { query } = useShow();
   const { data, isLoading } = query;
   const record = data?.data;
+
+  const tasks = [
+    {
+      id: 20,
+      text: "New Task",
+      start: new Date(2024, 5, 11),
+      end: new Date(2024, 6, 12),
+      duration: 1,
+      progress: 2,
+      type: "task",
+      lazy: false,
+    },
+    {
+      id: 47,
+      text: "[1] Master project",
+      start: new Date(2024, 5, 12),
+      end: new Date(2024, 7, 12),
+      duration: 8,
+      progress: 0,
+      parent: 0,
+      type: "summary",
+    },
+    {
+      id: 22,
+      text: "Task",
+      start: new Date(2024, 7, 11),
+      end: new Date(2024, 8, 12),
+      duration: 8,
+      progress: 0,
+      parent: 47,
+      type: "task",
+    },
+    {
+      id: 21,
+      text: "New Task 2",
+      start: new Date(2024, 7, 10),
+      end: new Date(2024, 8, 12),
+      duration: 3,
+      progress: 0,
+      type: "task",
+      lazy: false,
+    },
+  ];
+
+  const links = [{ id: 1, source: 20, target: 21, type: "e2e" }];
+
+  const scales = [
+    { unit: "month", step: 1, format: "MMMM yyy" },
+    { unit: "day", step: 1, format: "d" },
+  ];
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
+  };
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ textAlign: "center", padding: "20px" }}>
+        <Spin size="large" tip={translate("loading")} />
+      </div>
+    );
   }
+
   return (
     <>
-      <Show isLoading={isLoading} title={record?.name}>
-        <PlanGeneralInformation data={record} />
-        <Divider />
-        <PlanObservation data={record} />
-      </Show>
+      <PlanGeneralInformation data={record} />
+      <Divider />
+      <PlanObservation data={record} />
+      <Divider />
+      <div>
+        <Title level={3}>Tiến trình: Giai đoạn chuẩn bị</Title>
+        <Card style={{ width: "100%", backgroundColor: "transparent" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            <Button>Giai đoạn chuẩn bị</Button>
+            <Button>Giai đoạn chăm sóc</Button>
+            <Button>Giai đoạn thu hoạch</Button>
+          </div>
+          <Divider></Divider>
+
+          <Layout style={{ height: "100vh" }}></Layout>
+        </Card>
+      </div>
     </>
   );
 };

@@ -40,7 +40,7 @@ import {
 } from "@refinedev/antd";
 import { Card } from "antd/lib";
 import TextArea from "antd/es/input/TextArea";
-import { set } from "lodash";
+import { max, min, set } from "lodash";
 import { Line } from "@ant-design/plots";
 import { color } from "bun";
 import { Content } from "antd/es/layout/layout";
@@ -67,11 +67,12 @@ export interface EnvironmentDashboardProps {
 
 interface ChartConfig {
   data: any[];
+  height: number;
   xField: string;
   yField: string;
-  smooth: boolean;
+  point: any;
   color: string;
-  legend: boolean;
+  tooltip?: any;
 }
 
 export const EnvironmentDashboard = (props: EnvironmentDashboardProps) => {
@@ -84,10 +85,13 @@ export const EnvironmentDashboard = (props: EnvironmentDashboardProps) => {
   const [chartConfig, setChartConfig] = useState<ChartConfig>({
     data: [],
     xField: "date",
+    height: 400,
     yField: "air_temp_value",
-    smooth: true,
+    point: {
+      size: 3,
+      shape: "diamond | circule",
+    },
     color: "#ff4d4f",
-    legend: false,
   });
 
   const aggregateData = (data: IEnvironmentData[], timeFilter: string) => {
@@ -132,10 +136,13 @@ export const EnvironmentDashboard = (props: EnvironmentDashboardProps) => {
       setChartConfig({
         data: aggregatedData,
         xField: "date",
+        height: 400,
         yField: typeData,
-        smooth: true,
+        point: {
+          size: 3,
+          shape: "diamond | circule",
+        },
         color: "#ff4d4f",
-        legend: false,
       });
     }
   }, [props.data, props.land_id, typeData, timeData]);

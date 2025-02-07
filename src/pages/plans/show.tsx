@@ -127,7 +127,7 @@ export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
     setRecord(props.data);
   }, [props?.data]);
   const item_2 = (
-    <>
+    <div>
       <Title level={4}>{record?.seed?.name}</Title>
 
       <Flex justify="space-between" style={{ gap: "20px" }}>
@@ -150,7 +150,7 @@ export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
           />
         </div>
       </Flex>
-    </>
+    </div>
   );
   const item_1 = (
     <>
@@ -212,6 +212,11 @@ export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
       </Flex>
     </>
   );
+  const item_3 = (
+    <>
+      <p>Nhân viên phụ trách</p>
+    </>
+  );
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -223,16 +228,30 @@ export const PlanGeneralInformation = (props: PlanGeneralInformationProps) => {
       label: "Thông tin cây trồng",
       children: item_2,
     },
+    {
+      key: "3",
+      label: "Nhân viên phụ trách",
+      children: item_3,
+    },
+    {
+      key: "4",
+      label: "Thông tin vật tư",
+      children: item_3,
+    },
+    {
+      key: "5",
+      label: "Thông tin hoạt động",
+      children: item_3,
+    },
+    {
+      key: "6",
+      label: "Khu đất",
+      children: item_3,
+    },
   ];
   return (
     <>
-      <Title level={4} style={{ fontWeight: "bold", textAlign: "center" }}>
-        THÔNG TIN
-      </Title>
-
-      <>
-        <Tabs defaultActiveKey="1" items={items} />
-      </>
+      <Tabs tabPosition={"left"} defaultActiveKey="1" items={items} />
     </>
   );
 };
@@ -265,17 +284,13 @@ export const PlanObservation = (props: PlanObservationProps) => {
 
   return (
     <>
-      <Title level={4} style={{ fontWeight: "bold" }}>
-        THEO DÕI MÔI TRƯỜNG
-      </Title>
-      <Divider />
       <Space
         align="center"
         style={{ display: "flex", gap: "5px", marginBottom: "20px" }}
       >
         <Title level={5}>Khu đất:</Title>
         <Select
-          defaultValue={chosenLand?.id}  
+          defaultValue={chosenLand?.id}
           options={options}
           style={{ width: "300px" }}
           onChange={(value) => {
@@ -307,30 +322,46 @@ export const PlanShow: React.FC = () => {
   const { query } = useShow();
   const { data, isLoading } = query;
   const record = data?.data;
-
-  return (
-    <>
-      <PlanObservation data={record} />
-      <Divider />
-      <div>
-        <Title level={3}>Tiến trình: Giai đoạn chuẩn bị</Title>
-        <Card style={{ width: "100%", backgroundColor: "transparent" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "10px",
-            }}
-          >
-            <Button>Giai đoạn chuẩn bị</Button>
-            <Button>Giai đoạn chăm sóc</Button>
-            <Button>Giai đoạn thu hoạch</Button>
+  const items = [
+    {
+      key: "1",
+      label: "Thông tin",
+      children: <PlanGeneralInformation data={record} />,
+    },
+    {
+      key: "2",
+      label: "Theo dõi môi trường",
+      children: <PlanObservation data={record} />,
+    },
+    {
+      key: "3",
+      label: "Tiến trình",
+      children: (
+        <>
+          <div>
+            <Title level={3}>Tiến trình: Giai đoạn chuẩn bị</Title>
+            <Card style={{ width: "100%", backgroundColor: "transparent" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+                }}
+              >
+                <Button>Giai đoạn chuẩn bị</Button>
+                <Button>Giai đoạn chăm sóc</Button>
+                <Button>Giai đoạn thu hoạch</Button>
+              </div>
+              <Divider></Divider>
+            </Card>
           </div>
-          <Divider></Divider>
-
-          <Layout style={{ height: "100vh" }}></Layout>
-        </Card>
-      </div>
-    </>
+        </>
+      ),
+    },
+  ];
+  return (
+    <Show title="Chi tiết kế hoạch" isLoading={false}>
+      <Tabs defaultActiveKey="1" centered items={items} />
+    </Show>
   );
 };

@@ -57,6 +57,11 @@ import {
   FertilizersList,
   FertilizersShow,
 } from "./pages/fertilizers";
+import { FarmerList } from "./pages/farmers";
+import { FarmerDrawerShow } from "./components/farmer/drawer-show";
+import { FarmerDrawerForm } from "./components/farmer";
+import { FarmerCreate } from "./pages/farmers/create";
+import { FarmersShow } from "./pages/farmers/show";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -194,7 +199,7 @@ const App: React.FC = () => {
                 list: "/farmers",
                 create: "/farmers/create",
                 edit: "/farmers/edit/:id",
-                show: "/farmers/show/:id",
+                show: "/farmers/:id",
                 meta: { parent: "employees", canDelete: true },
               },
               {
@@ -313,6 +318,17 @@ const App: React.FC = () => {
                   <Route path="new" element={<FertilizersCreate />} />
                   <Route path=":id" element={<FertilizersShow />} />
                   <Route path="edit/:id" element={<FertilizersEdit />} />
+                </Route>
+                <Route
+                  path="/farmers"
+                  element={
+                    <FarmerList>
+                      <Outlet />
+                    </FarmerList>
+                  }
+                >
+                  <Route path=":id" element={<FarmersShow />} />
+                  <Route path="new" element={<FarmerCreate />} />
                 </Route>
               </Route>
 

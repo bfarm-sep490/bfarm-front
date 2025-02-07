@@ -99,3 +99,14 @@ export interface IFertilizer {
   status: FertilizerStatus;
   type: FertilizerType;
 }
+
+export type FarmerStatus = "UnActived" | "Actived";
+export interface IFarmer {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  DOB: string;
+  avatar: string;
+  status: FarmerStatus;
+}

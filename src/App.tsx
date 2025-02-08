@@ -62,6 +62,7 @@ import { FarmerDrawerShow } from "./components/farmer/drawer-show";
 import { FarmerDrawerForm } from "./components/farmer";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmersShow } from "./pages/farmers/show";
+import { FarmerEdit } from "./pages/farmers/edit";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -315,7 +316,7 @@ const App: React.FC = () => {
                     </FertilizersList>
                   }
                 >
-                  <Route path="new" element={<FertilizersCreate />} />
+                  <Route path="create" element={<FertilizersCreate />} />
                   <Route path=":id" element={<FertilizersShow />} />
                   <Route path="edit/:id" element={<FertilizersEdit />} />
                 </Route>
@@ -328,7 +329,8 @@ const App: React.FC = () => {
                   }
                 >
                   <Route path=":id" element={<FarmersShow />} />
-                  <Route path="new" element={<FarmerCreate />} />
+                  <Route path="create" element={<FarmerCreate />} />
+                  <Route path="edit/:id" element={<FarmerEdit />} />
                 </Route>
               </Route>
 

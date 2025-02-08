@@ -6,6 +6,7 @@ import {
   useGo,
   useTranslate,
 } from "@refinedev/core";
+import axios from "axios";
 import { getValueFromEvent } from "@refinedev/antd";
 import {
   Form,
@@ -19,12 +20,17 @@ import {
   Avatar,
   Spin,
   DatePicker,
+  message,
 } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { IFarmer, IFertilizer } from "@/interfaces";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { before, set } from "lodash";
+import moment from "moment";
 
 type Props = {
   id?: BaseKey;
@@ -34,6 +40,9 @@ type Props = {
 };
 
 export const FarmerDrawerForm = (props: Props) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
+
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -68,8 +77,45 @@ export const FarmerDrawerForm = (props: Props) => {
       type: "replace",
     });
   };
+  useEffect(() => {
+    if (props.action === "edit" && formProps.form) {
+      const currentAvatar = formProps.form.getFieldValue("avatar");
+      if (currentAvatar) {
+        setPreviewImage(currentAvatar);
+      }
+    }
+  }, [props.action, formProps.form]);
 
-  const image = Form.useWatch("image", formProps.form);
+  const uploadImage = async ({ onSuccess, onError, file, onProgress }: any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const response = await axios.post(
+        "https://api.outfit4rent.online/api/farmers/images/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.status === 200 && response.data.data?.length) {
+        const uploadedImageUrl = response.data.data[0];
+        setPreviewImage(uploadedImageUrl);
+        onSuccess(uploadedImageUrl);
+        console.log("Server response:", response.data);
+      } else {
+        throw new Error(response.data.message || "Upload failed.");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      onError(error);
+    } finally {
+      setUploading(false);
+    }
+  };
   const title = props.action === "edit" ? "Edit this farmer" : "Add a farmer";
 
   const statusOptions = [
@@ -90,14 +136,15 @@ export const FarmerDrawerForm = (props: Props) => {
         <Form {...formProps} layout="vertical">
           <Form.Item
             name="avatar"
-            valuePropName="fileList"
-            getValueFromEvent={getValueFromEvent}
+            valuePropName="file"
+            getValueFromEvent={(e: any) => {
+              return e?.file?.response ?? "/images/fertilizer-default-img.png";
+            }}
             style={{ margin: 0 }}
-            rules={[{ required: true }]}
           >
             <Upload.Dragger
               name="file"
-              action={`${apiUrl}/media/upload`}
+              customRequest={uploadImage}
               maxCount={1}
               accept=".png,.jpg,.jpeg"
               className={styles.uploadDragger}
@@ -114,12 +161,12 @@ export const FarmerDrawerForm = (props: Props) => {
                   style={{
                     aspectRatio: 1,
                     objectFit: "contain",
-                    width: image ? "100%" : "48px",
-                    height: image ? "100%" : "48px",
-                    marginTop: image ? undefined : "auto",
-                    transform: image ? undefined : "translateY(50%)",
+                    width: previewImage ? "100%" : "48px",
+                    height: previewImage ? "100%" : "48px",
+                    marginTop: previewImage ? undefined : "auto",
+                    transform: previewImage ? undefined : "translateY(50%)",
                   }}
-                  src={image || "/images/fertilizer-default-img.png"}
+                  src={previewImage || "/images/fertilizer-default-img.png"}
                   alt="Farmer Image"
                 />
                 <Button
@@ -128,13 +175,10 @@ export const FarmerDrawerForm = (props: Props) => {
                     marginTop: "auto",
                     marginBottom: "16px",
                     backgroundColor: theme.colorBgContainer,
-                    ...(!!image && {
-                      position: "absolute",
-                      bottom: 0,
-                    }),
                   }}
+                  disabled={uploading}
                 >
-                  Upload Image
+                  {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -165,12 +209,17 @@ export const FarmerDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Date of birth"
+              label="Date of Birth"
               name="DOB"
+              getValueProps={(i) => ({
+                value: i === undefined ? undefined : moment(i),
+              })}
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please select date of birth" },
+              ]}
             >
-              <DatePicker />
+              <DatePicker format="DD-MM-YYYY" />
             </Form.Item>
 
             <Form.Item

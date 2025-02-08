@@ -57,6 +57,12 @@ import {
   FertilizersList,
   FertilizersShow,
 } from "./pages/fertilizers";
+import {
+  ExpertCreate,
+  ExpertEdit,
+  ExpertList,
+  ExpertShow,
+} from "./pages/experts";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -202,7 +208,7 @@ const App: React.FC = () => {
                 list: "/experts",
                 create: "/experts/create",
                 edit: "/experts/edit/:id",
-                show: "/experts/show/:id",
+                show: "/experts/:id",
                 meta: { parent: "employees", canDelete: true },
               },
               {
@@ -313,6 +319,18 @@ const App: React.FC = () => {
                   <Route path="new" element={<FertilizersCreate />} />
                   <Route path=":id" element={<FertilizersShow />} />
                   <Route path="edit/:id" element={<FertilizersEdit />} />
+                </Route>
+                <Route
+                  path="/experts"
+                  element={
+                    <ExpertList>
+                      <Outlet />
+                    </ExpertList>
+                  }
+                >
+                  <Route path=":id" element={<ExpertShow />} />
+                  <Route path="create" element={<ExpertCreate />} />
+                  <Route path="edit/:id" element={<ExpertEdit />} />
                 </Route>
               </Route>
 

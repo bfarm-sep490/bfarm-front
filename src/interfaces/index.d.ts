@@ -99,3 +99,13 @@ export interface IFertilizer {
   status: FertilizerStatus;
   type: FertilizerType;
 }
+export type ExpertStatus = "UnActived" | "Actived";
+export interface IExpert {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  DOB: string;
+  avatar: string;
+  status: ExpertStatus;
+}

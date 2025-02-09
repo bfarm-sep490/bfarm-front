@@ -71,6 +71,8 @@ import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
 import { InspectorShow } from "./pages/inspectors/show";
+import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -183,7 +185,7 @@ const App: React.FC = () => {
               {
                 name: "item",
                 list: "/items",
-                create: "/items/create",
+                create: "/items/new",
                 edit: "/items/edit/:id",
                 show: "/items/show/:id",
                 meta: { parent: "material", canDelete: true },
@@ -452,6 +454,9 @@ const App: React.FC = () => {
                 </Route>
               </Route>
 
+
+
+
               <Route
                 element={
                   <Authenticated key="auth-pages" fallback={<Outlet />}>
@@ -518,7 +523,7 @@ const App: React.FC = () => {
           </Refine>
         </RefineKbarProvider>
       </ConfigProvider>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 };
 

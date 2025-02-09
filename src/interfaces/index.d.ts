@@ -1,3 +1,4 @@
+import exp from "constants";
 import type { Dayjs } from "dayjs";
 
 export interface IOrderChart {
@@ -82,6 +83,8 @@ export interface ISeasonProgressEntry {
 
 export type FertilizerStatus = "UnActived" | "InStock" | "OutStock";
 export type FertilizerType = "Organic" | "Chemical" | "Mixed";
+export type ItemStatus = "UnActived" | "InStock" | "OutStock";
+export type ItemType = "Productive" | "Harvestive" | "Packaging" | "Inspecting";
 
 export interface IFertilizer {
   id: number;
@@ -132,4 +135,14 @@ export interface IProductiveTask {
   created_at: Date;
   updated_at: Date;
   priority: number;
+}
+
+
+export interface IItem {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  status: ItemStatus;
+  type: ItemType;
 }

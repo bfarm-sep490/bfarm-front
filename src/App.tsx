@@ -187,7 +187,7 @@ const App: React.FC = () => {
                 list: "/items",
                 create: "/items/new",
                 edit: "/items/edit/:id",
-                show: "/items/show/:id",
+                show: "/items/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {

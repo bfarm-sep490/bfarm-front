@@ -58,6 +58,20 @@ import {
   FertilizersShow,
 } from "./pages/fertilizers";
 
+import { FarmerList } from "./pages/farmers";
+import { FarmerDrawerShow } from "./components/farmer/drawer-show";
+import { FarmerDrawerForm } from "./components/farmer";
+import { FarmerCreate } from "./pages/farmers/create";
+import { FarmersShow } from "./pages/farmers/show";
+import { FarmerEdit } from "./pages/farmers/edit";
+
+import {
+  ExpertCreate,
+  ExpertEdit,
+  ExpertList,
+  ExpertShow,
+} from "./pages/experts";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -194,7 +208,7 @@ const App: React.FC = () => {
                 list: "/farmers",
                 create: "/farmers/create",
                 edit: "/farmers/edit/:id",
-                show: "/farmers/show/:id",
+                show: "/farmers/:id",
                 meta: { parent: "employees", canDelete: true },
               },
               {
@@ -202,7 +216,7 @@ const App: React.FC = () => {
                 list: "/experts",
                 create: "/experts/create",
                 edit: "/experts/edit/:id",
-                show: "/experts/show/:id",
+                show: "/experts/:id",
                 meta: { parent: "employees", canDelete: true },
               },
               {
@@ -310,9 +324,34 @@ const App: React.FC = () => {
                     </FertilizersList>
                   }
                 >
-                  <Route path="new" element={<FertilizersCreate />} />
+                  <Route path="create" element={<FertilizersCreate />} />
                   <Route path=":id" element={<FertilizersShow />} />
                   <Route path="edit/:id" element={<FertilizersEdit />} />
+                </Route>
+                <Route
+
+                  path="/farmers"
+                  element={
+                    <FarmerList>
+                      <Outlet />
+                    </FarmerList>
+                  }
+                >
+                  <Route path=":id" element={<FarmersShow />} />
+                  <Route path="create" element={<FarmerCreate />} />
+                  <Route path="edit/:id" element={<FarmerEdit />} />
+                </Route>
+                <Route
+                  path="/experts"
+                  element={
+                    <ExpertList>
+                      <Outlet />
+                    </ExpertList>
+                  }
+                >
+                  <Route path=":id" element={<ExpertShow />} />
+                  <Route path="create" element={<ExpertCreate />} />
+                  <Route path="edit/:id" element={<ExpertEdit />} />
                 </Route>
               </Route>
 

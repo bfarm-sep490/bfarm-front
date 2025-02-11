@@ -71,7 +71,11 @@ export const PlanList = () => {
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <ShowButton onClick={() => go({ to: `/plans/${record.id}` })} />
+              <ShowButton
+                onClick={() =>
+                  go({ to: `/plans/${record.id}/${"information"}` })
+                }
+              />
             </Space>
           )}
         />

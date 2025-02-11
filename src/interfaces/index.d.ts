@@ -84,3 +84,20 @@ export interface ISeasonProgressEntry {
   timestamp: string;
   progress: number;
 }
+
+export interface IProductiveTask {
+  id: number;
+  period_id: number;
+  land_id: number;
+  task_name: string;
+  start_date: Date;
+  end_date: Date;
+  complete_date: Date;
+  task_type: string;
+  farmer_id: number;
+  is_completed: boolean;
+  is_available: boolean;
+  created_at: Date;
+  updated_at: Date;
+  priority: number;
+}

@@ -1,32 +1,43 @@
 import { Flex, Select, Space } from "antd";
 import Title from "antd/lib/typography/Title";
 import { useEffect, useState } from "react";
-import { RealTimeEnvironment } from "../realTimeCardEnviroment";
-import { EnvironmentDashboard } from "../environmentDashboard";
+import { RealTimeEnvironment } from "../real-time-enviroment";
+import { EnvironmentDashboard } from "../environment-dashboard";
+import { BaseKey, HttpError, useShow } from "@refinedev/core";
 
 type PlanObservationProps = {
-  data: any;
+  id?: BaseKey;
 };
+
 export const PlanObservation = (props: PlanObservationProps) => {
   const [chosenLand, setChosenLand] = useState<any>(null);
   const [deviceCodes, setDeviceCodes] = useState<string[]>([]);
   const [options, setOptions] = useState<any[]>([]);
 
-  useEffect(() => {
-    if (props.data?.lands?.length > 0) {
-      setOptions(
-        props.data.lands.map((land: any) => ({
-          label: land.name,
-          value: land.id,
-        }))
-      );
-      setChosenLand(props.data.lands[0]);
-    }
-  }, [props.data]);
+  const { query: showRecord } = useShow<any, HttpError>({
+    resource: "plans",
+    id: props?.id,
+  });
+
+  const data = showRecord?.data?.data;
 
   useEffect(() => {
-    if (chosenLand) {
+    if (data?.lands && data.lands.length > 0) {
+      const formattedOptions = data.lands.map((land: any) => ({
+        label: land.name,
+        value: land.id,
+      }));
+
+      setOptions(formattedOptions);
+      setChosenLand(data.lands[0]);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (chosenLand?.devices?.length > 0) {
       setDeviceCodes(chosenLand.devices.map((device: any) => device.code));
+    } else {
+      setDeviceCodes([]);
     }
   }, [chosenLand]);
 
@@ -38,12 +49,12 @@ export const PlanObservation = (props: PlanObservationProps) => {
       >
         <Title level={5}>Khu đất:</Title>
         <Select
-          defaultValue={chosenLand?.id}
+          value={chosenLand?.id}
           options={options}
           style={{ width: "300px" }}
           onChange={(value) => {
-            const land = props.data.lands.find((l: any) => l.id === value);
-            setChosenLand(land);
+            const land = data?.lands.find((l: any) => l.id === value);
+            setChosenLand(land || null);
           }}
         />
       </Space>
@@ -56,7 +67,7 @@ export const PlanObservation = (props: PlanObservationProps) => {
         </div>
         <div style={{ flex: 2.7 }}>
           <EnvironmentDashboard
-            data={props.data?.environment_data}
+            data={data?.environment_data}
             land_id={chosenLand?.id}
           />
         </div>

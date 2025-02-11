@@ -274,11 +274,10 @@ const App: React.FC = () => {
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
-                <Route path="/plans" element={<PlanList />}>
-                  <Route path="new" element={<FarmerManagementCreate />} />
-                  <Route path=":id/edit" element={<FarmerManagementEdit />} />
+                <Route path="/plans">
+                  <Route index element={<PlanList />} />
+                  <Route path=":id?/:tab?/:sub?" element={<PlanShow />} />
                 </Route>
-                <Route path="/plans/:id" element={<PlanShow />} />
               </Route>
 
               <Route

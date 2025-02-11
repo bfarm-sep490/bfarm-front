@@ -121,7 +121,7 @@ export const EnvironmentDashboard = (props: EnvironmentDashboardProps) => {
     return Object.entries(groupedData).map(([key, { sum, count }]) => ({
       land_id: props.land_id,
       date: key,
-      [typeData]: count > 0 ? sum / count : 0, // Tính trung bình
+      [typeData]: count > 0 ? sum / count : 0, 
     }));
   };
 

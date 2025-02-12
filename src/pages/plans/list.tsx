@@ -73,7 +73,7 @@ export const PlanList = () => {
             <Space>
               <ShowButton
                 onClick={() =>
-                  go({ to: `/plans/${record.id}/${"information"}` })
+                  go({ to: `/plans/${record.id}/information` })
                 }
               />
             </Space>

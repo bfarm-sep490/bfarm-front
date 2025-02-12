@@ -33,35 +33,41 @@ export const ShowActivities = (props: ShowActivitiesProps) => {
   return (
     <Tabs activeKey={key} onChange={handleTabChange} tabPosition="left">
       <Tabs.TabPane key="progress" tab="Tiến trình">
-        <div>
-          <Title level={3}>Tiến trình: Giai đoạn chuẩn bị</Title>
-          <Card style={{ width: "100%", backgroundColor: "transparent" }}>
-            <div
-              style={{ display: "flex", justifyContent: "center", gap: "10px" }}
-            >
-              <Button>Giai đoạn chuẩn bị</Button>
-              <Button>Giai đoạn chăm sóc</Button>
-              <Button>Giai đoạn thu hoạch</Button>
-            </div>
-            <Divider />
-          </Card>
-        </div>
+        {key === "progress" && (
+          <div style={{ width: "100%" }}>
+            <Title level={3}>Tiến trình: Giai đoạn chuẩn bị</Title>
+            <Card style={{ width: "100%", backgroundColor: "transparent" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+                }}
+              >
+                <Button>Giai đoạn chuẩn bị</Button>
+                <Button>Giai đoạn chăm sóc</Button>
+                <Button>Giai đoạn thu hoạch</Button>
+              </div>
+              <Divider />
+            </Card>
+          </div>
+        )}
       </Tabs.TabPane>
 
       <Tabs.TabPane key="progress/productive-tasks" tab="Báo cáo chăm sóc">
-        <ProductiveTaskListTable />
+        {key === "progress/productive-tasks" && <ProductiveTaskListTable />}
       </Tabs.TabPane>
 
       <Tabs.TabPane key="progress/inspecting-tasks" tab="Báo cáo kiểm định">
-        <InspectingTaskListTable />
+        {key === "progress/inspecting-tasks" && <InspectingTaskListTable />}
       </Tabs.TabPane>
 
       <Tabs.TabPane key="progress/harvesting-tasks" tab="Báo cáo thu hoạch">
-        <HarvestingTaskListTable />
+        {key === "progress/harvesting-tasks" && <HarvestingTaskListTable />}
       </Tabs.TabPane>
 
       <Tabs.TabPane key="progress/packaging-tasks" tab="Báo cáo đóng gói">
-        <PackagingTaskListTable />
+        {key === "progress/packaging-tasks" && <PackagingTaskListTable />}
       </Tabs.TabPane>
     </Tabs>
   );

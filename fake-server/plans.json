@@ -14,6 +14,45 @@
         "min_moisture" : 60,
         "max_moisture" : 80
     },
+    "items": [{
+        "id" : 1,
+        "name": "Xẻng",
+        "type" : "Vật tư",
+        "quantity": 1,
+        "unit": "cây"
+    }],
+    "fertilizers" : [
+        {
+            "id" : 1,
+            "name": "Phân bón loại 1",
+            "type" : "Phân bón",
+            "quantity": 100,
+            "unit": "kg"
+        }
+    ],
+    "pesticides" : [
+        {
+            "id" : 1,
+            "name": "Thuốc trừ sâu loại 1",
+            "type" : "Thuốc trừ sâu",
+            "quantity": 100,
+            "unit": "kg"
+        }
+    ],
+    "farmers": [{
+        "id": 1,
+        "name": "Nguyễn Văn A",
+        "number_tasks": 22, 
+        "done_tasks": 10,
+        "status" :"on-going"
+    }],
+    "experts": [{
+        "id": 1,
+        "name": "Nguyễn Văn A",
+        "number_tasks": 22, 
+        "done_tasks": 10,
+        "status" :"on-going"
+    }],
     "lands": [{
         "id" : 1,
         "name": "Khu đất 1",
@@ -35,6 +74,7 @@
             "status": "on-going"
         }]
     },
+   
     {   
         "devices" : [],
         "id" : 2,

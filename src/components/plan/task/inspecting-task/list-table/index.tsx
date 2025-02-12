@@ -91,6 +91,7 @@ export const InspectingTaskListTable: React.FC = () => {
   return (
     <>
       <Table
+        style={{ width: "100%", height: "100%" }}
         {...tableProps}
         rowKey="id"
         scroll={{ x: true }}

@@ -191,7 +191,7 @@ const App: React.FC = () => {
                 name: "plans",
                 list: "/plans",
                 create: "/plans/create",
-                show: "/plans/:id",
+                show: "/plans/:id?/*",
                 meta: {
                   label: "Plans",
                   icon: <CalendarOutlined />,
@@ -274,9 +274,9 @@ const App: React.FC = () => {
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
-                <Route path="/plans">
+                <Route path="/plans" >
                   <Route index element={<PlanList />} />
-                  <Route path=":id?/:tab?/:sub?" element={<PlanShow />} />
+                  <Route path=":id/*" element={<PlanShow />} />
                 </Route>
               </Route>
 

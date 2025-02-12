@@ -30,7 +30,7 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
 import { IProductiveTask } from "../../../../../interfaces";
 import { PaginationTotal } from "../../../../paginationTotal";
-import { PackagingTaskDrawerShow } from "../drawer-show"; 
+import { PackagingTaskDrawerShow } from "../drawer-show";
 import { useState } from "react";
 
 export const PackagingTaskListTable: React.FC = () => {

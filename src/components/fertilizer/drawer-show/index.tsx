@@ -118,7 +118,9 @@ export const FertilizerDrawerShow = (props: Props) => {
               value: fertilizer?.type && <FertilizerTypeTag type={fertilizer.type} />,
             },
             {
-              label: <Typography.Text type="secondary">Available Quantity</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">Available Quantity</Typography.Text>
+              ),
               value: (
                 <Typography.Text>
                   {fertilizer?.available_quantity} {fertilizer?.unit}

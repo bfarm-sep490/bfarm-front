@@ -73,6 +73,7 @@ import { InspectorCreate } from "./pages/inspectors/create";
 import { InspectorShow } from "./pages/inspectors/show";
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { SeedCreate, SeedEdit, SeedsList, SeedsShow } from "./pages/seed";
+import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-managements";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -166,6 +167,17 @@ const App: React.FC = () => {
                 meta: {
                   label: "Inspection",
                   icon: <SearchOutlined />,
+                },
+              },
+              {
+                name: "yield",
+                list: "/yield",
+                create: "/yield/create",
+                edit: "/yield/edit/:id",
+                show: "/yield/show/:id",
+                meta: {
+                  label: "Yield Management",
+                  icon: <EnvironmentOutlined />,
                 },
               },
               {
@@ -412,6 +424,11 @@ const App: React.FC = () => {
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
                 </Route>
 
+                <Route path="/yield/*" element={<YieldsList />}>
+                  <Route path="create" element={<YieldCreate />} />
+                  <Route path="edit/:id" element={<YieldEdit />} />
+                  <Route path="show/:id" element={<YieldsShow />} />
+                </Route>
                 <Route
                   path="/fertilizers"
                   element={

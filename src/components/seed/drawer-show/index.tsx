@@ -60,9 +60,6 @@ export const SeedDrawerShow = (props: Props) => {
     resource: "seed",
     id: props?.id,
   });
-  if (queryResult?.error) {
-    console.error("Error fetching seed:", queryResult?.error);
-  }
 
   const seed = queryResult.data?.data;
 
@@ -190,7 +187,7 @@ export const SeedDrawerShow = (props: Props) => {
             }
             return go({
               to: `${editUrl("seed", seed?.id?.toString() || "")}`,
-              query: { to: "/seed" },
+              query: { to: "/seeds" },
               options: { keepQuery: true },
               type: "replace",
             });

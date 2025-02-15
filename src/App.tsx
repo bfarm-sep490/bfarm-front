@@ -184,7 +184,7 @@ const App: React.FC = () => {
                 meta: { parent: "material", canDelete: true },
               },
               {
-                name: "items",
+                name: "item",
                 list: "/items",
                 create: "/items/new",
                 edit: "/items/edit/:id",
@@ -193,10 +193,10 @@ const App: React.FC = () => {
               },
               {
                 name: "seed",
-                list: "/seed",
-                create: "/seed/new",
-                edit: "/seed/edit/:id",
-                show: "/seed/:id",
+                list: "/seeds",
+                create: "/seeds/new",
+                edit: "/seeds/edit/:id",
+                show: "/seeds/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -464,7 +464,7 @@ const App: React.FC = () => {
 
 
                 <Route
-                  path="/seed"
+                  path="/seeds"
                   element={
                     <SeedsList>
                       <Outlet />
@@ -472,11 +472,10 @@ const App: React.FC = () => {
                   }
                 >
                   <Route path="new" element={<SeedCreate />} />
-                  <Route path=":id" element={<SeedsShow />} />  
+                  <Route path=":id" element={<SeedsShow />} />
                   <Route path="edit/:id" element={<SeedEdit />} />
                 </Route>
               </Route>
-
 
               <Route
                 element={

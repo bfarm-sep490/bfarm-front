@@ -6,15 +6,7 @@ import {
   useTranslate,
 } from "@refinedev/core";
 
-import {
-  Card,
-  Divider,
-  Flex,
-  List,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -41,11 +33,16 @@ export const SeedListCard = () => {
   // Hàm lấy màu sắc tương ứng với GT Test Kit
   const getGTTestKitColor = (color: string | null | undefined) => {
     switch (color) {
-      case "Blue": return "blue";
-      case "Yellow": return "gold";
-      case "Red": return "red";
-      case "Orange": return "orange";
-      default: return "default";
+      case "Blue":
+        return "blue";
+      case "Yellow":
+        return "gold";
+      case "Red":
+        return "red";
+      case "Orange":
+        return "orange";
+      default:
+        return "default";
     }
   };
 
@@ -90,13 +87,13 @@ export const SeedListCard = () => {
                     return;
                   }
 
-                  const targetUrl = `/seed/${SeedID}`;
+                  const targetUrl = `/seeds/${SeedID}`;
                   console.log("Navigating to:", targetUrl);
 
                   go({
                     to: targetUrl,
                     options: { keepQuery: true },
-                    type: "replace", 
+                    type: "replace",
                   });
                 }}
                 className={cx(styles.viewButton, "viewButton")}
@@ -129,7 +126,11 @@ export const SeedListCard = () => {
                 {item.Description || "-"}
               </Typography.Paragraph>
 
-              <Flex justify="space-between" align="center" style={{ marginBottom: 8 }}>
+              <Flex
+                justify="space-between"
+                align="center"
+                style={{ marginBottom: 8 }}
+              >
                 <Typography.Text type="secondary">
                   Availability:
                 </Typography.Text>

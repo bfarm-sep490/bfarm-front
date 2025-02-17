@@ -60,6 +60,7 @@ import {
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { SeedCreate, SeedEdit, SeedsList, SeedsShow } from "./pages/seed";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-managements";
+import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from "./pages/pesticides";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -167,6 +168,14 @@ const App: React.FC = () => {
                 create: "/fertilizer/new",
                 edit: "/fertilizer/edit/:id",
                 show: "/fertilizer/:id",
+                meta: { parent: "material", canDelete: true },
+              },
+              {
+                name: "pesticide",
+                list: "/pesticide",
+                create: "/pesticide/new",
+                edit: "/pesticide/edit/:id",
+                show: "/pesticide/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -331,7 +340,18 @@ const App: React.FC = () => {
                   <Route path="edit/:id" element={<FertilizersEdit />} />
                 </Route>
 
-
+                <Route
+                  path="/pesticide"
+                  element={
+                    <PesticidesList>
+                      <Outlet />
+                    </PesticidesList>
+                  }
+                >
+                  <Route path="new" element={<PesticidesCreate />} />
+                  <Route path=":id" element={<PesticideShow />} />
+                  <Route path="edit/:id" element={<PesticidesEdit />} />
+                </Route>
 
                 <Route
                   path="/items"

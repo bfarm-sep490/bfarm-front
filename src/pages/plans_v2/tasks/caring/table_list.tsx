@@ -9,10 +9,12 @@ import {
   TagField,
   EmailField,
   DateField,
+  Title,
 } from "@refinedev/antd";
 import { Table, Space, Radio, Button, Breadcrumb } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Typography } from "antd/lib";
 
 type TypeProps = {
   type: "productive" | "harvesting" | "inspecting";

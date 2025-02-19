@@ -124,7 +124,11 @@ export const ProblemShow = () => {
 
         <Divider />
         <Image.PreviewGroup items={task?.imageUrls || []}>
-          <Image style={{ borderRadius: "10px" }} src={task?.imageUrls[0]} />
+          <Image
+            loading="lazy"
+            style={{ borderRadius: "10px" }}
+            src={task?.imageUrls[0]}
+          />
         </Image.PreviewGroup>
         <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
         <List

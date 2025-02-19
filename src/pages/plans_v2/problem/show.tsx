@@ -11,7 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Flex } from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ProblemList } from "./table_list";
@@ -38,6 +38,9 @@ export const ShowProblemList = ({ children }: PropsWithChildren) => {
             Plans
           </Button>
         </Flex>
+        <Typography.Title level={3}>
+          Danh sách vấn đề của kế hoạch #{id}
+        </Typography.Title>
         <ProblemList children={children} />
       </div>
     </>

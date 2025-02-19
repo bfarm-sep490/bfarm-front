@@ -29,6 +29,9 @@ import {
   CaretUpOutlined,
   CaretDownOutlined,
   ArrowLeftOutlined,
+  FieldTimeOutlined,
+  GoldOutlined,
+  GroupOutlined,
 } from "@ant-design/icons";
 import { DateField, Show, ShowButton, TextField } from "@refinedev/antd";
 import { useShow } from "@refinedev/core";
@@ -37,12 +40,16 @@ import React from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { PlanObservation } from "../../components/plan/plan-obervation";
 
 export const PlanShowV2 = () => {
   const { id } = useParams();
   const { query: queryResult } = useShow({
     resource: "plans",
     id: id,
+    queryOptions: {
+      cacheTime: 60000,
+    },
   });
   const [icon, setIcon] = React.useState(true);
   const [icon1, setIcon11] = React.useState(true);
@@ -102,9 +109,9 @@ export const PlanShowV2 = () => {
         opacity: 1,
       },
       legend: {
-        position: "right",
+        position: "bottom",
         offsetX: 0,
-        offsetY: 50,
+        offsetY: 0,
       },
     },
   });
@@ -267,6 +274,10 @@ export const PlanShowV2 = () => {
   const handle1 = (data: any) => {
     setIcon11(data);
   };
+  const [icon4, setIcon4] = React.useState(true);
+  const handle4 = (data: any) => {
+    setIcon4(data);
+  };
   const breakpoint = Grid.useBreakpoint();
   return (
     <div>
@@ -287,6 +298,7 @@ export const PlanShowV2 = () => {
             align="center"
           >
             <Image
+              loading="lazy"
               style={{
                 borderRadius: 10,
                 width: breakpoint.md ? "300px" : "100%",
@@ -326,14 +338,14 @@ export const PlanShowV2 = () => {
               </Space>
 
               <Space align="start" style={{ marginTop: 12 }}>
-                <UserOutlined style={{ fontSize: 16 }} />
+                <GoldOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Tổng diện tích:</Typography.Text>
                 <Typography.Text>
                   {data?.lands?.length || "Không có"}
                 </Typography.Text>
               </Space>
               <Space align="start" style={{ marginTop: 12 }}>
-                <UserOutlined style={{ fontSize: 16 }} />
+                <GroupOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
                 <Typography.Text>
                   {data?.expected_yield || "Không có"}
@@ -341,10 +353,12 @@ export const PlanShowV2 = () => {
               </Space>
 
               <Space align="start" style={{ marginTop: 12 }}>
-                <UserOutlined style={{ fontSize: 16 }} />
+                <FieldTimeOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Trạng thái:</Typography.Text>
-                <Tag color={data?.status === "on-going" ? "red" : "green"}>
-                  {data?.status || "Không hoạt động"}
+                <Tag color={data?.status === "on-going" ? "blue" : "default"}>
+                  {(data?.status &&
+                    (data?.status === "on-going" ? "Đang tiến hành" : null)) ||
+                    "Không hoạt động"}
                 </Tag>
               </Space>
               <Space align="start" style={{ marginTop: 12 }}>
@@ -361,12 +375,12 @@ export const PlanShowV2 = () => {
           </Flex>
         </Card>
         <Divider />
-        <Flex>
-          <Typography.Title level={3}>👨‍🌾 Tổng quan</Typography.Title>
+        <Flex justify={"space-between"} style={{ fontSize: "40px" }}>
+          <Typography.Title level={3}>🔍 Tổng quan</Typography.Title>
           {icon ? (
-            <CaretDownOutlined onClick={() => handle(false)} />
+            <CaretUpOutlined onClick={() => handle(false)} />
           ) : (
-            <CaretUpOutlined onClick={() => handle(true)} />
+            <CaretDownOutlined onClick={() => handle(true)} />
           )}
         </Flex>
         <div style={{ display: icon ? "block" : "none" }}>
@@ -452,12 +466,39 @@ export const PlanShowV2 = () => {
           </Row>
         </div>
         <Divider />
-        <Flex>
-          <Typography.Title level={3}>👨‍🌾 Công việc</Typography.Title>
-          {icon1 ? (
-            <CaretDownOutlined onClick={() => handle1(false)} />
+        {/* <Flex
+          justify={breakpoint.md ? "space-between" : "start"}
+          gap={breakpoint.md ? 0 : 16}
+        >
+          <Typography.Title level={3}>👁️ Theo dõi môi trường</Typography.Title>
+          {icon4 ? (
+            <CaretUpOutlined
+              style={{ fontSize: "50px" }}
+              onClick={() => handle4(false)}
+            />
           ) : (
-            <CaretUpOutlined onClick={() => handle1(true)} />
+            <CaretDownOutlined
+              style={{ fontSize: "50px" }}
+              onClick={() => handle4(true)}
+            />
+          )}
+        </Flex>
+        <div style={{ display: icon4 ? "block" : "none" }}>
+          <PlanObservation />
+        </div>
+        <Divider /> */}
+        <Flex justify={"space-between"}>
+          <Typography.Title level={3}>🛠 Công việc</Typography.Title>
+          {icon1 ? (
+            <CaretUpOutlined
+              onClick={() => handle1(false)}
+              style={{ fontSize: "40px" }}
+            />
+          ) : (
+            <CaretDownOutlined
+              onClick={() => handle1(true)}
+              style={{ fontSize: "40px" }}
+            />
           )}
         </Flex>
         <div style={{ display: icon1 ? "block" : "none" }}>

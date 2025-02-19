@@ -143,7 +143,11 @@ export const ProductiveTaskShow = () => {
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>
-                <Image style={{ borderRadius: "10px" }} src={task?.images[0]} />
+                <Image
+                  loading="lazy"
+                  style={{ borderRadius: "10px" }}
+                  src={task?.images[0]}
+                />
               </Image.PreviewGroup>
             )}
             <List

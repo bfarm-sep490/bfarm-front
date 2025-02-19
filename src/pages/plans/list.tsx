@@ -6,6 +6,7 @@ import {
   ShowButton,
   TagField,
   DateField,
+  EditButton,
 } from "@refinedev/antd";
 import { Table, Space } from "antd";
 
@@ -71,11 +72,7 @@ export const PlanList = () => {
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <ShowButton
-                onClick={() =>
-                  go({ to: `/plans/${record.id}/information` })
-                }
-              />
+              <ShowButton hideText size="small" recordItemId={record.id} />
             </Space>
           )}
         />

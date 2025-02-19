@@ -52,6 +52,13 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
 import { PlanList, PlanShow } from "./pages/plans";
+import { PlanShowV2 } from "./pages/plans_v2/show";
+import { TaskList } from "./pages/plans_v2/tasks/caring/table_list";
+import { ProblemList, ShowProblemList } from "./pages/plans_v2/problem/show";
+import { HarvestedTaskList } from "./pages/plans_v2/tasks/harvesting/table_list";
+import { ShowTasksList } from "./pages/plans_v2/tasks/show";
+import { ProductiveTaskShow } from "./pages/plans_v2/tasks/caring/show";
+import { ProblemShow } from "./pages/plans_v2/problem/show-detail";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -67,7 +74,7 @@ const customTitleHandler = ({ resource }: TitleHandlerOptions): string => {
 
 const App: React.FC = () => {
   // This hook is used to automatically login the user.
-  const { loading } = useAutoLoginForDemo();
+  // const { loading } = useAutoLoginForDemo();
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
@@ -84,9 +91,9 @@ const App: React.FC = () => {
     getLocale: () => i18n.language,
   };
 
-  if (loading) {
-    return null;
-  }
+  // if (loading) {
+  //   return null;
+  // }
 
   return (
     <BrowserRouter>
@@ -191,10 +198,11 @@ const App: React.FC = () => {
                 name: "plans",
                 list: "/plans",
                 create: "/plans/create",
-                show: "/plans/:id?/*",
+                show: "/plans/:id",
                 meta: {
                   label: "Plans",
                   icon: <CalendarOutlined />,
+                  route: "/plans",
                 },
               },
               {
@@ -257,6 +265,40 @@ const App: React.FC = () => {
                 }
               >
                 <Route index element={<DashboardPage />} />
+                <Route path="/plans">
+                  <Route index element={<PlanList />} />
+                  <Route path=":id">
+                    <Route index element={<PlanShowV2 />} />
+                    <Route
+                      path="problems"
+                      element={
+                        <ShowProblemList>
+                          <Outlet />
+                        </ShowProblemList>
+                      }
+                    >
+                      <Route path=":problemId" element={<ProblemShow />} />
+                    </Route>
+                    <Route
+                      path="productive-tasks"
+                      element={
+                        <ShowTasksList>
+                          <Outlet />
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<ProductiveTaskShow />} />
+                    </Route>
+                    <Route
+                      path="harvesting-tasks"
+                      element={<ShowTasksList />}
+                    />
+                    <Route
+                      path="inspecting-tasks"
+                      element={<ShowTasksList />}
+                    />
+                  </Route>
+                </Route>
 
                 <Route
                   path="/customers"
@@ -273,10 +315,6 @@ const App: React.FC = () => {
                   <Route path="show/:id" element={<FarmerManagementShow />} />
                   <Route path="new" element={<FarmerManagementCreate />} />
                   <Route path=":id/edit" element={<FarmerManagementEdit />} />
-                </Route>
-                <Route path="/plans" >
-                  <Route index element={<PlanList />} />
-                  <Route path=":id/*" element={<PlanShow />} />
                 </Route>
               </Route>
 

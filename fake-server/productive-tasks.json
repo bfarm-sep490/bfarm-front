@@ -1,0 +1,105 @@
+[
+    {
+        "id": 1,
+        "plan_id": 1, 
+        "land_id": 1, 
+        "problem_id": null,
+        "name": "Tưới nước", 
+        "description": "Tưới 2 lần cách nhau 20p, mỗi lần tới 10m3 nước",
+        "type": "watering",
+        "start_date": "2021-06-01T06:00:00Z",
+        "end_date": "2021-06-01T08:00:00Z",
+        "status": "pending",
+        "created_at": "2021-06-01T06:00:00Z",
+        "updated_at": "2021-06-01T06:00:00Z",
+        "priority": 2,
+        "farmer_id":1,
+        "completed_at":"2021-06-01T06:00:00Z",
+        "result_content": "Đã hoàn thành",
+        "images": ["https://img.lovepik.com/photo/50050/0106.jpg_wh860.jpg", "https://img.lovepik.com/photo/50050/0106.jpg_wh860.jpg"],
+        "items": [],
+        "fertilizers":[],
+        "pesticides":[]
+    },
+    {
+        "id": 2,
+        "plan_id": 1, 
+        "land_id": 1, 
+        "problem_id": null,
+        "name": "Gieo hạt", 
+        "description": "Gieo mỗi 1000m2 10kg hạt",
+        "type": "planting",
+        "start_date": "2021-06-01T06:00:00Z",
+        "end_date": "2021-06-01T08:00:00Z",
+        "status": "pending",
+        "created_at": "2021-06-01T06:00:00Z",
+        "updated_at": "2021-06-01T06:00:00Z",
+        "priority": 1,
+        "farmer_id":1,
+        "completed_at":null,
+        "result_content": null,
+        "images": [],
+        "items": [],
+        "fertilizers":[],
+        "pesticides":[]
+    },
+    {
+        "id": 3,
+        "plan_id": 1, 
+        "land_id": 1, 
+        "problem_id": null,
+        "name": "Bón phân", 
+        "description": "Gieo mỗi 1000m2 10kg hạt",
+        "type": "fertilizing",
+        "start_date": "2021-06-01T06:00:00Z",
+        "end_date": "2021-06-01T08:00:00Z",
+        "status": "pending",
+        "created_at": "2021-06-01T06:00:00Z",
+        "updated_at": "2021-06-01T06:00:00Z",
+        "priority": 3,
+        "farmer_id":1,
+        "completed_at":null,
+        "result_content": null,
+        "images": [],
+        "items": [],
+        "fertilizers":[
+            {
+                "id": 1,
+                "name": "Phân bón NPK",
+                "quantity": 10,
+                "unit": "kg"
+            }
+        ],
+        "pesticides":[]
+    },
+    {
+        "id": 4,
+        "plan_id": 1, 
+        "land_id": 1, 
+        "problem_id": null,
+        "name": "Phun thuốc", 
+        "description": "Phun 100 ml thuốc trừ sâu loại 1",
+        "type": "pestcontrol",
+        "start_date": "2021-06-01T06:00:00Z",
+        "end_date": "2021-06-01T08:00:00Z",
+        "status": "pending",
+        "created_at": "2021-06-01T06:00:00Z",
+        "updated_at": "2021-06-01T06:00:00Z",
+        "priority": 3,
+        "farmer_id":1,
+        "completed_at":null,
+        "result_content": null,
+        "images": [],
+        "items": [],
+        "fertilizers":[
+        ],
+        "pesticides":[
+            {
+                "id": 1,
+                "name": "Thuốc trừ sâu loại 1",
+                "quantity": 100,
+                "unit": "ml"
+            }
+        ]
+    }
+]

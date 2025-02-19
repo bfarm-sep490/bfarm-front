@@ -272,5 +272,282 @@
         }
 
     ]
+  },
+
+  { 
+    "id": 3,
+    "name": "Mùa vụ cà chua mùa đông 2",
+    "seed": {
+        "name": "Hạt giống cà chua",
+        "description": "Hạt giống cà chua mùa đông",
+        "min_humidity" : 60,
+        "max humidity" : 80,
+        "min_temperature" : 20,
+        "max_temperature" : 30,
+        "min_light" : 6,
+        "max_light" : 8,
+        "min_moisture" : 60,
+        "max_moisture" : 80
+    },
+    "items": [{
+        "id" : 1,
+        "name": "Xẻng",
+        "type" : "Vật tư",
+        "quantity": 1,
+        "unit": "cây"
+    }],
+    "fertilizers" : [
+        {
+            "id" : 1,
+            "name": "Phân bón loại 1",
+            "type" : "Phân bón",
+            "quantity": 100,
+            "unit": "kg"
+        }
+    ],
+    "pesticides" : [
+        {
+            "id" : 1,
+            "name": "Thuốc trừ sâu loại 1",
+            "type" : "Thuốc trừ sâu",
+            "quantity": 100,
+            "unit": "kg"
+        }
+    ],
+    "farmers": [{
+        "id": 1,
+        "name": "Nguyễn Văn A",
+        "number_tasks": 22, 
+        "done_tasks": 10,
+        "status" :"on-going"
+    }],
+    "experts": [{
+        "id": 1,
+        "name": "Nguyễn Văn A",
+        "number_tasks": 22, 
+        "done_tasks": 10,
+        "status" :"on-going"
+    }],
+    "lands": [{
+        "id" : 1,
+        "name": "Khu đất 1",
+        "area": 10000,
+        "unit": "m2",
+        "status" : "on-going",
+        "devices" : [{
+            "id": 1,
+            "code": "AD889",
+            "name": "Máy đo loại 1-AD889",
+            "description": "Máy đo nhiệt ẩm không khí, đất",
+            "status": "on-going"
+        },
+        {
+            "id": 2,
+            "code": "AD888",
+            "name": "Máy đo loại 1-AD888",
+            "description": "Máy phun thuốc tự động",
+            "status": "on-going"
+        }]
+    },
+   
+    {   
+        "devices" : [],
+        "id" : 2,
+        "name": "Khu đất 2",
+        "area": 20000,
+        "unit": "m2",
+        "status" : "on-going"
+    }],
+    "start_date": "2024-01-01",
+    "end_date": null,
+    "status": "pending",
+    "employees": [{
+        "id": 1,
+        "name": "Nguyễn Văn A",
+        "role": "Kiểm định"
+    }
+        ,
+    {
+        "id": 2,
+        "name": "Nguyễn Văn B",
+        "role": "Nông dân"
+    }],
+    "created_at": "2024-12-01",
+    "updated_at": "2024-12-01",
+    "tasks" : [
+    {
+        "id" : 1,
+        "priority": 1,
+        "land_id": 1,
+        "employee_id": 2,
+        "name" : "Tưới nước",
+        "description" : "Tưới nước hàng ngày",
+        "status" : "on-going"
+    },
+    {
+        "id" : 2,
+        "priority": 2,
+        "employee_id": 2,
+        "land_id": 1,
+        "name" : "Tưới nước",
+        "description" : "Tưới nước hàng ngày",
+        "status" : "on-going"
+    }
+    ,
+    {
+        "id" : 3,
+        "name" : "Tưới nước",
+        "priority": 3,
+        "employee_id": 2,
+        "land_id": 1,
+        "description" : "Tưới nước hàng ngày",
+        "status" : "on-going"
+    },
+    {
+        "id" : 4,
+        "priority": 4,
+        "employee_id": 2,
+        "land_id": 1,
+        "name" : "Tưới nước",
+        "description" : "Tưới nước hàng ngày",
+        "status" : "on-going"
+    },
+    {
+        "id" : 5,
+        "priority": 1,
+        "employee_id": 2,
+        "land_id": 2,
+        "name" : "Tưới nước",
+        "description" : "Tưới nước hàng ngày",
+        "status" : "on-going"
+    },
+    {
+        "id" : 6,
+        "priority": 3,
+        "employee_id": 2,
+        "land_id": 2,
+        "name" : "Phun thuốc",
+        "description" : "Phun thuốc hàng tuần",
+        "status" : "on-going"
+    },
+    {
+        "id" : 7,
+        "priority": 4,
+        "employee_id": 2,
+        "land_id": 2,
+        "name" : "Phun thuốc",
+        "description" : "Phun thuốc hàng tuần",
+        "status" : "on-going"
+    }],
+    "environment_data" : [
+        {
+            "date" : "2024-01-01",
+            "air_temp_value" : 25,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-02",
+            "air_temp_value" : 26,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-03",
+            "air_temp_value" : 25,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-04",
+            "air_temp_value" : 27,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-05",
+            "air_temp_value" : 28,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-06",
+            "air_temp_value" : 22,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-07",
+            "air_temp_value" : 21,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-08",
+            "air_temp_value" : 20,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-09",
+            "air_temp_value" : 29,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-10",
+            "air_temp_value" : 30,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-11",
+            "air_temp_value" : 31,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-12",
+            "air_temp_value" : 33,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-13",
+            "air_temp_value" : 34,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        },
+        {
+            "date" : "2024-01-14",
+            "air_temp_value" : 32,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 2
+        },
+        {
+            "date" : "2024-01-15",
+            "air_temp_value" : 31,
+            "air_humidity_value" : 70,
+            "soil_temp_value" : 25,
+            "land_id" : 1
+        }
+
+    ]
   }
+
+
 ]

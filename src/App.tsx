@@ -75,6 +75,7 @@ import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { SeedCreate, SeedEdit, SeedsList, SeedsShow } from "./pages/seed";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-managements";
 import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from "./pages/pesticides";
+import Logout from "./pages/auth/Logout";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -321,7 +322,7 @@ const App: React.FC = () => {
                 element={
                   <Authenticated
                     key="authenticated-routes"
-                    fallback={<CatchAllNavigate to="/login" />}
+                    fallback={<CatchAllNavigate to="dashboard" />}
                   >
                     <ThemedLayoutV2
                       Sider={() => <ThemedSiderV2 Title={Title} fixed />}
@@ -517,8 +518,9 @@ const App: React.FC = () => {
                       type="login"
                       formProps={{
                         initialValues: {
-                          email: "demo@bfarm.dev",
-                          password: "demodemo",
+                          email: "FarmOwner@gmail.com",
+                          password: "",
+                          
                         },
                       }}
                     />

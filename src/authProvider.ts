@@ -1,98 +1,98 @@
 import type { AuthProvider } from "@refinedev/core";
 import { notification } from "antd";
-import { disableAutoLogin, enableAutoLogin } from "./hooks";
-
-export const TOKEN_KEY = "bfarm-auth";
+import { loginUser, logoutUser } from "@/services/authService";
 
 export const authProvider: AuthProvider = {
-  login: async ({ email, password }) => {
-    enableAutoLogin();
-    localStorage.setItem(TOKEN_KEY, `${email}-${password}`);
-    return {
-      success: true,
-      redirectTo: "/",
-    };
-  },
-  register: async ({ email, password }) => {
+  login: async ({ email, password }: { email: string; password: string }) => {
     try {
-      await authProvider.login({ email, password });
-      return {
-        success: true,
-      };
-    } catch (error) {
+      const response = await loginUser(email, password);
+      
+      if (response.data.accessToken) {
+        // Lưu token và role
+        localStorage.setItem("token", response.data.accessToken);
+        localStorage.setItem("role", response.data.role || "");
+        
+        return {
+          success: true,
+          redirectTo: "/",
+        };
+      }
+
       return {
         success: false,
         error: {
-          message: "Register failed",
-          name: "Invalid email or password",
+          name: "Login Error",
+          message: "Invalid credentials",
+        },
+      };
+    } catch (error: any) {
+      notification.error({
+        message: "Login Failed",
+        description: error.message || "Invalid credentials",
+      });
+      
+      return {
+        success: false,
+        error: {
+          name: "Login Error",
+          message: error.message || "Invalid credentials",
         },
       };
     }
   },
-  updatePassword: async () => {
-    notification.success({
-      message: "Updated Password",
-      description: "Password updated successfully",
-    });
-    return {
-      success: true,
-    };
-  },
-  forgotPassword: async ({ email }) => {
-    notification.success({
-      message: "Reset Password",
-      description: `Reset password link sent to "${email}"`,
-    });
-    return {
-      success: true,
-    };
-  },
+
   logout: async () => {
-    disableAutoLogin();
-    localStorage.removeItem(TOKEN_KEY);
+    logoutUser();
     return {
       success: true,
       redirectTo: "/login",
     };
   },
-  onError: async (error) => {
-    if (error.response?.status === 401) {
-      return {
-        logout: true,
-      };
-    }
 
-    return { error };
-  },
   check: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
       return {
-        authenticated: true,
+        authenticated: false,
+        error: {
+          name: "Not Authenticated",
+          message: "You must be logged in",
+        },
+        logout: true,
+        redirectTo: "/login",
       };
     }
 
     return {
-      authenticated: false,
-      error: {
-        message: "Check failed",
-        name: "Token not found",
-      },
-      logout: true,
-      redirectTo: "/login",
+      authenticated: true,
     };
   },
-  getPermissions: async () => null,
+
+  getPermissions: async () => {
+    const role = localStorage.getItem("role");
+    if (!role) return null;
+    return role;
+  },
+
   getIdentity: async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) {
-      return null;
-    }
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    
+    if (!token || !role) return null;
 
     return {
-      id: 1,
-      name: "Ackerman",
-      avatar: "https://i.pravatar.cc/150",
+      token,
+      role,
     };
+  },
+
+  onError: async (error: any) => {
+    console.error(error);
+    notification.error({
+      message: "Error",
+      description: error?.message || "Something went wrong",
+    });
+    return { error };
   },
 };

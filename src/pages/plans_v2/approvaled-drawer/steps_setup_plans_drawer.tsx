@@ -5,7 +5,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Area } from "@ant-design/plots";
-import { DateField } from "@refinedev/antd";
+import { DateField, TextField } from "@refinedev/antd";
 import { useBack, useShow } from "@refinedev/core";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import {
@@ -32,19 +32,53 @@ import {
   Typography,
 } from "antd";
 import { DatePickerType } from "antd/es/date-picker";
+// Removed import for Paragraph as it does not exist in "antd"
+import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { set } from "lodash";
 import { title } from "process";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 type LayoutType = Parameters<typeof Form>[0]["layout"];
+
+const getTypeTagColor = (value: string) => {
+  switch (value) {
+    case "planting":
+      return "green";
+    case "nurturing":
+      return "#550000";
+    case "watering":
+      return "blue";
+    case "fertilizing":
+      return "orange";
+    case "pestcontrol":
+      return "yellow";
+    default:
+      return "default";
+  }
+};
+const getTypeTagValue = (value: string) => {
+  switch (value) {
+    case "planting":
+      return "Gieo hạt";
+    case "nurturing":
+      return "Chăm sóc";
+    case "watering":
+      return "Tưới nước";
+    case "fertilizing":
+      return "Bón phân";
+    case "pestcontrol":
+      return "Phun thuốc";
+    default:
+      return "default";
+  }
+};
 
 export const ApprovalingPlanDrawer = () => {
   const { id } = useParams();
   const [current, setCurrent] = React.useState(0);
   const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState<LayoutType>("horizontal");
   const [gainingPlan, setGainingPlan] = useState<any>();
   const [productiveTasks, setProductiveTasks] = useState<any>([]);
   const [harvestingTasks, setHarvestingTasks] = useState<any>([]);
@@ -55,28 +89,21 @@ export const ApprovalingPlanDrawer = () => {
   const [experts, setExperts] = useState<any>([]);
   const [yields, setYields] = useState<any>([]);
   const [inspectors, setinspectors] = useState<any>([]);
-  ////////////////////////////////
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState("Content of the modal");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
-    setOpen(true);
+    setIsModalOpen(true);
   };
 
   const handleOk = () => {
-    setModalText("The modal will be closed after two seconds");
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
-    console.log("Clicked cancel button");
-    setOpen(false);
+    setIsModalOpen(false);
   };
+
   ///////////////////////////////////////////////
   const { query: queryResult } = useShow({
     resource: "plans",
@@ -133,40 +160,152 @@ export const ApprovalingPlanDrawer = () => {
     ],
   });
   useEffect(() => {
-    const farmers = gainingQuery[0].data;
-    if (farmers) {
-      setFarmers(farmers);
-    }
-    const productiveTasks = gainingQuery[1].data;
-    if (productiveTasks) {
-      setProductiveTasks(productiveTasks);
-    }
-    const harvestingTasks = gainingQuery[2].data;
-    if (harvestingTasks) {
-      setHarvestingTasks(harvestingTasks);
-    }
-    const inspectingTasks = gainingQuery[3].data;
-    if (inspectingTasks) {
-      setInspectingTasks(inspectingTasks);
-    }
-    const inspectors = gainingQuery[4].data;
-    if (inspectors) {
-      setinspectors(inspectors);
-    }
-    const plants = gainingQuery[5].data;
-    if (plants) {
-      setPlants(plants);
-    }
-    const experts = gainingQuery[6].data;
-    if (experts) {
-      setExperts(experts);
-    }
-    const yields = gainingQuery[7].data;
-    if (yields) {
-      setYields(yields);
-    }
-  }, [gainingQuery]);
-
+    console.log("Updated productiveTasks:", productiveTasks);
+  }, [productiveTasks]);
+  useEffect(() => {
+    if (gainingQuery[0].data) setFarmers(gainingQuery[0].data);
+    if (gainingQuery[1].data) setProductiveTasks(gainingQuery[1].data);
+    if (gainingQuery[2].data) setHarvestingTasks(gainingQuery[2].data);
+    if (gainingQuery[3].data) setInspectingTasks(gainingQuery[3].data);
+    if (gainingQuery[4].data) setinspectors(gainingQuery[4].data);
+    if (gainingQuery[5].data) setPlants(gainingQuery[5].data);
+    if (gainingQuery[6].data) setExperts(gainingQuery[6].data);
+    if (gainingQuery[7].data) setYields(gainingQuery[7].data);
+  }, [gainingQuery.some((query) => query.isFetched)]);
+  const column_productive_checked = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên công việc",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Thời gian bắt đầu",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Thời gian kết thúc",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Loại chăm sóc",
+      dataIndex: "type",
+      key: "type",
+      render: (text: any, record: any) => (
+        <Tag color={getTypeTagColor(record.type)} style={{ fontSize: "12px" }}>
+          {getTypeTagValue(record.type)}
+        </Tag>
+      ),
+    },
+    {
+      title: "Nông dân",
+      dataIndex: "farmer_id",
+      key: "farmer_id",
+      render: (text: any, record: any) => (
+        <TextField
+          value={
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
+              ?.name || "Chưa xác định"
+          }
+        />
+      ),
+    },
+  ];
+  const column_harvesting_checked = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên công việc",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Thời gian bắt đầu",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Thời gian kết thúc",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Nông dân",
+      dataIndex: "farmer_id",
+      key: "farmer_id",
+      render: (text: any, record: any) => (
+        <TextField
+          value={
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
+              ?.name || "Chưa xác định"
+          }
+        />
+      ),
+    },
+  ];
+  const column_inspecting_checked = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên công việc",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Thời gian bắt đầu",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Thời gian kết thúc",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+      ),
+    },
+    {
+      title: "Nhà kiểm định",
+      dataIndex: "inspector_id",
+      key: "inspector_id",
+      render: (text: any, record: any) => (
+        <TextField
+          value={
+            inspectors?.find(
+              (inspector: any) => inspector.id === record.inspector_id
+            )?.name || "Chưa xác định"
+          }
+        />
+      ),
+    },
+  ];
   const column_productive = [
     {
       title: "ID",
@@ -198,14 +337,24 @@ export const ApprovalingPlanDrawer = () => {
       title: "Loại chăm sóc",
       dataIndex: "type",
       key: "type",
+      render: (text: any, record: any) => (
+        <Tag color={getTypeTagColor(record.type)} style={{ fontSize: "12px" }}>
+          {getTypeTagValue(record.type)}
+        </Tag>
+      ),
     },
     {
       title: "Lựa chọn nông dân",
+      key: "farmer_id",
+      dataIndex: "farmer_id",
+      fixed: "left",
       render: (text: any, record: any) => (
         <Select
+          key={record.farmer_id}
+          value={record?.farmer_id}
           onChange={(value) => {
-            const newInspectingTasks = inspectingTasks.map((task: any) => {
-              if (task.id === record.id) {
+            const newProductiveTasks = productiveTasks.map((task: any) => {
+              if (record.id === task.id) {
                 return {
                   ...task,
                   farmer_id: value,
@@ -213,12 +362,15 @@ export const ApprovalingPlanDrawer = () => {
               }
               return task;
             });
-            setProductiveTasks(newInspectingTasks);
+            setProductiveTasks(newProductiveTasks);
+            console.log(productiveTasks);
           }}
-          style={{ width: "200px" }}
+          style={{ width: "150px" }}
         >
           {chosenFarmers.map((farmer: any) => (
-            <Select.Option value={farmer.id}>{farmer.name}</Select.Option>
+            <Select.Option key={farmer.id} value={farmer.id}>
+              {farmer.name}
+            </Select.Option>
           ))}
         </Select>
       ),
@@ -253,11 +405,16 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Lựa chọn nông dân",
+      fixed: "left",
+      key: "farmer_id",
+      dataIndex: "farmer_id",
       render: (text: any, record: any) => (
         <Select
+          key={record.id}
+          value={record?.farmer_id || ""}
           onChange={(value) => {
-            const newInspectingTasks = inspectingTasks.map((task: any) => {
-              if (task.id === record.id) {
+            const newHarvestingTask = harvestingTasks.map((task: any) => {
+              if (record.id === task.id) {
                 return {
                   ...task,
                   farmer_id: value,
@@ -265,12 +422,13 @@ export const ApprovalingPlanDrawer = () => {
               }
               return task;
             });
-            setHarvestingTasks(newInspectingTasks);
+            setHarvestingTasks(newHarvestingTask);
+            console.log(productiveTasks);
           }}
-          style={{ width: "200px" }}
+          style={{ width: "150px" }}
         >
           {chosenFarmers.map((chosenFarmer: any) => (
-            <Select.Option value={chosenFarmer.id}>
+            <Select.Option key={chosenFarmer.id} value={chosenFarmer.id}>
               {chosenFarmer.name}
             </Select.Option>
           ))}
@@ -307,8 +465,13 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Lựa chọn nhà kiểm định",
+      fixed: "left",
+      key: "inspector_id",
+      dataIndex: "inspector_id",
       render: (text: any, record: any) => (
         <Select
+          key={record.id}
+          value={record?.inspector_id || ""}
           onChange={(value) => {
             const newInspectingTasks = inspectingTasks.map((task: any) => {
               if (task.id === record.id) {
@@ -319,12 +482,14 @@ export const ApprovalingPlanDrawer = () => {
               }
               return task;
             });
-            setInspectingTasks(newInspectingTasks);
+            setInspectingTasks([...newInspectingTasks]);
           }}
-          style={{ width: "200px" }}
+          style={{ width: "150px" }}
         >
           {inspectors.map((inspector: any) => (
-            <Select.Option value={inspector.id}>{inspector.name}</Select.Option>
+            <Select.Option key={inspector.id} value={inspector.id}>
+              {inspector.name}
+            </Select.Option>
           ))}
         </Select>
       ),
@@ -396,6 +561,26 @@ export const ApprovalingPlanDrawer = () => {
               setChosenFarmers(
                 chosenFarmers.filter((farmer: any) => farmer.id !== record.id)
               );
+              const newProductiveTask = productiveTasks.map((task: any) => {
+                if (task.id === record.id) {
+                  return {
+                    ...task,
+                    farmer_id: null,
+                  };
+                }
+                return task;
+              });
+              setProductiveTasks(newProductiveTask);
+              const newHarvestingTask = harvestingTasks.map((task: any) => {
+                if (task.id === record.id) {
+                  return {
+                    ...task,
+                    farmer_id: null,
+                  };
+                }
+                return task;
+              });
+              setHarvestingTasks(newHarvestingTask);
             }
           }}
         ></Checkbox>
@@ -426,11 +611,12 @@ export const ApprovalingPlanDrawer = () => {
                       style={{ width: "100%" }}
                       placeholder="Chọn giống cây trồng"
                     >
-                      {plants.map((plant: any) => (
-                        <Select.Option value={plant.id}>
-                          {plant.name}
-                        </Select.Option>
-                      ))}
+                      {plants &&
+                        plants.map((plant: any) => (
+                          <Select.Option value={plant.id}>
+                            {plant.name}
+                          </Select.Option>
+                        ))}
                     </Select>
                   </Flex>
                 </Form.Item>
@@ -448,11 +634,12 @@ export const ApprovalingPlanDrawer = () => {
                       style={{ width: "100%" }}
                       placeholder="Chọn khu đất gieo trồng"
                     >
-                      {yields.map((yieldItem: any) => (
-                        <Select.Option value={yieldItem.id}>
-                          {yieldItem.name}
-                        </Select.Option>
-                      ))}
+                      {yields &&
+                        yields.map((yieldItem: any) => (
+                          <Select.Option value={yieldItem.id}>
+                            {yieldItem.name}
+                          </Select.Option>
+                        ))}
                     </Select>
                   </Flex>
                 </Form.Item>
@@ -470,11 +657,12 @@ export const ApprovalingPlanDrawer = () => {
                       style={{ width: "100%" }}
                       placeholder="Chọn chuyên gia"
                     >
-                      {experts.map((expert: any) => (
-                        <Select.Option value={expert.id}>
-                          {expert.name}
-                        </Select.Option>
-                      ))}
+                      {experts &&
+                        experts.map((expert: any) => (
+                          <Select.Option value={expert.id}>
+                            {expert.name}
+                          </Select.Option>
+                        ))}
                     </Select>
                   </Flex>
                 </Form.Item>
@@ -564,7 +752,7 @@ export const ApprovalingPlanDrawer = () => {
       content: (
         <>
           <Card
-            style={{ height: "600px" }}
+            style={{ minHeight: "600px" }}
             title="Lựa chọn nông dân"
             extra={
               <>
@@ -587,31 +775,43 @@ export const ApprovalingPlanDrawer = () => {
       title: "3",
       content: (
         <>
-          <Card title="Phân bổ công việc" style={{ height: "600px" }}>
+          <Card title="Phân bổ công việc" style={{ minHeight: "600px" }}>
             <Tabs
               defaultActiveKey={tab}
               tabPosition={"left"}
-              style={{ height: 220 }}
+              style={{ minHeight: 220 }}
             >
               <Tabs.TabPane key="1" tab="Chăm sóc">
                 <Table
-                  columns={column_productive}
+                  pagination={{
+                    pageSize: 10,
+                  }}
+                  columns={column_productive as ColumnsType<any>}
                   dataSource={productiveTasks}
                   rowKey="id"
+                  scroll={{ x: "max-content" }}
                 ></Table>
               </Tabs.TabPane>
               <Tabs.TabPane key="2" tab="Thu hoạch">
                 <Table
-                  columns={column_harvesting}
+                  pagination={{
+                    pageSize: 10,
+                  }}
+                  columns={column_harvesting as ColumnsType<any>}
                   dataSource={harvestingTasks}
                   rowKey="id"
+                  scroll={{ x: "max-content" }}
                 ></Table>
               </Tabs.TabPane>
               <Tabs.TabPane key="3" tab="Kiểm định">
                 <Table
-                  columns={column_inspecting}
+                  pagination={{
+                    pageSize: 10,
+                  }}
+                  columns={column_inspecting as ColumnsType<any>}
                   dataSource={inspectingTasks}
                   rowKey="id"
+                  scroll={{ x: "max-content" }}
                 ></Table>
               </Tabs.TabPane>
             </Tabs>
@@ -623,7 +823,7 @@ export const ApprovalingPlanDrawer = () => {
       title: "4",
       content: (
         <>
-          <Flex vertical justify="center" about="center">
+          <Flex vertical justify="center" about="center" gap={10}>
             <Card>
               <Typography.Title level={4}></Typography.Title>
 
@@ -633,40 +833,112 @@ export const ApprovalingPlanDrawer = () => {
                     <Space align="start" style={{ marginTop: 12 }}>
                       <UserOutlined style={{ fontSize: 16 }} />
                       <Typography.Text strong>Cây trồng:</Typography.Text>
-                      <Typography.Text></Typography.Text>
+
+                      <Typography.Text>
+                        {plants?.find(
+                          (plant: any) => plant.id === gainingPlan?.seed_id
+                        )?.name || "Không có dữ liệu"}
+                      </Typography.Text>
                     </Space>
 
                     <Space align="start" style={{ marginTop: 12 }}>
                       <GoldOutlined style={{ fontSize: 16 }} />
                       <Typography.Text strong>Khu đất:</Typography.Text>
-                      <Typography.Text></Typography.Text>
+                      <Typography.Text>
+                        {yields?.find(
+                          (yieldItem: any) =>
+                            yieldItem.id === gainingPlan?.land_id
+                        )?.name || "Không có dữ liệu"}
+                      </Typography.Text>
                     </Space>
                     <Space align="start" style={{ marginTop: 12 }}>
                       <FieldTimeOutlined style={{ fontSize: 16 }} />
                       <Typography.Text strong>
                         Thời gian dự kiến
                       </Typography.Text>
-                      <Typography.Text></Typography.Text>
+                      <Typography.Text>
+                        <DateField
+                          value={dayjs(gainingPlan?.start_date)}
+                          format="DD-MM-YYYY"
+                        ></DateField>{" "}
+                        -{" "}
+                        <DateField
+                          value={dayjs(gainingPlan?.end_date)}
+                          format="DD-MM-YYYY"
+                        ></DateField>
+                      </Typography.Text>
                     </Space>
                     <Space align="start" style={{ marginTop: 12 }}>
                       <GroupOutlined style={{ fontSize: 16 }} />
                       <Typography.Text strong>
                         Sản lượng dự kiến:
                       </Typography.Text>
-                      <Typography.Text></Typography.Text>
+                      <Typography.Text>
+                        {gainingPlan?.estimated_products}{" "}
+                        {gainingPlan?.estimated_unit}
+                      </Typography.Text>
                     </Space>
 
                     <Space align="start" style={{ marginTop: 12 }}>
                       <FieldTimeOutlined style={{ fontSize: 16 }} />
                       <Typography.Text strong>Chuyên gia:</Typography.Text>
-                      <Typography.Text></Typography.Text>
+                      <Typography.Text>
+                        {experts?.find(
+                          (expert: any) => expert.id === gainingPlan?.expert_id
+                        )?.name || "Không có dữ liệu"}
+                      </Typography.Text>
                     </Space>
                   </Flex>
                 </Col>
-                <Col xs={24} md={12}>
-                  <Typography.Text></Typography.Text>
+                <Col>
+                  <FieldTimeOutlined style={{ fontSize: 16 }} />
+                  <Typography.Text strong>Mô tả</Typography.Text>
+                  <Typography.Paragraph>
+                    {gainingPlan?.description}
+                  </Typography.Paragraph>
                 </Col>
               </Row>
+            </Card>
+            <Card title="Công việc đã phân bổ" style={{ minHeight: "600px" }}>
+              <Tabs
+                defaultActiveKey={tab}
+                tabPosition={"left"}
+                style={{ minHeight: 220 }}
+              >
+                <Tabs.TabPane key="1" tab="Chăm sóc">
+                  <Table
+                    pagination={{
+                      pageSize: 10,
+                    }}
+                    columns={column_productive_checked}
+                    dataSource={productiveTasks}
+                    rowKey="id"
+                    scroll={{ x: "max-content" }}
+                  ></Table>
+                </Tabs.TabPane>
+                <Tabs.TabPane key="2" tab="Thu hoạch">
+                  <Table
+                    pagination={{
+                      pageSize: 10,
+                    }}
+                    columns={column_harvesting_checked}
+                    dataSource={harvestingTasks}
+                    rowKey="id"
+                    scroll={{ x: "max-content" }}
+                  ></Table>
+                </Tabs.TabPane>
+                <Tabs.TabPane key="3" tab="Kiểm định">
+                  <Table
+                    pagination={{
+                      pageSize: 10,
+                    }}
+                    columns={column_inspecting_checked}
+                    dataSource={inspectingTasks}
+                    rowKey="id"
+                    scroll={{ x: "max-content" }}
+                  ></Table>
+                </Tabs.TabPane>
+              </Tabs>
             </Card>
           </Flex>
         </>
@@ -687,9 +959,41 @@ export const ApprovalingPlanDrawer = () => {
     color: token.colorTextTertiary,
     marginTop: 16,
   };
-
+  const [loading, setLoading] = useState(false);
+  const handleDone = async (e: any) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3001/plans/gaining_plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // <-- Xác định kiểu dữ liệu là JSON
+        },
+        body: JSON.stringify({
+          ...gainingPlan,
+          productiveTasks,
+          harvestingTasks,
+          inspectingTasks,
+        }),
+      })
+        .then((res) => res.json())
+        .finally(() => setLoading(false));
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Success:", data);
+        alert("Gaining successfully!");
+      } else {
+        console.error("Request failed with status:", response.status);
+        alert("Failed to send data! Please try again");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred!");
+    }
+  };
   return (
     <Drawer
+      loading={loading}
       open
       title={
         <>
@@ -712,22 +1016,35 @@ export const ApprovalingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}
-            {current < 4 && (
+            {current < 3 && (
               <Button type="primary" onClick={() => next()}>
                 Next
               </Button>
             )}
-            {current === 4 && <Button type="primary">Done</Button>}
+            {current === 3 && (
+              <Button type="primary" onClick={handleDone} loading={loading}>
+                Done
+              </Button>
+            )}
           </Flex>
         </>
       }
     >
       <div style={contentStyle}>{steps[current].content}</div>
-      <Modal title="Chọn nhân viên tham gia" open={open} onOk={handleOk}>
+      <Modal
+        title="Chọn nông dân"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
         <Table dataSource={farmers} columns={farm_modals_columns}></Table>
       </Modal>
     </Drawer>

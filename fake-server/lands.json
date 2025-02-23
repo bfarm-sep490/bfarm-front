@@ -1,5 +1,6 @@
 [
-  {
+  { 
+    "id"  : 1,
     "name": "Field A",
     "area": 20.5,
     "soilType": "Clay",
@@ -9,7 +10,9 @@
       { "crop": "Rice", "fertilizer": "Urea", "pesticide": "None" }
     ]
   },
-  {
+  { 
+        "id"  : 2,
+
     "name": "Field B",
     "area": 15.0,
     "soilType": "Sandy",

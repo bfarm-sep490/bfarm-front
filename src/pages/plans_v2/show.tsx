@@ -36,13 +36,13 @@ import {
 import { DateField, Show, ShowButton, TextField } from "@refinedev/antd";
 import { useShow } from "@refinedev/core";
 import { useNavigate, useParams } from "react-router";
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { PlanObservation } from "../../components/plan/plan-obervation";
 
-export const PlanShowV2 = () => {
+export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
   const { query: queryResult } = useShow({
     resource: "plans",
@@ -51,6 +51,7 @@ export const PlanShowV2 = () => {
       cacheTime: 60000,
     },
   });
+
   const [icon, setIcon] = React.useState(true);
   const [icon1, setIcon11] = React.useState(true);
   const navigate = useNavigate();
@@ -278,6 +279,7 @@ export const PlanShowV2 = () => {
   const handle4 = (data: any) => {
     setIcon4(data);
   };
+
   const breakpoint = Grid.useBreakpoint();
   return (
     <div>
@@ -289,7 +291,30 @@ export const PlanShowV2 = () => {
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <div>
-        <Typography.Title level={3}>📋 Thông tin kế hoạch</Typography.Title>
+        <Row gutter={[16, 16]} justify="center">
+          <Col xs={24} md={12} lg={12} xl={12}>
+            <Typography.Title level={3}>📋 Thông tin kế hoạch</Typography.Title>
+          </Col>
+          <Col xs={24} md={12} lg={12} xl={12}>
+            <Flex justify="end">
+              <Space>
+                <Button color="danger" variant="solid">
+                  Hủy bỏ
+                </Button>
+                <Button
+                  color="primary"
+                  variant="solid"
+                  onClick={() => {
+                    navigate(`/plans/${id}/approve`);
+                  }}
+                >
+                  Chấp nhận
+                </Button>
+              </Space>
+            </Flex>
+          </Col>
+        </Row>
+        <Divider />
         <Card loading={isLoading} title="Thông tin chung">
           <Flex
             gap={breakpoint.md ? 30 : 16}
@@ -668,6 +693,7 @@ export const PlanShowV2 = () => {
           </Row>
         </div>
       </div>
+      {children}
     </div>
   );
 };

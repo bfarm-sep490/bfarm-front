@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "name": "Task 1",
+        "description": "Description 1",
+        "status": "pending",
+        "inspector_id": null
+    },
+    {
+        "id": 2,
+        "name": "Task 2",
+        "description": "Description 2",
+        "status": "pending",
+        "inspector_id": null
+
+    },
+    {
+        "id": 3,
+        "name": "Task 3",
+        "description": "Description 3",
+        "status": "pending",
+        "inspector_id": null
+
+    }
+]

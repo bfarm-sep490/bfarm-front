@@ -59,6 +59,7 @@ import { HarvestedTaskList } from "./pages/plans_v2/tasks/harvesting/table_list"
 import { ShowTasksList } from "./pages/plans_v2/tasks/show";
 import { ProductiveTaskShow } from "./pages/plans_v2/tasks/caring/show";
 import { ProblemShow } from "./pages/plans_v2/problem/show-detail";
+import { ApprovalingPlanDrawer } from "./pages/plans_v2/approvaled-drawer/steps_setup_plans_drawer";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -268,7 +269,18 @@ const App: React.FC = () => {
                 <Route path="/plans">
                   <Route index element={<PlanList />} />
                   <Route path=":id">
-                    <Route index element={<PlanShowV2 />} />
+                    <Route
+                      index
+                      element={
+                        <PlanShowV2>
+                          <Outlet></Outlet>
+                        </PlanShowV2>
+                      }
+                    />
+                    <Route
+                      path="approve"
+                      element={<ApprovalingPlanDrawer />}
+                    ></Route>
                     <Route
                       path="problems"
                       element={

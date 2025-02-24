@@ -1,41 +1,52 @@
 import type { AuthProvider } from "@refinedev/core";
-import { notification } from "antd";
+import { message } from "antd";
 import { loginUser, logoutUser } from "@/services/authService";
+import * as yup from "yup";
+
+
+const loginSchema = yup.object().shape({
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
 
 export const authProvider: AuthProvider = {
   login: async ({ email, password }: { email: string; password: string }) => {
     try {
-      const response = await loginUser(email, password);
-      
-      if (response.data.accessToken) {
-        // Lưu token và role
-        localStorage.setItem("token", response.data.accessToken);
-        localStorage.setItem("role", response.data.role || "");
-        
-        return {
-          success: true,
-          redirectTo: "/",
-        };
-      }
+     
+      await loginSchema.validate({ email, password }, { abortEarly: false });
 
+
+      const response = await loginUser(email, password);
+      const { accessToken, role } = response.data;
+
+      if (!accessToken) throw new Error("No access token received from server.");
+
+   
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", role || "");
+      localStorage.setItem("loginSuccess", "true");
+
+      message.success("Login successful!");
       return {
-        success: false,
-        error: {
-          name: "Login Error",
-          message: "Invalid credentials",
-        },
+        success: true,
+        redirectTo: "/",
       };
     } catch (error: any) {
-      notification.error({
-        message: "Login Failed",
-        description: error.message || "Invalid credentials",
-      });
-      
+      let errorMessage = "Invalid credentials";
+
+ 
+      if (error.name === "ValidationError") {
+        errorMessage = error.errors.join(", ");
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      message.error(errorMessage);
       return {
         success: false,
         error: {
           name: "Login Error",
-          message: error.message || "Invalid credentials",
+          message: errorMessage,
         },
       };
     }
@@ -43,6 +54,7 @@ export const authProvider: AuthProvider = {
 
   logout: async () => {
     logoutUser();
+    message.success("Logged out successfully!");
     return {
       success: true,
       redirectTo: "/login",
@@ -51,8 +63,9 @@ export const authProvider: AuthProvider = {
 
   check: async () => {
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
+      message.error("Please log in first.");
       return {
         authenticated: false,
         error: {
@@ -70,29 +83,19 @@ export const authProvider: AuthProvider = {
   },
 
   getPermissions: async () => {
-    const role = localStorage.getItem("role");
-    if (!role) return null;
-    return role;
+    return localStorage.getItem("role") || null;
   },
 
   getIdentity: async () => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    
-    if (!token || !role) return null;
 
-    return {
-      token,
-      role,
-    };
+    return token && role ? { token, role } : null;
   },
 
   onError: async (error: any) => {
     console.error(error);
-    notification.error({
-      message: "Error",
-      description: error?.message || "Something went wrong",
-    });
+    message.error(error?.message || "Something went wrong");
     return { error };
   },
 };

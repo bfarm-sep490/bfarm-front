@@ -76,6 +76,7 @@ import { SeedCreate, SeedEdit, SeedsList, SeedsShow } from "./pages/seed";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-managements";
 import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from "./pages/pesticides";
 import Logout from "./pages/auth/Logout";
+import { InspectorCreate, InspectorsList, InspectorsShow } from "./pages/inspections";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -439,6 +440,15 @@ const App: React.FC = () => {
                   <Route path="edit/:id" element={<YieldEdit />} />
                   <Route path="show/:id" element={<YieldsShow />} />
                 </Route>
+
+         
+                  <Route path="/inspector/*" element={<InspectorsList />}>
+                    <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} />
+                    <Route path="show/:id" element={<InspectorsShow />} />
+                  </Route>
+ 
+
                 <Route
                   path="/fertilizers"
                   element={
@@ -520,7 +530,7 @@ const App: React.FC = () => {
                         initialValues: {
                           email: "",
                           password: "",
-                          
+
                         },
                       }}
                     />

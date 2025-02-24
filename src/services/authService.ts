@@ -5,6 +5,7 @@ interface LoginResponse {
   status: number;
   message: string;
   data: {
+    token: { accessToken: string; role: string; };
     accessToken: string;
     role: string;
   };

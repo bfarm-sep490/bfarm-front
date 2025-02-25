@@ -163,7 +163,9 @@ export const ApprovalingPlanDrawer = () => {
     console.log("Updated productiveTasks:", productiveTasks);
   }, [productiveTasks]);
   useEffect(() => {
-    if (gainingQuery[0].data) setFarmers(gainingQuery[0].data);
+    if (gainingQuery[0].data) {
+      setFarmers(gainingQuery[0].data);
+    }
     if (gainingQuery[1].data) setProductiveTasks(gainingQuery[1].data);
     if (gainingQuery[2].data) setHarvestingTasks(gainingQuery[2].data);
     if (gainingQuery[3].data) setInspectingTasks(gainingQuery[3].data);
@@ -188,7 +190,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -196,7 +198,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -239,7 +241,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -247,7 +249,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -280,7 +282,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -288,7 +290,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -322,7 +324,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -330,7 +332,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -351,7 +353,7 @@ export const ApprovalingPlanDrawer = () => {
       render: (text: any, record: any) => (
         <Select
           key={record.farmer_id}
-          value={record?.farmer_id}
+          value={record?.farmer_id || ""}
           onChange={(value) => {
             const newProductiveTasks = productiveTasks.map((task: any) => {
               if (record.id === task.id) {
@@ -392,7 +394,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "startDate",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -400,7 +402,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -452,7 +454,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "start_date",
       key: "start_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD-MM-YYYY" />
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -460,7 +462,7 @@ export const ApprovalingPlanDrawer = () => {
       dataIndex: "end_date",
       key: "end_date",
       render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD-MM-YYYY" />
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
       ),
     },
     {
@@ -553,7 +555,10 @@ export const ApprovalingPlanDrawer = () => {
       key: "action",
       render: (text: any, record: any) => (
         <Checkbox
-          value={record.chosen}
+          value={
+            chosenFarmers?.find((farmer: any) => farmer.id === record.id)
+              ?.chosen || false
+          }
           onChange={(e) => {
             if (e.target.checked) {
               setChosenFarmers([...chosenFarmers, { ...record, chosen: true }]);
@@ -594,156 +599,183 @@ export const ApprovalingPlanDrawer = () => {
       title: "1",
       content: (
         <>
-          <Flex justify="center" about="center">
-            <Card>
-              <Flex vertical>
-                <Form.Item label="Giống cây trồng">
-                  <Flex gap={10}>
-                    <Select
-                      value={gainingPlan?.seed_id}
-                      key={"seed_id"}
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          seed_id: value,
-                        });
-                      }}
-                      style={{ width: "100%" }}
-                      placeholder="Chọn giống cây trồng"
-                    >
-                      {plants &&
-                        plants.map((plant: any) => (
-                          <Select.Option value={plant.id}>
-                            {plant.name}
-                          </Select.Option>
-                        ))}
-                    </Select>
-                  </Flex>
-                </Form.Item>
-                <Form.Item label="Khu đất">
-                  <Flex gap={10}>
-                    <Select
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          land_id: value,
-                        });
-                      }}
-                      value={gainingPlan?.land_id}
-                      key={"land_id"}
-                      style={{ width: "100%" }}
-                      placeholder="Chọn khu đất gieo trồng"
-                    >
-                      {yields &&
-                        yields.map((yieldItem: any) => (
-                          <Select.Option value={yieldItem.id}>
-                            {yieldItem.name}
-                          </Select.Option>
-                        ))}
-                    </Select>
-                  </Flex>
-                </Form.Item>
-                <Form.Item label="Chuyên gia">
-                  <Flex gap={10}>
-                    <Select
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          expert_id: value,
-                        });
-                      }}
-                      value={gainingPlan?.expert_id}
-                      key={"expert_id"}
-                      style={{ width: "100%" }}
-                      placeholder="Chọn chuyên gia"
-                    >
-                      {experts &&
-                        experts.map((expert: any) => (
-                          <Select.Option value={expert.id}>
-                            {expert.name}
-                          </Select.Option>
-                        ))}
-                    </Select>
-                  </Flex>
-                </Form.Item>
+          <Form layout="vertical">
+            <Flex justify="center" about="center">
+              <Card
+                style={{ width: "60%" }}
+                title={
+                  <>
+                    {" "}
+                    <Typography.Title style={{ textAlign: "center" }} level={4}>
+                      Thông tin kế hoạch
+                    </Typography.Title>
+                  </>
+                }
+              >
+                <Flex vertical>
+                  <Form.Item label="Giống cây trồng">
+                    <Flex gap={10}>
+                      <Select
+                        value={gainingPlan?.seed_id}
+                        key={"seed_id"}
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            seed_id: value,
+                          });
+                        }}
+                        style={{ width: "100%" }}
+                        placeholder="Chọn giống cây trồng"
+                      >
+                        {plants &&
+                          plants.map((plant: any) => (
+                            <Select.Option value={plant.id}>
+                              {plant.name}
+                            </Select.Option>
+                          ))}
+                      </Select>
+                    </Flex>
+                  </Form.Item>
+                  <Form.Item label="Khu đất">
+                    <Flex gap={10}>
+                      <Select
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            land_id: value,
+                          });
+                        }}
+                        value={gainingPlan?.land_id}
+                        key={"land_id"}
+                        style={{ width: "100%" }}
+                        placeholder="Chọn khu đất gieo trồng"
+                      >
+                        {yields &&
+                          yields.map((yieldItem: any) => (
+                            <Select.Option value={yieldItem.id}>
+                              {yieldItem.name}
+                            </Select.Option>
+                          ))}
+                      </Select>
+                    </Flex>
+                  </Form.Item>
+                  <Form.Item label="Chuyên gia">
+                    <Flex gap={10}>
+                      <Select
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            expert_id: value,
+                          });
+                        }}
+                        value={gainingPlan?.expert_id}
+                        key={"expert_id"}
+                        style={{ width: "100%" }}
+                        placeholder="Chọn chuyên gia"
+                      >
+                        {experts &&
+                          experts.map((expert: any) => (
+                            <Select.Option value={expert.id}>
+                              {expert.name}
+                            </Select.Option>
+                          ))}
+                      </Select>
+                    </Flex>
+                  </Form.Item>
 
-                <Form.Item label="Sản lượng dự kiến">
-                  <Flex gap={10}>
-                    <Input
-                      onChange={(e) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          estimated_products: e.target.value,
-                        });
-                      }}
-                      value={gainingPlan?.estimated_products}
-                      key={"estimated_products"}
-                      placeholder="Nhập sản lượng dự kiến"
-                    />
-                    <Select
-                      value={gainingPlan?.estimated_unit}
-                      style={{ width: "100px" }}
-                      key="estimated_unit"
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          estimated_unit: value,
-                        });
-                      }}
-                    >
-                      <Select.Option value="kg">kg</Select.Option>
-                      <Select.Option value="ton">ton</Select.Option>
-                    </Select>
-                  </Flex>
-                </Form.Item>
-                <Form.Item label="Thời gian dự kiến">
-                  <Flex gap={10}>
-                    <DatePicker
-                      defaultValue={dayjs(gainingPlan?.start_date)}
-                      format="DD-MM-YYYY"
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          start_date: value.format("YYYY-MM-DD"),
-                        });
-                      }}
-                      key={"start_date"}
-                      placeholder="Ngày bắt đầu"
-                    />
-                    -
-                    <DatePicker
-                      defaultValue={dayjs(gainingPlan?.end_date)}
-                      format="DD-MM-YYYY"
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          end_date: value.format("YYYY-MM-DD"),
-                        });
-                      }}
-                      key={"end_date"}
-                      placeholder="Ngày kết thúc"
-                    />
-                  </Flex>
-                </Form.Item>
-                <Form.Item label="Mô tả">
-                  <Flex gap={10}>
-                    <Input.TextArea
-                      onChange={(value) => {
-                        setGainingPlan({
-                          ...gainingPlan,
-                          description: value.target.value,
-                        });
-                      }}
-                      value={gainingPlan?.description}
-                      rows={6}
-                      key={"description"}
-                      placeholder="Nhập sản lượng dự kiến"
-                    />
-                  </Flex>
-                </Form.Item>
-              </Flex>
-            </Card>
-          </Flex>
+                  <Form.Item
+                    label="Sản lượng dự kiến"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập sản lượng dự kiến",
+                      },
+                    ]}
+                  >
+                    <Flex gap={10}>
+                      <Input
+                        onChange={(e) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            estimated_products: e.target.value,
+                          });
+                        }}
+                        value={gainingPlan?.estimated_products}
+                        key={"estimated_products"}
+                        placeholder="Nhập sản lượng dự kiến"
+                      />
+                      <Select
+                        value={gainingPlan?.estimated_unit || "kg"}
+                        style={{ width: "100px" }}
+                        key="estimated_unit"
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            estimated_unit: value,
+                          });
+                        }}
+                      >
+                        <Select.Option value="kg">kg</Select.Option>
+                        <Select.Option value="ton">ton</Select.Option>
+                      </Select>
+                    </Flex>
+                  </Form.Item>
+                  <Form.Item label="Ngày bắt đầu dự kiến">
+                    <Flex gap={10}>
+                      <DatePicker
+                        value={dayjs(gainingPlan?.start_date)}
+                        format="DD/MM/YYYY"
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            start_date: dayjs(value).format("YYYY-MM-DD"),
+                          });
+                        }}
+                        key={"start_date"}
+                        placeholder="Ngày bắt đầu dự kiến"
+                      />
+                    </Flex>
+                  </Form.Item>
+                  <Form.Item label="Ngày kết thúc dự kiến">
+                    <Flex gap={10}>
+                      <DatePicker
+                        value={dayjs(gainingPlan?.end_date)}
+                        defaultValue={dayjs(
+                          gainingPlan?.end_date || new Date()
+                        )}
+                        format="DD/MM/YYYY"
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            end_date: value.format("YYYY-MM-DD"),
+                          });
+                        }}
+                        key={"end_date"}
+                        placeholder="Ngày kết thúc"
+                      />
+                    </Flex>
+                  </Form.Item>
+                  <Form.Item label="Mô tả">
+                    <Flex gap={10}>
+                      <Input.TextArea
+                        onChange={(value) => {
+                          setGainingPlan({
+                            ...gainingPlan,
+                            description: value.target.value,
+                          });
+                        }}
+                        required
+                        value={gainingPlan?.description}
+                        rows={6}
+                        key={"description"}
+                        placeholder="Nhập mô tả"
+                      />
+                    </Flex>
+                  </Form.Item>
+                </Flex>
+              </Card>
+            </Flex>
+          </Form>
         </>
       ),
     },
@@ -757,7 +789,7 @@ export const ApprovalingPlanDrawer = () => {
             extra={
               <>
                 <Button type="primary" color="primary" onClick={showModal}>
-                  Thêm nhân viên
+                  Thay đổi nông dân tham gia
                 </Button>
               </>
             }
@@ -824,7 +856,7 @@ export const ApprovalingPlanDrawer = () => {
       content: (
         <>
           <Flex vertical justify="center" about="center" gap={10}>
-            <Card>
+            <Card title={"Xác nhận thông tin chung kế hoạch"}>
               <Typography.Title level={4}></Typography.Title>
 
               <Row gutter={[16, 16]}>
@@ -859,12 +891,12 @@ export const ApprovalingPlanDrawer = () => {
                       <Typography.Text>
                         <DateField
                           value={dayjs(gainingPlan?.start_date)}
-                          format="DD-MM-YYYY"
+                          format="DD/MM/YYYY"
                         ></DateField>{" "}
                         -{" "}
                         <DateField
                           value={dayjs(gainingPlan?.end_date)}
-                          format="DD-MM-YYYY"
+                          format="DD/MM/YYYY"
                         ></DateField>
                       </Typography.Text>
                     </Space>
@@ -899,7 +931,10 @@ export const ApprovalingPlanDrawer = () => {
                 </Col>
               </Row>
             </Card>
-            <Card title="Công việc đã phân bổ" style={{ minHeight: "600px" }}>
+            <Card
+              title={"Xác nhận công việc đã phân công của kế hoạch"}
+              style={{ minHeight: "600px" }}
+            >
               <Tabs
                 defaultActiveKey={tab}
                 tabPosition={"left"}
@@ -991,6 +1026,42 @@ export const ApprovalingPlanDrawer = () => {
       alert("An error occurred!");
     }
   };
+  const validateAllTasks = () => {
+    for (let task of productiveTasks) {
+      if (!task.farmer_id) {
+        alert(
+          "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
+            task.name +
+            " #ID: " +
+            task.id
+        );
+        return false;
+      }
+    }
+    for (let task of harvestingTasks) {
+      if (!task.farmer_id) {
+        alert(
+          "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
+            task.name +
+            " #ID: " +
+            task.id
+        );
+        return false;
+      }
+    }
+    for (let task of inspectingTasks) {
+      if (!task.inspector_id) {
+        alert(
+          "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
+            task.name +
+            " #ID: " +
+            task.id
+        );
+        return false;
+      }
+    }
+    return true;
+  };
   return (
     <Drawer
       loading={loading}
@@ -1025,7 +1096,15 @@ export const ApprovalingPlanDrawer = () => {
               </Button>
             )}
             {current < 3 && (
-              <Button type="primary" onClick={() => next()}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  if (current == 2) {
+                    if (!validateAllTasks()) return;
+                  }
+                  next();
+                }}
+              >
                 Next
               </Button>
             )}

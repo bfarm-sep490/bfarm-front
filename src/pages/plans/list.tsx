@@ -27,15 +27,9 @@ export const PlanList = () => {
           title={translate("plans.fields.seed")}
         />
         <Table.Column
-          dataIndex="lands"
-          title={translate("plans.fields.lands")}
-          render={(value: any[]) => (
-            <>
-              {value?.map((item) => (
-                <TagField value={item?.name} key={item?.name} />
-              ))}
-            </>
-          )}
+          dataIndex="land"
+          title={translate("plans.fields.land")}
+          render={(value) => <TagField value={value?.name} key={value?.name} />}
         />
         <Table.Column
           dataIndex={["start_date"]}
@@ -47,15 +41,9 @@ export const PlanList = () => {
           title={translate("plans.fields.status")}
         />
         <Table.Column
-          dataIndex="employees"
-          title={translate("plans.fields.employees")}
-          render={(value: any[]) => (
-            <>
-              {value?.map((item) => (
-                <TagField value={item?.name} key={item?.name} />
-              ))}
-            </>
-          )}
+          dataIndex="expert"
+          title={translate("plans.fields.expert")}
+          render={(value) => <TagField value={value?.name} key={value?.name} />}
         />
         <Table.Column
           dataIndex={["created_at"]}

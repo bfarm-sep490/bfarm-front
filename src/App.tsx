@@ -52,15 +52,14 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
 import { PlanList, PlanShow } from "./pages/plans";
-import { PlanShowV2 } from "./pages/plans_v2/show";
-import { TaskList } from "./pages/plans_v2/tasks/caring/table_list";
-import { ProblemList, ShowProblemList } from "./pages/plans_v2/problem/show";
-import { HarvestedTaskList } from "./pages/plans_v2/tasks/harvesting/table_list";
-import { ShowTasksList } from "./pages/plans_v2/tasks/show";
-import { ProductiveTaskShow } from "./pages/plans_v2/tasks/caring/show";
-import { ProblemShow } from "./pages/plans_v2/problem/show-detail";
-import { ApprovalingPlanDrawer } from "./pages/plans_v2/approvaled-drawer/steps_setup_plans_drawer";
-import { HarvestingTaskShow } from "./pages/plans_v2/tasks/harvesting/show";
+import { TaskList } from "./pages/plans/tasks/caring/table_list";
+import { ProblemList, ShowProblemList } from "./pages/plans/problem/show";
+import { HarvestedTaskList } from "./pages/plans/tasks/harvesting/table_list";
+import { ShowTasksList } from "./pages/plans/tasks/show";
+import { ProductiveTaskShow } from "./pages/plans/tasks/caring/show";
+import { ProblemShow } from "./pages/plans/problem/show-detail";
+import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer/steps_setup_plans_drawer";
+import { HarvestingTaskShow } from "./pages/plans/tasks/harvesting/show";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -273,9 +272,9 @@ const App: React.FC = () => {
                     <Route
                       index
                       element={
-                        <PlanShowV2>
+                        <PlanShow>
                           <Outlet></Outlet>
-                        </PlanShowV2>
+                        </PlanShow>
                       }
                     />
                     <Route

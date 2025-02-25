@@ -41,6 +41,8 @@ import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { PlanObservation } from "../../components/plan/plan-obervation";
+import { DropDownSection } from "../../components/section/drop-down-section";
+import { ActivityCard } from "../../components/card/card-activity";
 
 export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
@@ -400,15 +402,7 @@ export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
           </Flex>
         </Card>
         <Divider />
-        <Flex justify={"space-between"} style={{ fontSize: "40px" }}>
-          <Typography.Title level={3}>🔍 Tổng quan</Typography.Title>
-          {icon ? (
-            <CaretUpOutlined onClick={() => handle(false)} />
-          ) : (
-            <CaretDownOutlined onClick={() => handle(true)} />
-          )}
-        </Flex>
-        <div style={{ display: icon ? "block" : "none" }}>
+        <DropDownSection title="Tổng quan">
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "30px" }}>
             <Col xs={24} sm={12} md={6}>
               <Card title="📦 Sản lượng thu hoạch">
@@ -418,34 +412,17 @@ export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
               </Card>
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <Card
+              <ActivityCard
                 title="⚠️ Vấn đề"
-                extra={
-                  <ShowButton
-                    hideText
-                    size="small"
-                    onClick={() => navigate(`/plans/${id}/problems`)}
-                  />
-                }
-              >
-                <Typography.Title level={2} style={{ textAlign: "center" }}>
-                  1 vấn đề
-                </Typography.Title>
-              </Card>
+                navigate={`/plans/${id}/problems`}
+                completedTasks={1}
+              />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <Card title="🌍 Số khu đất">
-                <Typography.Title level={2} style={{ textAlign: "center" }}>
-                  2
-                </Typography.Title>
-              </Card>
+              <ActivityCard title="🌍 Số khu đất" completedTasks={2} />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <Card title="👨‍🌾 Số nông dân">
-                <Typography.Title level={2} style={{ textAlign: "center" }}>
-                  2
-                </Typography.Title>
-              </Card>
+              <ActivityCard title="👨‍🌾 Số nông dân" completedTasks={2} />
             </Col>
           </Row>
 
@@ -489,185 +466,53 @@ export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
               </Card>
             </Col>
           </Row>
-        </div>
+        </DropDownSection>
         <Divider />
-        {/* <Flex
-          justify={breakpoint.md ? "space-between" : "start"}
-          gap={breakpoint.md ? 0 : 16}
-        >
-          <Typography.Title level={3}>👁️ Theo dõi môi trường</Typography.Title>
-          {icon4 ? (
-            <CaretUpOutlined
-              style={{ fontSize: "50px" }}
-              onClick={() => handle4(false)}
-            />
-          ) : (
-            <CaretDownOutlined
-              style={{ fontSize: "50px" }}
-              onClick={() => handle4(true)}
-            />
-          )}
-        </Flex>
-        <div style={{ display: icon4 ? "block" : "none" }}>
-          <PlanObservation />
-        </div>
-        <Divider /> */}
-        <Flex justify={"space-between"}>
-          <Typography.Title level={3}>🛠 Công việc</Typography.Title>
-          {icon1 ? (
-            <CaretUpOutlined
-              onClick={() => handle1(false)}
-              style={{ fontSize: "40px" }}
-            />
-          ) : (
-            <CaretDownOutlined
-              onClick={() => handle1(true)}
-              style={{ fontSize: "40px" }}
-            />
-          )}
-        </Flex>
-        <div style={{ display: icon1 ? "block" : "none" }}>
+        <DropDownSection title="Công việc">
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "10px" }}>
             <Col xs={24} md={12} lg={12} xl={12}>
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Card
-                    title={
-                      <Flex align="center" gap={8}>
-                        <BranchesOutlined style={{ color: "#52c41a" }} />
-                        {"Chăm sóc"}
-                      </Flex>
-                    }
-                    extra={
-                      <ShowButton
-                        hideText
-                        size="small"
-                        onClick={() =>
-                          navigate(`/plans/${id}/productive-tasks`)
-                        }
-                      />
-                    }
-                  >
-                    <Typography.Title
-                      level={2}
-                      style={{ fontSize: 28, textAlign: "center" }}
-                    >
-                      12
-                      <strong style={{ fontSize: 20, color: "gray" }}>
-                        /38
-                      </strong>
-                    </Typography.Title>
-                    <Typography.Text
-                      type="secondary"
-                      style={{
-                        textAlign: "end",
-                        fontSize: 12,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Lần cuối: 12/02/2025
-                    </Typography.Text>
-                  </Card>
+                  <ActivityCard
+                    icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
+                    completedTasks={12}
+                    title="Chăm sóc"
+                    totalActivity={13}
+                    lastActivityDate="Lần cuối: 12/02/2025"
+                    navigate={`/plans/${id}/producive-tasks`}
+                  />
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Card
-                    title={
-                      <Flex align="center" gap={8}>
-                        <AuditOutlined style={{ color: "#fa8c16" }} />
-                        {"Kiểm định"}
-                      </Flex>
-                    }
-                    extra={
-                      <ShowButton
-                        hideText
-                        size="small"
-                        onClick={() =>
-                          navigate(`/plans/${id}/inspecting-tasks`)
-                        }
-                      />
-                    }
-                  >
-                    <Typography.Title
-                      level={2}
-                      style={{ fontSize: 28, textAlign: "center" }}
-                    >
-                      0
-                      <strong style={{ fontSize: 20, color: "gray" }}>
-                        /1
-                      </strong>
-                    </Typography.Title>
-                    <Typography.Text
-                      type="secondary"
-                      style={{
-                        textAlign: "end",
-                        fontSize: 12,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Chưa kiểm định lần nào
-                    </Typography.Text>
-                  </Card>
+                  <ActivityCard
+                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
+                    completedTasks={12}
+                    title="Kiểm định"
+                    totalActivity={13}
+                    lastActivityDate="Lần cuối: 12/02/2025"
+                    navigate={`/plans/${id}/inspecting-tasks`}
+                  />
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Card
-                    title={
-                      <Flex align="center" gap={8}>
-                        <GiftOutlined style={{ color: "#52c41a" }} />
-                        {"Thu hoạch"}
-                      </Flex>
-                    }
-                    extra={
-                      <ShowButton
-                        hideText
-                        size="small"
-                        onClick={() =>
-                          navigate(`/plans/${id}/harvesting-tasks`)
-                        }
-                      />
-                    }
-                  >
-                    <Typography.Title
-                      level={2}
-                      style={{ fontSize: 28, textAlign: "center" }}
-                    >
-                      0
-                      <strong style={{ fontSize: 20, color: "gray" }}>
-                        /1
-                      </strong>
-                    </Typography.Title>
-                    <Typography.Text
-                      type="secondary"
-                      style={{
-                        textAlign: "end",
-                        fontSize: 12,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Chưa thu hoạch lần nào
-                    </Typography.Text>
-                  </Card>
+                  <ActivityCard
+                    icon={<GiftOutlined style={{ color: "#52c41a" }} />}
+                    completedTasks={12}
+                    title="Thu hoạch"
+                    totalActivity={13}
+                    lastActivityDate="Lần cuối: 12/02/2025"
+                    navigate={`/plans/${id}/harvesting-tasks`}
+                  />
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Card
-                    title={
-                      <Flex align="center" gap={8}>
-                        <FileTextOutlined style={{ color: "#1890ff" }} />
-                        {"Công việc trống"}
-                      </Flex>
-                    }
-                    extra={<ShowButton hideText size="small" />}
-                  >
-                    <Typography.Title
-                      level={2}
-                      style={{ fontSize: 28, textAlign: "center" }}
-                    >
-                      12
-                    </Typography.Title>
-                    <Typography.Text> Lần cuối: 12/02/2025</Typography.Text>
-                  </Card>
+                  <ActivityCard
+                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
+                    completedTasks={12}
+                    title="Công việc trống"
+                    lastActivityDate="Chưa có công việc mới"
+                    navigate={`/plans/${id}/ungaining-tasks`}
+                  />
                 </Col>
               </Row>
             </Col>
@@ -691,7 +536,7 @@ export const PlanShowV2 = ({ children }: PropsWithChildren<{}>) => {
               </Card>
             </Col>
           </Row>
-        </div>
+        </DropDownSection>
       </div>
       {children}
     </div>

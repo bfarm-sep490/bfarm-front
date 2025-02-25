@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { useBack, useTranslate } from "@refinedev/core";
+import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
 import {
   useTable,
   List,
@@ -103,6 +103,21 @@ export const HarvestedTaskList = ({ children }: PropsWithChildren) => {
             title={translate("updated_at")}
             dataIndex="updated_at"
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+          />
+          <Table.Column
+            title={translate("table.actions")}
+            dataIndex="actions"
+            render={(_, record: BaseRecord) => (
+              <Space>
+                <ShowButton
+                  hideText
+                  size="small"
+                  onClick={() =>
+                    navigate(`/plans/${id}/harvesting-tasks/${record.id}`)
+                  }
+                />
+              </Space>
+            )}
           />
         </Table>
       </List>

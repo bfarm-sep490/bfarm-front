@@ -60,6 +60,7 @@ import { ShowTasksList } from "./pages/plans_v2/tasks/show";
 import { ProductiveTaskShow } from "./pages/plans_v2/tasks/caring/show";
 import { ProblemShow } from "./pages/plans_v2/problem/show-detail";
 import { ApprovalingPlanDrawer } from "./pages/plans_v2/approvaled-drawer/steps_setup_plans_drawer";
+import { HarvestingTaskShow } from "./pages/plans_v2/tasks/harvesting/show";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -303,8 +304,14 @@ const App: React.FC = () => {
                     </Route>
                     <Route
                       path="harvesting-tasks"
-                      element={<ShowTasksList />}
-                    />
+                      element={
+                        <ShowTasksList>
+                          <Outlet></Outlet>
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<HarvestingTaskShow />} />
+                    </Route>
                     <Route
                       path="inspecting-tasks"
                       element={<ShowTasksList />}

@@ -51,7 +51,7 @@ const getStatusTagValue = (value: string) => {
 export const HarvestingTaskShow = () => {
   const { taskId } = useParams();
   const { query: queryResult } = useShow<any>({
-    resource: "productive-tasks",
+    resource: "harvesting-tasks",
     id: taskId,
   });
 
@@ -90,7 +90,7 @@ export const HarvestingTaskShow = () => {
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.result_content ? (
+        {task?.status === "completed" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>
@@ -107,6 +107,14 @@ export const HarvestingTaskShow = () => {
                 {
                   label: "Ngày hoàn thành",
                   value: <DateField value={task?.completed_at} />,
+                },
+                {
+                  label: "Sản lượng thu hoạch",
+                  value: (
+                    <Typography.Text>
+                      {task?.harvested_quantity} {" " + task?.harvested_unit}
+                    </Typography.Text>
+                  ),
                 },
                 {
                   label: "Nội dung",

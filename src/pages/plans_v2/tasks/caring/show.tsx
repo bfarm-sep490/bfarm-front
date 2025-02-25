@@ -139,7 +139,7 @@ export const ProductiveTaskShow = () => {
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.result_content ? (
+        {task?.status === "completed" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>

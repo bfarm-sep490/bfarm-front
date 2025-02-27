@@ -195,7 +195,14 @@ export const ExpertDrawerForm = (props: Props) => {
               label="Name"
               name="name"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please input your name!" },
+                {
+                  min: 6,
+                  max: 50,
+                  message: "Name must be between 6 and 50 characters!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -203,7 +210,14 @@ export const ExpertDrawerForm = (props: Props) => {
               label="Phone"
               name="phone"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please input your phone!" },
+                {
+                  message: "The input is not valid phone number!",
+                  min: 10,
+                  max: 11,
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -211,7 +225,16 @@ export const ExpertDrawerForm = (props: Props) => {
               label="Email"
               name="email"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+                {
+                  type: "email",
+                  message: "The input is not valid E-mail!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>

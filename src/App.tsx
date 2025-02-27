@@ -21,7 +21,6 @@ import {
   SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
 
 import "dayjs/locale/vi";
@@ -62,6 +61,7 @@ import { FarmersShow } from "./pages/farmers/show";
 import { FarmerEdit } from "./pages/farmers/edit";
 
 import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
+import { jsonDataProvider } from "./dataProvider";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -79,9 +79,9 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
-  const dataProvider = jsonServerDataProvider(API_URL);
+  const dataProvider = jsonDataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
   interface TranslationParams {

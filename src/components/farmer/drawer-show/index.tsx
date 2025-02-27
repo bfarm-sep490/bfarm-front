@@ -10,7 +10,7 @@ import {
 import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
-import { DateField, DeleteButton } from "@refinedev/antd";
+import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { FarmerStatus, FertilizerStatus, FertilizerType, IFarmer, IFertilizer } from "@/interfaces";
 
@@ -22,8 +22,8 @@ type Props = {
 
 const FarmerStatusTag = ({ status }: { status: FarmerStatus }) => {
   const colorMap = {
-    UnActived: "default",
-    Actived: "success",
+    Inactive: "red",
+    Active: "success",
   };
 
   return <Tag color={colorMap[status]}>{status}</Tag>;
@@ -38,11 +38,11 @@ export const FarmerDrawerShow = (props: Props) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { query: queryResult } = useShow<IFarmer, HttpError>({
+  const { query: queryResult } = useShow<any, HttpError>({
     resource: "farmers",
     id: props?.id,
   });
-  const farmer = queryResult.data?.data;
+  const farmer = queryResult?.data?.data?.[0];
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -76,7 +76,7 @@ export const FarmerDrawerShow = (props: Props) => {
             margin: "16px auto",
             borderRadius: "8px",
           }}
-          src={farmer?.avatar}
+          src={farmer?.avatar_image}
           alt={farmer?.name}
         />
       </Flex>
@@ -106,13 +106,22 @@ export const FarmerDrawerShow = (props: Props) => {
               label: <Typography.Text type="secondary">Email</Typography.Text>,
               value: farmer?.email,
             },
-            {
-              label: <Typography.Text type="secondary">DOB</Typography.Text>,
-              value: farmer?.DOB && <DateField value={farmer.DOB} format="DD/MM/YYYY" />,
-            },
+
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
               value: farmer?.status && <FarmerStatusTag status={farmer.status} />,
+            },
+            {
+              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
+              value: farmer?.created_at && <DateField value={farmer?.created_at} />,
+            },
+            {
+              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              value: farmer?.updated_at ? (
+                <FarmerStatusTag status={farmer?.updated_at} />
+              ) : (
+                <TextField value={"Chưa cập nhập"} />
+              ),
             },
           ]}
           renderItem={(item) => (

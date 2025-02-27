@@ -7,11 +7,11 @@ interface Props {
 
 export const FarmerStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Actived":
-      return <Tag color="green">Actived</Tag>;
+    case "Active":
+      return <Tag color="green">Hoạt động</Tag>;
 
-    case "UnActived":
-      return <Tag color="red">Unactived</Tag>;
+    case "Inactive":
+      return <Tag color="red">Không hoạt động</Tag>;
     default:
       return null;
   }

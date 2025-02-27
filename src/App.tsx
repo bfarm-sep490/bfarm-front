@@ -138,8 +138,8 @@ const App: React.FC = () => {
               {
                 name: "inspector",
                 list: "/inspector",
-                create: "/inspector/create",
-                edit: "/inspector/edit/:id",
+                // create: "/inspector/create",
+                // edit: "/inspector/edit/:id",
                 show: "/inspector/show/:id",
                 meta: {
                   label: "Inspection",
@@ -154,6 +154,17 @@ const App: React.FC = () => {
                 show: "/yield/show/:id",
                 meta: {
                   label: "Yield Management",
+                  icon: <EnvironmentOutlined />,
+                },
+              },
+              {
+                name: "seed",
+                list: "/seeds",
+                create: "/seeds/new",
+                edit: "/seeds/edit/:id",
+                show: "/seeds/:id",
+                meta: {
+                  label: "Seeds",
                   icon: <EnvironmentOutlined />,
                 },
               },
@@ -186,14 +197,6 @@ const App: React.FC = () => {
                 create: "/items/new",
                 edit: "/items/edit/:id",
                 show: "/items/:id",
-                meta: { parent: "material", canDelete: true },
-              },
-              {
-                name: "seed",
-                list: "/seeds",
-                create: "/seeds/new",
-                edit: "/seeds/edit/:id",
-                show: "/seeds/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -332,8 +335,8 @@ const App: React.FC = () => {
 
          
                   <Route path="/inspector/*" element={<InspectorsList />}>
-                    <Route path="create" element={<InspectorCreate />} />
-                    <Route path="edit/:id" element={<InspectorCreate />} />
+                    {/* <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} /> */}
                     <Route path="show/:id" element={<InspectorsShow />} />
                   </Route>
  

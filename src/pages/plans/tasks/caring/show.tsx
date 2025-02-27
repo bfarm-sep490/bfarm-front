@@ -18,15 +18,15 @@ import { useParams } from "react-router";
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Planting":
       return "green";
-    case "nurturing":
+    case "Nurturing":
       return "#550000";
-    case "watering":
+    case "Watering":
       return "blue";
-    case "fertilizing":
+    case "Fertilizing":
       return "orange";
-    case "pestcontrol":
+    case "Pesticiding":
       return "yellow";
     default:
       return "default";
@@ -35,15 +35,17 @@ const getTypeTagColor = (value: string) => {
 
 const getTypeTagValue = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Planting":
       return "Gieo hạt";
-    case "nurturing":
+    case "Nurturing":
       return "Chăm sóc";
-    case "watering":
+    case "Watering":
       return "Tưới nước";
-    case "fertilizing":
+    case "Fertilizing":
       return "Bón phân";
-    case "pestcontrol":
+    case "Setup":
+      return "Lắp đặt";
+    case "Pesticiding":
       return "Phun thuốc";
     default:
       return "Không xác định";
@@ -52,14 +54,14 @@ const getTypeTagValue = (value: string) => {
 
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
-      return "blue";
-    case "completed":
+    case "Pending":
+      return "orange";
+    case "Completed":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
+    case "Ongoing":
+      return "blue";
     default:
       return "default";
   }
@@ -67,16 +69,15 @@ const getStatusTagColor = (value: string) => {
 
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Completed":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
+    case "Ongoing":
       return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
       return "Không xác định";
   }
@@ -85,7 +86,7 @@ const getStatusTagValue = (value: string) => {
 export const ProductiveTaskShow = () => {
   const { taskId } = useParams();
   const { query: queryResult } = useShow<any>({
-    resource: "productive-tasks",
+    resource: "caring-tasks",
     id: taskId,
   });
   const [dataVattu, setDataVattu] = useState<any>([]);
@@ -100,7 +101,7 @@ export const ProductiveTaskShow = () => {
 
   const handleModeChange = (mode: "fertilizer" | "pesticide" | "item") => {
     setModeVattu(mode);
-    setDataVattu(task ? task[mode + "s"] : []);
+    setDataVattu(task ? task["care_" + mode + "s"] : []);
   };
 
   const columns = [
@@ -117,7 +118,7 @@ export const ProductiveTaskShow = () => {
       onClose={back}
       title={
         <>
-          {task?.status !== "completed" && (
+          {task?.status !== "Completed" && (
             <Flex justify="end">
               <Space>
                 <Button color="danger" variant="solid">
@@ -134,19 +135,19 @@ export const ProductiveTaskShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Typography.Title level={3} style={{ margin: 0 }}>
-          <strong>#{task?.id}</strong> - {task?.name}
+          <strong>#{task?.id}</strong> - {task?.task_name}
         </Typography.Title>
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.status === "completed" ? (
+        {task?.status === "Completed" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
-                  src={task?.images[0]}
+                  src={task?.care_images?.[0]}
                 />
               </Image.PreviewGroup>
             )}
@@ -175,7 +176,7 @@ export const ProductiveTaskShow = () => {
             />
           </Flex>
         ) : (
-          <Typography.Text type="secondary">Không có kết quả.</Typography.Text>
+          <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
         )}
 
         <Divider />
@@ -187,8 +188,8 @@ export const ProductiveTaskShow = () => {
               label: "Loại công việc",
               value: (
                 <TagField
-                  value={getTypeTagValue(task?.type)}
-                  color={getTypeTagColor(task?.type)}
+                  value={getTypeTagValue(task?.task_type)}
+                  color={getTypeTagColor(task?.task_type)}
                 />
               ),
             },
@@ -210,7 +211,12 @@ export const ProductiveTaskShow = () => {
               ),
             },
             { label: "Mức độ ưu tiên", value: task?.priority },
-            { label: "ID Nông dân", value: task?.farmer_id },
+            { label: "Nông dân thực hiện", value: task?.farmer_id },
+            { label: "Kế hoạch", value: task?.plan_id },
+            {
+              label: "Vấn đề liên quan",
+              value: task?.problem_id || "Không liên hệ tới vấn đề nào",
+            },
             {
               label: "Mô tả công việc",
               value: (

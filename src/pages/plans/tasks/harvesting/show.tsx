@@ -18,14 +18,14 @@ import { useParams } from "react-router";
 
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
-      return "blue";
-    case "completed":
+    case "Pending":
+      return "orange";
+    case "Completed":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
+    case "Ongoing":
+      return "blue";
     default:
       return "default";
   }
@@ -33,21 +33,19 @@ const getStatusTagColor = (value: string) => {
 
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Completed":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
+    case "Ongoing":
       return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
       return "Không xác định";
   }
 };
-
 export const HarvestingTaskShow = () => {
   const { taskId } = useParams();
   const { query: queryResult } = useShow<any>({
@@ -68,7 +66,7 @@ export const HarvestingTaskShow = () => {
       onClose={back}
       title={
         <>
-          {task?.status !== "completed" && (
+          {task?.status !== "Completed" && (
             <Flex justify="end">
               <Space>
                 <Button color="danger" variant="solid">
@@ -85,19 +83,19 @@ export const HarvestingTaskShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Typography.Title level={3} style={{ margin: 0 }}>
-          <strong>#{task?.id}</strong> - {task?.name}
+          <strong>#{task?.id}</strong> - {task?.task_name}
         </Typography.Title>
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.status === "completed" ? (
+        {task?.status === "Completed" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
-                  src={task?.images[0]}
+                  src={task?.harvesting_images?.[0]}
                 />
               </Image.PreviewGroup>
             )}
@@ -106,7 +104,7 @@ export const HarvestingTaskShow = () => {
               dataSource={[
                 {
                   label: "Ngày hoàn thành",
-                  value: <DateField value={task?.completed_at} />,
+                  value: <DateField value={task?.complete_at} />,
                 },
                 {
                   label: "Sản lượng thu hoạch",
@@ -114,14 +112,6 @@ export const HarvestingTaskShow = () => {
                     <Typography.Text>
                       {task?.harvested_quantity} {" " + task?.harvested_unit}
                     </Typography.Text>
-                  ),
-                },
-                {
-                  label: "Nội dung",
-                  value: (
-                    <Typography.Paragraph>
-                      {task?.result_content}
-                    </Typography.Paragraph>
                   ),
                 },
                 {
@@ -169,6 +159,7 @@ export const HarvestingTaskShow = () => {
             },
             { label: "Mức độ ưu tiên", value: task?.priority },
             { label: "ID Nông dân", value: task?.farmer_id },
+            { label: "ID Kế hoạch", value: task?.plan_id },
             {
               label: "Mô tả công việc",
               value: (

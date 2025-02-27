@@ -10,6 +10,7 @@ import {
   EmailField,
   DateField,
   Title,
+  TextField,
 } from "@refinedev/antd";
 import { Table, Space, Radio, Button, Breadcrumb } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
@@ -22,65 +23,69 @@ type TypeProps = {
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Planting":
       return "green";
-    case "nurturing":
+    case "Nurturing":
       return "#550000";
-    case "watering":
+    case "Watering":
       return "blue";
-    case "fertilizing":
+    case "Fertilizing":
       return "orange";
-    case "pestcontrol":
+
+    case "Pesticiding":
       return "yellow";
     default:
       return "default";
   }
 };
+
 const getTypeTagValue = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Planting":
       return "Gieo hạt";
-    case "nurturing":
+    case "Nurturing":
       return "Chăm sóc";
-    case "watering":
+    case "Watering":
       return "Tưới nước";
-    case "fertilizing":
+    case "Fertilizing":
       return "Bón phân";
-    case "pestcontrol":
+    case "Setup":
+      return "Lắp đặt";
+    case "Pesticiding":
       return "Phun thuốc";
     default:
-      return "default";
+      return "Không xác định";
   }
 };
+
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
-      return "blue";
-    case "completed":
+    case "Pending":
+      return "orange";
+    case "Completed":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
-
+    case "Ongoing":
+      return "blue";
     default:
       return "default";
   }
 };
+
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Completed":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
+    case "Ongoing":
       return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
-      return "default";
+      return "Không xác định";
   }
 };
 type Props = {
@@ -101,7 +106,7 @@ export const TaskList = ({ children, type }: PropsWithChildren & TypeProps) => {
   const translate = useTranslate();
   const { tableProps } = useTable({
     syncWithLocation: true,
-    resource: resource,
+    resource: "caring-tasks",
   });
 
   const location = useLocation();
@@ -112,7 +117,7 @@ export const TaskList = ({ children, type }: PropsWithChildren & TypeProps) => {
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
           <Table.Column dataIndex="id" title={translate("ID")} />
-          <Table.Column dataIndex="name" title={translate("name")} />
+          <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
             dataIndex="start_date"
             title={translate("start_date")}
@@ -124,7 +129,7 @@ export const TaskList = ({ children, type }: PropsWithChildren & TypeProps) => {
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column
-            dataIndex="type"
+            dataIndex="task_type"
             title={translate("type")}
             render={(value) => (
               <TagField
@@ -143,18 +148,23 @@ export const TaskList = ({ children, type }: PropsWithChildren & TypeProps) => {
               />
             )}
           />
-          <Table.Column dataIndex="land_id" title={translate("land_id")} />
           <Table.Column title={translate("farmer_id")} dataIndex="farmer_id" />
           <Table.Column title={translate("plan_id")} dataIndex="plan_id" />
           <Table.Column
-            title={translate("created_at")}
-            dataIndex="created_at"
+            title={translate("create_at")}
+            dataIndex="create_at"
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column
-            title={translate("updated_at")}
-            dataIndex="updated_at"
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+            title={translate("update_at")}
+            dataIndex="update_at"
+            render={(value) =>
+              value ? (
+                <DateField format="DD/MM/YYYY" value={value} />
+              ) : (
+                <TextField value={"Chưa cập nhập"} />
+              )
+            }
           />
           <Table.Column
             title={translate("table.actions")}

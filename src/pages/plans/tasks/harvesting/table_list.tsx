@@ -9,6 +9,7 @@ import {
   TagField,
   EmailField,
   DateField,
+  TextField,
 } from "@refinedev/antd";
 import { Table, Space, Radio, Button, Breadcrumb, Typography } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
@@ -16,33 +17,32 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
-      return "blue";
-    case "completed":
+    case "Pending":
+      return "orange";
+    case "Completed":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
-
+    case "Ongoing":
+      return "blue";
     default:
       return "default";
   }
 };
+
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Completed":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
+    case "Ongoing":
       return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
-      return "default";
+      return "Không xác định";
   }
 };
 type Props = {
@@ -65,7 +65,7 @@ export const HarvestedTaskList = ({ children }: PropsWithChildren) => {
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
           <Table.Column dataIndex="id" title={translate("ID")} />
-          <Table.Column dataIndex="name" title={translate("name")} />
+          <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
             dataIndex="start_date"
             title={translate("start_date")}
@@ -91,13 +91,17 @@ export const HarvestedTaskList = ({ children }: PropsWithChildren) => {
               />
             )}
           />
-          <Table.Column dataIndex="land_id" title={translate("land_id")} />
           <Table.Column title={translate("farmer_id")} dataIndex="farmer_id" />
           <Table.Column title={translate("plan_id")} dataIndex="plan_id" />
           <Table.Column
             title={translate("created_at")}
             dataIndex="created_at"
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+          />
+          <Table.Column
+            title={translate("updated_at")}
+            dataIndex="updated_at"
+            render={(value) => value ? <DateField format="DD/MM/YYYY" value={value} /> : <TextField value={"Chưa cập nhập lần nào"} />}
           />
           <Table.Column
             title={translate("updated_at")}

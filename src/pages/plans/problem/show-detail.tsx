@@ -18,15 +18,19 @@ import { useParams } from "react-router";
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Weather":
       return "green";
-    case "nurturing":
+    case "Fungus":
+      return "#CC33FF";
+    case "Nutrients":
       return "#550000";
-    case "watering":
+    case "Light":
+      return "yellow";
+    case "Water":
       return "blue";
     case "fertilizing":
       return "orange";
-    case "pestcontrol":
+    case "Pest":
       return "yellow";
     default:
       return "default";
@@ -35,16 +39,20 @@ const getTypeTagColor = (value: string) => {
 
 const getTypeTagValue = (value: string) => {
   switch (value) {
-    case "planting":
-      return "Gieo hạt";
-    case "nurturing":
-      return "Chăm sóc";
-    case "watering":
-      return "Tưới nước";
-    case "fertilizing":
+    case "Weather":
+      return "Thời tiết";
+    case "Nutrients":
+      return "Dinh dưỡng";
+    case "Fungus":
+      return "Nấm mốc";
+    case "Light":
+      return "Ánh sáng";
+    case "Water":
+      return "Thiếu nước";
+    case "Fertilizing":
       return "Bón phân";
-    case "pestcontrol":
-      return "Phun thuốc";
+    case "Pest":
+      return "Sâu bệnh";
     default:
       return "Không xác định";
   }
@@ -52,14 +60,13 @@ const getTypeTagValue = (value: string) => {
 
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "blue";
-    case "completed":
+    case "Resolved":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
+
     default:
       return "default";
   }
@@ -67,16 +74,13 @@ const getStatusTagColor = (value: string) => {
 
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Resolved":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
-      return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
       return "Không xác định";
   }
@@ -102,7 +106,7 @@ export const ProblemShow = () => {
       onClose={back}
       title={
         <>
-          {task?.status !== "completed" && (
+          {task?.status === "Pending" && (
             <Flex justify="end">
               <Space>
                 <Button color="danger" variant="solid">
@@ -119,15 +123,15 @@ export const ProblemShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Typography.Title level={3} style={{ margin: 0 }}>
-          <strong>#{task?.id}</strong> - {task?.name}
+          <strong>#{task?.id}</strong> - {task?.problem_name}
         </Typography.Title>
 
         <Divider />
-        <Image.PreviewGroup items={task?.imageUrls || []}>
+        <Image.PreviewGroup items={task?.problem_images || []}>
           <Image
             loading="lazy"
             style={{ borderRadius: "10px" }}
-            src={task?.imageUrls[0]}
+            src={task?.problem_images?.[0]}
           />
         </Image.PreviewGroup>
         <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
@@ -138,14 +142,14 @@ export const ProblemShow = () => {
               label: "Loại vấn đề",
               value: (
                 <TagField
-                  value={getTypeTagValue(task?.type)}
-                  color={getTypeTagColor(task?.type)}
+                  value={getTypeTagValue(task?.problem_type)}
+                  color={getTypeTagColor(task?.problem_type)}
                 />
               ),
             },
             {
               label: "Ngày phát hiện",
-              value: <DateField value={task?.created_at} />,
+              value: <DateField value={task?.date} />,
             },
 
             {
@@ -174,7 +178,7 @@ export const ProblemShow = () => {
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.result ? (
+        {task?.result_content && task?.status === "Resolved" ? (
           <Flex vertical gap={16}>
             <List
               bordered
@@ -182,7 +186,9 @@ export const ProblemShow = () => {
                 {
                   label: "Nội dung",
                   value: (
-                    <Typography.Paragraph>{task?.result}</Typography.Paragraph>
+                    <Typography.Paragraph>
+                      {task?.result_content}
+                    </Typography.Paragraph>
                   ),
                 },
               ]}

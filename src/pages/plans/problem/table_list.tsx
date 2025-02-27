@@ -16,65 +16,70 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
-    case "planting":
+    case "Weather":
       return "green";
-    case "nurturing":
+    case "Fungus":
+      return "#CC33FF";
+    case "Nutrients":
       return "#550000";
-    case "watering":
+    case "Light":
+      return "yellow";
+    case "Water":
       return "blue";
-    case "fertilizing":
-      return "orange";
-    case "pestcontrol":
+
+    case "Pest":
       return "yellow";
     default:
       return "default";
   }
 };
+
 const getTypeTagValue = (value: string) => {
   switch (value) {
-    case "planting":
-      return "Gieo hạt";
-    case "nurturing":
-      return "Chăm sóc";
-    case "watering":
-      return "Tưới nước";
-    case "fertilizing":
+    case "Weather":
+      return "Thời tiết";
+    case "Nutrients":
+      return "Dinh dưỡng";
+    case "Fungus":
+      return "Nấm mốc";
+    case "Light":
+      return "Ánh sáng";
+    case "Water":
+      return "Thiếu nước";
+    case "Fertilizing":
       return "Bón phân";
-    case "pestcontrol":
-      return "Phun thuốc";
+    case "Pest":
+      return "Sâu bệnh";
     default:
-      return "default";
+      return "Không xác định";
   }
 };
+
 const getStatusTagColor = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "blue";
-    case "completed":
+    case "Resolved":
       return "green";
-    case "cancelled":
+    case "Cancelled":
       return "red";
-    case "inprogress":
-      return "#003399";
 
     default:
       return "default";
   }
 };
+
 const getStatusTagValue = (value: string) => {
   switch (value) {
-    case "pending":
+    case "Pending":
       return "Đợi xác nhận";
-    case "completed":
+    case "Resolved":
       return "Hoàn thành";
-    case "cancelled":
+    case "Cancelled":
       return "Hủy bỏ";
-    case "inprogress":
-      return "Trong quá trình";
-    case "notstart":
-      return "Chưa bắt đầu";
+
     default:
-      return "default";
+      return "Không xác định";
   }
 };
 export const ProblemList = ({ children }: PropsWithChildren) => {
@@ -82,26 +87,25 @@ export const ProblemList = ({ children }: PropsWithChildren) => {
   const translate = useTranslate();
   const { tableProps } = useTable({
     syncWithLocation: true,
-    resource: "problems",
+    resource: `plans/${id}/problems`,
   });
 
   const navigate = useNavigate();
 
   return (
     <>
-      
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
           <Table.Column dataIndex="id" title={translate("ID")} />
-          <Table.Column dataIndex="name" title={translate("name")} />
+          <Table.Column dataIndex="problem_name" title={translate("name")} />
           <Table.Column
             dataIndex="date"
-            title={translate("start_date")}
+            title={"Ngày phát sinh"}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column
-            dataIndex="type"
-            title={translate("type")}
+            dataIndex="problem_type"
+            title={translate("problem_type")}
             render={(value) => (
               <TagField
                 value={getTypeTagValue(value)}
@@ -119,11 +123,7 @@ export const ProblemList = ({ children }: PropsWithChildren) => {
               />
             )}
           />
-          <Table.Column
-            title={translate("created_at")}
-            dataIndex="created_at"
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
-          />
+
           <Table.Column
             title={translate("table.actions")}
             dataIndex="actions"

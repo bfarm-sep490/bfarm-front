@@ -37,9 +37,9 @@ import {
   BulbOutlined,
 } from "@ant-design/icons";
 import { DateField, Show, ShowButton, TextField } from "@refinedev/antd";
-import { useShow } from "@refinedev/core";
+import { HttpError, useOne, useShow } from "@refinedev/core";
 import { useNavigate, useParams } from "react-router";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import Chart from "react-apexcharts";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
@@ -49,16 +49,32 @@ import { RealTimeContentCard } from "../../components/card/card-real-time";
 
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
-  const { query: queryResult } = useShow({
+  const {
+    data: generalData,
+    isLoading: generalLoading,
+    error: generalError,
+  } = useOne<any, HttpError>({
     resource: "plans",
-    id: id,
-    queryOptions: {
-      cacheTime: 60000,
-    },
+    id: `${id}/general`,
   });
+  const {
+    data: farmersData,
+    isLoading: farmersLoading,
+    error: farmersError,
+  } = useOne<any, HttpError>({
+    resource: "plans",
+    id: `${id}/farmers`,
+  });
+  const { data: problemsData, isLoading: problemsLoading } = useOne<
+    any,
+    HttpError
+  >({
+    resource: "plans",
+    id: `${id}/problems`,
+  });
+  const general_info = generalData?.data;
+  const farmers_info = farmersData?.data as any[];
   const navigate = useNavigate();
-  const isLoading = queryResult.isLoading;
-  const data = queryResult.data?.data;
 
   const [state, setState] = React.useState({
     series: [
@@ -363,7 +379,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           </Col>
         </Row>
         <Divider />
-        <Card loading={isLoading} title="Thông tin chung">
+        <Card title="Thông tin chung" loading={generalLoading}>
           <Flex
             gap={breakpoint.md ? 30 : 16}
             vertical={!breakpoint.md}
@@ -379,26 +395,30 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               width={300}
               height={400}
               src={
-                data?.seed?.imageUrl ||
+                general_info?.plant_information?.image_url ||
                 "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2024/1/13/xa-lach-1705113923296944450397.jpg"
               }
             />
             <Flex vertical gap={16} style={{ flex: 1 }}>
               <Typography.Title level={4}>
-                🌱 {data?.name || "Không có tên"}
+                🌱 {general_info?.plan_name || "Chưa xác định"}
               </Typography.Title>
               <Divider />
               <Space align="start" style={{ marginTop: 12 }}>
                 <EnvironmentOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Thời gian:</Typography.Text>
                 <Typography.Text>
-                  {data?.status === "on-going"
-                    ? `${data?.start_date || "Chưa có"} - ${
-                        data?.end_date || "Đang cập nhật"
-                      }`
-                    : data?.status === "pending"
-                    ? "Chưa triển khai"
-                    : "Không xác định"}
+                  {general_info?.start_date ? (
+                    <DateField value={general_info?.start_date} />
+                  ) : (
+                    "Chưa xác định"
+                  )}{" "}
+                  -
+                  {general_info?.end_date ? (
+                    <DateField value={general_info?.end_date} />
+                  ) : (
+                    "Chưa xác định"
+                  )}
                 </Typography.Text>
               </Space>
 
@@ -406,31 +426,42 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 <UserOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Cây trồng:</Typography.Text>
                 <Typography.Text>
-                  {data?.seed?.name || "Không có"}
+                  {general_info?.plant_information?.plant_name ||
+                    "Chưa xác định"}
                 </Typography.Text>
               </Space>
 
               <Space align="start" style={{ marginTop: 12 }}>
                 <GoldOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Tổng diện tích:</Typography.Text>
+                <Typography.Text strong>Khu đất</Typography.Text>
                 <Typography.Text>
-                  {data?.lands?.length || "Không có"}
+                  <Tag>
+                    {general_info?.yield_information?.yield_name ||
+                      "Chưa xác định"}
+                  </Tag>
                 </Typography.Text>
               </Space>
               <Space align="start" style={{ marginTop: 12 }}>
                 <GroupOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
                 <Typography.Text>
-                  {data?.expected_yield || "Không có"}
+                  {general_info?.estimated_product || "Không có"} -
+                  {general_info?.estimated_unit || "Không có"}
                 </Typography.Text>
               </Space>
 
               <Space align="start" style={{ marginTop: 12 }}>
                 <FieldTimeOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Trạng thái:</Typography.Text>
-                <Tag color={data?.status === "on-going" ? "blue" : "default"}>
-                  {(data?.status &&
-                    (data?.status === "on-going" ? "Đang tiến hành" : null)) ||
+                <Tag
+                  color={
+                    general_info?.status === "Ongoing" ? "blue" : "default"
+                  }
+                >
+                  {(general_info?.status &&
+                    (general_info?.status === "Ongoing"
+                      ? "Đang tiến hành"
+                      : null)) ||
                     "Không hoạt động"}
                 </Tag>
               </Space>
@@ -439,7 +470,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 <Typography.Text strong>Ngày tạo:</Typography.Text>
                 <Typography.Text type="secondary">
                   <DateField
-                    value={data?.created_at}
+                    value={general_info?.created_at}
                     format="MMMM, YYYY hh:mm A"
                   />
                 </Typography.Text>
@@ -461,14 +492,22 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               <ActivityCard
                 title="⚠️ Vấn đề"
                 navigate={`/plans/${id}/problems`}
-                completedTasks={1}
+                completedTasks={problemsData?.data?.length || 0}
               />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <ActivityCard title="🌍 Số khu đất" completedTasks={2} />
+              <ActivityCard
+                loading={generalLoading}
+                title={`🌍 Tổng diện tích (${general_info?.yield_information?.area_unit})`}
+                completedTasks={general_info?.yield_information?.area || 0}
+              />
             </Col>
             <Col xs={24} sm={12} md={6}>
-              <ActivityCard title="👨‍🌾 Số nông dân" completedTasks={2} />
+              <ActivityCard
+                loading={farmersLoading}
+                title="👨‍🌾 Số nông dân"
+                completedTasks={farmers_info?.length}
+              />
             </Col>
           </Row>
 

@@ -44,11 +44,20 @@ export const ExpertDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IExpert>({
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
     resource: "experts",
     id: props?.id,
     action: props.action,
     redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.[0]?.avatar_image) {
+          setPreviewImage(data?.data?.[0]?.avatar_image);
+        }
+        formProps.form.setFieldsValue(data?.data?.[0]);
+      },
+    },
     onMutationSuccess: () => {
       props.onMutationSuccess?.();
     },
@@ -97,6 +106,7 @@ export const ExpertDrawerForm = (props: Props) => {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
         onSuccess(uploadedImageUrl);
+        formProps.form.setFieldValue("avatar_image", uploadedImageUrl);
         console.log("Server response:", response.data);
       } else {
         throw new Error(response.data.message || "Upload failed.");
@@ -111,8 +121,8 @@ export const ExpertDrawerForm = (props: Props) => {
   const title = props.action === "edit" ? "Edit this expert" : "Add a expert";
 
   const statusOptions = [
-    { label: "Actived", value: "Actived" },
-    { label: "Unactivated", value: "UnActived" },
+    { label: "Active", value: "Active" },
+    { label: "Inactivate", value: "Inactive" },
   ];
 
   return (
@@ -125,9 +135,14 @@ export const ExpertDrawerForm = (props: Props) => {
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
           <Form.Item
-            name="avatar"
+            name="avatar_image"
             valuePropName="file"
             getValueFromEvent={(e: any) => {
               return e?.file?.response ?? "/images/fertilizer-default-img.png";
@@ -200,18 +215,6 @@ export const ExpertDrawerForm = (props: Props) => {
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Date of Birth"
-              name="DOB"
-              getValueProps={(i) => ({
-                value: i === undefined ? undefined : moment(i),
-              })}
-              className={styles.formItem}
-              rules={[{ required: true, message: "Please select date of birth" }]}
-            >
-              <DatePicker format="DD-MM-YYYY" />
-            </Form.Item>
-
             <Form.Item
               label="Status"
               name="status"

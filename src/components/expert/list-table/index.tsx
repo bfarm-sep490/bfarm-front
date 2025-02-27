@@ -9,6 +9,7 @@ import {
   DateField,
   FilterDropdown,
   NumberField,
+  TextField,
   getDefaultSortOrder,
   useTable,
 } from "@refinedev/antd";
@@ -30,6 +31,7 @@ export const ExpertListTable: React.FC = () => {
 
   const { tableProps, sorters, filters } = useTable<IFertilizer, HttpError>({
     resource: "experts",
+
     filters: {
       initial: [
         {
@@ -76,7 +78,6 @@ export const ExpertListTable: React.FC = () => {
         dataIndex="id"
         key="id"
         width={80}
-        render={(value) => <Typography.Text>#{value}</Typography.Text>}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -90,17 +91,22 @@ export const ExpertListTable: React.FC = () => {
             <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
           </FilterDropdown>
         )}
+        render={(value) => (
+          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+        )}
       />
 
       <Table.Column
+        width={"auto"}
         title="Avatar"
-        dataIndex="avatar"
-        key="avatar"
+        dataIndex="avatar_image"
+        key="avatar_image"
         render={(image: string) => <Avatar shape="square" src={image} alt="Expert" />}
       />
 
       <Table.Column
         title="Name"
+        width={"auto"}
         dataIndex="name"
         key="name"
         filterIcon={(filtered) => (
@@ -120,27 +126,21 @@ export const ExpertListTable: React.FC = () => {
 
       <Table.Column
         title="Phone"
+        width={"auto"}
         dataIndex="phone"
         key="phone"
-        width={300}
         render={(value) => (
           <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}
       />
-      <Table.Column
-        title="DOB"
-        dataIndex="DOB"
-        key="DOB"
-        width={300}
-        render={(value) => <DateField value={value} format="DD/MM/YYYY" />}
-      />
 
       <Table.Column
         title="Email"
         dataIndex="email"
         key="email"
+        width={"auto"}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -160,7 +160,7 @@ export const ExpertListTable: React.FC = () => {
         title="Status"
         dataIndex="status"
         key="status"
-        width={120}
+        width={"auto"}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <Select
@@ -169,14 +169,34 @@ export const ExpertListTable: React.FC = () => {
               placeholder="Filter by status"
               allowClear
             >
-              <Select.Option value="Actived">Actived</Select.Option>
-              <Select.Option value="UnActived">UnActived</Select.Option>
+              <Select.Option value="Active">Actived</Select.Option>
+              <Select.Option value="Inactive">UnActived</Select.Option>
             </Select>
           </FilterDropdown>
         )}
         render={(value) => <ExpertStatusTag value={value} />}
       />
 
+      <Table.Column
+        title="Ngày tạo"
+        width={"auto"}
+        dataIndex="created_at"
+        key="created_at"
+        render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+      />
+      <Table.Column
+        title="Ngày cập nhập"
+        dataIndex="updated_at"
+        key="updated_at"
+        width={"auto"}
+        render={(value) =>
+          value ? (
+            <DateField format="DD/MM/YYYY" value={value} />
+          ) : (
+            <TextField value={"Chưa cập nhập"} />
+          )
+        }
+      />
       <Table.Column
         title="Actions"
         key="actions"

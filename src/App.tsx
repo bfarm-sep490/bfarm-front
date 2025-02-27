@@ -184,6 +184,17 @@ const App: React.FC = () => {
                 },
               },
               {
+                name: "seed",
+                list: "/seeds",
+                create: "/seeds/new",
+                edit: "/seeds/edit/:id",
+                show: "/seeds/:id",
+                meta: {
+                  label: "Seeds",
+                  icon: <EnvironmentOutlined />,
+                },
+              },
+              {
                 name: "material",
                 meta: {
                   label: "Material",
@@ -212,14 +223,6 @@ const App: React.FC = () => {
                 create: "/items/new",
                 edit: "/items/edit/:id",
                 show: "/items/:id",
-                meta: { parent: "material", canDelete: true },
-              },
-              {
-                name: "seed",
-                list: "/seeds",
-                create: "/seeds/new",
-                edit: "/seeds/edit/:id",
-                show: "/seeds/:id",
                 meta: { parent: "material", canDelete: true },
               },
               {
@@ -443,8 +446,8 @@ const App: React.FC = () => {
 
          
                   <Route path="/inspector/*" element={<InspectorsList />}>
-                    <Route path="create" element={<InspectorCreate />} />
-                    <Route path="edit/:id" element={<InspectorCreate />} />
+                    {/* <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} /> */}
                     <Route path="show/:id" element={<InspectorsShow />} />
                   </Route>
  

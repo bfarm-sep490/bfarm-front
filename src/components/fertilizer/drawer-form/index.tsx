@@ -7,6 +7,7 @@ import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { IFertilizer } from "@/interfaces";
+import { UploadFile } from "antd/lib";
 
 type Props = {
   id?: BaseKey;
@@ -51,6 +52,17 @@ export const FertilizerDrawerForm = (props: Props) => {
     });
   };
 
+  const normalizeImage = (image: any) => {
+    if (!image) return [];
+    if (Array.isArray(image)) return image;
+    return [{ url: image }];
+  };
+
+  const initialValues = {
+    ...formProps.initialValues,
+    image: normalizeImage(formProps.initialValues?.image),
+  };
+
   const image = Form.useWatch("image", formProps.form);
   const title = props.action === "edit" ? "Edit Fertilizer" : "Add Fertilizer";
 
@@ -81,11 +93,19 @@ export const FertilizerDrawerForm = (props: Props) => {
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
+        <Form {...formProps} initialValues={initialValues} layout="vertical">
           <Form.Item
             name="image"
             valuePropName="fileList"
-            getValueFromEvent={getValueFromEvent}
+            getValueFromEvent={(e) => {
+              if (!e || !e.fileList) return [];
+              return e.fileList.map((file: UploadFile) => ({
+                url: file.response?.url || file.url,
+                name: file.name,
+                uid: file.uid,
+                originFileObj: file.originFileObj,
+              }));
+            }}
             style={{ margin: 0 }}
             rules={[{ required: true }]}
           >
@@ -95,7 +115,7 @@ export const FertilizerDrawerForm = (props: Props) => {
               maxCount={1}
               accept=".png,.jpg,.jpeg"
               className={styles.uploadDragger}
-              showUploadList={false}
+              showUploadList={true}
             >
               <Flex
                 vertical
@@ -108,13 +128,17 @@ export const FertilizerDrawerForm = (props: Props) => {
                   style={{
                     aspectRatio: 1,
                     objectFit: "contain",
-                    width: image ? "100%" : "48px",
-                    height: image ? "100%" : "48px",
-                    marginTop: image ? undefined : "auto",
-                    transform: image ? undefined : "translateY(50%)",
+                    width: image?.length ? "100%" : "48px",
+                    height: image?.length ? "100%" : "48px",
+                    marginTop: image?.length ? undefined : "auto",
+                    transform: image?.length ? undefined : "translateY(50%)",
                   }}
-                  src={image || "/images/fertilizer-default-img.png"}
-                  alt="Fertilizer Image"
+                  src={
+                    image?.length > 0
+                      ? image[0]?.url || "/images/item-default-img.png"
+                      : "/images/item-default-img.png"
+                  }
+                  alt="Item Image"
                 />
                 <Button
                   icon={<UploadOutlined />}
@@ -122,7 +146,7 @@ export const FertilizerDrawerForm = (props: Props) => {
                     marginTop: "auto",
                     marginBottom: "16px",
                     backgroundColor: theme.colorBgContainer,
-                    ...(!!image && {
+                    ...(image?.length > 0 && {
                       position: "absolute",
                       bottom: 0,
                     }),
@@ -192,7 +216,12 @@ export const FertilizerDrawerForm = (props: Props) => {
             </Form.Item>
             <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
               <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+              <SaveButton
+                {...saveButtonProps}
+                htmlType="submit"
+                type="primary"
+                icon={null}
+              >
                 Save
               </SaveButton>
             </Flex>

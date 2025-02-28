@@ -12,40 +12,34 @@ import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
-import { FertilizerStatus, FertilizerType, IFertilizer } from "@/interfaces";
+import { axiosClient } from "@/lib/api/config/axios-client";
+import { FertilizerDrawerForm } from "../drawer-form";
 
 type Props = {
-  id?: BaseKey;
+  id?: number;
   onClose?: () => void;
-  onEdit?: () => void;
 };
 
-const FertilizerStatusTag = ({ status }: { status: FertilizerStatus }) => {
-  const colorMap = {
+const FertilizerStatusTag = ({ status }: { status: string }) => {
+  const colorMap: Record<string, string> = {
     UnActived: "default",
     InStock: "success",
     OutStock: "error",
   };
-
-  return <Tag color={colorMap[status]}>{status}</Tag>;
+  return <Tag color={colorMap[status] || "default"}>{status}</Tag>;
 };
 
-const FertilizerTypeTag = ({ type }: { type: FertilizerType }) => {
-  const colorMap = {
-    Organic: "green",
-    Chemical: "orange",
-    Mixed: "blue",
+const FertilizerTypeTag = ({ type }: { type: string }) => {
+  const colorMap: Record<string, string> = {
+    Đạm: "blue",
+    Kali: "red",
+    Lân: "orange",
   };
-
-  return <Tag color={colorMap[type]}>{type}</Tag>;
+  return <Tag color={colorMap[type] || "default"}>{type}</Tag>;
 };
 
-export const FertilizerDrawerShow = (props: Props) => {
-  const getToPath = useGetToPath();
+export const FertilizerDrawerShow = ({ id, onClose }: Props) => {
   const [searchParams] = useSearchParams();
-  const go = useGo();
-  const { editUrl } = useNavigation();
-  const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 

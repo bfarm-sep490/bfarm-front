@@ -14,11 +14,10 @@ import { useLocation } from "react-router";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerStatusTag } from "../status";
+import { IFertilizer } from "@/interfaces";
+import { FertilizerDrawerShow } from "../drawer-show";
 
 export const FertilizersListTable: React.FC = () => {
-  const { token } = theme.useToken();
-  const t = useTranslate();
-  const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 

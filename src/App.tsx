@@ -61,6 +61,8 @@ import { ProblemShow } from "./pages/plans/problem/show-detail";
 import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer/steps_setup_plans_drawer";
 import { HarvestingTaskShow } from "./pages/plans/tasks/harvesting/show";
 import { jsonDataProvider } from "./dataProvider";
+import { ProblemListInProblem } from "./components/problem/list-table";
+import { ProblemShowV2 } from "./pages/problems/show";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -208,6 +210,21 @@ const App: React.FC = () => {
                 },
               },
               {
+                name: "problems",
+                list: "/problems",
+                show: "/problems/:id",
+                meta: {
+                  label: "Vấn đề",
+                },
+              },
+              {
+                name: "new-task",
+                list: "/",
+                meta: {
+                  label: "Công việc mới",
+                },
+              },
+              {
                 name: "report",
                 list: "/report",
                 create: "/report/create",
@@ -290,7 +307,17 @@ const App: React.FC = () => {
                         </ShowProblemList>
                       }
                     >
-                      <Route path=":problemId" element={<ProblemShow />} />
+                      <Route
+                        path=":id"
+                        element={
+                          <ProblemShowV2>
+                            <Outlet />
+                          </ProblemShowV2>
+                        }
+                      >
+                        <Route path="cancel" element={<ProblemShow />} />
+                        <Route path="resolve" element={<ProblemShow />} />
+                      </Route>
                     </Route>
                     <Route
                       path="productive-tasks"
@@ -318,7 +345,16 @@ const App: React.FC = () => {
                     />
                   </Route>
                 </Route>
-
+                <Route
+                  path="/problems"
+                  element={
+                    <ProblemListInProblem>
+                      <Outlet></Outlet>
+                    </ProblemListInProblem>
+                  }
+                >
+                  <Route path=":problemId" element={<ProblemShow />} />
+                </Route>
                 <Route
                   path="/customers"
                   element={

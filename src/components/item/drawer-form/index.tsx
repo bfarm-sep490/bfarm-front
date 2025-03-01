@@ -10,7 +10,6 @@ import { getValueFromEvent } from "@refinedev/antd";
 import {
   Form,
   Input,
-  InputNumber,
   Select,
   Upload,
   Grid,
@@ -41,25 +40,27 @@ export const ItemDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
+  const [form] = Form.useForm();
+
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
     useDrawerForm<IItem>({
-      resource: "item",
+      resource: "items",
       id: props?.id,
       action: props.action,
       redirect: false,
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
+        onDrawerClose(); // ✅ Đóng Drawer sau khi lưu thành công
       },
     });
 
+  // ✅ Xử lý đóng Drawer
   const onDrawerClose = () => {
     close();
-
     if (props?.onClose) {
       props.onClose();
       return;
     }
-
     go({
       to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
       query: { to: undefined },
@@ -68,22 +69,8 @@ export const ItemDrawerForm = (props: Props) => {
     });
   };
 
-  const image = Form.useWatch("image", formProps.form);
-  console.log("Selected image:", image);
+  const image = Form.useWatch("image", form);
   const title = props.action === "edit" ? "Edit Item" : "Add Item";
-
-  const typeOptions = [
-    { label: "Productive", value: "Productive" },
-    { label: "Harvestive", value: "Harvestive" },
-    { label: "Packaging", value: "Packaging" },
-    { label: "Inspecting", value: "Inspecting" },
-  ];
-
-  const unitOptions = [
-    { label: "Kg", value: "Kg" },
-    { label: "Tấn", value: "Ton" },
-    { label: "Lít", value: "Litre" },
-  ];
 
   const statusOptions = [
     { label: "UnActived", value: "UnActived" },
@@ -101,13 +88,13 @@ export const ItemDrawerForm = (props: Props) => {
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
+        <Form {...formProps} layout="vertical" form={form}>
           <Form.Item
             name="image"
             valuePropName="fileList"
             getValueFromEvent={getValueFromEvent}
             style={{ margin: 0 }}
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Please upload an image" }]}
           >
             <Upload.Dragger
               name="file"
@@ -116,6 +103,12 @@ export const ItemDrawerForm = (props: Props) => {
               accept=".png,.jpg,.jpeg"
               className={styles.uploadDragger}
               showUploadList={false}
+              onChange={(info) => {
+                if (info.file.status === "done") {
+                  const imageUrl = info.file.response?.url;
+                  form.setFieldsValue({ image: imageUrl });
+                }
+              }}
             >
               <Flex
                 vertical
@@ -130,35 +123,21 @@ export const ItemDrawerForm = (props: Props) => {
                     objectFit: "contain",
                     width: image ? "100%" : "48px",
                     height: image ? "100%" : "48px",
-                    marginTop: image ? undefined : "auto",
-                    transform: image ? undefined : "translateY(50%)",
                   }}
                   src={image || "/images/item-default-img.png"}
                   alt="Item Image"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{
-                    marginTop: "auto",
-                    marginBottom: "16px",
-                    backgroundColor: theme.colorBgContainer,
-                    ...(!!image && {
-                      position: "absolute",
-                      bottom: 0,
-                    }),
-                  }}
-                >
-                  Upload Image
-                </Button>
+                <Button icon={<UploadOutlined />}>Upload Image</Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
+
           <Flex vertical>
             <Form.Item
               label="Name"
               name="name"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Name is required" }]}
             >
               <Input />
             </Form.Item>
@@ -166,33 +145,22 @@ export const ItemDrawerForm = (props: Props) => {
               label="Description"
               name="description"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Description is required" }]}
             >
-              <Input.TextArea rows={6} />
+              <Input.TextArea rows={4} />
             </Form.Item>
             <Form.Item
               label="Status"
               name="status"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Please select status" }]}
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Form.Item
-              label="Type"
-              name="type"
-              className={styles.formItem}
-              rules={[{ required: true }]}
-            >
-              <Select options={typeOptions} />
-            </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
+
+            <Flex align="center" justify="space-between" style={{ paddingTop: 16 }}>
               <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
                 Save
               </SaveButton>
             </Flex>

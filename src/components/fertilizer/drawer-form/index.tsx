@@ -15,6 +15,8 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { Drawer } from "../../drawer";
 import { axiosClient } from "@/lib/api/config/axios-client";
+import { useGetToPath, useGo } from "@refinedev/core";
+import { useSearchParams } from "react-router";
 
 const statusOptions = [
   { label: "In Stock", value: "InStock" },
@@ -50,8 +52,9 @@ export const FertilizerDrawerForm = ({
   const breakpoint = Grid.useBreakpoint();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(true); // ✅ Thêm state để kiểm soát Drawer
-
+  const getToPath = useGetToPath();
+  const [searchParams] = useSearchParams();
+  const go = useGo();
   useEffect(() => {
     if (id && action === "edit") {
       fetchFertilizerDetails();
@@ -91,7 +94,6 @@ export const FertilizerDrawerForm = ({
 
       if (response.data.status === 200) {
         setImageUrl(response.data.image_url);
-        form.setFieldsValue({ image_url: response.data.image_url });
         message.success("Tải ảnh lên thành công!");
       } else {
         message.error("Lỗi khi tải ảnh lên.");
@@ -119,7 +121,7 @@ export const FertilizerDrawerForm = ({
           action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
         );
         onMutationSuccess?.();
-        onDrawerClose(); // ✅ Đóng Drawer sau khi lưu thành công
+        onDrawerClose();
       } else {
         message.error("Có lỗi xảy ra!");
       }
@@ -130,20 +132,24 @@ export const FertilizerDrawerForm = ({
     }
   };
 
-  // ✅ Xử lý đóng Drawer
   const onDrawerClose = () => {
-    setIsOpen(false); // Đặt trạng thái đóng Drawer
     if (onClose) {
       onClose();
+      return;
     }
+    go({
+      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
+      query: { to: undefined },
+      options: { keepQuery: true },
+      type: "replace",
+    });
   };
-
   return (
     <Drawer
-      open={isOpen} // ✅ Điều khiển trạng thái mở/đóng
+      open={true}
       title={action === "edit" ? "Edit Fertilizer" : "Add Fertilizer"}
       width={breakpoint.sm ? "378px" : "100%"}
-      onClose={onDrawerClose} // ✅ Đóng Drawer đúng cách
+      onClose={onDrawerClose}
     >
       <Spin spinning={loading}>
         <Form form={form} layout="vertical" onFinish={onFinish}>
@@ -178,26 +184,28 @@ export const FertilizerDrawerForm = ({
             name="name"
             rules={[{ required: true, message: "Please enter a name" }]}
           >
-            <Input />
+            {" "}
+            <Input />{" "}
           </Form.Item>
           <Form.Item
             label="Description"
             name="description"
             rules={[{ required: true, message: "Please enter a description" }]}
           >
-            <Input.TextArea rows={4} />
+            {" "}
+            <Input.TextArea rows={4} />{" "}
           </Form.Item>
           <Form.Item
             label="Available Quantity"
             name="available_quantity"
-            rules={[{ required: true, message: "Please enter a quantity" }]}
+            rules={[{ required: true }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             label="Total Quantity"
             name="total_quantity"
-            rules={[{ required: true, message: "Please enter a total quantity" }]}
+            rules={[{ required: true }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
@@ -212,7 +220,7 @@ export const FertilizerDrawerForm = ({
           </Form.Item>
 
           <Flex align="center" justify="space-between">
-            <Button onClick={onDrawerClose}>Cancel</Button>
+          <Button onClick={onDrawerClose}>Cancel</Button>
             <Button htmlType="submit" type="primary">
               Save
             </Button>

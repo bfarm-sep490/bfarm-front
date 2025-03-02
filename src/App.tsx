@@ -1,11 +1,7 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import {
-  useNotificationProvider,
-  ThemedLayoutV2,
-  ErrorComponent,
-} from "@refinedev/antd";
+import { useNotificationProvider, ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -65,12 +61,7 @@ import { FarmerCreate } from "./pages/farmers/create";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerEdit } from "./pages/farmers/edit";
 
-import {
-  ExpertCreate,
-  ExpertEdit,
-  ExpertList,
-  ExpertShow,
-} from "./pages/experts";
+import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -78,7 +69,7 @@ interface TitleHandlerOptions {
 
 const customTitleHandler = ({ resource }: TitleHandlerOptions): string => {
   const baseTitle = "BFarm";
-  let titleSegment = resource?.meta?.label;
+  const titleSegment = resource?.meta?.label;
 
   const title = titleSegment ? `${titleSegment} | ${baseTitle}` : baseTitle;
   return title;
@@ -329,7 +320,6 @@ const App: React.FC = () => {
                   <Route path="edit/:id" element={<FertilizersEdit />} />
                 </Route>
                 <Route
-
                   path="/farmers"
                   element={
                     <FarmerList>
@@ -390,14 +380,8 @@ const App: React.FC = () => {
                     />
                   }
                 />
-                <Route
-                  path="/forgot-password"
-                  element={<AuthPage type="forgotPassword" />}
-                />
-                <Route
-                  path="/update-password"
-                  element={<AuthPage type="updatePassword" />}
-                />
+                <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
+                <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
               </Route>
 
               <Route

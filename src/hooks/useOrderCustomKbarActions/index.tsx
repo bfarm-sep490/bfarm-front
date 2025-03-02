@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslate, useUpdate } from "@refinedev/core";
-import {
-  type Action,
-  createAction,
-  Priority,
-  useRegisterActions,
-} from "@refinedev/kbar";
+import { type Action, createAction, Priority, useRegisterActions } from "@refinedev/kbar";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 import type { IOrder } from "../../interfaces";

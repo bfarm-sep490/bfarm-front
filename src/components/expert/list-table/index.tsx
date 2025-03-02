@@ -13,17 +13,7 @@ import {
   useTable,
 } from "@refinedev/antd";
 
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  Table,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -78,9 +68,7 @@ export const ExpertListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="experts" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="experts" />,
       }}
     >
       <Table.Column
@@ -99,11 +87,7 @@ export const ExpertListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber
-              addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder="Search ID"
-            />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
           </FilterDropdown>
         )}
       />
@@ -112,9 +96,7 @@ export const ExpertListTable: React.FC = () => {
         title="Avatar"
         dataIndex="avatar"
         key="avatar"
-        render={(image: string) => (
-          <Avatar shape="square" src={image} alt="Expert" />
-        )}
+        render={(image: string) => <Avatar shape="square" src={image} alt="Expert" />}
       />
 
       <Table.Column
@@ -142,10 +124,7 @@ export const ExpertListTable: React.FC = () => {
         key="phone"
         width={300}
         render={(value) => (
-          <Typography.Paragraph
-            ellipsis={{ rows: 2, tooltip: true }}
-            style={{ marginBottom: 0 }}
-          >
+          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}

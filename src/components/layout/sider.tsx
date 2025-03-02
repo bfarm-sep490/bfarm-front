@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { CSSProperties, useContext } from "react";
 import {
   useTranslate,
   useLogout,
@@ -15,7 +15,11 @@ import {
   pickNotDeprecated,
   useWarnAboutChange,
 } from "@refinedev/core";
-import { ThemedTitleV2, useThemedLayoutContext } from "@refinedev/antd";
+import {
+  RefineThemedLayoutV2SiderProps,
+  ThemedTitleV2,
+  useThemedLayoutContext,
+} from "@refinedev/antd";
 import {
   DashboardOutlined,
   LogoutOutlined,
@@ -24,55 +28,44 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import {
-  Layout,
-  Menu,
-  Grid,
-  Drawer,
-  Button,
-  theme,
-  ConfigProvider,
-  Typography,
-} from "antd";
-import type { RefineThemedLayoutV2SiderProps } from "@refinedev/antd";
-import type { CSSProperties } from "react";
+import { Layout, Menu, Grid, Drawer, Button, theme, ConfigProvider, Typography } from "antd";
 
 const modernStyles = {
   sider: (token: any): CSSProperties => ({
     backgroundColor: token.colorBgContainer,
-    borderRight: 'none',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-    transition: 'all 0.2s ease',
+    borderRight: "none",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+    transition: "all 0.2s ease",
   }),
   menuContainer: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    height: '100%',
-    padding: '16px 0',
+    display: "flex",
+    flexDirection: "column" as const,
+    height: "100%",
+    padding: "16px 0",
   },
   logo: (collapsed: boolean): CSSProperties => ({
-    padding: collapsed ? '8px' : '16px',
-    transition: 'all 0.2s ease',
-    borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-    marginBottom: '8px',
+    padding: collapsed ? "8px" : "16px",
+    transition: "all 0.2s ease",
+    borderBottom: "1px solid rgba(0, 0, 0, 0.06)",
+    marginBottom: "8px",
   }),
   menuItem: (token: any): CSSProperties => ({
-    margin: '4px 12px',
-    borderRadius: '6px',
+    margin: "4px 12px",
+    borderRadius: "6px",
     color: token.colorTextSecondary,
   }),
   menuIcon: {
-    fontSize: '18px',
-    marginRight: '8px',
+    fontSize: "18px",
+    marginRight: "8px",
   },
 };
 
 const drawerButtonStyles: CSSProperties = {
-  borderRadius: '0 8px 8px 0',
-  position: 'fixed',
+  borderRadius: "0 8px 8px 0",
+  position: "fixed",
   top: 64,
   zIndex: 999,
-  boxShadow: '2px 0 8px rgba(0, 0, 0, 0.15)',
+  boxShadow: "2px 0 8px rgba(0, 0, 0, 0.15)",
 };
 export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
   Title: TitleFromProps,
@@ -82,12 +75,8 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
   activeItemDisabled = false,
 }) => {
   const { token } = theme.useToken();
-  const {
-    siderCollapsed,
-    setSiderCollapsed,
-    mobileSiderOpen,
-    setMobileSiderOpen,
-  } = useThemedLayoutContext();
+  const { siderCollapsed, setSiderCollapsed, mobileSiderOpen, setMobileSiderOpen } =
+    useThemedLayoutContext();
 
   const isExistAuthentication = useIsExistAuthentication();
   const direction = useContext(ConfigProvider.ConfigContext)?.direction;
@@ -106,24 +95,13 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
 
-  const isMobile =
-    typeof breakpoint.lg === "undefined" ? false : !breakpoint.lg;
+  const isMobile = typeof breakpoint.lg === "undefined" ? false : !breakpoint.lg;
 
   const RenderToTitle = TitleFromProps ?? TitleFromContext ?? ThemedTitleV2;
 
   const renderTreeView = (tree: ITreeMenu[], selectedKey?: string) => {
     return tree.map((item: ITreeMenu) => {
-      const {
-        icon,
-        label,
-        route,
-        key,
-        name,
-        children,
-        parentName,
-        meta,
-        options,
-      } = item;
+      const { icon, label, route, key, name, children, parentName, meta, options } = item;
 
       if (children.length > 0) {
         return (
@@ -147,8 +125,8 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
       }
       const isSelected = key === selectedKey;
       const isRoute = !(
-        pickNotDeprecated(meta?.parent, options?.parent, parentName) !==
-          undefined && children.length === 0
+        pickNotDeprecated(meta?.parent, options?.parent, parentName) !== undefined &&
+        children.length === 0
       );
 
       const linkStyle: React.CSSProperties =
@@ -166,15 +144,12 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
           <Menu.Item
             key={item.key}
             icon={icon ?? (isRoute && <UnorderedListOutlined style={modernStyles.menuIcon} />)}
-  
             style={linkStyle}
           >
             <Link to={route ?? ""} style={linkStyle}>
               {label}
             </Link>
-            {!siderCollapsed && isSelected && (
-              <div className="ant-menu-tree-arrow" />
-            )}
+            {!siderCollapsed && isSelected && <div className="ant-menu-tree-arrow" />}
           </Menu.Item>
         </CanAccess>
       );
@@ -186,8 +161,8 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
       const confirm = window.confirm(
         translate(
           "warnWhenUnsavedChanges",
-          "Are you sure you want to leave? You have unsaved changes."
-        )
+          "Are you sure you want to leave? You have unsaved changes.",
+        ),
       );
 
       if (confirm) {
@@ -200,11 +175,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
   };
 
   const logout = isExistAuthentication && (
-    <Menu.Item
-      key="logout"
-      onClick={() => handleLogout()}
-      icon={<LogoutOutlined />}
-    >
+    <Menu.Item key="logout" onClick={() => handleLogout()} icon={<LogoutOutlined />}>
       {translate("buttons.logout", "Logout")}
     </Menu.Item>
   );
@@ -212,9 +183,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
   const dashboard = hasDashboard ? (
     <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
       <Link to="/">{translate("dashboard.title", "Dashboard")}</Link>
-      {!siderCollapsed && selectedKey === "/" && (
-        <div className="ant-menu-tree-arrow" />
-      )}
+      {!siderCollapsed && selectedKey === "/" && <div className="ant-menu-tree-arrow" />}
     </Menu.Item>
   ) : null;
 
@@ -357,8 +326,8 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
             type="text"
             style={{
               borderRadius: 0,
-              height: '48px',
-              width: '100%',
+              height: "48px",
+              width: "100%",
               backgroundColor: token.colorBgElevated,
             }}
           >

@@ -50,10 +50,7 @@ interface IOptions {
   options: IOptionGroup[];
 }
 
-export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
-  isSticky,
-  sticky,
-}) => {
+export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, sticky }) => {
   const { token } = useToken();
   const { styles } = useStyles();
   const { mode, setMode } = useConfigProvider();
@@ -78,11 +75,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
     label: (
       <Link to={link} style={{ display: "flex", alignItems: "center" }}>
         {imageUrl && (
-          <Avatar
-            size={32}
-            src={imageUrl}
-            style={{ minWidth: "32px", marginRight: "16px" }}
-          />
+          <Avatar size={32} src={imageUrl} style={{ minWidth: "32px", marginRight: "16px" }} />
         )}
         <Text>{title}</Text>
       </Link>
@@ -96,19 +89,17 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({
     setOptions([]);
   }, [value]);
 
-  const menuItems: MenuProps["items"] = [...(i18n.languages || [])]
-    .sort()
-    .map((lang: string) => ({
-      key: lang,
-      onClick: () => changeLanguage(lang),
-      icon: (
-        <span style={{ marginRight: 8 }}>
-          <Avatar size={16} src={`/images/flags/${lang}.svg`} />
-        </span>
-      ),
-      label: lang === "en" ? "English" : "Tiếng Việt",
-    }));
-const headerStyles: React.CSSProperties = {
+  const menuItems: MenuProps["items"] = [...(i18n.languages || [])].sort().map((lang: string) => ({
+    key: lang,
+    onClick: () => changeLanguage(lang),
+    icon: (
+      <span style={{ marginRight: 8 }}>
+        <Avatar size={16} src={`/images/flags/${lang}.svg`} />
+      </span>
+    ),
+    label: lang === "en" ? "English" : "Tiếng Việt",
+  }));
+  const headerStyles: React.CSSProperties = {
     backgroundColor: token.colorBgElevated,
     padding: "0px 24px",
   };
@@ -119,9 +110,7 @@ const headerStyles: React.CSSProperties = {
     headerStyles.zIndex = 1000;
   }
   return (
-    <AntdHeader
-    style={headerStyles}
-  >
+    <AntdHeader style={headerStyles}>
       <Row
         align="middle"
         style={{

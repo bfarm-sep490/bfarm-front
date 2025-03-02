@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  memo,
-  useRef,
-  type PropsWithChildren,
-} from "react";
+import { useState, useEffect, memo, useRef, type PropsWithChildren } from "react";
 import { type Root, createRoot } from "react-dom/client";
 
 type AdvancedMarkerProps = {
@@ -20,8 +14,7 @@ const AdvancedMarker: React.FC<PropsWithChildren<AdvancedMarkerProps>> = ({
   ...options
 }) => {
   const rootRef = useRef<Root | null>(null);
-  const [marker, setMarker] =
-    useState<google.maps.marker.AdvancedMarkerElement>();
+  const [marker, setMarker] = useState<google.maps.marker.AdvancedMarkerElement>();
 
   useEffect(() => {
     if (!map) return;

@@ -15,10 +15,7 @@ export const FormItemEditable = ({
   const { styles, cx } = useStyles();
 
   return (
-    <Form.Item
-      {...formItemProps}
-      className={cx(styles.formItem, styles[variant])}
-    >
+    <Form.Item {...formItemProps} className={cx(styles.formItem, styles[variant])}>
       {children}
     </Form.Item>
   );

@@ -16,9 +16,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>(
-    (localStorage.getItem("farmers-view") as View) || "table"
-  );
+  const [view, setView] = useState<View>((localStorage.getItem("farmers-view") as View) || "table");
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view

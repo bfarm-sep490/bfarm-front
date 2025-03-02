@@ -3,10 +3,13 @@ import { useGetToPath, useGo } from "@refinedev/core";
 import { useSearchParams } from "react-router";
 
 export const FertilizersCreate = () => {
-      const getToPath = useGetToPath();
+  const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-    return <FertilizerDrawerForm action="create" onMutationSuccess={() => {
+  return (
+    <FertilizerDrawerForm
+      action="create"
+      onMutationSuccess={() => {
         go({
           to:
             searchParams.get("to") ??
@@ -23,5 +26,6 @@ export const FertilizersCreate = () => {
           type: "replace",
         });
       }}
-    />;
+    />
+  );
 };

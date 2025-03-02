@@ -1,24 +1,7 @@
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import { getValueFromEvent } from "@refinedev/antd";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-} from "antd";
+import { getValueFromEvent, SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+
+import { Form, Input, InputNumber, Select, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -207,11 +190,7 @@ export const FertilizerDrawerForm = (props: Props) => {
             >
               <Select options={typeOptions} />
             </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
               <Button onClick={onDrawerClose}>Cancel</Button>
               <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 Save

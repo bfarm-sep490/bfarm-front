@@ -7,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton } from "@refinedev/antd";
@@ -118,15 +108,11 @@ export const ExpertDrawerShow = (props: Props) => {
             },
             {
               label: <Typography.Text type="secondary">DOB</Typography.Text>,
-              value: expert?.DOB && (
-                <DateField value={expert.DOB} format="DD/MM/YYYY" />
-              ),
+              value: expert?.DOB && <DateField value={expert.DOB} format="DD/MM/YYYY" />,
             },
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
-              value: expert?.status && (
-                <ExpertStatusTag status={expert.status} />
-              ),
+              value: expert?.status && <ExpertStatusTag status={expert.status} />,
             },
           ]}
           renderItem={(item) => (

@@ -2,12 +2,7 @@ import type { Dayjs } from "dayjs";
 
 export interface IOrderChart {
   count: number;
-  status:
-    | "waiting"
-    | "ready"
-    | "on the way"
-    | "delivered"
-    | "could not be delivered";
+  status: "waiting" | "ready" | "on the way" | "delivered" | "could not be delivered";
 }
 
 export interface IOrderTotalCount {

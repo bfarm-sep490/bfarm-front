@@ -9,10 +9,7 @@ type PaginationTotalProps = {
   entityName: string;
 };
 
-export const PaginationTotal: FC<PaginationTotalProps> = ({
-  total,
-  entityName,
-}) => {
+export const PaginationTotal: FC<PaginationTotalProps> = ({ total, entityName }) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   return (

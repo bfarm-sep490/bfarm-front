@@ -1,7 +1,6 @@
 import { FertilizerStatus } from "@/interfaces";
 import { Tag } from "antd";
 
-
 interface Props {
   value: FertilizerStatus;
 }

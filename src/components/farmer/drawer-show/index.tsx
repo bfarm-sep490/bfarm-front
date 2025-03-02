@@ -7,28 +7,12 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
-import {
-  FarmerStatus,
-  FertilizerStatus,
-  FertilizerType,
-  IFarmer,
-  IFertilizer,
-} from "@/interfaces";
+import { FarmerStatus, FertilizerStatus, FertilizerType, IFarmer, IFertilizer } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;
@@ -124,15 +108,11 @@ export const FarmerDrawerShow = (props: Props) => {
             },
             {
               label: <Typography.Text type="secondary">DOB</Typography.Text>,
-              value: farmer?.DOB && (
-                <DateField value={farmer.DOB} format="DD/MM/YYYY" />
-              ),
+              value: farmer?.DOB && <DateField value={farmer.DOB} format="DD/MM/YYYY" />,
             },
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
-              value: farmer?.status && (
-                <FarmerStatusTag status={farmer.status} />
-              ),
+              value: farmer?.status && <FarmerStatusTag status={farmer.status} />,
             },
           ]}
           renderItem={(item) => (

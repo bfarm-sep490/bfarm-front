@@ -1,13 +1,6 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import axios from "axios";
-import { getValueFromEvent } from "@refinedev/antd";
 import {
   Form,
   Input,
@@ -51,16 +44,15 @@ export const FarmerDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IFarmer>({
-      resource: "farmers",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IFarmer>({
+    resource: "farmers",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -98,7 +90,7 @@ export const FarmerDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -215,9 +207,7 @@ export const FarmerDrawerForm = (props: Props) => {
                 value: i === undefined ? undefined : moment(i),
               })}
               className={styles.formItem}
-              rules={[
-                { required: true, message: "Please select date of birth" },
-              ]}
+              rules={[{ required: true, message: "Please select date of birth" }]}
             >
               <DatePicker format="DD-MM-YYYY" />
             </Form.Item>
@@ -230,18 +220,9 @@ export const FarmerDrawerForm = (props: Props) => {
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
               <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 Save
               </SaveButton>
             </Flex>

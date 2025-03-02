@@ -1,20 +1,7 @@
 import { NumberField, useSimpleList } from "@refinedev/antd";
-import {
-  type HttpError,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, useGo, useNavigation, useTranslate } from "@refinedev/core";
 
-import {
-  Card,
-  Divider,
-  Flex,
-  List,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined } from "@ant-design/icons";
 import { CSSProperties } from "react";
@@ -27,16 +14,16 @@ import { useStyles } from "./styled";
 // Only keeping styles that aren't in the styled components
 const additionalStyles = {
   image: {
-    aspectRatio: '288/160',
-    objectFit: 'cover',
-    width: '100%',
+    aspectRatio: "288/160",
+    objectFit: "cover",
+    width: "100%",
   } as CSSProperties,
   typeTag: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
+    position: "absolute",
+    top: "10px",
+    left: "10px",
     zIndex: 1,
-  } as CSSProperties
+  } as CSSProperties,
 };
 
 export const FertilizersListCard = () => {
@@ -57,14 +44,14 @@ export const FertilizersListCard = () => {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'Organic':
-        return 'green';
-      case 'Chemical':
-        return 'red';
-      case 'Mixed':
-        return 'blue';
+      case "Organic":
+        return "green";
+      case "Chemical":
+        return "red";
+      case "Mixed":
+        return "blue";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -75,9 +62,7 @@ export const FertilizersListCard = () => {
         {...listProps}
         pagination={{
           ...listProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="fertilizers" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
         }}
         grid={{
           gutter: [16, 16],
@@ -126,17 +111,10 @@ export const FertilizersListCard = () => {
                   >
                     View
                   </Tag>
-                  <Tag
-                    color={getTypeColor(item.type)}
-                    style={additionalStyles.typeTag}
-                  >
+                  <Tag color={getTypeColor(item.type)} style={additionalStyles.typeTag}>
                     {item.type}
                   </Tag>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={additionalStyles.image}
-                  />
+                  <img src={item.image} alt={item.name} style={additionalStyles.image} />
                 </>
               }
               actions={[
@@ -147,9 +125,7 @@ export const FertilizersListCard = () => {
                     padding: "0 16px",
                   }}
                 >
-                  <Typography.Text>
-                    {item.unit}
-                  </Typography.Text>
+                  <Typography.Text>{item.unit}</Typography.Text>
                   <FertilizerStatusTag value={item.status} />
                 </Flex>,
               ]}
@@ -182,7 +158,8 @@ export const FertilizersListCard = () => {
                     </Typography.Paragraph>
                     <Flex justify="space-between">
                       <Typography.Text type="secondary">
-                        Available: <NumberField value={item.available_quantity} /> / <NumberField value={item.total_quantity} />
+                        Available: <NumberField value={item.available_quantity} /> /{" "}
+                        <NumberField value={item.total_quantity} />
                       </Typography.Text>
                     </Flex>
                   </Flex>

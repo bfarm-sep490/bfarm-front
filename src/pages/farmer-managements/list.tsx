@@ -22,18 +22,9 @@ export const FarmerManagementList = ({ children }: PropsWithChildren) => {
     <>
       <List>
         <Table {...tableProps} rowKey="id">
-          <Table.Column
-            dataIndex="Name"
-            title={translate("farmer-management.fields.Name")}
-          />
-          <Table.Column
-            dataIndex="Phone"
-            title={translate("farmer-management.fields.Phone")}
-          />
-          <Table.Column
-            dataIndex="Account"
-            title={translate("farmer-management.fields.Account")}
-          />
+          <Table.Column dataIndex="Name" title={translate("farmer-management.fields.Name")} />
+          <Table.Column dataIndex="Phone" title={translate("farmer-management.fields.Phone")} />
+          <Table.Column dataIndex="Account" title={translate("farmer-management.fields.Account")} />
           <Table.Column
             dataIndex="Password"
             title={translate("farmer-management.fields.Password")}
@@ -41,31 +32,20 @@ export const FarmerManagementList = ({ children }: PropsWithChildren) => {
           <Table.Column
             dataIndex={["Avatar"]}
             title={translate("farmer-management.fields.Avatar")}
-            render={(value: any) => (
-              <ImageField style={{ maxWidth: "100px" }} value={value} />
-            )}
+            render={(value: any) => <ImageField style={{ maxWidth: "100px" }} value={value} />}
           />
           <Table.Column
             dataIndex={["Email"]}
             title={translate("farmer-management.fields.Email")}
             render={(value: any) => <EmailField value={value} />}
           />
-          <Table.Column
-            dataIndex="Status"
-            title={translate("farmer-management.fields.Status")}
-          />
-          <Table.Column
-            dataIndex="CCCD"
-            title={translate("farmer-management.fields.CCCD")}
-          />
+          <Table.Column dataIndex="Status" title={translate("farmer-management.fields.Status")} />
+          <Table.Column dataIndex="CCCD" title={translate("farmer-management.fields.CCCD")} />
           <Table.Column
             dataIndex="DeviceNo"
             title={translate("farmer-management.fields.DeviceNo")}
           />
-          <Table.Column
-            dataIndex="Address"
-            title={translate("farmer-management.fields.Address")}
-          />
+          <Table.Column dataIndex="Address" title={translate("farmer-management.fields.Address")} />
           <Table.Column
             dataIndex={["CreatedAt"]}
             title={translate("farmer-management.fields.CreatedAt")}

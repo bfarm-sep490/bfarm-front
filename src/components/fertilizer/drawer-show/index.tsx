@@ -7,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -36,7 +26,7 @@ const FertilizerStatusTag = ({ status }: { status: FertilizerStatus }) => {
     InStock: "success",
     OutStock: "error",
   };
-  
+
   return <Tag color={colorMap[status]}>{status}</Tag>;
 };
 
@@ -46,7 +36,7 @@ const FertilizerTypeTag = ({ type }: { type: FertilizerType }) => {
     Chemical: "orange",
     Mixed: "blue",
   };
-  
+
   return <Tag color={colorMap[type]}>{type}</Tag>;
 };
 
@@ -114,29 +104,21 @@ export const FertilizerDrawerShow = (props: Props) => {
           }}
         >
           <Typography.Title level={5}>{fertilizer?.name}</Typography.Title>
-          <Typography.Text type="secondary">
-            {fertilizer?.description}
-          </Typography.Text>
+          <Typography.Text type="secondary">{fertilizer?.description}</Typography.Text>
         </Flex>
         <Divider style={{ margin: 0, padding: 0 }} />
         <List
           dataSource={[
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
-              value: fertilizer?.status && (
-                <FertilizerStatusTag status={fertilizer.status} />
-              ),
+              value: fertilizer?.status && <FertilizerStatusTag status={fertilizer.status} />,
             },
             {
               label: <Typography.Text type="secondary">Type</Typography.Text>,
-              value: fertilizer?.type && (
-                <FertilizerTypeTag type={fertilizer.type} />
-              ),
+              value: fertilizer?.type && <FertilizerTypeTag type={fertilizer.type} />,
             },
             {
-              label: (
-                <Typography.Text type="secondary">Available Quantity</Typography.Text>
-              ),
+              label: <Typography.Text type="secondary">Available Quantity</Typography.Text>,
               value: (
                 <Typography.Text>
                   {fertilizer?.available_quantity} {fertilizer?.unit}
@@ -144,9 +126,7 @@ export const FertilizerDrawerShow = (props: Props) => {
               ),
             },
             {
-              label: (
-                <Typography.Text type="secondary">Total Quantity</Typography.Text>
-              ),
+              label: <Typography.Text type="secondary">Total Quantity</Typography.Text>,
               value: (
                 <Typography.Text>
                   {fertilizer?.total_quantity} {fertilizer?.unit}

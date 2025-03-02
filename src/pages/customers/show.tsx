@@ -1,11 +1,7 @@
 import { useShow, useNavigation } from "@refinedev/core";
 import { Flex, Grid } from "antd";
 import type { IUser } from "../../interfaces";
-import {
-  CustomerInfoList,
-  CustomerInfoSummary,
-  Drawer,
-} from "../../components";
+import { CustomerInfoList, CustomerInfoSummary, Drawer } from "../../components";
 
 export const CustomerShow = () => {
   const { list } = useNavigation();
@@ -16,11 +12,7 @@ export const CustomerShow = () => {
   const user = data?.data;
 
   return (
-    <Drawer
-      open
-      onClose={() => list("users")}
-      width={breakpoint.sm ? "736px" : "100%"}
-    >
+    <Drawer open onClose={() => list("users")} width={breakpoint.sm ? "736px" : "100%"}>
       <Flex
         vertical
         gap={32}

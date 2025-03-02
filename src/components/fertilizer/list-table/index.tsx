@@ -5,24 +5,9 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import {
-  FilterDropdown,
-  NumberField,
-  getDefaultSortOrder,
-  useTable,
-} from "@refinedev/antd";
+import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@refinedev/antd";
 
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  Table,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -72,9 +57,7 @@ export const FertilizersListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="fertilizers" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
       }}
     >
       <Table.Column
@@ -82,22 +65,18 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="id"
         key="id"
         width={80}
-        render={(value) => (
-          <Typography.Text>#{value}</Typography.Text>
-        )}
+        render={(value) => <Typography.Text>#{value}</Typography.Text>}
         filterIcon={(filtered) => (
-          <SearchOutlined style={{
-            color: filtered ? token.colorPrimary : undefined,
-          }} />
+          <SearchOutlined
+            style={{
+              color: filtered ? token.colorPrimary : undefined,
+            }}
+          />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber
-              addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder="Search ID"
-            />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
           </FilterDropdown>
         )}
       />
@@ -106,13 +85,7 @@ export const FertilizersListTable: React.FC = () => {
         title="Image"
         dataIndex="image"
         key="image"
-        render={(image: string) => (
-          <Avatar
-            shape="square"
-            src={image}
-            alt="Fertilizer"
-          />
-        )}
+        render={(image: string) => <Avatar shape="square" src={image} alt="Fertilizer" />}
       />
 
       <Table.Column
@@ -120,9 +93,11 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="name"
         key="name"
         filterIcon={(filtered) => (
-          <SearchOutlined style={{
-            color: filtered ? token.colorPrimary : undefined,
-          }} />
+          <SearchOutlined
+            style={{
+              color: filtered ? token.colorPrimary : undefined,
+            }}
+          />
         )}
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
@@ -138,10 +113,7 @@ export const FertilizersListTable: React.FC = () => {
         key="description"
         width={300}
         render={(value) => (
-          <Typography.Paragraph
-            ellipsis={{ rows: 2, tooltip: true }}
-            style={{ marginBottom: 0 }}
-          >
+          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}
@@ -181,12 +153,7 @@ export const FertilizersListTable: React.FC = () => {
         )}
       />
 
-      <Table.Column
-        title="Unit"
-        dataIndex="unit"
-        key="unit"
-        width={100}
-      />
+      <Table.Column title="Unit" dataIndex="unit" key="unit" width={100} />
 
       <Table.Column
         title="Status"
@@ -230,7 +197,7 @@ export const FertilizersListTable: React.FC = () => {
           </FilterDropdown>
         )}
         render={(value) => (
-          <Tag color={value === 'Organic' ? 'green' : value === 'Chemical' ? 'red' : 'blue'}>
+          <Tag color={value === "Organic" ? "green" : value === "Chemical" ? "red" : "blue"}>
             {value}
           </Tag>
         )}

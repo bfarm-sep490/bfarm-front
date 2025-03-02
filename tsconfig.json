@@ -27,7 +27,9 @@
     "useDefineForClassFields": true
   },
   "include": [
-    "src"
+    "commitlint.config.ts",
+    "src",
+    "vite.config.ts"
   ],
   "references": [
     {

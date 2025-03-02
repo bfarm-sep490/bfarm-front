@@ -1,9 +1,8 @@
-import React, { useMemo } from "react";
-import { ThemedLayoutContextProvider } from "@refinedev/antd";
-import { ThemedHeaderV2 as DefaultHeader } from "./header";
+import React from "react";
+import { RefineThemedLayoutV2Props, ThemedLayoutContextProvider } from "@refinedev/antd";
+import { Header as DefaultHeader } from "../header";
 import { ThemedSiderV2 as DefaultSider } from "./sider";
 import { Grid, Layout as AntdLayout } from "antd";
-import type { RefineThemedLayoutV2Props } from "@refinedev/antd";
 
 export const ThemedLayoutV2: React.FC<RefineThemedLayoutV2Props> = ({
   children,

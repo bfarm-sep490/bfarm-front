@@ -14,16 +14,7 @@ import {
   getDefaultSortOrder,
   ExportButton,
 } from "@refinedev/antd";
-import {
-  Table,
-  Avatar,
-  Typography,
-  theme,
-  InputNumber,
-  Input,
-  Select,
-  Button,
-} from "antd";
+import { Table, Avatar, Typography, theme, InputNumber, Input, Select, Button } from "antd";
 
 import type { IUser, IUserFilterVariables } from "../../interfaces";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
@@ -38,11 +29,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
   const t = useTranslate();
   const { token } = theme.useToken();
 
-  const { tableProps, filters, sorters } = useTable<
-    IUser,
-    HttpError,
-    IUserFilterVariables
-  >({
+  const { tableProps, filters, sorters } = useTable<IUser, HttpError, IUserFilterVariables>({
     filters: {
       initial: [
         {
@@ -92,9 +79,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="users" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="users" />,
         }}
       >
         <Table.Column
@@ -139,17 +124,10 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           key="fullName"
           dataIndex="fullName"
           title={t("users.fields.name")}
-          defaultFilteredValue={getDefaultFilter(
-            "fullName",
-            filters,
-            "contains",
-          )}
+          defaultFilteredValue={getDefaultFilter("fullName", filters, "contains")}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.name.placeholder")}
-              />
+              <Input style={{ width: "100%" }} placeholder={t("users.filter.name.placeholder")} />
             </FilterDropdown>
           )}
         />
@@ -160,10 +138,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
           defaultFilteredValue={getDefaultFilter("gsm", filters, "eq")}
           filterDropdown={(props) => (
             <FilterDropdown {...props}>
-              <Input
-                style={{ width: "100%" }}
-                placeholder={t("users.filter.gsm.placeholder")}
-              />
+              <Input style={{ width: "100%" }} placeholder={t("users.filter.gsm.placeholder")} />
             </FilterDropdown>
           )}
         />
@@ -190,12 +165,8 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
                 style={{ width: "100%" }}
                 placeholder={t("users.filter.isActive.placeholder")}
               >
-                <Select.Option value="true">
-                  {t("users.fields.isActive.true")}
-                </Select.Option>
-                <Select.Option value="false">
-                  {t("users.fields.isActive.false")}
-                </Select.Option>
+                <Select.Option value="true">{t("users.fields.isActive.true")}</Select.Option>
+                <Select.Option value="false">{t("users.fields.isActive.false")}</Select.Option>
               </Select>
             </FilterDropdown>
           )}

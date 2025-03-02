@@ -64,9 +64,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
                       <Typography.Text
                         key={index}
                         style={{
-                          color: isFirst
-                            ? token.colorText
-                            : token.colorTextTertiary,
+                          color: isFirst ? token.colorText : token.colorTextTertiary,
                         }}
                       >
                         {address.text}
@@ -97,11 +95,7 @@ export const CustomerInfoList = ({ customer }: Props) => {
             <List.Item>
               <List.Item.Meta
                 avatar={item.icon}
-                title={
-                  <Typography.Text type="secondary">
-                    {item.title}
-                  </Typography.Text>
-                }
+                title={<Typography.Text type="secondary">{item.title}</Typography.Text>}
                 description={item.value}
               />
             </List.Item>

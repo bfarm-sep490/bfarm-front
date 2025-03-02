@@ -1,7 +1,4 @@
-export const getUniqueListWithCount = <TData = any>(props: {
-  list: TData[];
-  field: string;
-}) => {
+export const getUniqueListWithCount = <TData = any>(props: { list: TData[]; field: string }) => {
   const { list, field } = props;
 
   const uniqueList = list.reduce(

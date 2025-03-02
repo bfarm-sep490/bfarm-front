@@ -28,8 +28,7 @@
   },
   "include": [
     "commitlint.config.ts",
-    "src",
-    "vite.config.ts"
+    "src"
   ],
   "references": [
     {

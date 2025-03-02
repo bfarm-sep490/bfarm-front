@@ -82,7 +82,7 @@ const MapWrapper: FC<PropsWithChildren<MapWrapperProps>> = ({ children, mapProps
       //  @ts-ignore
       version="beta"
       libraries={["marker"]}
-      apiKey={import.meta.env.VITE_APP_MAP_ID}
+      apiKey={import.meta.env.VITE_APP_MAP_ID || ""}
     >
       <MapComponent {...mapProps}>{children}</MapComponent>
     </Wrapper>

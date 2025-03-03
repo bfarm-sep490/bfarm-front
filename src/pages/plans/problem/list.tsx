@@ -11,15 +11,25 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Flex,
+  Typography,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { ProblemList } from "./table_list";
+import { ProblemListTable } from "../../../components/problem/list-table";
 
 export const ShowProblemList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const { tableProps } = useTable({
+    resource: `plans/${id}/problems`,
+  });
   return (
     <>
       <Button
@@ -41,9 +51,12 @@ export const ShowProblemList = ({ children }: PropsWithChildren) => {
         <Typography.Title level={3}>
           Danh sách vấn đề của kế hoạch #{id}
         </Typography.Title>
-        <ProblemList children={children} />
+        <ProblemListTable
+          tableProps={tableProps}
+          showNavigation={`/plans/${id}/problems`}
+          children={children}
+        />
       </div>
     </>
   );
 };
-export { ProblemList };

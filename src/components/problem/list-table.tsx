@@ -21,75 +21,9 @@ import {
 } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ProblemTypeTag } from "./type-tag";
+import { ProblemStatusTag } from "./status-tag";
 
-const getTypeTagColor = (value: string) => {
-  switch (value) {
-    case "Weather":
-      return "green";
-    case "Fungus":
-      return "#CC33FF";
-    case "Nutrients":
-      return "#550000";
-    case "Light":
-      return "yellow";
-    case "Water":
-      return "blue";
-
-    case "Pest":
-      return "yellow";
-    default:
-      return "default";
-  }
-};
-
-const getTypeTagValue = (value: string) => {
-  switch (value) {
-    case "Weather":
-      return "Thời tiết";
-    case "Nutrients":
-      return "Dinh dưỡng";
-    case "Fungus":
-      return "Nấm mốc";
-    case "Light":
-      return "Ánh sáng";
-    case "Water":
-      return "Thiếu nước";
-    case "Fertilizing":
-      return "Bón phân";
-    case "Pest":
-      return "Sâu bệnh";
-    default:
-      return "Không xác định";
-  }
-};
-
-const getStatusTagColor = (value: string) => {
-  switch (value) {
-    case "Pending":
-      return "blue";
-    case "Resolved":
-      return "green";
-    case "Cancelled":
-      return "red";
-
-    default:
-      return "default";
-  }
-};
-
-const getStatusTagValue = (value: string) => {
-  switch (value) {
-    case "Pending":
-      return "Đợi xác nhận";
-    case "Resolved":
-      return "Hoàn thành";
-    case "Cancelled":
-      return "Hủy bỏ";
-
-    default:
-      return "Không xác định";
-  }
-};
 type TableProblemProps = {
   tableProps: TableProps;
   showNavigation?: string;
@@ -118,22 +52,12 @@ export const ProblemListTable = ({
           <Table.Column
             dataIndex="problem_type"
             title={translate("problem_type")}
-            render={(value) => (
-              <TagField
-                value={getTypeTagValue(value)}
-                color={getTypeTagColor(value)}
-              />
-            )}
+            render={(value) => <ProblemTypeTag status={value} />}
           />
           <Table.Column
             dataIndex="status"
             title={"status"}
-            render={(value) => (
-              <TagField
-                value={getStatusTagValue(value)}
-                color={getStatusTagColor(value)}
-              />
-            )}
+            render={(value) => <ProblemStatusTag status={value} />}
           />
 
           <Table.Column

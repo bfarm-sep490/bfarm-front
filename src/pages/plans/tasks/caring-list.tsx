@@ -9,6 +9,15 @@ export const CaringTaskListInPlan = ({ children }: PropsWithChildren) => {
   const { tableProps } = useTable({
     syncWithLocation: true,
     resource: "caring-tasks",
+    filters: {
+      initial: [
+        {
+          field: "planId",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
   return (
     <CaringListTable

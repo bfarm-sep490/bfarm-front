@@ -10,6 +10,15 @@ export const HarvestingTaskListInPlan = ({ children }: PropsWithChildren) => {
   const { tableProps } = useTable({
     syncWithLocation: true,
     resource: "harvesting-tasks",
+    filters: {
+      initial: [
+        {
+          field: "planId",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
   return (
     <HarvestedTaskList

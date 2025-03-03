@@ -4,6 +4,37 @@ import {
   GroupOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+// const { formProps } = useForm<GainingPlan>({
+//   resource: `plans`,
+//   action: "edit",
+//   id: `${id}/general`,
+//   queryOptions: {
+//     onSuccess(data: any) {
+//       if (data?.data?.data) {
+//         const general_plan = data?.data?.data;
+//         formProps.form?.setFieldsValue({
+//           id: general_plan?.id,
+//           plan_name: general_plan?.plan_name,
+//           plant_id: general_plan.plant_information?.plant_id,
+//           yield_id: general_plan?.yield_information?.yield_id,
+//           description: general_plan?.description,
+//           start_date: general_plan?.start_date,
+//           end_date: general_plan?.end_date,
+//           estimated_product: general_plan?.estimated_product,
+//           estimated_unit: general_plan?.estimated_unit,
+//         });
+//       }
+//     },
+//   },
+// });
+{
+  /* <InputGeneralPlan
+            experts={experts}
+            yields={yields}
+            plants={plants}
+            formProps={formProps}
+          /> */
+}
 import { Area } from "@ant-design/plots";
 import { DateField, TextField } from "@refinedev/antd";
 import { useBack, useShow } from "@refinedev/core";
@@ -37,6 +68,8 @@ import dayjs from "dayjs";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
+import { CaringTypeTag } from "../../../components/caring-task/type-tag";
+import { VerifyPlanInformation } from "./verify";
 type LayoutType = Parameters<typeof Form>[0]["layout"];
 
 interface GainingPlan {
@@ -66,39 +99,6 @@ interface GainingPlan {
     status: string;
   }[];
 }
-
-const getTypeTagColor = (value: string) => {
-  switch (value) {
-    case "planting":
-      return "green";
-    case "nurturing":
-      return "#550000";
-    case "watering":
-      return "blue";
-    case "fertilizing":
-      return "orange";
-    case "pestcontrol":
-      return "yellow";
-    default:
-      return "default";
-  }
-};
-const getTypeTagValue = (value: string) => {
-  switch (value) {
-    case "planting":
-      return "Gieo hạt";
-    case "nurturing":
-      return "Chăm sóc";
-    case "watering":
-      return "Tưới nước";
-    case "fertilizing":
-      return "Bón phân";
-    case "pestcontrol":
-      return "Phun thuốc";
-    default:
-      return "default";
-  }
-};
 
 export const ApprovalingPlanDrawer = () => {
   const { id } = useParams();
@@ -216,140 +216,6 @@ export const ApprovalingPlanDrawer = () => {
     if (gainingQuery[7].data) setYields(gainingQuery[7].data.data);
     setDataLoading(false);
   }, [gainingQuery.some((query) => query.isFetched)]);
-  const column_productive_checked = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên công việc",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Thời gian bắt đầu",
-      dataIndex: "start_date",
-      key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Thời gian kết thúc",
-      dataIndex: "end_date",
-      key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Loại chăm sóc",
-      dataIndex: "type",
-      key: "type",
-      render: (text: any, record: any) => (
-        <Tag color={getTypeTagColor(record.type)} style={{ fontSize: "12px" }}>
-          {getTypeTagValue(record.type)}
-        </Tag>
-      ),
-    },
-    {
-      title: "Nông dân",
-      dataIndex: "farmer_id",
-      key: "farmer_id",
-      render: (text: any, record: any) => (
-        <TextField
-          value={
-            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
-              ?.name || "Chưa xác định"
-          }
-        />
-      ),
-    },
-  ];
-  const column_harvesting_checked = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên công việc",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Thời gian bắt đầu",
-      dataIndex: "start_date",
-      key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Thời gian kết thúc",
-      dataIndex: "end_date",
-      key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Nông dân",
-      dataIndex: "farmer_id",
-      key: "farmer_id",
-      render: (text: any, record: any) => (
-        <TextField
-          value={
-            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
-              ?.name || "Chưa xác định"
-          }
-        />
-      ),
-    },
-  ];
-  const column_inspecting_checked = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên công việc",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Thời gian bắt đầu",
-      dataIndex: "start_date",
-      key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Thời gian kết thúc",
-      dataIndex: "end_date",
-      key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
-    },
-    {
-      title: "Nhà kiểm định",
-      dataIndex: "inspector_id",
-      key: "inspector_id",
-      render: (text: any, record: any) => (
-        <TextField
-          value={
-            inspectors?.find(
-              (inspector: any) => inspector.id === record.inspector_id
-            )?.name || "Chưa xác định"
-          }
-        />
-      ),
-    },
-  ];
   const column_productive = [
     {
       title: "ID",
@@ -358,7 +224,7 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Tên công việc",
-      dataIndex: "name",
+      dataIndex: "task_name",
       key: "name",
     },
     {
@@ -379,12 +245,10 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Loại chăm sóc",
-      dataIndex: "type",
+      dataIndex: "task_type",
       key: "type",
       render: (text: any, record: any) => (
-        <Tag color={getTypeTagColor(record.type)} style={{ fontSize: "12px" }}>
-          {getTypeTagValue(record.type)}
-        </Tag>
+        <CaringTypeTag status={record?.task_type} />
       ),
     },
     {
@@ -428,8 +292,8 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Tên thu hoạch",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "task_name",
+      key: "task_name",
     },
     {
       title: "Thời gian bắt đầu",
@@ -488,7 +352,7 @@ export const ApprovalingPlanDrawer = () => {
     },
     {
       title: "Tên công việc",
-      dataIndex: "name",
+      dataIndex: "task_name",
       key: "name",
     },
     {
@@ -518,7 +382,7 @@ export const ApprovalingPlanDrawer = () => {
           value={record?.inspector_id || ""}
           onChange={(value) => {
             const newInspectingTasks = inspectingTasks.map((task: any) => {
-              if (task.id === record.id) {
+              if (task?.id === record?.id) {
                 return {
                   ...task,
                   inspector_id: value,
@@ -596,7 +460,7 @@ export const ApprovalingPlanDrawer = () => {
                 chosenFarmers.filter((farmer: any) => farmer.id !== record.id)
               );
               const newProductiveTask = productiveTasks.map((task: any) => {
-                if (task.id === record.id) {
+                if (task?.id === record?.id) {
                   return {
                     ...task,
                     farmer_id: null,
@@ -606,7 +470,7 @@ export const ApprovalingPlanDrawer = () => {
               });
               setProductiveTasks(newProductiveTask);
               const newHarvestingTask = harvestingTasks.map((task: any) => {
-                if (task.id === record.id) {
+                if (task?.id === record?.id) {
                   return {
                     ...task,
                     farmer_id: null,
@@ -884,127 +748,17 @@ export const ApprovalingPlanDrawer = () => {
       title: "4",
       content: (
         <>
-          <Flex vertical justify="center" about="center" gap={10}>
-            <Card title={"Xác nhận thông tin chung kế hoạch"}>
-              <Typography.Title level={4}></Typography.Title>
-
-              <Row gutter={[16, 16]}>
-                <Col>
-                  <Flex vertical gap={16} style={{ flex: 1 }}>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <UserOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Cây trồng:</Typography.Text>
-
-                      <Typography.Text>
-                        {plants?.find(
-                          (plant: any) => plant.id === gainingPlan?.seed_id
-                        )?.name || "Không có dữ liệu"}
-                      </Typography.Text>
-                    </Space>
-
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <GoldOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Khu đất:</Typography.Text>
-                      <Typography.Text>
-                        {yields?.find(
-                          (yieldItem: any) =>
-                            yieldItem.id === gainingPlan?.yield_id
-                        )?.name || "Không có dữ liệu"}
-                      </Typography.Text>
-                    </Space>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <FieldTimeOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>
-                        Thời gian dự kiến
-                      </Typography.Text>
-                      <Typography.Text>
-                        <DateField
-                          value={dayjs(gainingPlan?.start_date)}
-                          format="DD/MM/YYYY"
-                        ></DateField>{" "}
-                        -{" "}
-                        <DateField
-                          value={dayjs(gainingPlan?.end_date)}
-                          format="DD/MM/YYYY"
-                        ></DateField>
-                      </Typography.Text>
-                    </Space>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <GroupOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>
-                        Sản lượng dự kiến:
-                      </Typography.Text>
-                      <Typography.Text>
-                        {gainingPlan?.estimated_products}{" "}
-                        {gainingPlan?.estimated_unit}
-                      </Typography.Text>
-                    </Space>
-
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <FieldTimeOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Chuyên gia:</Typography.Text>
-                      <Typography.Text>
-                        {experts?.find(
-                          (expert: any) => expert.id === gainingPlan?.expert_id
-                        )?.name || "Không có dữ liệu"}
-                      </Typography.Text>
-                    </Space>
-                  </Flex>
-                </Col>
-                <Col>
-                  <FieldTimeOutlined style={{ fontSize: 16 }} />
-                  <Typography.Text strong>Mô tả</Typography.Text>
-                  <Typography.Paragraph>
-                    {gainingPlan?.description}
-                  </Typography.Paragraph>
-                </Col>
-              </Row>
-            </Card>
-            <Card
-              title={"Xác nhận công việc đã phân công của kế hoạch"}
-              style={{ minHeight: "600px" }}
-            >
-              <Tabs
-                defaultActiveKey={tab}
-                tabPosition={"left"}
-                style={{ minHeight: 220 }}
-              >
-                <Tabs.TabPane key="1" tab="Chăm sóc">
-                  <Table
-                    pagination={{
-                      pageSize: 10,
-                    }}
-                    columns={column_productive_checked}
-                    dataSource={productiveTasks}
-                    rowKey="id"
-                    scroll={{ x: "max-content" }}
-                  ></Table>
-                </Tabs.TabPane>
-                <Tabs.TabPane key="2" tab="Thu hoạch">
-                  <Table
-                    pagination={{
-                      pageSize: 10,
-                    }}
-                    columns={column_harvesting_checked}
-                    dataSource={harvestingTasks}
-                    rowKey="id"
-                    scroll={{ x: "max-content" }}
-                  ></Table>
-                </Tabs.TabPane>
-                <Tabs.TabPane key="3" tab="Kiểm định">
-                  <Table
-                    pagination={{
-                      pageSize: 10,
-                    }}
-                    columns={column_inspecting_checked}
-                    dataSource={inspectingTasks}
-                    rowKey="id"
-                    scroll={{ x: "max-content" }}
-                  ></Table>
-                </Tabs.TabPane>
-              </Tabs>
-            </Card>
-          </Flex>
+          <VerifyPlanInformation
+            plants={plants}
+            yields={yields}
+            gainingPlan={gainingPlan}
+            experts={experts}
+            productiveTasks={productiveTasks}
+            harvestingTasks={harvestingTasks}
+            inspectingTasks={inspectingTasks}
+            inspectors={inspectors}
+            farmers={farmers}
+          />
         </>
       ),
     },
@@ -1031,7 +785,7 @@ export const ApprovalingPlanDrawer = () => {
       const response = await fetch("http://localhost:3001/plans/gaining_plan", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // <-- Xác định kiểu dữ liệu là JSON
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...gainingPlan,

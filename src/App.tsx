@@ -24,6 +24,7 @@ import {
   HddOutlined,
   SearchOutlined,
   UserOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
@@ -52,10 +53,9 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
 import { PlanList, PlanShow } from "./pages/plans";
-import { ProblemList, ShowProblemList } from "./pages/plans/problem/show";
+import { ShowProblemList } from "./pages/plans/problem/list";
 import { ShowTasksList } from "./pages/plans/tasks/show";
-import { ProblemShow } from "./pages/plans/problem/show-detail";
-import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer/steps_setup_plans_drawer";
+import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer";
 import { jsonDataProvider } from "./dataProvider";
 import { ProblemShowV2 } from "./pages/problems/show";
 import { CaringTaskListInPlan } from "./pages/plans/tasks/caring-list";
@@ -217,6 +217,8 @@ const App: React.FC = () => {
                 show: "/problems/:id",
                 meta: {
                   label: "Vấn đề",
+                  icon: <WarningOutlined />,
+                  route: "/problems",
                 },
               },
               {

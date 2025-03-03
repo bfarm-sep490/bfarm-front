@@ -9,7 +9,16 @@ export const PackagingTaskListInPlan = ({ children }: PropsWithChildren) => {
   const { id } = useParams();
   const { tableProps } = useTable({
     syncWithLocation: true,
-    resource: "caring-tasks",
+    resource: "packaging-tasks",
+    filters: {
+      initial: [
+        {
+          field: "planId",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
   return (
     <PakagingTaskList

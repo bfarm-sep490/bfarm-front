@@ -446,8 +446,8 @@ const App: React.FC = () => {
 
          
                   <Route path="/inspector/*" element={<InspectorsList />}>
-                    {/* <Route path="create" element={<InspectorCreate />} />
-                    <Route path="edit/:id" element={<InspectorCreate />} /> */}
+                    <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} />
                     <Route path="show/:id" element={<InspectorsShow />} />
                   </Route>
  

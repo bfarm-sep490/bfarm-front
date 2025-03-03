@@ -47,6 +47,7 @@ export const FertilizerDrawerForm = ({
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
+
   useEffect(() => {
     if (id && action === "edit") {
       fetchFertilizerDetails();
@@ -71,6 +72,19 @@ export const FertilizerDrawerForm = ({
     }
   };
 
+  const onDrawerClose = () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+    go({
+      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
+      query: { to: undefined },
+      options: { keepQuery: true },
+      type: "replace",
+    });
+  };
+
   const handleUpload = async ({ file }: any) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -85,7 +99,9 @@ export const FertilizerDrawerForm = ({
       );
 
       if (response.data.status === 200) {
-        setImageUrl(response.data.image_url);
+        const uploadedImageUrl = response.data.image_url;
+        setImageUrl(uploadedImageUrl);
+        form.setFieldsValue({ image_url: uploadedImageUrl }); // Cập nhật form
         message.success("Tải ảnh lên thành công!");
       } else {
         message.error("Lỗi khi tải ảnh lên.");
@@ -113,7 +129,7 @@ export const FertilizerDrawerForm = ({
           action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
         );
         onMutationSuccess?.();
-        onDrawerClose();
+        onClose?.();
       } else {
         message.error("Có lỗi xảy ra!");
       }
@@ -124,18 +140,6 @@ export const FertilizerDrawerForm = ({
     }
   };
 
-  const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
-      return;
-    }
-    go({
-      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
-      query: { to: undefined },
-      options: { keepQuery: true },
-      type: "replace",
-    });
-  };
   return (
     <Drawer
       open={true}
@@ -212,7 +216,7 @@ export const FertilizerDrawerForm = ({
           </Form.Item>
 
           <Flex align="center" justify="space-between">
-          <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Cancel</Button>
             <Button htmlType="submit" type="primary">
               Save
             </Button>

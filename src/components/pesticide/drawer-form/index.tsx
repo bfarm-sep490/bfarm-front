@@ -40,7 +40,6 @@ export const PesticideDrawerForm = ({
   const [searchParams] = useSearchParams();
   const go = useGo();
 
-
   // Fetch pesticide details if action is 'edit' and id is provided
   useEffect(() => {
     if (id && action === "edit") {
@@ -73,6 +72,18 @@ export const PesticideDrawerForm = ({
     } finally {
       setLoading(false);
     }
+  };
+  const onDrawerClose = () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+    go({
+      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
+      query: { to: undefined },
+      options: { keepQuery: true },
+      type: "replace",
+    });
   };
 
   // Handle image upload
@@ -130,7 +141,7 @@ export const PesticideDrawerForm = ({
           action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
         );
         onMutationSuccess?.();
-        onDrawerClose();
+        onClose?.();
       } else {
         message.error("Có lỗi xảy ra!");
       }
@@ -140,27 +151,14 @@ export const PesticideDrawerForm = ({
       setLoading(false);
     }
   };
-  
-  const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
-      return;
-    }
-    go({
-      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
-      query: { to: undefined },
-      options: { keepQuery: true },
-      type: "replace",
-    });
-  };
 
   return (
     <Drawer
-    open={true}
-    title={action === "edit" ? "Edit Pesticide" : "Add Pesticide"}
-    width={breakpoint.sm ? "378px" : "100%"}
-    onClose={onDrawerClose}
-  >
+      open={true}
+      title={action === "edit" ? "Edit Pesticide" : "Add Pesticide"}
+      width={breakpoint.sm ? "378px" : "100%"}
+      onClose={onDrawerClose}
+    >
       <Spin spinning={loading}>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item label="Image">
@@ -261,7 +259,7 @@ export const PesticideDrawerForm = ({
           </Form.Item>
 
           <Flex align="center" justify="space-between">
-          <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Cancel</Button>
             <SaveButton htmlType="submit" type="primary">
               Save
             </SaveButton>

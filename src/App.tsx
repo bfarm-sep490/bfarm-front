@@ -138,8 +138,8 @@ const App: React.FC = () => {
               {
                 name: "inspector",
                 list: "/inspector",
-                // create: "/inspector/create",
-                // edit: "/inspector/edit/:id",
+                create: "/inspector/create",
+                edit: "/inspector/edit/:id",
                 show: "/inspector/show/:id",
                 meta: {
                   label: "Inspection",
@@ -335,8 +335,8 @@ const App: React.FC = () => {
 
          
                   <Route path="/inspector/*" element={<InspectorsList />}>
-                    {/* <Route path="create" element={<InspectorCreate />} />
-                    <Route path="edit/:id" element={<InspectorCreate />} /> */}
+                    <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} />
                     <Route path="show/:id" element={<InspectorsShow />} />
                   </Route>
  

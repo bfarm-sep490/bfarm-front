@@ -87,6 +87,7 @@ export const InspectorDrawerForm = (props: Props) => {
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
+          {/* Image Upload */}
           <Form.Item
             name="imageUrl"
             valuePropName="fileList"
@@ -101,6 +102,7 @@ export const InspectorDrawerForm = (props: Props) => {
               accept=".png,.jpg,.jpeg"
               className={styles.uploadDragger}
               showUploadList={false}
+              disabled={props.action === "edit"} // Disable khi ở chế độ edit
             >
               <Flex
                 vertical
@@ -132,63 +134,74 @@ export const InspectorDrawerForm = (props: Props) => {
                       bottom: 0,
                     }),
                   }}
+                  disabled={props.action === "edit"} // Disable khi ở chế độ edit
                 >
                   Upload Image
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
-          <Flex vertical>
-            <Form.Item
-              label="Account ID"
-              name="accountID"
-              className={styles.formItem}
-              rules={[{ required: true, message: "Account ID is required!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Name"
-              name="name"
-              className={styles.formItem}
-              rules={[{ required: true, message: "Name is required!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Address"
-              name="address"
-              className={styles.formItem}
-              rules={[{ required: true, message: "Address is required!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Description"
-              name="description"
-              className={styles.formItem}
-              rules={[{ required: true, message: "Description is required!" }]}
-            >
-              <Input.TextArea rows={6} />
-            </Form.Item>
-            <Form.Item
-              label="Availability"
-              name="isAvailable"
-              className={styles.formItem}
-              rules={[{ required: true, message: "Availability is required!" }]}
-            >
-              <Select options={availabilityOptions} />
-            </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
-              <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
-                Save
-              </SaveButton>
-            </Flex>
+
+          {/* Account ID */}
+          <Form.Item
+            label="Account ID"
+            name="accountID"
+            className={styles.formItem}
+            rules={[{ required: true, message: "Account ID is required!" }]}
+          >
+            <Input disabled={props.action === "edit"} /> {/* Disable khi ở chế độ edit */}
+          </Form.Item>
+
+          {/* Name */}
+          <Form.Item
+            label="Name"
+            name="name"
+            className={styles.formItem}
+            rules={[{ required: true, message: "Name is required!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          {/* Address */}
+          <Form.Item
+            label="Address"
+            name="address"
+            className={styles.formItem}
+            rules={[{ required: true, message: "Address is required!" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          {/* Description */}
+          <Form.Item
+            label="Description"
+            name="description"
+            className={styles.formItem}
+            rules={[{ required: true, message: "Description is required!" }]}
+          >
+            <Input.TextArea rows={6} />
+          </Form.Item>
+
+          {/* Availability */}
+          <Form.Item
+            label="Availability"
+            name="isAvailable"
+            className={styles.formItem}
+            rules={[{ required: true, message: "Availability is required!" }]}
+          >
+            <Select options={availabilityOptions} />
+          </Form.Item>
+
+          {/* Buttons */}
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ padding: "16px 16px 0px 16px" }}
+          >
+            <Button onClick={onDrawerClose}>Cancel</Button>
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+              Save
+            </SaveButton>
           </Flex>
         </Form>
       </Spin>

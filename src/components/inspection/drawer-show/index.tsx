@@ -7,6 +7,7 @@ import {
   useShow,
   useTranslate,
   useList,
+  useUpdate, // Thêm hook useUpdate
 } from "@refinedev/core";
 import {
   Avatar,
@@ -18,11 +19,16 @@ import {
   Typography,
   theme,
   Tag,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Select,
 } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { IInspector, InspectorAvailability, IInspectingTask, InspectingTestKitColor } from "@/interfaces";
+import { IInspector, IInspectingTask } from "@/interfaces";
 import { useState } from "react";
 
 type Props = {
@@ -31,50 +37,16 @@ type Props = {
   onEdit?: () => void;
 };
 
-// Component đổi màu trạng thái của Task
 const TaskStatusTag = ({ status }: { status: string }) => {
   const colorMap: Record<string, string> = {
-    completed: "green",
-    ongoing: "blue",
-    pending: "gold",
-    cancel: "red",
+    Completed: "green",
+    OnGoing: "blue",
+    Pending: "gold",
+    Draft: "gray",
+    Cancel: "red",
   };
 
   return <Tag color={colorMap[status] || "gray"}>{status.toUpperCase()}</Tag>;
-};
-
-// Component hiển thị trạng thái Availability
-const AvailabilityTag = ({ availability }: { availability: InspectorAvailability }) => {
-  const isAvailable = availability === "Available";
-  return (
-    <Tag color={isAvailable ? "green" : "red"} style={{ padding: "4px 12px", fontSize: "14px" }}>
-      {isAvailable ? <CheckCircleOutlined /> : <CloseCircleOutlined />} {isAvailable ? "Available" : "Not Available"}
-    </Tag>
-  );
-};
-
-// Component hiển thị màu GT Test Kit
-const GTTestKitColorTag = ({ color }: { color?: InspectingTestKitColor }) => {
-  if (!color) return <Tag color="default">N/A</Tag>;
-
-  const colorMap: Record<InspectingTestKitColor, string> = {
-    Blue: "blue",
-    Yellow: "gold",
-    Red: "red",
-    Orange: "orange",
-  };
-
-  return <Tag color={colorMap[color] || "gray"}>{color}</Tag>;
-};
-
-// Component giả định cho form chỉnh sửa
-const ItemDrawerForm = ({ id, action, onClose }: { id?: BaseKey; action: string; onClose: () => void }) => {
-  return (
-    <Drawer open={true} onClose={onClose}>
-      <Typography.Title level={4}>{action === "edit" ? "Edit Inspector" : "Create Inspector"}</Typography.Title>
-      {/* Form logic here */}
-    </Drawer>
-  );
 };
 
 export const InspectorDrawerShow = (props: Props) => {
@@ -85,7 +57,9 @@ export const InspectorDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const [editOpen, setEditOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<IInspectingTask | null>(null); // Lưu task được chọn để chỉnh sửa
   const breakpoint = Grid.useBreakpoint();
+  const [form] = Form.useForm(); // Form instance
 
   // Fetch dữ liệu của Inspector
   const { query: queryResult } = useShow<IInspector, HttpError>({
@@ -97,6 +71,9 @@ export const InspectorDrawerShow = (props: Props) => {
   const { data: taskData } = useList<IInspectingTask>({
     resource: "inspectingTask",
   });
+
+  // Hook để cập nhật dữ liệu
+  const { mutate: updateTask } = useUpdate<IInspectingTask>();
 
   const inspector = queryResult.data?.data;
 
@@ -114,6 +91,30 @@ export const InspectorDrawerShow = (props: Props) => {
       query: { to: undefined },
       options: { keepQuery: true },
       type: "replace",
+    });
+  };
+
+  // Xử lý khi nhấn nút "Complete"
+  const handleEditClick = (task: IInspectingTask) => {
+    setSelectedTask(task); // Lưu task được chọn
+    form.setFieldsValue(task); // Đặt giá trị mặc định cho form
+    setEditOpen(true); // Mở modal chỉnh sửa
+  };
+
+  // Xử lý khi nhấn nút "Save" trong modal chỉnh sửa
+  const handleSave = () => {
+    form.validateFields().then((values) => {
+      if (selectedTask) {
+        updateTask({
+          resource: "inspectingTask",
+          id: selectedTask.taskID,
+          values: {
+            ...selectedTask,
+            ...values,
+          },
+        });
+        setEditOpen(false); // Đóng modal sau khi lưu
+      }
     });
   };
 
@@ -154,10 +155,6 @@ export const InspectorDrawerShow = (props: Props) => {
           dataSource={[
             { label: "Account ID", value: inspector?.accountID },
             { label: "Address", value: inspector?.address },
-            {
-              label: "Availability",
-              value: <AvailabilityTag availability={inspector?.isAvailable!} />,
-            },
           ]}
           renderItem={(data) => (
             <List.Item style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}>
@@ -179,21 +176,27 @@ export const InspectorDrawerShow = (props: Props) => {
                 <List
                   dataSource={[
                     { label: "Task ID", value: task.taskID },
+                    { label: "Plan ID", value: task.planID },
+                    { label: "Task Name", value: task.taskName },
                     { label: "Task Type", value: task.taskType },
                     { label: "Description", value: task.description },
                     { label: "Start Date", value: new Date(task.startDate).toLocaleDateString() },
                     { label: "End Date", value: new Date(task.endDate).toLocaleDateString() },
+                    { label: "Completed Date", value: task.completedDate ? new Date(task.completedDate).toLocaleDateString() : "N/A" },
+                    { label: "Result Content", value: task.resultContent },
+                    { label: "Brix Point", value: task.brixPoint !== null ? `${task.brixPoint}` : "N/A" },
                     { label: "Temperature (°C)", value: `${task.temperature}°C` },
                     { label: "Humidity (%)", value: `${task.humidity}%` },
-                    { label: "Moisture (%)", value: task.moisture ? `${task.moisture}%` : "N/A" },
+                    { label: "Moisture (%)", value: task.moisture !== null ? `${task.moisture}%` : "N/A" },
+                    { label: "Shell Color", value: task.shellColor || "N/A" },
+                    { label: "Test GT Kit Color", value: task.testGTKitColor || "N/A" },
                     { label: "Inspecting Quantity", value: `${task.inspectingQuantity} ${task.unit}` },
                     { label: "Issue Percent", value: `${task.issuePercent}%` },
                     { label: "Can Harvest", value: task.canHarvest ? "Yes" : "No" },
-                    {
-                      label: "GT Test Kit Color",
-                      value: <GTTestKitColorTag color={task.testGTKitColor} />,
-                    },
                     { label: "Status", value: <TaskStatusTag status={task.status} /> },
+                    { label: "Inspector ID", value: task.inspectorID },
+                    { label: "Created At", value: new Date(task.createdAt).toLocaleString() },
+                    { label: "Updated At", value: new Date(task.updatedAt).toLocaleString() },
                   ]}
                   renderItem={(data) => (
                     <List.Item style={{ display: "flex", justifyContent: "space-between", padding: "8px 16px" }}>
@@ -203,25 +206,72 @@ export const InspectorDrawerShow = (props: Props) => {
                   )}
                 />
                 {index < inspectorTasks.length - 1 && <Divider style={{ margin: "8px 0" }} />}
+                <Flex align="center" justify="flex-end" style={{ padding: "16px" }}>
+                  <Button icon={<EditOutlined />} onClick={() => handleEditClick(task)}>
+                    Complete
+                  </Button>
+                </Flex>
               </div>
             ))}
           </>
         ) : (
           <Typography.Text style={{ padding: "16px" }}>No tasks assigned to this inspector.</Typography.Text>
         )}
-
-        {/* Button chỉnh sửa */}
-        <Flex align="center" justify="flex-end" style={{ padding: "16px" }}>
-          <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>
-            Edit
-          </Button>
-        </Flex>
       </Drawer>
 
-      {/* Form chỉnh sửa */}
-      {editOpen && (
-        <ItemDrawerForm id={props.id} action="edit" onClose={() => setEditOpen(false)} />
-      )}
+      <Modal
+      title="Edit Task"
+      open={editOpen}
+      onCancel={() => setEditOpen(false)}
+      onOk={handleSave}
+      zIndex={2000} // Đặt z-index cao hơn Drawer
+      style={{ top: 20 }} // Điều chỉnh vị trí nếu cần
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item name="resultContent" label="Result Content">
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item name="brixPoint" label="Brix Point">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="temperature" label="Temperature (°C)">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="humidity" label="Humidity (%)">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="moisture" label="Moisture (%)">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="shellColor" label="Shell Color">
+          <Input />
+        </Form.Item>
+        <Form.Item name="testGTKitColor" label="Test GT Kit Color">
+          <Input />
+        </Form.Item>
+        <Form.Item name="inspectingQuantity" label="Inspecting Quantity">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="issuePercent" label="Issue Percent">
+          <InputNumber />
+        </Form.Item>
+        <Form.Item name="canHarvest" label="Can Harvest">
+          <Select>
+            <Select.Option value={true}>Yes</Select.Option>
+            <Select.Option value={false}>No</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item name="status" label="Status">
+          <Select>
+            <Select.Option value="Completed">Completed</Select.Option>
+            <Select.Option value="OnGoing">OnGoing</Select.Option>
+            <Select.Option value="Pending">Pending</Select.Option>
+            <Select.Option value="Draft">Draft</Select.Option>
+            <Select.Option value="Cancel">Cancel</Select.Option>
+          </Select>
+        </Form.Item>
+      </Form>
+    </Modal>
     </>
   );
 };

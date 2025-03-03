@@ -1,12 +1,12 @@
-import type { AxiosInstance } from "axios";
+import { axiosInstance, generateSort, generateFilter } from "./utils";
 import { stringify } from "query-string";
+import type { AxiosInstance } from "axios";
 import type { DataProvider } from "@refinedev/core";
-import { axiosInstance, generateFilter, generateSort } from "@refinedev/simple-rest";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 type MethodTypesWithBody = "post" | "put" | "patch";
 
-export const jsonDataProvider = (
+export const dataProvider = (
   apiUrl: string,
   httpClient: AxiosInstance = axiosInstance,
 ): Omit<Required<DataProvider>, "createMany" | "updateMany" | "deleteMany"> => ({
@@ -48,11 +48,20 @@ export const jsonDataProvider = (
       headers: headersFromMeta,
     });
 
-    const total = +headers["x-total-count"];
+    const responseData = data.data !== undefined ? data.data : data;
+
+    const total =
+      headers["x-total-count"] !== undefined
+        ? parseInt(headers["x-total-count"], 10)
+        : data.total !== undefined
+          ? data.total
+          : Array.isArray(responseData)
+            ? responseData.length
+            : 0;
 
     return {
-      data: data?.data,
-      total: total || data?.data?.length,
+      data: responseData,
+      total,
     };
   },
 
@@ -65,8 +74,10 @@ export const jsonDataProvider = (
       { headers },
     );
 
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
-      data: data?.data,
+      data: responseData,
     };
   },
 
@@ -80,8 +91,10 @@ export const jsonDataProvider = (
       headers,
     });
 
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
-      data: data?.data,
+      data: responseData,
     };
   },
 
@@ -95,8 +108,10 @@ export const jsonDataProvider = (
       headers,
     });
 
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
-      data: data?.data,
+      data: responseData,
     };
   },
 
@@ -108,8 +123,10 @@ export const jsonDataProvider = (
 
     const { data } = await httpClient[requestMethod](url, { headers });
 
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
-      data: data?.data,
+      data: responseData,
     };
   },
 
@@ -124,8 +141,10 @@ export const jsonDataProvider = (
       headers,
     });
 
+    const responseData = data.data !== undefined ? data.data : data;
+
     return {
-      data: data?.data,
+      data: responseData,
     };
   },
 
@@ -181,6 +200,8 @@ export const jsonDataProvider = (
 
     const { data } = axiosResponse;
 
-    return Promise.resolve({ data: data.data });
+    const responseData = data.data !== undefined ? data.data : data;
+
+    return Promise.resolve({ data: responseData });
   },
 });

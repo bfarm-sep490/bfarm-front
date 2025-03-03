@@ -23,7 +23,7 @@ export const FertilizersListTable: React.FC = () => {
   const { showUrl } = useNavigation();
 
   const { tableProps, sorters, filters } = useTable<IFertilizer, HttpError>({
-    resource: "fertilizer",
+    resource: "fertilizers",
     filters: {
       initial: [
         {

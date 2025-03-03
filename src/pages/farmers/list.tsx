@@ -1,9 +1,7 @@
 import { FarmerListTable } from "@/components/farmer";
-import { FertilizersListCard } from "@/components/fertilizer/list-card";
-import { FertilizersListTable } from "@/components/fertilizer/list-table";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
-import { useGo, useNavigation, useTranslate } from "@refinedev/core";
+import { useGo, useNavigation } from "@refinedev/core";
 import { Segmented } from "antd";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation } from "react-router";
@@ -26,7 +24,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
     localStorage.setItem("farmers-view", value);
   };
 
-  const t = useTranslate();
+  // const t = useTranslate();
 
   return (
     <List

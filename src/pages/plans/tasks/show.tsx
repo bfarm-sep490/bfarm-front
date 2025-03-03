@@ -22,8 +22,11 @@ import {
 } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { HarvestedTaskList } from "./harvesting/table_list";
-import { TaskList } from "./caring/table_list";
+import { CaringListTable } from "../../../components/caring-task/list-table";
+import { CaringTaskListInPlan } from "./caring-list";
+import { HarvestedTaskList } from "../../../components/harvesting-task/list-table";
+import { HarvestingTaskListInPlan } from "./harvesting-list";
+import { PackagingTaskListInPlan } from "./packaging-list";
 
 export const ShowTasksList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
@@ -31,8 +34,8 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   const isHarvestingTask = location.pathname.includes("harvesting-task");
-  const isProductingTask = location.pathname.includes("productive-task");
-  const isInspectingTask = location.pathname.includes("inspecting-task");
+  const isProductingTask = location.pathname.includes("caring-task");
+  const isPackagingTask = location.pathname.includes("packaging-task");
 
   return (
     <>
@@ -53,32 +56,37 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
               defaultValue={
                 isHarvestingTask
                   ? "harvesting"
-                  : isInspectingTask
-                  ? "inspecting"
-                  : "productive"
+                  : isPackagingTask
+                  ? "packaging"
+                  : "caring"
               }
               onChange={(e) => {
                 navigate(`/plans/${id}/${e.target.value}-tasks`);
               }}
             >
-              <Radio.Button value="productive">Chăm sóc</Radio.Button>
+              <Radio.Button value="caring">Chăm sóc</Radio.Button>
               <Radio.Button value="harvesting">Thu hoạch</Radio.Button>
-              <Radio.Button value="inspecting">Kiểm tra</Radio.Button>
+              <Radio.Button value="packaging">Đóng gói</Radio.Button>
             </Radio.Group>
           </Space>
           <Button
-            onClick={() => navigate(`/plans`)}
-            icon={<ArrowLeftOutlined />}
+            onClick={() => {
+              if (isProductingTask) navigate(`/plans/${id}/caring-tasks/create`);
+
+              if (isHarvestingTask) navigate("/harvesting-tasks/create");
+
+              if (isPackagingTask) navigate("/packaging-tasks/create");
+            }}
           >
-            Plans
+            Tạo mới
           </Button>
         </Flex>
-        {isHarvestingTask ? (
-          <HarvestedTaskList />
-        ) : isInspectingTask ? (
-          <TaskList type="inspecting" />
+        {isProductingTask ? (
+          <CaringTaskListInPlan />
+        ) : isHarvestingTask ? (
+          <HarvestingTaskListInPlan />
         ) : (
-          <TaskList type={"productive"} />
+          <PackagingTaskListInPlan />
         )}
         {children}
       </div>

@@ -10,7 +10,15 @@ import {
   EmailField,
   DateField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Typography,
+  TableProps,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
@@ -82,13 +90,17 @@ const getStatusTagValue = (value: string) => {
       return "Không xác định";
   }
 };
-export const ProblemListInProblem = ({ children }: PropsWithChildren) => {
+type TableProblemProps = {
+  tableProps: TableProps;
+  showNavigation?: string;
+};
+export const ProblemListTable = ({
+  children,
+  tableProps,
+  showNavigation,
+}: PropsWithChildren & TableProblemProps) => {
   const { id } = useParams();
   const translate = useTranslate();
-  const { tableProps } = useTable({
-    syncWithLocation: true,
-    resource: `problems`,
-  });
 
   const navigate = useNavigate();
 
@@ -132,7 +144,13 @@ export const ProblemListInProblem = ({ children }: PropsWithChildren) => {
                 <ShowButton
                   hideText
                   size="small"
-                  onClick={() => navigate(`/problems/${record.id}`)}
+                  onClick={() =>
+                    navigate(
+                      showNavigation
+                        ? showNavigation + `/${record.id}`
+                        : `/problems/${record.id}`
+                    )
+                  }
                 />
               </Space>
             )}

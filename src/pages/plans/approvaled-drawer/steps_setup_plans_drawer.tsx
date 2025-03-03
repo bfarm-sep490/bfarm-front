@@ -32,15 +32,40 @@ import {
   Typography,
 } from "antd";
 import { DatePickerType } from "antd/es/date-picker";
-// Removed import for Paragraph as it does not exist in "antd"
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { set } from "lodash";
-import { title } from "process";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 type LayoutType = Parameters<typeof Form>[0]["layout"];
+
+interface GainingPlan {
+  id: number;
+  plan_name: string;
+  plant_id: number;
+  yield_id: number;
+  description: string;
+  start_date: Date;
+  end_date: Date;
+  estimated_product: number;
+  estimated_unit: string;
+  caring_tasks: {
+    task_id: number;
+    farmer_id: number;
+    status: string;
+  }[];
+  harvesting_tasks: {
+    task_id: number;
+    farmer_id: number;
+    status: string;
+  }[];
+
+  inspecting_tasks: {
+    task_id: number;
+    inspector_id: number;
+    status: string;
+  }[];
+}
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
@@ -89,9 +114,9 @@ export const ApprovalingPlanDrawer = () => {
   const [experts, setExperts] = useState<any>([]);
   const [yields, setYields] = useState<any>([]);
   const [inspectors, setinspectors] = useState<any>([]);
-
+  const [dataLoading, setDataLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [gainingData, setGainingData] = useState<GainingPlan | null>(null);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -104,75 +129,92 @@ export const ApprovalingPlanDrawer = () => {
     setIsModalOpen(false);
   };
 
-  ///////////////////////////////////////////////
   const { query: queryResult } = useShow({
     resource: "plans",
-    id: id,
+    id: `${id}/general`,
   });
   const gainingQuery = useQueries({
     queries: [
       {
         queryKey: ["farmers"],
         queryFn: () =>
-          fetch(`http://localhost:3001/farmers`).then((res) => res.json()),
+          fetch(`https://api.outfit4rent.online/api/farmers`).then((res) =>
+            res.json()
+          ),
       },
       {
         queryKey: ["productive-tasks"],
         queryFn: () =>
-          fetch(`http://localhost:3001/productive-tasks`).then((res) =>
+          fetch(`https://api.outfit4rent.online/api/caring-tasks`).then((res) =>
             res.json()
           ),
       },
       {
         queryKey: ["harvesting-tasks"],
         queryFn: () =>
-          fetch(`http://localhost:3001/harvesting-tasks`).then((res) =>
-            res.json()
+          fetch(`https://api.outfit4rent.online/api/harvesting-tasks`).then(
+            (res) => res.json()
           ),
       },
       {
         queryKey: ["inspecting-tasks"],
         queryFn: () =>
-          fetch(`http://localhost:3001/inspecting-tasks`).then((res) =>
-            res.json()
+          fetch(`https://api.outfit4rent.online/api/inspecting-forms`).then(
+            (res) => res.json()
           ),
       },
       {
         queryKey: ["inspectors"],
         queryFn: () =>
-          fetch(`http://localhost:3001/inspectors`).then((res) => res.json()),
+          fetch(`https://api.outfit4rent.online/api/inspectors`).then((res) =>
+            res.json()
+          ),
       },
       {
         queryKey: ["plants"],
         queryFn: () =>
-          fetch(`http://localhost:3001/plants`).then((res) => res.json()),
+          fetch(`https://api.outfit4rent.online/api/plants`).then((res) =>
+            res.json()
+          ),
       },
       {
         queryKey: ["experts"],
         queryFn: () =>
-          fetch(`http://localhost:3001/experts`).then((res) => res.json()),
+          fetch(`https://api.outfit4rent.online/api/experts`).then((res) =>
+            res.json()
+          ),
       },
       {
         queryKey: ["yields"],
         queryFn: () =>
-          fetch(`http://localhost:3001/lands`).then((res) => res.json()),
+          fetch(`https://api.outfit4rent.online/api/yields`).then((res) =>
+            res.json()
+          ),
       },
     ],
   });
   useEffect(() => {
-    console.log("Updated productiveTasks:", productiveTasks);
-  }, [productiveTasks]);
+    const plan = queryResult.data?.data;
+    if (queryResult.data) {
+      console.log(queryResult.data.data);
+      setGainingPlan(queryResult.data.data);
+      form.setFieldsValue({
+        ...plan,
+      });
+    }
+  }, [queryResult.data]);
   useEffect(() => {
     if (gainingQuery[0].data) {
-      setFarmers(gainingQuery[0].data);
+      setFarmers(gainingQuery[0].data.data);
     }
-    if (gainingQuery[1].data) setProductiveTasks(gainingQuery[1].data);
-    if (gainingQuery[2].data) setHarvestingTasks(gainingQuery[2].data);
-    if (gainingQuery[3].data) setInspectingTasks(gainingQuery[3].data);
-    if (gainingQuery[4].data) setinspectors(gainingQuery[4].data);
-    if (gainingQuery[5].data) setPlants(gainingQuery[5].data);
-    if (gainingQuery[6].data) setExperts(gainingQuery[6].data);
-    if (gainingQuery[7].data) setYields(gainingQuery[7].data);
+    if (gainingQuery[1].data) setProductiveTasks(gainingQuery[1].data.data);
+    if (gainingQuery[2].data) setHarvestingTasks(gainingQuery[2].data.data);
+    if (gainingQuery[3].data) setInspectingTasks(gainingQuery[3].data.data);
+    if (gainingQuery[4].data) setinspectors(gainingQuery[4].data.data);
+    if (gainingQuery[5].data) setPlants(gainingQuery[5].data.data);
+    if (gainingQuery[6].data) setExperts(gainingQuery[6].data.data);
+    if (gainingQuery[7].data) setYields(gainingQuery[7].data.data);
+    setDataLoading(false);
   }, [gainingQuery.some((query) => query.isFetched)]);
   const column_productive_checked = [
     {
@@ -497,19 +539,6 @@ export const ApprovalingPlanDrawer = () => {
       ),
     },
   ];
-  useEffect(() => {
-    const plan = queryResult.data?.data;
-    if (queryResult.data) {
-      console.log(queryResult.data.data);
-      setGainingPlan(queryResult.data.data);
-      form.setFieldsValue({
-        ...plan,
-      });
-    }
-  }, [queryResult.data]);
-  useEffect(() => {
-    console.log(gainingPlan);
-  }, [gainingPlan]);
 
   const farm_columns = [
     {
@@ -616,12 +645,12 @@ export const ApprovalingPlanDrawer = () => {
                   <Form.Item label="Giống cây trồng">
                     <Flex gap={10}>
                       <Select
-                        value={gainingPlan?.seed_id}
+                        value={gainingPlan?.plant_information?.plant_id}
                         key={"seed_id"}
                         onChange={(value) => {
                           setGainingPlan({
                             ...gainingPlan,
-                            seed_id: value,
+                            plant_id: value,
                           });
                         }}
                         style={{ width: "100%" }}
@@ -630,7 +659,7 @@ export const ApprovalingPlanDrawer = () => {
                         {plants &&
                           plants.map((plant: any) => (
                             <Select.Option value={plant.id}>
-                              {plant.name}
+                              {plant.plant_name}
                             </Select.Option>
                           ))}
                       </Select>
@@ -642,18 +671,18 @@ export const ApprovalingPlanDrawer = () => {
                         onChange={(value) => {
                           setGainingPlan({
                             ...gainingPlan,
-                            land_id: value,
+                            yield_id: value,
                           });
                         }}
-                        value={gainingPlan?.land_id}
-                        key={"land_id"}
+                        value={gainingPlan?.yield_information?.yield_id}
+                        key={"yield_id"}
                         style={{ width: "100%" }}
                         placeholder="Chọn khu đất gieo trồng"
                       >
                         {yields &&
                           yields.map((yieldItem: any) => (
                             <Select.Option value={yieldItem.id}>
-                              {yieldItem.name}
+                              {yieldItem.yield_name}
                             </Select.Option>
                           ))}
                       </Select>
@@ -697,11 +726,11 @@ export const ApprovalingPlanDrawer = () => {
                         onChange={(e) => {
                           setGainingPlan({
                             ...gainingPlan,
-                            estimated_products: e.target.value,
+                            estimated_product: e.target.value,
                           });
                         }}
-                        value={gainingPlan?.estimated_products}
-                        key={"estimated_products"}
+                        value={gainingPlan?.estimated_product}
+                        key={"estimated_product"}
                         placeholder="Nhập sản lượng dự kiến"
                       />
                       <Select
@@ -879,7 +908,7 @@ export const ApprovalingPlanDrawer = () => {
                       <Typography.Text>
                         {yields?.find(
                           (yieldItem: any) =>
-                            yieldItem.id === gainingPlan?.land_id
+                            yieldItem.id === gainingPlan?.yield_id
                         )?.name || "Không có dữ liệu"}
                       </Typography.Text>
                     </Space>
@@ -1064,7 +1093,7 @@ export const ApprovalingPlanDrawer = () => {
   };
   return (
     <Drawer
-      loading={loading}
+      loading={loading && queryResult?.isLoading && dataLoading}
       open
       title={
         <>

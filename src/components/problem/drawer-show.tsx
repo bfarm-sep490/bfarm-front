@@ -1,5 +1,5 @@
-import { DateField, TagField, Title } from "@refinedev/antd";
-import { useShow, useNavigation, useBack } from "@refinedev/core";
+import { DateField, TagField, Title, useModalForm } from "@refinedev/antd";
+import { useShow, useNavigation, useBack, useUpdate } from "@refinedev/core";
 import {
   Drawer,
   Flex,
@@ -12,10 +12,13 @@ import {
   Radio,
   Space,
   Button,
+  Modal,
+  Form,
+  Input,
 } from "antd";
 import { useState } from "react";
-import { useParams } from "react-router";
-import ReportProblemModal from "./report-modals";
+import { useNavigate, useParams } from "react-router";
+import { ReportProblemModal } from "./report-modals";
 
 const getTypeTagColor = (value: string) => {
   switch (value) {
@@ -93,131 +96,141 @@ export const ProblemShowInProblem = () => {
     resource: "problems",
     id: id,
   });
-  const [isEdit, setIsEdit] = useState(false);
-  const [isCancel, setIsCancel] = useState(false);
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
   const { data } = queryResult;
   const task = data?.data;
-
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [defaultReportStatus, setDefaultReportStatus] = useState("Resovled");
   return (
-    <Drawer
-      open={open}
-      width={breakpoint.sm ? "736px" : "100%"}
-      onClose={back}
-      title={
-        <>
-          {task?.status === "Pending" && (
-            <Flex justify="end">
-              <Space>
-                <Button
-                  color="danger"
-                  variant="solid"
-                  onClick={() => {
-                  }}
-                >
-                  Hủy bỏ
-                </Button>
-                <Button
-                  color="primary"
-                  variant="solid"
-                  onClick={() => {
-                    setIsCancel(false);
-                    setIsEdit(true);
-                  }}
-                >
-                  Đồng ý
-                </Button>
-              </Space>
-            </Flex>
-          )}
-        </>
-      }
-    >
-      <Flex vertical gap={24} style={{ padding: "32px" }}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
-          <strong>#{task?.id}</strong> - {task?.problem_name}
-        </Typography.Title>
+    <>
+      <Drawer
+        open={open}
+        width={breakpoint.sm ? "736px" : "100%"}
+        onClose={back}
+        title={"Chi tiết vấn đề"}
+      >
+        <Flex justify="end">
+          <Space>
+            <Button
+              color="danger"
+              variant="solid"
+              onClick={() => {
+                setDefaultReportStatus("Cancelled");
+                setIsModalOpen(true);
+              }}
+            >
+              Hủy bỏ
+            </Button>
+            <Button
+              color="primary"
+              variant="solid"
+              onClick={() => {
+                setDefaultReportStatus("Resolved");
+                setIsModalOpen(true);
+              }}
+            >
+              Đồng ý
+            </Button>
+          </Space>
+        </Flex>
+        <Flex vertical gap={24} style={{ padding: "32px" }}>
+          <Typography.Title level={3} style={{ margin: 0 }}>
+            <strong>#{task?.id}</strong> - {task?.problem_name}
+          </Typography.Title>
 
-        <Divider />
-        <Image.PreviewGroup items={task?.problem_images || []}>
-          <Image
-            loading="lazy"
-            style={{ borderRadius: "10px" }}
-            src={task?.problem_images?.[0]}
-          />
-        </Image.PreviewGroup>
-        <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
-        <List
-          bordered
-          dataSource={[
-            {
-              label: "Loại vấn đề",
-              value: (
-                <TagField
-                  value={getTypeTagValue(task?.problem_type)}
-                  color={getTypeTagColor(task?.problem_type)}
-                />
-              ),
-            },
-            {
-              label: "Ngày phát hiện",
-              value: <DateField value={task?.date} />,
-            },
-
-            {
-              label: "Trạng thái",
-              value: (
-                <TagField
-                  value={getStatusTagValue(task?.status)}
-                  color={getStatusTagColor(task?.status)}
-                />
-              ),
-            },
-            {
-              label: "Mô tả vấn đề",
-              value: (
-                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
-              ),
-            },
-          ]}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
-            </List.Item>
-          )}
-        />
-
-        <Divider />
-        <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.result_content && task?.status === "Resolved" ? (
-          <Flex vertical gap={16}>
-            <List
-              bordered
-              dataSource={[
-                {
-                  label: "Nội dung",
-                  value: (
-                    <Typography.Paragraph>
-                      {task?.result_content}
-                    </Typography.Paragraph>
-                  ),
-                },
-              ]}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                  {item.value}
-                </List.Item>
-              )}
+          <Divider />
+          <Image.PreviewGroup items={task?.problem_images || []}>
+            <Image
+              loading="lazy"
+              style={{ borderRadius: "10px" }}
+              src={task?.problem_images?.[0]}
             />
-          </Flex>
-        ) : (
-          <Typography.Text type="secondary">Không có kết quả.</Typography.Text>
-        )}
-      </Flex>
-    </Drawer>
+          </Image.PreviewGroup>
+          <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
+          <List
+            bordered
+            dataSource={[
+              {
+                label: "Loại vấn đề",
+                value: (
+                  <TagField
+                    value={getTypeTagValue(task?.problem_type)}
+                    color={getTypeTagColor(task?.problem_type)}
+                  />
+                ),
+              },
+              {
+                label: "Ngày phát hiện",
+                value: <DateField value={task?.date} />,
+              },
+
+              {
+                label: "Trạng thái",
+                value: (
+                  <TagField
+                    value={getStatusTagValue(task?.status)}
+                    color={getStatusTagColor(task?.status)}
+                  />
+                ),
+              },
+              {
+                label: "Mô tả vấn đề",
+                value: (
+                  <Typography.Paragraph>
+                    {task?.description}
+                  </Typography.Paragraph>
+                ),
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item>
+                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                {item.value}
+              </List.Item>
+            )}
+          />
+
+          <Divider />
+          <Typography.Title level={4}>Kết quả</Typography.Title>
+          {task?.result_content && task?.status === "Resolved" ? (
+            <Flex vertical gap={16}>
+              <List
+                bordered
+                dataSource={[
+                  {
+                    label: "Nội dung",
+                    value: (
+                      <Typography.Paragraph>
+                        {task?.result_content}
+                      </Typography.Paragraph>
+                    ),
+                  },
+                ]}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                    {item.value}
+                  </List.Item>
+                )}
+              />
+            </Flex>
+          ) : (
+            <Typography.Text type="secondary">
+              Không có kết quả.
+            </Typography.Text>
+          )}
+          <ReportProblemModal
+            close={() => {
+              setIsModalOpen(false);
+            }}
+            open={isModalOpen}
+            status={defaultReportStatus}
+          />
+        </Flex>
+      </Drawer>
+    </>
   );
 };

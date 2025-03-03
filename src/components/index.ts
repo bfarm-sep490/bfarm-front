@@ -1,7 +1,6 @@
 export * from "./header";
 export * from "./title";
 export * from "./icons";
-export * from "./plan";
 export * from "./map";
 export * from "./paginationTotal";
 export * from "./customer/userStatus";

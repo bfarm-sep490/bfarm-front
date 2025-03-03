@@ -52,17 +52,19 @@ import { ThemedSiderV2 } from "./components/layout/sider";
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
 import { PlanList, PlanShow } from "./pages/plans";
-import { TaskList } from "./pages/plans/tasks/caring/table_list";
 import { ProblemList, ShowProblemList } from "./pages/plans/problem/show";
-import { HarvestedTaskList } from "./pages/plans/tasks/harvesting/table_list";
 import { ShowTasksList } from "./pages/plans/tasks/show";
-import { ProductiveTaskShow } from "./pages/plans/tasks/caring/show";
 import { ProblemShow } from "./pages/plans/problem/show-detail";
 import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer/steps_setup_plans_drawer";
-import { HarvestingTaskShow } from "./pages/plans/tasks/harvesting/show";
 import { jsonDataProvider } from "./dataProvider";
-import { ProblemListInProblem } from "./components/problem/list-table";
 import { ProblemShowV2 } from "./pages/problems/show";
+import { CaringTaskListInPlan } from "./pages/plans/tasks/caring-list";
+import { ProductiveTaskShow } from "./components/caring-task/show";
+import { HarvestingTaskShow } from "./components/harvesting-task/show";
+import { PackagingTaskShow } from "./components/packaging-task/show";
+import { ProblemListInProblems } from "./pages/problems/list";
+import { CaringCreate } from "./pages/plans/tasks/caring-create";
+import { CaringUpdate } from "./pages/plans/tasks/caring-update";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -307,20 +309,10 @@ const App: React.FC = () => {
                         </ShowProblemList>
                       }
                     >
-                      <Route
-                        path=":id"
-                        element={
-                          <ProblemShowV2>
-                            <Outlet />
-                          </ProblemShowV2>
-                        }
-                      >
-                        <Route path="cancel" element={<ProblemShow />} />
-                        <Route path="resolve" element={<ProblemShow />} />
-                      </Route>
+                      <Route path=":id" element={<ProblemShowV2 />}></Route>
                     </Route>
                     <Route
-                      path="productive-tasks"
+                      path="caring-tasks"
                       element={
                         <ShowTasksList>
                           <Outlet />
@@ -329,6 +321,14 @@ const App: React.FC = () => {
                     >
                       <Route path=":taskId" element={<ProductiveTaskShow />} />
                     </Route>
+                    <Route
+                      path="caring-tasks/create"
+                      element={<CaringCreate />}
+                    ></Route>
+                    <Route
+                      path="caring-tasks/:taskId/edit"
+                      element={<CaringUpdate />}
+                    ></Route>
                     <Route
                       path="harvesting-tasks"
                       element={
@@ -340,20 +340,26 @@ const App: React.FC = () => {
                       <Route path=":taskId" element={<HarvestingTaskShow />} />
                     </Route>
                     <Route
-                      path="inspecting-tasks"
-                      element={<ShowTasksList />}
-                    />
+                      path="packaging-tasks"
+                      element={
+                        <ShowTasksList>
+                          <Outlet />
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<PackagingTaskShow />} />
+                    </Route>
                   </Route>
                 </Route>
                 <Route
                   path="/problems"
                   element={
-                    <ProblemListInProblem>
+                    <ProblemListInProblems>
                       <Outlet></Outlet>
-                    </ProblemListInProblem>
+                    </ProblemListInProblems>
                   }
                 >
-                  <Route path=":problemId" element={<ProblemShow />} />
+                  <Route path=":id" element={<ProblemShowV2 />} />
                 </Route>
                 <Route
                   path="/customers"

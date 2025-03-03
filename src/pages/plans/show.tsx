@@ -46,14 +46,55 @@ import { ApexOptions } from "apexcharts";
 import { DropDownSection } from "../../components/section/drop-down-section";
 import { ActivityCard } from "../../components/card/card-activity";
 import { RealTimeContentCard } from "../../components/card/card-real-time";
+import TextArea from "antd/es/input/TextArea";
 
+interface IGeneralPlan {
+  plan_id: number;
+  plan_name: string;
+  plant_information: {
+    plant_id: number;
+    plant_name: string;
+    plant_image: string;
+  };
+  yield_information: {
+    yield_id: number;
+    yield_name: string;
+    yield_unit: string;
+    area: number;
+  };
+  start_date: Date;
+  end_date: Date;
+  estimated_product: number;
+  estimated_unit: string;
+  status: string;
+  created_at: Date;
+  expert_information: {
+    expert_id: number;
+    expert_name: string;
+  };
+  description: string;
+}
+interface IProblem {
+  id: number;
+  plan_id: number;
+  problem_name: string;
+  description: string;
+  date: Date;
+  problem_type: string;
+  status: string;
+  result_content: string;
+  problem_images: {
+    image_id: number;
+    url: string;
+  }[];
+}
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
   const {
     data: generalData,
     isLoading: generalLoading,
     error: generalError,
-  } = useOne<any, HttpError>({
+  } = useOne<IGeneralPlan, HttpError>({
     resource: "plans",
     id: `${id}/general`,
   });
@@ -66,7 +107,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     id: `${id}/farmers`,
   });
   const { data: problemsData, isLoading: problemsLoading } = useOne<
-    any,
+    IProblem[],
     HttpError
   >({
     resource: "plans",
@@ -395,7 +436,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               width={300}
               height={400}
               src={
-                general_info?.plant_information?.image_url ||
+                general_info?.plant_information?.plant_image ||
                 "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2024/1/13/xa-lach-1705113923296944450397.jpg"
               }
             />
@@ -404,77 +445,97 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 🌱 {general_info?.plan_name || "Chưa xác định"}
               </Typography.Title>
               <Divider />
-              <Space align="start" style={{ marginTop: 12 }}>
-                <EnvironmentOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Thời gian:</Typography.Text>
-                <Typography.Text>
-                  {general_info?.start_date ? (
-                    <DateField value={general_info?.start_date} />
-                  ) : (
-                    "Chưa xác định"
-                  )}{" "}
-                  -
-                  {general_info?.end_date ? (
-                    <DateField value={general_info?.end_date} />
-                  ) : (
-                    "Chưa xác định"
-                  )}
-                </Typography.Text>
-              </Space>
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={12} md={6}>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <EnvironmentOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Thời gian:</Typography.Text>
+                    <Typography.Text>
+                      {general_info?.start_date ? (
+                        <DateField value={general_info?.start_date} />
+                      ) : (
+                        "Chưa xác định"
+                      )}{" "}
+                      -
+                      {general_info?.end_date ? (
+                        <DateField value={general_info?.end_date} />
+                      ) : (
+                        "Chưa xác định"
+                      )}
+                    </Typography.Text>
+                  </Space>
 
-              <Space align="start" style={{ marginTop: 12 }}>
-                <UserOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Cây trồng:</Typography.Text>
-                <Typography.Text>
-                  {general_info?.plant_information?.plant_name ||
-                    "Chưa xác định"}
-                </Typography.Text>
-              </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <UserOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Cây trồng:</Typography.Text>
+                    <Typography.Text>
+                      {general_info?.plant_information?.plant_name ||
+                        "Chưa xác định"}
+                    </Typography.Text>
+                  </Space>
 
-              <Space align="start" style={{ marginTop: 12 }}>
-                <GoldOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Khu đất</Typography.Text>
-                <Typography.Text>
-                  <Tag>
-                    {general_info?.yield_information?.yield_name ||
-                      "Chưa xác định"}
-                  </Tag>
-                </Typography.Text>
-              </Space>
-              <Space align="start" style={{ marginTop: 12 }}>
-                <GroupOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
-                <Typography.Text>
-                  {general_info?.estimated_product || "Không có"} -
-                  {general_info?.estimated_unit || "Không có"}
-                </Typography.Text>
-              </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <GoldOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Khu đất</Typography.Text>
+                    <Typography.Text>
+                      <Tag>
+                        {general_info?.yield_information?.yield_name ||
+                          "Chưa xác định"}
+                      </Tag>
+                    </Typography.Text>
+                  </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <GroupOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
+                    <Typography.Text>
+                      {general_info?.estimated_product || "Không có"} -
+                      {general_info?.estimated_unit || "Không có"}
+                    </Typography.Text>
+                  </Space>
 
-              <Space align="start" style={{ marginTop: 12 }}>
-                <FieldTimeOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Trạng thái:</Typography.Text>
-                <Tag
-                  color={
-                    general_info?.status === "Ongoing" ? "blue" : "default"
-                  }
-                >
-                  {(general_info?.status &&
-                    (general_info?.status === "Ongoing"
-                      ? "Đang tiến hành"
-                      : null)) ||
-                    "Không hoạt động"}
-                </Tag>
-              </Space>
-              <Space align="start" style={{ marginTop: 12 }}>
-                <CalendarOutlined style={{ fontSize: 16 }} />
-                <Typography.Text strong>Ngày tạo:</Typography.Text>
-                <Typography.Text type="secondary">
-                  <DateField
-                    value={general_info?.created_at}
-                    format="MMMM, YYYY hh:mm A"
-                  />
-                </Typography.Text>
-              </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <FieldTimeOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Trạng thái:</Typography.Text>
+                    <Tag
+                      color={
+                        general_info?.status === "Ongoing" ? "blue" : "default"
+                      }
+                    >
+                      {(general_info?.status &&
+                        (general_info?.status === "Ongoing"
+                          ? "Đang tiến hành"
+                          : null)) ||
+                        "Không hoạt động"}
+                    </Tag>
+                  </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <CalendarOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Ngày tạo:</Typography.Text>
+                    <Typography.Text type="secondary">
+                      <DateField
+                        value={general_info?.created_at}
+                        format="MMMM, YYYY hh:mm A"
+                      />
+                    </Typography.Text>
+                  </Space>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <GroupOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Chuyên gia:</Typography.Text>
+                    <Typography.Text>
+                      {general_info?.expert_information.expert_name}
+                    </Typography.Text>
+                  </Space>
+                  <Space align="start" style={{ marginTop: 12 }}>
+                    <GroupOutlined style={{ fontSize: 16 }} />
+                    <Typography.Text strong>Mô tả</Typography.Text>
+                    <Typography.Paragraph>
+                      {general_info?.description || "Không có mô tả"}
+                    </Typography.Paragraph>
+                  </Space>
+                </Col>
+              </Row>
             </Flex>
           </Flex>
         </Card>
@@ -498,7 +559,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
                 loading={generalLoading}
-                title={`🌍 Tổng diện tích (${general_info?.yield_information?.area_unit})`}
+                title={`🌍 Tổng diện tích (${general_info?.yield_information?.area})`}
                 completedTasks={general_info?.yield_information?.area || 0}
               />
             </Col>
@@ -565,7 +626,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     title="Chăm sóc"
                     totalActivity={13}
                     lastActivityDate="Lần cuối: 12/02/2025"
-                    navigate={`/plans/${id}/producive-tasks`}
+                    navigate={`/plans/${id}/caring-tasks`}
                   />
                 </Col>
 
@@ -595,9 +656,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   <ActivityCard
                     icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
                     completedTasks={12}
-                    title="Công việc trống"
+                    title="Đóng gói"
                     lastActivityDate="Chưa có công việc mới"
-                    navigate={`/plans/${id}/ungaining-tasks`}
+                    navigate={`/plans/${id}/packaging-tasks`}
                   />
                 </Col>
               </Row>

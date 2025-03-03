@@ -1,8 +1,17 @@
 import { PropsWithChildren } from "react";
-import { ProblemListInProblem } from "../../components/problem/list-table";
+import { ProblemListTable } from "../../components/problem/list-table";
+import { useTable } from "@refinedev/antd";
 
 export const ProblemListInProblems: React.FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
-  return <ProblemListInProblem></ProblemListInProblem>;
+  const { tableProps } = useTable({
+    resource: "problems",
+  });
+  return (
+    <ProblemListTable
+      tableProps={tableProps}
+      children={children}
+    ></ProblemListTable>
+  );
 };

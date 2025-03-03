@@ -1,7 +1,7 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { useNotificationProvider, ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -19,9 +19,7 @@ import {
   GoldOutlined,
   HddOutlined,
   SearchOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
-import jsonServerDataProvider from "@refinedev/simple-rest";
 import { authProvider } from "./authProvider";
 
 import "dayjs/locale/vi";
@@ -38,15 +36,12 @@ import "@refinedev/antd/dist/reset.css";
 import {
   FarmerManagementCreate,
   FarmerManagementEdit,
-  FarmerManagementList,
   FarmerManagementShow,
 } from "./pages/farmer-managements";
 import { DeviceList } from "./pages/devices";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
-import { liveProvider } from "@refinedev/ably";
-import { ablyClient } from "./utils/ablyClient";
 import {
   FertilizersCreate,
   FertilizersEdit,
@@ -55,13 +50,12 @@ import {
 } from "./pages/fertilizers";
 
 import { FarmerList } from "./pages/farmers";
-import { FarmerDrawerShow } from "./components/farmer/drawer-show";
-import { FarmerDrawerForm } from "./components/farmer";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerEdit } from "./pages/farmers/edit";
 
 import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
+import { dataProvider } from "./rest-data-provider";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -79,9 +73,9 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
-  const dataProvider = jsonServerDataProvider(API_URL);
+  const appDataProvider = dataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
   interface TranslationParams {
@@ -104,7 +98,7 @@ const App: React.FC = () => {
         <RefineKbarProvider>
           <Refine
             routerProvider={routerProvider}
-            dataProvider={dataProvider}
+            dataProvider={appDataProvider}
             authProvider={authProvider}
             i18nProvider={i18nProvider}
             options={{
@@ -165,7 +159,7 @@ const App: React.FC = () => {
               },
               {
                 name: "fertilizer",
-                list: "/fertilizer",
+                list: "/fertilizers",
                 create: "/fertilizer/new",
                 edit: "/fertilizer/edit/:id",
                 show: "/fertilizer/:id",
@@ -308,7 +302,7 @@ const App: React.FC = () => {
                 </Route>
 
                 <Route
-                  path="/fertilizer"
+                  path="/fertilizers"
                   element={
                     <FertilizersList>
                       <Outlet />

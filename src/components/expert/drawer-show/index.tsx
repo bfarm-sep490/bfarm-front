@@ -10,7 +10,7 @@ import {
 import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
-import { DateField, DeleteButton } from "@refinedev/antd";
+import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { ExpertStatus, IExpert } from "@/interfaces";
 
@@ -22,8 +22,8 @@ type Props = {
 
 const ExpertStatusTag = ({ status }: { status: ExpertStatus }) => {
   const colorMap = {
-    UnActived: "default",
-    Actived: "success",
+    Active: "green",
+    Inactive: "red",
   };
 
   return <Tag color={colorMap[status]}>{status}</Tag>;
@@ -38,11 +38,11 @@ export const ExpertDrawerShow = (props: Props) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { query: queryResult } = useShow<IExpert, HttpError>({
+  const { query: queryResult } = useShow<any, HttpError>({
     resource: "experts",
     id: props?.id,
   });
-  const expert = queryResult.data?.data;
+  const expert = queryResult?.data?.data?.[0];
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -76,7 +76,7 @@ export const ExpertDrawerShow = (props: Props) => {
             margin: "16px auto",
             borderRadius: "8px",
           }}
-          src={expert?.avatar}
+          src={expert?.avatar_image}
           alt={expert?.name}
         />
       </Flex>
@@ -106,13 +106,22 @@ export const ExpertDrawerShow = (props: Props) => {
               label: <Typography.Text type="secondary">Email</Typography.Text>,
               value: expert?.email,
             },
-            {
-              label: <Typography.Text type="secondary">DOB</Typography.Text>,
-              value: expert?.DOB && <DateField value={expert.DOB} format="DD/MM/YYYY" />,
-            },
+
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
               value: expert?.status && <ExpertStatusTag status={expert.status} />,
+            },
+            {
+              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
+              value: <DateField format="DD/MM/YYYY" value={expert?.created_at} />,
+            },
+            {
+              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              value: expert?.updated_at ? (
+                <DateField value={expert?.created_date} />
+              ) : (
+                <TextField value="Chưa cập nhập" />
+              ),
             },
           ]}
           renderItem={(item) => (

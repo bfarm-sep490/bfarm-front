@@ -40,15 +40,29 @@ export const FarmerDrawerForm = (props: Props) => {
   const [searchParams] = useSearchParams();
   const go = useGo();
   const t = useTranslate();
-  const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IFarmer>({
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<{
+    avatar_image: string;
+    name: string;
+    phone: string;
+    email: string;
+    status: string;
+  }>({
     resource: "farmers",
     id: props?.id,
     action: props.action,
     redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data: any) => {
+        if (data?.data?.[0]?.avatar_image) {
+          setPreviewImage(data?.data?.[0]?.avatar_image);
+        }
+        formProps.form.setFieldsValue(data?.data?.[0]);
+      },
+    },
     onMutationSuccess: () => {
       props.onMutationSuccess?.();
     },
@@ -61,7 +75,6 @@ export const FarmerDrawerForm = (props: Props) => {
       props.onClose();
       return;
     }
-
     go({
       to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
       query: { to: undefined },
@@ -71,7 +84,8 @@ export const FarmerDrawerForm = (props: Props) => {
   };
   useEffect(() => {
     if (props.action === "edit" && formProps.form) {
-      const currentAvatar = formProps.form.getFieldValue("avatar");
+      const currentAvatar = formProps.form.getFieldValue("avatar_image") as string;
+      console.log("currentAvatar: " + currentAvatar);
       if (currentAvatar) {
         setPreviewImage(currentAvatar);
       }
@@ -97,7 +111,7 @@ export const FarmerDrawerForm = (props: Props) => {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
         onSuccess(uploadedImageUrl);
-        console.log("Server response:", response.data);
+        formProps.form?.setFieldsValue({ avatar_image: uploadedImageUrl });
       } else {
         throw new Error(response.data.message || "Upload failed.");
       }
@@ -111,10 +125,9 @@ export const FarmerDrawerForm = (props: Props) => {
   const title = props.action === "edit" ? "Edit this farmer" : "Add a farmer";
 
   const statusOptions = [
-    { label: "Actived", value: "Actived" },
-    { label: "Unactivated", value: "UnActived" },
+    { label: "Active", value: "Hoạt động" },
+    { label: "Inactive", value: "Không hoạt động" },
   ];
-
   return (
     <Drawer
       {...drawerProps}
@@ -125,9 +138,14 @@ export const FarmerDrawerForm = (props: Props) => {
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
           <Form.Item
-            name="avatar"
+            name="avatar_image"
             valuePropName="file"
             getValueFromEvent={(e: any) => {
               return e?.file?.response ?? "/images/fertilizer-default-img.png";
@@ -177,42 +195,58 @@ export const FarmerDrawerForm = (props: Props) => {
           </Form.Item>
           <Flex vertical>
             <Form.Item
+              key={"name"}
               label="Name"
               name="name"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please input your name!" },
+                {
+                  min: 6,
+                  max: 50,
+                  message: "Name must be between 6 and 50 characters!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
+              key={"phone"}
               label="Phone"
               name="phone"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please input your phone!" },
+                {
+                  message: "The input is not valid phone number!",
+                  min: 10,
+                  max: 11,
+                },
+              ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
+              key={"email"}
               label="Email"
               name="email"
               className={styles.formItem}
-              rules={[{ required: true }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+                {
+                  type: "email",
+                  message: "The input is not valid E-mail!",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
-            <Form.Item
-              label="Date of Birth"
-              name="DOB"
-              getValueProps={(i) => ({
-                value: i === undefined ? undefined : moment(i),
-              })}
-              className={styles.formItem}
-              rules={[{ required: true, message: "Please select date of birth" }]}
-            >
-              <DatePicker format="DD-MM-YYYY" />
-            </Form.Item>
 
             <Form.Item
+              key={"status"}
               label="Status"
               name="status"
               className={styles.formItem}

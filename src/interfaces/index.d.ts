@@ -95,8 +95,8 @@ export interface IFertilizer {
   type: FertilizerType;
 }
 
-export type FarmerStatus = "UnActived" | "Actived";
-export type ExpertStatus = "UnActived" | "Actived";
+export type FarmerStatus = "Active" | "Inactive";
+export type ExpertStatus = "Active" | "Inactive";
 
 export interface IFarmer {
   id: number;

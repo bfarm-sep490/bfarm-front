@@ -9,6 +9,7 @@ import {
   DateField,
   FilterDropdown,
   NumberField,
+  TextField,
   getDefaultSortOrder,
   useTable,
 } from "@refinedev/antd";
@@ -28,7 +29,7 @@ export const FarmerListTable: React.FC = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<IFertilizer, HttpError>({
+  const { tableProps, sorters, filters } = useTable<any, HttpError>({
     resource: "farmers",
     filters: {
       initial: [
@@ -75,8 +76,10 @@ export const FarmerListTable: React.FC = () => {
         title="ID"
         dataIndex="id"
         key="id"
-        width={80}
-        render={(value) => <Typography.Text>#{value}</Typography.Text>}
+        width={"auto"}
+        render={(value) => (
+          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+        )}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -94,8 +97,9 @@ export const FarmerListTable: React.FC = () => {
 
       <Table.Column
         title="Avatar"
-        dataIndex="avatar"
-        key="avatar"
+        width={"auto"}
+        dataIndex="avatar_image"
+        key="avatar_image"
         render={(image: string) => <Avatar shape="square" src={image} alt="Farmer" />}
       />
 
@@ -103,6 +107,7 @@ export const FarmerListTable: React.FC = () => {
         title="Name"
         dataIndex="name"
         key="name"
+        width={"auto"}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -122,25 +127,19 @@ export const FarmerListTable: React.FC = () => {
         title="Phone"
         dataIndex="phone"
         key="phone"
-        width={300}
+        width={"auto"}
         render={(value) => (
           <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}
       />
-      <Table.Column
-        title="DOB"
-        dataIndex="DOB"
-        key="DOB"
-        width={300}
-        render={(value) => <DateField value={value} format="DD/MM/YYYY" />}
-      />
 
       <Table.Column
         title="Email"
         dataIndex="email"
         key="email"
+        width={"auto"}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{
@@ -160,7 +159,7 @@ export const FarmerListTable: React.FC = () => {
         title="Status"
         dataIndex="status"
         key="status"
-        width={120}
+        width={"auto"}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <Select
@@ -175,6 +174,26 @@ export const FarmerListTable: React.FC = () => {
           </FilterDropdown>
         )}
         render={(value) => <FarmerStatusTag value={value} />}
+      />
+      <Table.Column
+        title="Ngày tạo"
+        dataIndex="created_at"
+        key="created_at"
+        width={120}
+        render={(value) => <DateField value={value} />}
+      />
+      <Table.Column
+        title="Ngày cập nhập"
+        dataIndex="updated_at"
+        key="updated_at"
+        width={"auto"}
+        render={(value) =>
+          value ? (
+            <DateField value={value} format="DD/MM/YYYY" />
+          ) : (
+            <TextField value="Chưa cập nhập" />
+          )
+        }
       />
 
       <Table.Column

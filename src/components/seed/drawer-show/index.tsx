@@ -16,13 +16,13 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { axiosClient } from "@/lib/api/config/axios-client";
 import { ISeed } from "@/interfaces";
 import { SeedDrawerForm } from "../drawer-form";
-
 type Props = {
   id?: string;
   onClose?: () => void;
+  onMutationSuccess?: (plantOrId: string | ISeed, isDeleted: boolean) => void; // ✅ Hỗ trợ cả ID & Object
 };
 
-export const SeedDrawerShow = ({ id, onClose }: Props) => {
+export const SeedDrawerShow = ({ id, onClose, onMutationSuccess }: Props) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
@@ -39,7 +39,7 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
       setError(null);
       try {
         const response = await axiosClient.get(`/api/plants/${id}`);
-        
+
         if (response.data && response.data.status === 200) {
           // ✅ Truy cập đúng vào `data`
           setPlant(response.data.data);
@@ -56,18 +56,29 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
 
     fetchPlant();
   }, [id]);
-
   const handleDelete = async () => {
     if (!id) return;
     try {
-      await axiosClient.delete(`/api/plants/${id}`);
-      message.success("Xóa cây trồng thành công");
-      onClose?.();
+        await axiosClient.delete(`/api/plants/${id}`);
+        message.success("Xóa cây trồng thành công");
+
+        // ✅ Gọi `onMutationSuccess` để cập nhật danh sách ngay lập tức
+        onMutationSuccess?.(id, true);
+        onClose?.();
     } catch (err) {
-      console.error(err);
-      message.error("Xóa cây trồng thất bại");
+        console.error(err);
+        message.error("Xóa cây trồng thất bại");
     }
+};
+
+  
+  const handleUpdateSuccess = (updatedPlant: ISeed) => {
+    setPlant((prev) => ({
+      ...prev,
+      ...updatedPlant, // ✅ Cập nhật dữ liệu mới ngay lập tức
+    }));
   };
+
 
   if (loading) {
     return (
@@ -131,6 +142,11 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
                 {plant?.is_available ? "Available" : "Not Available"}
               </Tag>
             </Typography.Text>
+            <Typography.Text>
+              <br />
+              <b>Quantity:</b> {plant?.quantity !== undefined ? `${plant.quantity} ${plant.unit}` : "-"}
+            </Typography.Text>
+            
 
             <Typography.Text>
               <br />
@@ -152,7 +168,7 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
               <br />
               <b>Moisture (%):</b>{" "}
               {plant?.min_moisture !== undefined &&
-              plant?.max_moisture !== undefined
+                plant?.max_moisture !== undefined
                 ? `${plant?.min_moisture} - ${plant?.max_moisture}`
                 : "-"}
             </Typography.Text>
@@ -161,7 +177,7 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
               <br />
               <b>Fertilizer:</b>{" "}
               {plant?.min_fertilizer !== undefined &&
-              plant?.max_fertilizer !== undefined
+                plant?.max_fertilizer !== undefined
                 ? `${plant?.min_fertilizer} - ${plant?.max_fertilizer} ${plant?.fertilizer_unit}`
                 : "-"}
             </Typography.Text>
@@ -170,7 +186,7 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
               <br />
               <b>Pesticide:</b>{" "}
               {plant?.min_pesticide !== undefined &&
-              plant?.max_pesticide !== undefined
+                plant?.max_pesticide !== undefined
                 ? `${plant?.min_pesticide} - ${plant?.max_pesticide} ${plant?.pesticide_unit}`
                 : "-"}
             </Typography.Text>
@@ -179,7 +195,7 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
               <br />
               <b>Brix Point:</b>{" "}
               {plant?.min_brix_point !== undefined &&
-              plant?.max_brix_point !== undefined
+                plant?.max_brix_point !== undefined
                 ? `${plant?.min_brix_point} - ${plant?.max_brix_point}`
                 : "-"}
             </Typography.Text>
@@ -215,9 +231,10 @@ export const SeedDrawerShow = ({ id, onClose }: Props) => {
           id={id}
           action="edit"
           onClose={() => setEditOpen(false)}
-          onMutationSuccess={() => setEditOpen(false)}
+          onMutationSuccess={handleUpdateSuccess} // ✅ Cập nhật dữ liệu ngay lập tức
         />
       )}
+
     </>
   );
 };

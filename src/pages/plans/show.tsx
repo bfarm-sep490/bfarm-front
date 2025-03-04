@@ -662,7 +662,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           </Row>
         </DropDownSection>
         <Divider />
-        <DropDownSection title="Quan sát">
+        {/* <DropDownSection title="Quan sát">
           <Row gutter={[16, 16]} justify={"start"} style={{ marginTop: "10px" }}>
             <Col
               xs={24}
@@ -729,7 +729,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               <div id="html-dist"></div>
             </div>
           </Card>
-        </DropDownSection>
+        </DropDownSection> */}
       </div>
       {children}
     </div>

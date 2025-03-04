@@ -1,6 +1,6 @@
 import { Row, Col, theme, Dropdown, type MenuProps, Button, Flex } from "antd";
 import { useTranslation } from "react-i18next";
-import { CardWithPlot, QuickStatsChart } from "../../components";
+import {} from "../../components";
 import { DownOutlined, RiseOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import { List, NumberField } from "@refinedev/antd";
@@ -101,66 +101,5 @@ export const DashboardPage: React.FC = () => {
     };
   }, [quickStatsData]);
 
-  return (
-    <List
-      title={t("dashboard.overview.title")}
-      headerButtons={() => (
-        <Dropdown menu={{ items: dateFilters }}>
-          <Button>
-            {t(`dashboard.filter.date.${DATE_FILTERS[selecetedDateFilter].text}`)}
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-      )}
-    >
-      <Row gutter={[16, 16]}>
-        <Col md={24}>
-          <Row gutter={[16, 16]}>
-            <Col xl={{ span: 12 }} lg={12} md={24} sm={24} xs={24}>
-              <CardWithPlot
-                icon={
-                  <ShoppingOutlined
-                    style={{
-                      fontSize: 14,
-                      color: token.colorPrimary,
-                    }}
-                  />
-                }
-                rightSlot={
-                  <Flex align="center" gap={8}>
-                    <NumberField value={quick.trend} />
-                    {quick.trend > 0 ? <RiseOutlined /> : <DownOutlined />}
-                  </Flex>
-                }
-                title={t("dashboard.quickStats.title")}
-              >
-                <QuickStatsChart height={170} data={quick.data} />
-              </CardWithPlot>
-            </Col>
-            <Col xl={{ span: 12 }} lg={12} md={24} sm={24} xs={24}>
-              <CardWithPlot
-                icon={
-                  <ShoppingOutlined
-                    style={{
-                      fontSize: 14,
-                      color: token.colorPrimary,
-                    }}
-                  />
-                }
-                rightSlot={
-                  <Flex align="center" gap={8}>
-                    <NumberField value={quick.trend} />
-                    {quick.trend > 0 ? <RiseOutlined /> : <DownOutlined />}
-                  </Flex>
-                }
-                title={t("dashboard.quickStats.title")}
-              >
-                <QuickStatsChart height={170} data={quick.data} />
-              </CardWithPlot>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </List>
-  );
+  return <></>;
 };

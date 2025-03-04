@@ -162,11 +162,11 @@ export interface ISeed {
 export interface IYield {
   id: number;
   yield_name: string;
-  areaUnit: string;
+  area_unit: string;
   area: number;
   type: YieldType;
   description: string;
-  isAvailable: YieldAvailability;
+  is_available: YieldAvailability;
   size: YieldSize;
 }
 

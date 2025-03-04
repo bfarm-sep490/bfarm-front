@@ -23,7 +23,7 @@ export const SeedsListTable: React.FC = () => {
         console.log("API Response:", response.data);
 
         if (response.status === 200 && Array.isArray(response.data.data)) {
-          setPlants(response.data.data); 
+          setPlants(response.data.data);
         } else {
           setError("Không thể tải danh sách cây trồng.");
         }
@@ -36,7 +36,8 @@ export const SeedsListTable: React.FC = () => {
     };
 
     fetchPlants();
-  }, []);
+  }, []); // ✅ Chỉ chạy 1 lần khi component mount
+
 
   // 🎨 Màu sắc GT Test Kit Color
   const getGTTestKitColor = (color: string | null | undefined) => {
@@ -52,6 +53,29 @@ export const SeedsListTable: React.FC = () => {
 
   if (loading) return <Spin size="large" className="flex justify-center" />;
   if (error) return <Typography.Text type="danger">{error}</Typography.Text>;
+  const handleMutationSuccess = (plantIdOrData: string | ISeed, isDeleted: boolean) => {
+    setPlants((prevPlants) => {
+      if (isDeleted) {
+        // ✅ Xóa ngay lập tức khỏi danh sách
+        return prevPlants.filter((plant) => plant.id !== Number(plantIdOrData));
+      } else {
+        // ✅ Nếu là tạo mới hoặc chỉnh sửa
+        const updatedPlant = plantIdOrData as ISeed;
+        const exists = prevPlants.some((plant) => plant.id === updatedPlant.id);
+
+        if (exists) {
+          // ✅ Nếu là Edit, cập nhật dữ liệu
+          return prevPlants.map((plant) =>
+            plant.id === updatedPlant.id ? { ...updatedPlant } : plant
+          );
+        } else {
+          // ✅ Nếu là Create, thêm mới vào danh sách
+          return [...prevPlants, updatedPlant];
+        }
+      }
+    });
+  };
+
 
   return (
     <>
@@ -94,54 +118,6 @@ export const SeedsListTable: React.FC = () => {
           )}
         />
 
-        {/* ✅ Temperature */}
-        <Table.Column
-          title="Temperature (°C)"
-          key="temperature"
-          width={180}
-          render={(_, record: ISeed) => (
-            <Typography.Text>
-              {record.min_temp} - {record.max_temp}°C
-            </Typography.Text>
-          )}
-        />
-
-        {/* ✅ Humidity */}
-        <Table.Column
-          title="Humidity (%)"
-          key="humidity"
-          width={180}
-          render={(_, record: ISeed) => (
-            <Typography.Text>
-              {record.min_humid} - {record.max_humid}%
-            </Typography.Text>
-          )}
-        />
-
-        {/* ✅ Fertilizer */}
-        <Table.Column
-          title="Fertilizer"
-          key="fertilizer"
-          width={200}
-          render={(_, record: ISeed) => (
-            <Tag color="blue">
-              {record.min_fertilizer} - {record.max_fertilizer} {record.fertilizer_unit}
-            </Tag>
-          )}
-        />
-
-        {/* ✅ Pesticide */}
-        <Table.Column
-          title="Pesticide"
-          key="pesticide"
-          width={200}
-          align="center"
-          render={(_, record: ISeed) => (
-            <Tag color="gold">
-              {record.min_pesticide} - {record.max_pesticide} {record.pesticide_unit}
-            </Tag>
-          )}
-        />
 
         {/* ✅ GT Test Kit Color */}
         <Table.Column
@@ -153,7 +129,6 @@ export const SeedsListTable: React.FC = () => {
           render={(value) => <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>}
         />
 
-        {/* ✅ Actions */}
         <Table.Column
           title="Actions"
           key="actions"
@@ -169,11 +144,16 @@ export const SeedsListTable: React.FC = () => {
             />
           )}
         />
-      </Table>
 
+      </Table>
       {selectedPlantId && (
-        <SeedDrawerShow id={selectedPlantId} onClose={() => setSelectedPlantId(null)} />
+        <SeedDrawerShow
+          id={selectedPlantId}
+          onClose={() => setSelectedPlantId(null)}
+          onMutationSuccess={handleMutationSuccess}
+        />
       )}
+
     </>
   );
 };

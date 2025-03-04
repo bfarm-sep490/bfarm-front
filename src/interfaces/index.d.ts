@@ -173,6 +173,8 @@ export interface ISeed {
   id: number;
   plant_name: string;
   description: string;
+  quantity: number;
+  unit: string
   is_available: boolean;
   min_temp: number;
   max_temp: number;

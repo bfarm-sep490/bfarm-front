@@ -112,7 +112,7 @@ export const ApprovalingPlanDrawer = () => {
     id: `${id}/general`,
   });
 
-  const { data: chosenFarmerData } = useList({
+  const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
     resource: `plans/${id}/farmers`,
     queryOptions: {
       staleTime: 60000,
@@ -121,7 +121,7 @@ export const ApprovalingPlanDrawer = () => {
       },
     },
   });
-  const { data: farmerData } = useList({
+  const { data: farmerData, isLoading: farmerLoading } = useList({
     resource: `farmers`,
     queryOptions: {
       staleTime: 60000,
@@ -131,7 +131,7 @@ export const ApprovalingPlanDrawer = () => {
     },
   });
 
-  const { data: expertsData } = useList({
+  const { data: expertsData, isLoading: expertLoading } = useList({
     resource: `experts`,
 
     queryOptions: {
@@ -142,7 +142,7 @@ export const ApprovalingPlanDrawer = () => {
     },
   });
 
-  const { data: yieldsData } = useList({
+  const { data: yieldsData, isLoading: yieldLoading } = useList({
     resource: "yields",
 
     queryOptions: {
@@ -152,7 +152,7 @@ export const ApprovalingPlanDrawer = () => {
       },
     },
   });
-  const { data: plantData } = useList({
+  const { data: plantData, isLoading: plantLoading } = useList({
     resource: "plants",
 
     queryOptions: {
@@ -405,7 +405,16 @@ export const ApprovalingPlanDrawer = () => {
   };
   return (
     <Drawer
-      loading={loading && queryResult?.isLoading}
+      loading={
+        loading &&
+        queryResult?.isLoading &&
+        plantLoading &&
+        yieldLoading &&
+        expertLoading &&
+        farmerLoading &&
+        chosenFarmerLoading &&
+        formLoading
+      }
       open
       title={
         <>

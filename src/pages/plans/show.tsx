@@ -47,6 +47,7 @@ import { DropDownSection } from "../../components/section/drop-down-section";
 import { ActivityCard } from "../../components/card/card-activity";
 import { RealTimeContentCard } from "../../components/card/card-real-time";
 import TextArea from "antd/es/input/TextArea";
+import { StatusTag } from "../../components/caring-task/status-tag";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -105,6 +106,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   } = useOne<any, HttpError>({
     resource: "plans",
     id: `${id}/farmers`,
+    queryOptions: {
+      staleTime: 1000 * 60,
+      cacheTime: 1000 * 60,
+    },
   });
   const { data: problemsData, isLoading: problemsLoading } = useOne<
     IProblem[],
@@ -402,20 +407,35 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           </Col>
           <Col xs={24} md={12} lg={12} xl={12}>
             <Flex justify="end">
-              <Space>
-                <Button color="danger" variant="solid">
-                  Hủy bỏ
-                </Button>
-                <Button
-                  color="primary"
-                  variant="solid"
-                  onClick={() => {
-                    navigate(`/plans/${id}/approve`);
-                  }}
-                >
-                  Chấp nhận
-                </Button>
-              </Space>
+              {general_info?.status === "Pending" && (
+                <Space>
+                  <Button color="danger" variant="solid">
+                    Hủy bỏ
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    onClick={() => {
+                      navigate(`/plans/${id}/approve`);
+                    }}
+                  >
+                    Chấp nhận
+                  </Button>
+                </Space>
+              )}
+              {general_info?.status === "Ongoing" && (
+                <Space>
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    onClick={() => {
+                      navigate(`/plans/${id}/approve`);
+                    }}
+                  >
+                    Kết thúc mùa vụ
+                  </Button>
+                </Space>
+              )}
             </Flex>
           </Col>
         </Row>
@@ -496,17 +516,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   <Space align="start" style={{ marginTop: 12 }}>
                     <FieldTimeOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Trạng thái:</Typography.Text>
-                    <Tag
-                      color={
-                        general_info?.status === "Ongoing" ? "blue" : "default"
-                      }
-                    >
-                      {(general_info?.status &&
-                        (general_info?.status === "Ongoing"
-                          ? "Đang tiến hành"
-                          : null)) ||
-                        "Không hoạt động"}
-                    </Tag>
+                    <StatusTag status={general_info?.status || "Default"} />
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
                     <CalendarOutlined style={{ fontSize: 16 }} />

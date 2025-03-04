@@ -10,44 +10,17 @@ import {
   TextField,
 } from "@refinedev/antd";
 import { Table, Space } from "antd";
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "Completed":
-      return "green";
-    case "Ongoing":
-      return "blue";
-    case "Pending":
-      return "orange";
-    case "Cancelled":
-      return "red";
-    default:
-      return "blue";
-  }
-};
-const getStatusValue = (status: string) => {
-  switch (status) {
-    case "Completed":
-      return "Đã hoàn thành";
-    case "Ongoing":
-      return "Đang triển khai";
-    case "Pending":
-      return "Chờ duyệt";
-    case "Cancelled":
-      return "Đã hủy";
-    default:
-      return "Không xác định";
-  }
-};
+import { StatusTag } from "../../components/caring-task/status-tag";
 export const PlanList = () => {
   const translate = useTranslate();
 
   const { tableProps } = useTable({
     resource: "plans",
     syncWithLocation: true,
-    // queryOptions: {
-    //   staleTime: 1000 * 60,
-    //   cacheTime: 1000 * 60,
-    // },
+    queryOptions: {
+      staleTime: 1000 * 60,
+      cacheTime: 1000 * 60,
+    },
   });
   const go = useGo();
 
@@ -84,12 +57,7 @@ export const PlanList = () => {
         <Table.Column
           dataIndex="status"
           title={translate("plans.fields.status")}
-          render={(value: any) => (
-            <TagField
-              value={getStatusValue(value)}
-              color={getStatusColor(value)}
-            />
-          )}
+          render={(value: any) => <StatusTag status={value} />}
         />
         <Table.Column
           dataIndex="expert_name"

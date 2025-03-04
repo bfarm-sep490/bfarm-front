@@ -5,32 +5,44 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { DateField, TextField } from "@refinedev/antd";
-import { Card, Col, Flex, Row, Space, Table, Tabs, Typography } from "antd";
+import {
+  Card,
+  Col,
+  Flex,
+  FormProps,
+  Row,
+  Space,
+  Table,
+  Tabs,
+  Typography,
+} from "antd";
 import dayjs from "dayjs";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 
 type Props = {
   plants: any;
   yields: any;
-  gainingPlan: any;
+  formProps: FormProps;
   experts: any;
   productiveTasks: any;
   harvestingTasks: any;
   inspectingTasks: any;
   inspectors: any;
   farmers: any;
+  packagingTasks: any;
 };
 
 export const VerifyPlanInformation = ({
   plants,
   yields,
-  gainingPlan,
+  formProps,
   experts,
   productiveTasks,
   harvestingTasks,
   inspectingTasks,
   inspectors,
   farmers,
+  packagingTasks,
 }: Props) => {
   const column_productive_checked = [
     {
@@ -67,6 +79,48 @@ export const VerifyPlanInformation = ({
         <CaringTypeTag status={record?.task_type} />
       ),
     },
+    {
+      title: "Nông dân",
+      dataIndex: "farmer_id",
+      key: "farmer_id",
+      render: (text: any, record: any) => (
+        <TextField
+          value={
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
+              ?.name || "Chưa xác định"
+          }
+        />
+      ),
+    },
+  ];
+  const column_packaging_checked = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Tên công việc",
+      dataIndex: "task_name",
+      key: "name",
+    },
+    {
+      title: "Thời gian bắt đầu",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.start_date} format="DD/MM/YYYY" />
+      ),
+    },
+    {
+      title: "Thời gian kết thúc",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (text: any, record: any) => (
+        <DateField value={record?.end_date} format="DD/MM/YYYY" />
+      ),
+    },
+
     {
       title: "Nông dân",
       dataIndex: "farmer_id",
@@ -178,8 +232,9 @@ export const VerifyPlanInformation = ({
 
                 <Typography.Text>
                   {plants?.find(
-                    (plant: any) => plant.id === gainingPlan?.seed_id
-                  )?.name || "Không có dữ liệu"}
+                    (plant: any) =>
+                      plant.id === formProps?.form?.getFieldValue("plant_id")
+                  )?.plant_name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
 
@@ -188,8 +243,10 @@ export const VerifyPlanInformation = ({
                 <Typography.Text strong>Khu đất:</Typography.Text>
                 <Typography.Text>
                   {yields?.find(
-                    (yieldItem: any) => yieldItem.id === gainingPlan?.yield_id
-                  )?.name || "Không có dữ liệu"}
+                    (yieldItem: any) =>
+                      yieldItem.id ===
+                      formProps?.form?.getFieldValue("yield_id")
+                  )?.yield_name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
               <Space align="start" style={{ marginTop: 12 }}>
@@ -197,12 +254,12 @@ export const VerifyPlanInformation = ({
                 <Typography.Text strong>Thời gian dự kiến</Typography.Text>
                 <Typography.Text>
                   <DateField
-                    value={dayjs(gainingPlan?.start_date)}
+                    value={dayjs(formProps?.form?.getFieldValue("start_date"))}
                     format="DD/MM/YYYY"
                   ></DateField>{" "}
                   -{" "}
                   <DateField
-                    value={dayjs(gainingPlan?.end_date)}
+                    value={dayjs(formProps?.form?.getFieldValue("end_date"))}
                     format="DD/MM/YYYY"
                   ></DateField>
                 </Typography.Text>
@@ -211,8 +268,8 @@ export const VerifyPlanInformation = ({
                 <GroupOutlined style={{ fontSize: 16 }} />
                 <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
                 <Typography.Text>
-                  {gainingPlan?.estimated_products}{" "}
-                  {gainingPlan?.estimated_unit}
+                  {formProps?.form?.getFieldValue("estimated_product")}{" "}
+                  {formProps?.form?.getFieldValue("estimated_unit")}
                 </Typography.Text>
               </Space>
 
@@ -221,7 +278,8 @@ export const VerifyPlanInformation = ({
                 <Typography.Text strong>Chuyên gia:</Typography.Text>
                 <Typography.Text>
                   {experts?.find(
-                    (expert: any) => expert.id === gainingPlan?.expert_id
+                    (expert: any) =>
+                      expert.id === formProps.form?.getFieldValue("expert_id")
                   )?.name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
@@ -231,7 +289,7 @@ export const VerifyPlanInformation = ({
             <FieldTimeOutlined style={{ fontSize: 16 }} />
             <Typography.Text strong>Mô tả</Typography.Text>
             <Typography.Paragraph>
-              {gainingPlan?.description}
+              {formProps.form?.getFieldValue("description")}
             </Typography.Paragraph>
           </Col>
         </Row>
@@ -274,6 +332,17 @@ export const VerifyPlanInformation = ({
               }}
               columns={column_inspecting_checked}
               dataSource={inspectingTasks}
+              rowKey="id"
+              scroll={{ x: "max-content" }}
+            ></Table>
+          </Tabs.TabPane>
+          <Tabs.TabPane key="4" tab="Thu hoạch">
+            <Table
+              pagination={{
+                pageSize: 10,
+              }}
+              columns={column_packaging_checked}
+              dataSource={packagingTasks}
               rowKey="id"
               scroll={{ x: "max-content" }}
             ></Table>

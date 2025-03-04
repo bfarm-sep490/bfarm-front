@@ -31,14 +31,11 @@ const getStatusTagValue = (value: string) => {
 };
 
 type StatusTagProps = {
-  status: "Completed" | "Cancelled" | "Ongoing" | "Pending";
+  status: string;
 };
 
-export const StatusTag = (props: StatusTagProps) => {
+export const StatusTag = ({ status }: StatusTagProps) => {
   return (
-    <Tag color={getStatusTagColor(props?.status)}>
-      {" "}
-      {getStatusTagValue(props?.status)}
-    </Tag>
+    <Tag color={getStatusTagColor(status)}> {getStatusTagValue(status)}</Tag>
   );
 };

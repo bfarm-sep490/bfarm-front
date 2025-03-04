@@ -19,6 +19,8 @@ import {
   GoldOutlined,
   HddOutlined,
   SearchOutlined,
+  UserOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import { authProvider } from "./authProvider";
 
@@ -30,7 +32,6 @@ import { CustomerShow, CustomerList } from "./pages/customers";
 import { useTranslation } from "react-i18next";
 import { Header, Title } from "./components";
 import { ConfigProvider } from "./context";
-import { useAutoLoginForDemo } from "./hooks";
 
 import "@refinedev/antd/dist/reset.css";
 import {
@@ -42,21 +43,30 @@ import { DeviceList } from "./pages/devices";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
+import { PlanList, PlanShow } from "./pages/plans";
+import { ShowProblemList } from "./pages/plans/problem/list";
+import { ShowTasksList } from "./pages/plans/tasks/show";
+import { ApprovalingPlanDrawer } from "./pages/plans/approvaled-drawer";
+import { ProblemShowV2 } from "./pages/problems/show";
+import { ProductiveTaskShow } from "./components/caring-task/show";
+import { HarvestingTaskShow } from "./components/harvesting-task/show";
+import { PackagingTaskShow } from "./components/packaging-task/show";
+import { ProblemListInProblems } from "./pages/problems/list";
+import { CaringCreate } from "./pages/plans/tasks/caring-create";
+import { CaringUpdate } from "./pages/plans/tasks/caring-update";
+import { dataProvider } from "./rest-data-provider";
+import { useAutoLoginForDemo } from "./hooks";
 import {
   FertilizersCreate,
   FertilizersEdit,
   FertilizersList,
   FertilizersShow,
 } from "./pages/fertilizers";
-
 import { FarmerList } from "./pages/farmers";
-import { FarmerCreate } from "./pages/farmers/create";
 import { FarmersShow } from "./pages/farmers/show";
+import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-
 import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
-import { dataProvider } from "./rest-data-provider";
-
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -140,17 +150,6 @@ const App: React.FC = () => {
                 },
               },
               {
-                name: "land-management",
-                list: "/land-management",
-                create: "/land-management/create",
-                edit: "/land-management/edit/:id",
-                show: "/land-management/show/:id",
-                meta: {
-                  label: "Land Management",
-                  icon: <EnvironmentOutlined />,
-                },
-              },
-              {
                 name: "material",
                 meta: {
                   label: "Material",
@@ -205,55 +204,31 @@ const App: React.FC = () => {
                 meta: { parent: "employees", canDelete: true },
               },
               {
-                name: "drivers",
-                list: "/drivers",
-                create: "/drivers/create",
-                edit: "/drivers/edit/:id",
-                show: "/drivers/show/:id",
-                meta: { parent: "employees", canDelete: true },
-              },
-              {
-                name: "season-management",
-                list: "/season-management",
-                create: "/season-management/create",
-                edit: "/season-management/edit/:id",
-                show: "/season-management/show/:id",
+                name: "plans",
+                list: "/plans",
+                create: "/plans/create",
+                show: "/plans/:id",
                 meta: {
-                  label: "Season Management",
+                  label: "Plans",
                   icon: <CalendarOutlined />,
+                  route: "/plans",
                 },
               },
               {
-                name: "report",
-                list: "/report",
-                create: "/report/create",
-                edit: "/report/edit/:id",
-                show: "/report/show/:id",
+                name: "problems",
+                list: "/problems",
+                show: "/problems/:id",
                 meta: {
-                  label: "Report",
-                  icon: <FileTextOutlined />,
+                  label: "Vấn đề",
+                  icon: <WarningOutlined />,
+                  route: "/problems",
                 },
               },
               {
-                name: "support",
-                list: "/support",
-                create: "/support/create",
-                edit: "/support/edit/:id",
-                show: "/support/show/:id",
+                name: "new-task",
+                list: "/",
                 meta: {
-                  label: "Support",
-                  icon: <CustomerServiceOutlined />,
-                },
-              },
-              {
-                name: "transport",
-                list: "/transport",
-                create: "/transport/create",
-                edit: "/transport/edit/:id",
-                show: "/transport/show/:id",
-                meta: {
-                  label: "Transport",
-                  icon: <CarOutlined />,
+                  label: "Công việc mới",
                 },
               },
             ]}
@@ -283,7 +258,72 @@ const App: React.FC = () => {
                 }
               >
                 <Route index element={<DashboardPage />} />
-
+                <Route path="/plans">
+                  <Route index element={<PlanList />} />
+                  <Route path=":id">
+                    <Route
+                      index
+                      element={
+                        <PlanShow>
+                          <Outlet></Outlet>
+                        </PlanShow>
+                      }
+                    />
+                    <Route path="approve" element={<ApprovalingPlanDrawer />}></Route>
+                    <Route
+                      path="problems"
+                      element={
+                        <ShowProblemList>
+                          <Outlet />
+                        </ShowProblemList>
+                      }
+                    >
+                      <Route path=":id" element={<ProblemShowV2 />}></Route>
+                    </Route>
+                    <Route
+                      path="caring-tasks"
+                      element={
+                        <ShowTasksList>
+                          <Outlet />
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<ProductiveTaskShow />} />
+                    </Route>
+                    <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
+                    <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
+                    <Route
+                      path="harvesting-tasks"
+                      element={
+                        <ShowTasksList>
+                          <Outlet></Outlet>
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<HarvestingTaskShow />} />
+                    </Route>
+                    <Route
+                      path="packaging-tasks"
+                      element={
+                        <ShowTasksList>
+                          <Outlet />
+                        </ShowTasksList>
+                      }
+                    >
+                      <Route path=":taskId" element={<PackagingTaskShow />} />
+                    </Route>
+                  </Route>
+                </Route>
+                <Route
+                  path="/problems"
+                  element={
+                    <ProblemListInProblems>
+                      <Outlet></Outlet>
+                    </ProblemListInProblems>
+                  }
+                >
+                  <Route path=":id" element={<ProblemShowV2 />} />
+                </Route>
                 <Route
                   path="/customers"
                   element={

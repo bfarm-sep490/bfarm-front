@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AuthPage as AntdAuthPage, type AuthProps } from "@refinedev/antd";
 import { Flex, Alert } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { BFarmLogoIcon, BFarmLogoText } from "../../components";
 import { loginUser } from "../../services/authService";
 

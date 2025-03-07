@@ -81,24 +81,28 @@ export interface ISeasonProgressEntry {
   progress: number;
 }
 
-export type FertilizerStatus = "UnActived" | "InStock" | "OutStock";
-export type FertilizerType = "Organic" | "Chemical" | "Mixed";
-export type ItemStatus = "UnActived" | "InStock" | "OutStock";
-export type ItemType = "Productive" | "Harvestive" | "Packaging" | "Inspecting";
-export type ItemStatus = "Inactive" | "InStock" | "OutStock";
-export type ItemType =
-  | "Caring"
-  | "Productive"
-  | "Harvestive"
-  | "Packaging"
-  | "Inspecting";
+export type FertilizerStatus = "Available" | "Unavailable";
+export type FertilizerType = "Đạm" | "Kali" | "Lân" | "Hữu cơ" | "Vi sinh";
+export type ItemStatus = "Active" | "In-stock" | "Out-stock";
+export type ItemType = "Caring" | "Harvesting" | "Packaging" | "Inspecting";
 export type SeedTestKitColor = "Blue" | "Yellow" | "Red" | "Orange";
 export type SeedAvailability = "Available" | "Unavailable";
-export type YieldType = "Đất thịt" | "Đất mùn";
+export type YieldType =
+  | "Lúa"
+  | "Rau"
+  | "Tổng hợp"
+  | "Trái cây"
+  | "Ngô"
+  | "Khác";
 export type YieldAvailability = "Available" | "Unavailable";
-export type YieldSize = "Small" | "Medium" | "Large";
-export type PesticideStatus = "UnActived" | "InStock" | "OutStock";
-export type PesticideType = "Insecticide" | "Fungicide" | "Herbicide" | "Other";
+export type YieldSize = "Nhỏ" | "Vừa" | "Lớn";
+export type PesticideStatus = "Available" | "UnAvailable" | "OutStock";
+export type PesticideType =
+  | "Trừ sâu"
+  | "Trừ nấm"
+  | "Diệt cỏ"
+  | "Trừ rầy"
+  | "Trừ bọ xít";
 export type InspectorAvailability = "Available" | "Unavailable";
 export type InspectingTaskStatus =
   | "pending"
@@ -174,7 +178,7 @@ export interface ISeed {
   plant_name: string;
   description: string;
   quantity: number;
-  unit: string
+  unit: string;
   is_available: boolean;
   min_temp: number;
   max_temp: number;
@@ -218,7 +222,7 @@ export interface IPesticide {
 }
 
 export interface IInspector {
-  id: number
+  id: number;
   accountID: string;
   address: string;
   name: string;
@@ -230,7 +234,7 @@ export interface IInspectingTask {
   taskID: number;
   planID: number;
   taskName: string;
-  taskType: string; 
+  taskType: string;
   description: string;
   startDate: Date;
   endDate: Date;
@@ -239,11 +243,11 @@ export interface IInspectingTask {
   temperature?: number;
   humidity?: number;
   moisture?: number;
-  shellColor?: string; 
+  shellColor?: string;
   testGTKitColor?: InspectingTestKitColor;
   inspectingQuantity: number;
   unit: string;
-  issuePercent: number; 
+  issuePercent: number;
   canHarvest: boolean;
   completedDate?: Date;
   inspectorID: number;

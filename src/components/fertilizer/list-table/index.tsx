@@ -13,10 +13,9 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
+import { FertilizerDrawerShow } from "@/components/fertilizer/drawer-show";
+import { FertilizerTypeTag } from "../type";
 import { FertilizerStatusTag } from "../status";
-import { IFertilizer } from "@/interfaces";
-import { FertilizerDrawerShow } from "../drawer-show";
-
 export const FertilizersListTable: React.FC = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();

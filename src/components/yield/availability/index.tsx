@@ -1,7 +1,5 @@
 import { YieldAvailability } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
 import { Tag } from "antd";
-
 
 interface Props {
   value: YieldAvailability;

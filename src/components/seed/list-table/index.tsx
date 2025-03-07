@@ -1,45 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { Table, Avatar, Tag, Button, Typography, Spin } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
-import { useGo } from "@refinedev/core";
-import { useLocation } from "react-router-dom";
-import { axiosClient } from "@/lib/api/config/axios-client";
+import React, { useState } from "react";
+import { useTable } from "@refinedev/antd";
+import { type HttpError, getDefaultFilter } from "@refinedev/core";
+import {
+  Table,
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Typography,
+  Tag,
+  theme,
+} from "antd";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { ISeed } from "@/interfaces";
+import { ISeed, SeedAvailability } from "@/interfaces";
 import { SeedDrawerShow } from "../drawer-show";
+import { SeedAvailabilityTag } from "../availability";
 
 export const SeedsListTable: React.FC = () => {
-  const go = useGo();
-  const { pathname } = useLocation();
+  const { token } = theme.useToken();
 
-  const [plants, setPlants] = useState<ISeed[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedPlantId, setSelectedPlantId] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchPlants = async () => {
-      try {
-        const response = await axiosClient.get("/api/plants");
-        console.log("API Response:", response.data);
+  // 🟢 Sử dụng useTable thay vì useList
+  const { tableProps, filters } = useTable<ISeed, HttpError>({
+    resource: "plants",
+    filters: {
+      initial: [
+        { field: "id", operator: "eq", value: "" },
+        { field: "plant_name", operator: "contains", value: "" },
+        { field: "quantity", operator: "eq", value: "" },
+      ],
+    },
+  });
 
-        if (response.status === 200 && Array.isArray(response.data.data)) {
-          setPlants(response.data.data);
-        } else {
-          setError("Không thể tải danh sách cây trồng.");
-        }
-      } catch (err) {
-        console.error("API Error:", err);
-        setError("Có lỗi xảy ra khi tải danh sách cây trồng.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [selectedPlantId, setSelectedPlantId] = useState<number | undefined>();
 
-    fetchPlants();
-  }, []); // ✅ Chỉ chạy 1 lần khi component mount
-
-
-  // 🎨 Màu sắc GT Test Kit Color
+  // ✅ Màu sắc của GT Test Kit Color
   const getGTTestKitColor = (color: string | null | undefined) => {
     const colorMap: Record<string, string> = {
       Blue: "blue",
@@ -51,73 +46,115 @@ export const SeedsListTable: React.FC = () => {
     return colorMap[color || ""] || "default";
   };
 
-  if (loading) return <Spin size="large" className="flex justify-center" />;
-  if (error) return <Typography.Text type="danger">{error}</Typography.Text>;
-  const handleMutationSuccess = (plantIdOrData: string | ISeed, isDeleted: boolean) => {
-    setPlants((prevPlants) => {
-      if (isDeleted) {
-        // ✅ Xóa ngay lập tức khỏi danh sách
-        return prevPlants.filter((plant) => plant.id !== Number(plantIdOrData));
-      } else {
-        // ✅ Nếu là tạo mới hoặc chỉnh sửa
-        const updatedPlant = plantIdOrData as ISeed;
-        const exists = prevPlants.some((plant) => plant.id === updatedPlant.id);
-
-        if (exists) {
-          // ✅ Nếu là Edit, cập nhật dữ liệu
-          return prevPlants.map((plant) =>
-            plant.id === updatedPlant.id ? { ...updatedPlant } : plant
-          );
-        } else {
-          // ✅ Nếu là Create, thêm mới vào danh sách
-          return [...prevPlants, updatedPlant];
-        }
-      }
-    });
-  };
-
-
   return (
     <>
       <Table
-        dataSource={plants}
+        {...tableProps}
         rowKey="id"
         scroll={{ x: true }}
         pagination={{
-          showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
+          ...tableProps.pagination,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="plants" />
+          ),
         }}
       >
-        {/* ✅ ID */}
-        <Table.Column title="ID" dataIndex="id" key="id" width={80} />
+        {/* ✅ ID - Bộ lọc tìm kiếm */}
+        <Table.Column
+          title="ID"
+          dataIndex="id"
+          key="id"
+          width={80}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
+          filterDropdown={(props) => (
+            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
+          )}
+        />
 
         {/* ✅ Image */}
         <Table.Column
           title="Image"
           dataIndex="image_url"
           key="image_url"
-          render={(image) => <Avatar shape="square" src={image} alt="Plant" />}
+          render={(image) => (
+            <Avatar
+              shape="square"
+              src={image?.trim() ? image : "/images/plant-default-img.png"}
+              alt="Plant"
+            />
+          )}
         />
 
-        {/* ✅ Name */}
-        <Table.Column title="Plant Name" dataIndex="plant_name" key="plant_name" />
+        {/* ✅ Name - Bộ lọc tìm kiếm */}
+        <Table.Column
+          title="Plant Name"
+          dataIndex="plant_name"
+          key="plant_name"
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter(
+            "plant_name",
+            filters,
+            "contains"
+          )}
+          filterDropdown={(props) => <Input placeholder="Search name" />}
+        />
 
         {/* ✅ Description */}
-        <Table.Column title="Description" dataIndex="description" key="description" width={300} />
+        <Table.Column
+          title="Description"
+          dataIndex="description"
+          key="description"
+          width={300}
+          render={(value) => (
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
+              {value}
+            </Typography.Paragraph>
+          )}
+        />
 
-        {/* ✅ Availability */}
+        {/* ✅ Quantity - Bộ lọc tìm kiếm */}
+        <Table.Column
+          title="Quantity"
+          dataIndex="quantity"
+          key="quantity"
+          width={"auto"}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
+          filterDropdown={(props) => (
+            <InputNumber
+              placeholder="Search total quantity"
+              style={{ width: "100%" }}
+            />
+          )}
+          render={(value, record) => `${value} ${record.unit}`}
+        />
         <Table.Column
           title="Availability"
           dataIndex="is_available"
           key="is_available"
           width={140}
           align="center"
-          render={(value) => (
-            <Tag color={value ? "green" : "red"}>
-              {value ? "Available" : "Not Available"}
-            </Tag>
-          )}
+          render={(value: boolean | string) => {
+            const availability = value === true ? "Available" : "Unavailable";
+            return <SeedAvailabilityTag value={availability} />;
+          }}
         />
-
 
         {/* ✅ GT Test Kit Color */}
         <Table.Column
@@ -126,9 +163,12 @@ export const SeedsListTable: React.FC = () => {
           key="gt_test_kit_color"
           width={120}
           align="center"
-          render={(value) => <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>}
+          render={(value) => (
+            <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>
+          )}
         />
 
+        {/* ✅ Actions */}
         <Table.Column
           title="Actions"
           key="actions"
@@ -138,22 +178,19 @@ export const SeedsListTable: React.FC = () => {
             <Button
               icon={<EyeOutlined />}
               onClick={() => {
-                console.log("Opening drawer for ID:", record.id);
-                setSelectedPlantId(record.id.toString());
+                console.log("Selected Plant ID:", record.id);
+                setSelectedPlantId(record.id);
               }}
             />
           )}
         />
-
       </Table>
       {selectedPlantId && (
         <SeedDrawerShow
           id={selectedPlantId}
-          onClose={() => setSelectedPlantId(null)}
-          onMutationSuccess={handleMutationSuccess}
+          onClose={() => setSelectedPlantId(undefined)}
         />
       )}
-
     </>
   );
 };

@@ -1,7 +1,7 @@
 import { Tag } from "antd";
 
 // Component will set the tag color to match its content
-const InspectionKitTag = ({ color }: { color?: string }) => {
+const SeedKitTag = ({ color }: { color?: string }) => {
   if (!color) return <Tag color="default">N/A</Tag>;
   
   // Convert the color name to lowercase for consistency
@@ -21,4 +21,4 @@ const InspectionKitTag = ({ color }: { color?: string }) => {
   return <Tag color={tagColor}>{color}</Tag>;
 };
 
-export default InspectionKitTag;
+export default SeedKitTag;

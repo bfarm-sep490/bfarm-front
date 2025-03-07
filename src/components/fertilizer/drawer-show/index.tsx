@@ -1,3 +1,12 @@
+import React, { useState } from "react";
+import {
+  type BaseKey,
+  type HttpError,
+  useGetToPath,
+  useGo,
+  useShow,
+  useTranslate,
+} from "@refinedev/core";
 import {
   type BaseKey,
   type HttpError,
@@ -12,34 +21,29 @@ import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
-import { axiosClient } from "@/lib/api/config/axios-client";
+import { IFertilizer, FertilizerStatus } from "@/interfaces";
 import { FertilizerDrawerForm } from "../drawer-form";
+import { FertilizerTypeTag } from "../type";
 
 type Props = {
-  id?: number;
+  id?: BaseKey;
   onClose?: () => void;
 };
 
-const FertilizerStatusTag = ({ status }: { status: string }) => {
-  const colorMap: Record<string, string> = {
-    UnActived: "default",
-    InStock: "success",
-    OutStock: "error",
+const FertilizerStatusTag = ({ status }: { status: FertilizerStatus }) => {
+  const colorMap = {
+    Available: "green",
+    Unavailable: "red",
   };
-  return <Tag color={colorMap[status] || "default"}>{status}</Tag>;
+  return <Tag color={colorMap[status]}>{status}</Tag>;
 };
 
-const FertilizerTypeTag = ({ type }: { type: string }) => {
-  const colorMap: Record<string, string> = {
-    Đạm: "blue",
-    Kali: "red",
-    Lân: "orange",
-  };
-  return <Tag color={colorMap[type] || "default"}>{type}</Tag>;
-};
-
-export const FertilizerDrawerShow = ({ id, onClose }: Props) => {
+export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
+  const [isEditing, setIsEditing] = useState(false); // State mở form Edit
+  const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
+  const go = useGo();
+  const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 

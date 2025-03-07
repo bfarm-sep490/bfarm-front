@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import axios from "axios";
 import {
   Form,
   Input,
+  InputNumber,
   Select,
   Upload,
   Grid,
@@ -10,135 +13,58 @@ import {
   Avatar,
   Spin,
   message,
+  Drawer,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { Drawer } from "../../drawer";
-import { axiosClient } from "@/lib/api/config/axios-client";
-import { SaveButton } from "@refinedev/antd";
-import { IItem } from "@/interfaces";
-import { useGetToPath, useGo } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id?: string;
-  action: "create" | "edit";
-  onClose?: () => void;
-  onMutationSuccess?: (updatedItem?: IItem) => void; // Cho phép truyền updatedItem
+  id: BaseKey;
+  action: "edit" | "create";
+  open: boolean;
+  onClose: () => void;
+  onMutationSuccess: () => void;
 };
 
-export const ItemDrawerForm = ({
-  id,
-  action,
-  onClose,
-  onMutationSuccess,
-}: Props) => {
-  const [form] = Form.useForm();
-  const breakpoint = Grid.useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+export const ItemDrawerForm = (props: Props) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
+  const apiUrl = useApiUrl();
+  const breakpoint = Grid.useBreakpoint();
 
-  useEffect(() => {
-    if (id && action === "edit") {
-      fetchItemDetails();
-    }
-  }, [id, action]);
-
-  const fetchItemDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosClient.get(`/api/items/${id}`);
-      if (response.data.status === 200) {
-        const itemData = response.data.data;
-        form.setFieldsValue({
-          name: itemData.name,
-          description: itemData.description,
-          status: itemData.status,
-          type: itemData.type,
-          quantity: itemData.quantity, // ✅ Thêm quantity
-          unit: itemData.unit, // ✅ Thêm unit
-        });
-        setImageUrl(itemData.image_url);
-      } else {
-        message.error("Không thể tải thông tin sản phẩm.");
-      }
-    } catch (error) {
-      message.error("Lỗi khi tải dữ liệu.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpload = async ({ file }: any) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axiosClient.post(
-        "/api/items/images/upload",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      if (response.data.status === 200) {
-        setImageUrl(response.data.image_url);
-        message.success("Tải ảnh lên thành công!");
-      } else {
-        message.error("Lỗi khi tải ảnh lên.");
-      }
-    } catch (error) {
-      message.error("Lỗi kết nối server.");
-    }
-  };
-
-  const onFinish = async (values: any) => {
-    setLoading(true);
-    const payload: any = {
-      name: values.name,
-      description: values.description,
-      quantity: Number(values.quantity) || 0,
-      unit: values.unit || "ml",
-      status: values.status,
-      type: values.type,
-      image_url: imageUrl || "",
-      caringItems: null,
-      harvestingItems: null,
-      packagingItems: null,
-    };
-    console.log("Payload gửi lên:", JSON.stringify(payload, null, 2));
-
-    try {
-      let response;
-      if (action === "edit") {
-        response = await axiosClient.put(`/api/items/${id}`, payload);
-      } else {
-        response = await axiosClient.post("/api/items", payload);
-      }
-      console.log("Response từ server:", response.data);
-
-      if (response.data.status === 200) {
-        message.success(
-          action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
-        );
-        onMutationSuccess?.(response.data.data); // ✅ Trả về dữ liệu mới
-        onDrawerClose();
-      } else {
-        message.error("Có lỗi xảy ra!");
-      }
-    } catch (error) {
-      message.error("Lỗi kết nối server.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "items",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image) {
+            console.log("Fetched data:", data);
+            setPreviewImage(data.data.image);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+              image_url: data?.data.image,
+            });
+          }
+        },
+      },
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
+    close();
+
+    if (props?.onClose) {
+      props.onClose();
       return;
     }
     go({
@@ -149,36 +75,88 @@ export const ItemDrawerForm = ({
     });
   };
 
+  useEffect(() => {
+    if (props.action === "edit" && formProps.form) {
+      const currentImage = formProps.form.getFieldValue("image");
+      if (currentImage) {
+        setPreviewImage(currentImage);
+      }
+    }
+  }, [props.action, formProps.form]);
+
+  const uploadImage = async ({ onSuccess, onError, file }: any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const response = await axios.post(
+        `${apiUrl}/items/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.data.status === 200 && response.data.data?.length) {
+        const uploadedImageUrl = response.data.data[0];
+        setPreviewImage(uploadedImageUrl);
+        onSuccess(uploadedImageUrl);
+        formProps.form.setFieldValue("image_url", uploadedImageUrl);
+      } else {
+        throw new Error(response.data.message || "Upload failed.");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      message.error("Image upload failed.");
+      onError(error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const title = props.action === "edit" ? "Edit Item" : "Add Item";
+
   return (
     <Drawer
+      {...drawerProps}
       open={true}
-      title={action === "edit" ? "Edit Item" : "Add Item"}
-      width={breakpoint.sm ? "378px" : "100%"}
+      title={title}
+      width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >
-      <Spin spinning={loading}>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Image">
+      <Spin spinning={formLoading}>
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
+          <Form.Item name="image_url" valuePropName="file">
             <Upload.Dragger
               name="file"
-              beforeUpload={() => false}
+              customRequest={uploadImage}
               maxCount={1}
-              accept="image/*"
-              customRequest={handleUpload}
+              accept=".png,.jpg,.jpeg"
               showUploadList={false}
             >
               <Flex vertical align="center" justify="center">
                 <Avatar
                   shape="square"
                   style={{
-                    width: "100%",
-                    maxHeight: "240px",
+                    aspectRatio: 1,
                     objectFit: "contain",
+                    width: previewImage ? "100%" : "80px",
+                    height: previewImage ? "100%" : "80px",
                   }}
-                  src={imageUrl || "/images/item-default-img.png"}
+                  src={previewImage || "/images/item-default-img.png"}
+                  alt="Item Image"
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>
-                  Upload Image
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -187,66 +165,63 @@ export const ItemDrawerForm = ({
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please enter a name" }]}
+            rules={[{ required: true, message: "Enter name!" }]}
           >
-            <Input />
+            <Input placeholder="Enter item name" />
           </Form.Item>
-
           <Form.Item
             label="Description"
             name="description"
-            rules={[{ required: true, message: "Please enter a description" }]}
+            rules={[{ required: true, message: "Enter description!" }]}
           >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "Please select a status" }]}
-          >
-            <Select
-              options={[
-                { label: "UnActived", value: "UnActived" },
-                { label: "In Stock", value: "InStock" },
-                { label: "Out of Stock", value: "OutStock" },
-              ]}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Please select a type" }]}
-          >
-            <Select
-              options={[
-                { label: "Productive", value: "Productive" },
-                { label: "Harvesting", value: "Harvesting" },
-                { label: "Packaging", value: "Packaging" },
-                { label: "Inspecting", value: "Inspecting" },
-              ]}
-            />
+            <Input.TextArea rows={3} placeholder="Enter item description" />
           </Form.Item>
           <Form.Item
             label="Quantity"
             name="quantity"
-            rules={[{ required: true, message: "Please enter quantity" }]}
+            rules={[{ required: true, message: "Enter quantity!" }]}
           >
-            <Input type="number" min={0} />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Enter quantity"
+            />
           </Form.Item>
 
           <Form.Item
             label="Unit"
             name="unit"
-            rules={[{ required: true, message: "Please enter unit" }]}
+            rules={[{ required: true, message: "Enter unit!" }]}
           >
-            <Input />
+            <Input placeholder="cái, hộp, máy, giỏ" />
           </Form.Item>
 
-          <Flex align="center" justify="space-between">
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Select status!" }]}
+          >
+            <Select placeholder="Select status">
+              <Select.Option value="Active">Active</Select.Option>
+              <Select.Option value="In-stock">In-stock</Select.Option>
+              <Select.Option value="Out-stock">Out-stock</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[{ required: true, message: "Select type!" }]}
+          >
+            <Select placeholder="Select type">
+              <Select.Option value="Packaging">Packaging</Select.Option>
+              <Select.Option value="Caring">Caring</Select.Option>
+              <Select.Option value="Harvesting">Harvesting</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <SaveButton htmlType="submit" type="primary">
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Save
             </SaveButton>
           </Flex>

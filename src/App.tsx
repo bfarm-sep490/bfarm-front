@@ -77,7 +77,7 @@ import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-man
 import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from "./pages/pesticides";
 import Logout from "./pages/auth/Logout";
 import { InspectorCreate, InspectorsList, InspectorsShow } from "./pages/inspections";
-
+import { dataProvider } from "./rest-data-provider";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }

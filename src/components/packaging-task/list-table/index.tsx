@@ -11,7 +11,15 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Typography,
+  TableProps,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
@@ -35,7 +43,13 @@ export const PakagingTaskList = ({
     <>
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
-          <Table.Column dataIndex="id" title={translate("ID")} />
+          <Table.Column
+            dataIndex="id"
+            title={translate("ID")}
+            render={(value) => (
+              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
+            )}
+          />
           <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
             dataIndex="start_date"
@@ -47,8 +61,20 @@ export const PakagingTaskList = ({
             title={translate("end_date")}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
-          <Table.Column dataIndex="packaged_quantity" title={"packaged_quantity"} />
-          <Table.Column dataIndex="packaged_unit" title={"unit"} />
+          <Table.Column
+            dataIndex="packed_quantity"
+            title={"packed_quantity"}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
+          />
+          <Table.Column
+            dataIndex="packed_unit"
+            title={"packed_unit"}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
+          />
           <Table.Column
             dataIndex="status"
             title={"status"}
@@ -72,11 +98,7 @@ export const PakagingTaskList = ({
               )
             }
           />
-          <Table.Column
-            title={translate("updated_at")}
-            dataIndex="updated_at"
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
-          />
+
           <Table.Column
             title={translate("table.actions")}
             dataIndex="actions"
@@ -89,7 +111,7 @@ export const PakagingTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/packaging-tasks/${record.id}`,
+                        : `/packaging-tasks/${record.id}`
                     )
                   }
                 />

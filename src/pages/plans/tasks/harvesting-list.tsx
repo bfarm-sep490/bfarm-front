@@ -13,7 +13,7 @@ export const HarvestingTaskListInPlan = ({ children }: PropsWithChildren) => {
     filters: {
       initial: [
         {
-          field: "planId",
+          field: "plan_id",
           operator: "eq",
           value: id,
         },

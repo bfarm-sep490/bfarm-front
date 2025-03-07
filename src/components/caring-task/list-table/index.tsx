@@ -41,7 +41,11 @@ export const CaringListTable = ({
     <>
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
-          <Table.Column dataIndex="id" title={translate("ID")} />
+          <Table.Column
+            dataIndex="id"
+            title={translate("ID")}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+          />
           <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
             dataIndex="start_date"
@@ -93,7 +97,7 @@ export const CaringListTable = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `caring-tasks/${record.id}`,
+                        : `caring-tasks/${record.id}`
                     )
                   }
                 />

@@ -1,4 +1,16 @@
-import { Image, Card, Typography, Space, Tag, Flex, Divider, Row, Col, Grid, Button } from "antd";
+import {
+  Image,
+  Card,
+  Typography,
+  Space,
+  Tag,
+  Flex,
+  Divider,
+  Row,
+  Col,
+  Grid,
+  Button,
+} from "antd";
 import {
   EnvironmentOutlined,
   UserOutlined,
@@ -14,6 +26,10 @@ import {
   SunOutlined,
   CloudOutlined,
   BulbOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
+  EditOutlined,
+  SnippetsOutlined,
 } from "@ant-design/icons";
 import { DateField, ShowButton } from "@refinedev/antd";
 import { HttpError, useOne } from "@refinedev/core";
@@ -25,6 +41,8 @@ import { DropDownSection } from "../../components/section/drop-down-section";
 import { ActivityCard } from "../../components/card/card-activity";
 import { RealTimeContentCard } from "../../components/card/card-real-time";
 import { StatusTag } from "../../components/caring-task/status-tag";
+import { StatusModal } from "@/components/plan/completd-modal";
+import { set } from "lodash";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -68,6 +86,8 @@ interface IProblem {
 }
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
+  const [completedModal, setCompletedModal] = React.useState(false);
+  const [valueModal, setValueModal] = React.useState("");
   const {
     data: generalData,
     isLoading: generalLoading,
@@ -88,7 +108,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
       cacheTime: 1000 * 60,
     },
   });
-  const { data: problemsData, isLoading: problemsLoading } = useOne<IProblem[], HttpError>({
+  const { data: problemsData, isLoading: problemsLoading } = useOne<
+    IProblem[],
+    HttpError
+  >({
     resource: "plans",
     id: `${id}/problems`,
   });
@@ -383,7 +406,15 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             <Flex justify="end">
               {general_info?.status === "Pending" && (
                 <Space>
-                  <Button color="danger" variant="solid">
+                  <Button
+                    color="danger"
+                    variant="solid"
+                    onClick={() => {
+                      setValueModal("cancel");
+                      setCompletedModal(true);
+                    }}
+                    icon={<CloseCircleOutlined />}
+                  >
                     Hủy bỏ
                   </Button>
                   <Button
@@ -392,6 +423,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     onClick={() => {
                       navigate(`/plans/${id}/approve`);
                     }}
+                    icon={<EditOutlined />}
                   >
                     Chấp nhận
                   </Button>
@@ -403,10 +435,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="primary"
                     variant="solid"
                     onClick={() => {
-                      navigate(`/plans/${id}/approve`);
+                      setValueModal("complete");
+                      setCompletedModal(true);
                     }}
+                    icon={<CheckCircleOutlined />}
                   >
-                    Kết thúc mùa vụ
+                    Kết thúc
                   </Button>
                 </Space>
               )}
@@ -463,7 +497,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <UserOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Cây trồng:</Typography.Text>
                     <Typography.Text>
-                      {general_info?.plant_information?.plant_name || "Chưa xác định"}
+                      {general_info?.plant_information?.plant_name ||
+                        "Chưa xác định"}
                     </Typography.Text>
                   </Space>
 
@@ -471,14 +506,17 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <GoldOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Khu đất</Typography.Text>
                     <Typography.Text>
-                      <Tag>{general_info?.yield_information?.yield_name || "Chưa xác định"}</Tag>
+                      <Tag>
+                        {general_info?.yield_information?.yield_name ||
+                          "Chưa xác định"}
+                      </Tag>
                     </Typography.Text>
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
                     <GroupOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
                     <Typography.Text>
-                      {general_info?.estimated_product || "Không có"} -
+                      {general_info?.estimated_product || "Không có"}{" "}
                       {general_info?.estimated_unit || "Không có"}
                     </Typography.Text>
                   </Space>
@@ -492,7 +530,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <CalendarOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Ngày tạo:</Typography.Text>
                     <Typography.Text type="secondary">
-                      <DateField value={general_info?.created_at} format="MMMM, YYYY hh:mm A" />
+                      <DateField
+                        value={general_info?.created_at}
+                        format="hh:mm DD/MM/YYYY"
+                      />
                     </Typography.Text>
                   </Space>
                 </Col>
@@ -505,7 +546,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     </Typography.Text>
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
-                    <GroupOutlined style={{ fontSize: 16 }} />
+                    <SnippetsOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Mô tả</Typography.Text>
                     <Typography.Paragraph>
                       {general_info?.description || "Không có mô tả"}
@@ -663,7 +704,11 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         </DropDownSection>
         <Divider />
         <DropDownSection title="Quan sát">
-          <Row gutter={[16, 16]} justify={"start"} style={{ marginTop: "10px" }}>
+          <Row
+            gutter={[16, 16]}
+            justify={"start"}
+            style={{ marginTop: "10px" }}
+          >
             <Col
               xs={24}
               md={8}
@@ -712,11 +757,16 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 style={{ height: "100%" }}
                 extra={<ShowButton hideText size="small" />}
               >
-                <Typography.Text type="warning">Chưa có cảnh báo nào</Typography.Text>
+                <Typography.Text type="warning">
+                  Chưa có cảnh báo nào
+                </Typography.Text>
               </Card>
             </Col>
           </Row>
-          <Card style={{ marginTop: "10px" }} title="Biểu đồ nhiệt ẩm của khu đất">
+          <Card
+            style={{ marginTop: "10px" }}
+            title="Biểu đồ nhiệt ẩm của khu đất"
+          >
             <div>
               <div id="chart">
                 <ReactApexChart
@@ -731,6 +781,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           </Card>
         </DropDownSection>
       </div>
+      <StatusModal
+        visible={completedModal}
+        id={Number(id)}
+        onClose={() => setCompletedModal(false)}
+        status={valueModal}
+      />
       {children}
     </div>
   );

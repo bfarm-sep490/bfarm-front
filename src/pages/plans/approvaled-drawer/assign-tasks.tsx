@@ -62,7 +62,9 @@ export const AssignTasks = ({
       title: "Loại chăm sóc",
       dataIndex: "task_type",
       key: "type",
-      render: (text: any, record: any) => <CaringTypeTag status={record?.task_type} />,
+      render: (text: any, record: any) => (
+        <CaringTypeTag status={record?.task_type} />
+      ),
     },
     {
       title: "Lựa chọn nông dân",
@@ -277,7 +279,11 @@ export const AssignTasks = ({
 
   return (
     <Card title="Phân bổ công việc" style={{ minHeight: "600px" }}>
-      <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
+      <Tabs
+        defaultActiveKey={"1"}
+        tabPosition={"left"}
+        style={{ minHeight: 220 }}
+      >
         <Tabs.TabPane key="1" tab="Chăm sóc">
           <Table
             pagination={{
@@ -311,7 +317,7 @@ export const AssignTasks = ({
             scroll={{ x: "max-content" }}
           ></Table>
         </Tabs.TabPane>
-        <Tabs.TabPane key="4" tab="Thu hoạch">
+        <Tabs.TabPane key="4" tab="Đóng gói">
           <Table
             pagination={{
               pageSize: 10,

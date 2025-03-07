@@ -176,7 +176,7 @@ export const ApprovalingPlanDrawer = () => {
     resource: "caring-tasks",
     filters: [
       {
-        field: "planId",
+        field: "plan_id",
         operator: "eq",
         value: id,
       },
@@ -191,7 +191,7 @@ export const ApprovalingPlanDrawer = () => {
     resource: "packaging-tasks",
     filters: [
       {
-        field: "planId",
+        field: "plan_id",
         operator: "eq",
         value: id,
       },
@@ -206,7 +206,7 @@ export const ApprovalingPlanDrawer = () => {
     resource: "harvesting-tasks",
     filters: [
       {
-        field: "planId",
+        field: "plan_id",
         operator: "eq",
         value: id,
       },
@@ -221,7 +221,7 @@ export const ApprovalingPlanDrawer = () => {
     resource: "inspecting-forms",
     filters: [
       {
-        field: "planId",
+        field: "plan_id",
         operator: "eq",
         value: id,
       },
@@ -237,7 +237,12 @@ export const ApprovalingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
+        <InputGeneralPlan
+          experts={experts}
+          yields={yields}
+          plants={plants}
+          formProps={formProps}
+        />
       ),
     },
     {
@@ -350,7 +355,7 @@ export const ApprovalingPlanDrawer = () => {
         },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
 
       console.log("Response:", response.data.data);
@@ -369,7 +374,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -380,7 +385,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -391,7 +396,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -432,7 +437,11 @@ export const ApprovalingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}

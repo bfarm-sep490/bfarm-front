@@ -1,6 +1,6 @@
 import { Card, DatePicker, Flex, Form, Input, Select, Typography } from "antd";
 import { useList } from "@refinedev/core";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { FormProps } from "antd/lib";
 import form from "antd/es/form";
 import dayjs from "dayjs";
@@ -12,7 +12,31 @@ type Props = {
   formProps: FormProps;
 };
 
-export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) => {
+export const InputGeneralPlan = ({
+  experts,
+  yields,
+  plants,
+  formProps,
+}: Props) => {
+  const [expertLoading, setExpertLoading] = useState(true);
+  const [yieldLoading, setYieldLoading] = useState(true);
+  const [plantLoading, setPlantLoading] = useState(true);
+
+  useEffect(() => {
+    if (experts) {
+      setExpertLoading(false);
+    }
+  }, [experts]);
+  useEffect(() => {
+    if (yields) {
+      setYieldLoading(false);
+    }
+  }, [yields]);
+  useEffect(() => {
+    if (plants) {
+      setPlantLoading(false);
+    }
+  }, [plants]);
   return (
     <>
       <Form
@@ -24,6 +48,7 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
       >
         <Flex justify="center" align="center">
           <Card
+            loading={expertLoading || yieldLoading || plantLoading}
             style={{ width: "60%" }}
             title={
               <Typography.Title style={{ textAlign: "center" }} level={4}>
@@ -47,7 +72,9 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
               >
                 <Select
                   value={formProps.form?.getFieldValue("plant_id")}
-                  onChange={(value: any) => formProps.form?.setFieldValue("plant_id", value)}
+                  onChange={(value: any) =>
+                    formProps.form?.setFieldValue("plant_id", value)
+                  }
                 >
                   {plants &&
                     plants.map((plant: any) => (
@@ -64,7 +91,9 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
               >
                 <Select
                   value={formProps.form?.getFieldValue("yield_id")}
-                  onChange={(value: any) => formProps.form?.setFieldValue("yield_id", value)}
+                  onChange={(value: any) =>
+                    formProps.form?.setFieldValue("yield_id", value)
+                  }
                 >
                   {yields &&
                     yields.map((expert: any) => (
@@ -81,7 +110,9 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
               >
                 <Select
                   value={formProps.form?.getFieldValue("expert_id")}
-                  onChange={(value: any) => formProps.form?.setFieldValue("expert_id", value)}
+                  onChange={(value: any) =>
+                    formProps.form?.setFieldValue("expert_id", value)
+                  }
                 >
                   {experts &&
                     experts.map((expert: any) => (
@@ -96,7 +127,9 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
                   label="Sản lượng dự kiến"
                   name="estimated_product"
                   style={{ flex: 1 }}
-                  rules={[{ required: true, message: "Nhập sản lượng dự kiến" }]}
+                  rules={[
+                    { required: true, message: "Nhập sản lượng dự kiến" },
+                  ]}
                 >
                   <Input />
                 </Form.Item>
@@ -125,12 +158,14 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
                 <Form.Item label="Ngày bắt đầu dự kiến">
                   <Flex gap={10}>
                     <DatePicker
-                      value={dayjs(formProps?.form?.getFieldValue("start_date"))}
+                      value={dayjs(
+                        formProps?.form?.getFieldValue("start_date")
+                      )}
                       format="DD/MM/YYYY"
                       onChange={(value: any) => {
                         formProps?.form?.setFieldValue(
                           "start_date",
-                          dayjs(value).format("YYYY-MM-DD"),
+                          dayjs(value).format("YYYY-MM-DD")
                         );
                       }}
                       key={"start_date"}
@@ -142,12 +177,14 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
                   <Flex gap={10}>
                     <DatePicker
                       value={dayjs(formProps?.form?.getFieldValue("end_date"))}
-                      defaultValue={dayjs(formProps?.form?.getFieldValue("end_date"))}
+                      defaultValue={dayjs(
+                        formProps?.form?.getFieldValue("end_date")
+                      )}
                       format="DD/MM/YYYY"
                       onChange={(value: any) => {
                         formProps?.form?.setFieldValue(
                           "end_date",
-                          dayjs(value).format("YYYY-MM-DD"),
+                          dayjs(value).format("YYYY-MM-DD")
                         );
                       }}
                       key={"end_date"}

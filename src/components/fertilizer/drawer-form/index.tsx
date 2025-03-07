@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import axios from "axios";
 import {
   Form,
   Input,
@@ -11,78 +13,56 @@ import {
   Avatar,
   Spin,
   message,
+  Drawer,
+  Switch,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { Drawer } from "../../drawer";
-import { axiosClient } from "@/lib/api/config/axios-client";
-import { useGetToPath, useGo } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
-const statusOptions = [
-  { label: "In Stock", value: "InStock" },
-  { label: "Out of Stock", value: "OutStock" },
-  { label: "Unactivated", value: "UnActived" },
-];
-
-const typeOptions = [
-  { label: "Organic", value: "Organic" },
-  { label: "Chemical", value: "Chemical" },
-  { label: "Mixed", value: "Mixed" },
-];
-
-const unitOptions = [
-  { label: "Bao 2kg", value: "Bao 2kg" },
-  { label: "Bao 3kg", value: "Bao 3kg" },
-];
-
 type Props = {
-  id?: string;
-  action: "create" | "edit";
-  onClose?: () => void;
-  onMutationSuccess?: () => void;
+  id: BaseKey;
+  action: "edit" | "create";
+  open: boolean;
+  onClose: () => void;
+  onMutationSuccess: () => void;
 };
 
-export const FertilizerDrawerForm = ({
-  id,
-  action,
-  onClose,
-  onMutationSuccess,
-}: Props) => {
-  const [form] = Form.useForm();
-  const breakpoint = Grid.useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+export const FertilizerDrawerForm = (props: Props) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
+  const apiUrl = useApiUrl();
+  const breakpoint = Grid.useBreakpoint();
 
-  useEffect(() => {
-    if (id && action === "edit") {
-      fetchFertilizerDetails();
-    }
-  }, [id, action]);
-
-  const fetchFertilizerDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosClient.get(`/api/fertilizer/${id}`);
-      if (response.data.status === 200) {
-        const itemData = response.data.data;
-        form.setFieldsValue(itemData);
-        setImageUrl(itemData.image_url);
-      } else {
-        message.error("Không thể tải thông tin phân bón.");
-      }
-    } catch (error) {
-      message.error("Lỗi khi tải dữ liệu.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "fertilizers",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image) {
+            console.log("Fetched data:", data);
+            setPreviewImage(data.data.image);
+          }
+          formProps.form.setFieldsValue(data?.data);
+        },
+      },
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
+    close();
+
+    if (props?.onClose) {
+      props.onClose();
       return;
     }
     go({
@@ -93,91 +73,88 @@ export const FertilizerDrawerForm = ({
     });
   };
 
-  const handleUpload = async ({ file }: any) => {
+  useEffect(() => {
+    if (props.action === "edit" && formProps.form) {
+      const currentImage = formProps.form.getFieldValue("image");
+      if (currentImage) {
+        setPreviewImage(currentImage);
+      }
+    }
+  }, [props.action, formProps.form]);
+
+  const uploadImage = async ({ onSuccess, onError, file }: any) => {
     const formData = new FormData();
     formData.append("image", file);
-
+    setUploading(true);
     try {
-      const response = await axiosClient.post(
-        "/api/fertilizer/images/upload",
+      const response = await axios.post(
+        `${apiUrl}/fertilizers/images/upload`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
-      if (response.data.status === 200) {
-        const uploadedImageUrl = response.data.image_url;
-        setImageUrl(uploadedImageUrl);
-        form.setFieldsValue({ image_url: uploadedImageUrl }); // Cập nhật form
-        message.success("Tải ảnh lên thành công!");
+      if (response.data.status === 200 && response.data.data?.length) {
+        const uploadedImageUrl = response.data.data[0];
+        setPreviewImage(uploadedImageUrl);
+        onSuccess(uploadedImageUrl);
+        formProps.form.setFieldValue("image", uploadedImageUrl);
       } else {
-        message.error("Lỗi khi tải ảnh lên.");
+        throw new Error(response.data.message || "Upload failed.");
       }
     } catch (error) {
-      message.error("Lỗi kết nối server.");
-    }
-  };
-
-  const onFinish = async (values: any) => {
-    setLoading(true);
-
-    const payload = { ...values, image_url: imageUrl || "" };
-
-    try {
-      let response;
-      if (action === "edit") {
-        response = await axiosClient.put(`/api/fertilizer/${id}`, payload);
-      } else {
-        response = await axiosClient.post("/api/fertilizer", payload);
-      }
-
-      if (response.data.status === 200) {
-        message.success(
-          action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
-        );
-        onMutationSuccess?.();
-        onClose?.();
-      } else {
-        message.error("Có lỗi xảy ra!");
-      }
-    } catch (error) {
-      message.error("Lỗi kết nối server.");
+      console.error("Upload error:", error);
+      message.error("Image upload failed.");
+      onError(error);
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
+
+  const title = props.action === "edit" ? "Edit Fertilizer" : "Add Fertilizer";
 
   return (
     <Drawer
+      {...drawerProps}
       open={true}
-      title={action === "edit" ? "Edit Fertilizer" : "Add Fertilizer"}
-      width={breakpoint.sm ? "378px" : "100%"}
+      title={title}
+      width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >
-      <Spin spinning={loading}>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Image">
+      <Spin spinning={formLoading}>
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
+          <Form.Item name="image" valuePropName="file">
             <Upload.Dragger
               name="file"
-              beforeUpload={() => false}
+              customRequest={uploadImage}
               maxCount={1}
-              accept="image/*"
-              customRequest={handleUpload}
+              accept=".png,.jpg,.jpeg"
               showUploadList={false}
             >
               <Flex vertical align="center" justify="center">
                 <Avatar
                   shape="square"
                   style={{
-                    width: "100%",
-                    maxHeight: "240px",
+                    aspectRatio: 1,
                     objectFit: "contain",
+                    width: previewImage ? "100%" : "80px",
+                    height: previewImage ? "100%" : "80px",
                   }}
-                  src={imageUrl || "/images/item-default-img.png"}
+                  src={previewImage || "/images/fertilizer-default-img.png"}
+                  alt="Fertilizer Image"
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>
-                  Upload Image
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -186,48 +163,83 @@ export const FertilizerDrawerForm = ({
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please enter a name" }]}
+            rules={[{ required: true, message: "Enter name!" }]}
           >
-            {" "}
-            <Input />{" "}
+            <Input placeholder="Enter fertilizer name" />
           </Form.Item>
+
           <Form.Item
             label="Description"
             name="description"
-            rules={[{ required: true, message: "Please enter a description" }]}
+            rules={[{ required: true, message: "Enter description!" }]}
           >
-            {" "}
-            <Input.TextArea rows={4} />{" "}
+            <Input.TextArea
+              rows={3}
+              placeholder="Enter fertilizer description"
+            />
           </Form.Item>
+
           <Form.Item
             label="Available Quantity"
             name="available_quantity"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Enter available quantity!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Enter available quantity"
+            />
           </Form.Item>
+
           <Form.Item
             label="Total Quantity"
             name="total_quantity"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: "Enter total quantity!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item label="Unit" name="unit" rules={[{ required: true }]}>
-            <Select options={unitOptions} />
-          </Form.Item>
-          <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-            <Select options={statusOptions} />
-          </Form.Item>
-          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-            <Select options={typeOptions} />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Enter total quantity"
+            />
           </Form.Item>
 
-          <Flex align="center" justify="space-between">
+          <Form.Item
+            label="Unit"
+            name="unit"
+            rules={[{ required: true, message: "Enter unit!" }]}
+          >
+            <Input placeholder="e.g., kg, ton" />
+          </Form.Item>
+
+          <Form.Item
+            label="Trạng thái"
+            name="status"
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+          >
+            <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Available">Available</Select.Option>
+              <Select.Option value="Unavailable">Unavailable</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[{ required: true, message: "Select type!" }]}
+          >
+            <Select placeholder="Select type">
+              <Select.Option value="Đạm">Đạm</Select.Option>
+              <Select.Option value="Lân">Lân</Select.Option>
+              <Select.Option value="Kali">Kali</Select.Option>
+              <Select.Option value="Hữu cơ">Hữu cơ</Select.Option>
+              <Select.Option value="Vi sinh">Vi sinh</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <Button htmlType="submit" type="primary">
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Save
-            </Button>
+            </SaveButton>
           </Flex>
         </Form>
       </Spin>

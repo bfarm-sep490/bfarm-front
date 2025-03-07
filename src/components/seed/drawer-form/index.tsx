@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import axios from "axios";
 import {
   Form,
   Input,
@@ -11,201 +13,60 @@ import {
   Avatar,
   Spin,
   message,
+  Drawer,
+  Row,
+  Col,
+  Typography,
+  Divider,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { Drawer } from "../../drawer";
-import { SaveButton } from "@refinedev/antd";
-import { axiosClient } from "@/lib/api/config/axios-client";
-import { useGetToPath, useGo } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import axios from "axios";
-import { ISeed } from "@/interfaces";
 
 type Props = {
-  id?: string;
-  action: "create" | "edit";
-  onClose?: () => void;
-  onMutationSuccess?: (updatedPlant: ISeed, isNew: boolean) => void;
+  id: BaseKey;
+  action: "edit" | "create";
+  open: boolean;
+  onClose: () => void;
+  onMutationSuccess: () => void;
 };
 
-
-
-export const SeedDrawerForm = ({ id, action, onClose, onMutationSuccess }: Props) => {
-  const [form] = Form.useForm();
-  const breakpoint = Grid.useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+export const SeedDrawerForm = (props: Props) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
+  const apiUrl = useApiUrl();
+  const breakpoint = Grid.useBreakpoint();
 
-  useEffect(() => {
-    if (id && action === "edit") {
-      fetchPlantDetails();
-    }
-  }, [id, action]);
-
-  const fetchPlantDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosClient.get(`/api/plants/${id}`);
-      if (response.data.status === 200) {
-        const plantData = response.data.data;
-
-        console.log("🚀 Dữ liệu lấy từ API:", plantData);
-
-        form.setFieldsValue({
-          plant_name: plantData.plant_name,
-          description: plantData.description,
-          quantity: plantData.quantity,
-          unit: plantData.unit,
-          min_temp: plantData.min_temp,
-          max_temp: plantData.max_temp,
-          min_humid: plantData.min_humid,
-          max_humid: plantData.max_humid,
-          min_moisture: plantData.min_moisture,
-          max_moisture: plantData.max_moisture,
-          min_brix_point: plantData.min_brix_point,
-          max_brix_point: plantData.max_brix_point,
-
-          // ✅ Thêm Fertilizer
-          min_fertilizer: plantData.min_fertilizer,
-          max_fertilizer: plantData.max_fertilizer,
-          fertilizer_unit: plantData.fertilizer_unit,
-
-          // ✅ Thêm Pesticide
-          min_pesticide: plantData.min_pesticide,
-          max_pesticide: plantData.max_pesticide,
-          pesticide_unit: plantData.pesticide_unit,
-
-          gt_test_kit_color: plantData.gt_test_kit_color,
-          is_available: plantData.is_available ? "Available" : "Not Available",
-        });
-
-        setImageUrl(plantData.image_url);
-      } else {
-        message.error("Không thể tải thông tin cây trồng.");
-      }
-    } catch (error) {
-      message.error("Lỗi khi tải dữ liệu.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const handleUpload = async ({ file }: any) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axiosClient.post("/api/plants/images/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response.data.status === 200) {
-        setImageUrl(response.data.image_url);
-        form.setFieldsValue({ image_url: response.data.image_url });
-        message.success("Tải ảnh lên thành công!");
-      } else {
-        message.error("Lỗi khi tải ảnh lên.");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Lỗi từ server:", error.response?.data || error.message);
-      } else {
-        console.error("Lỗi từ server:", error);
-      }
-      const errorMessage = (error as any).response?.data?.message || "Lỗi không xác định. Vui lòng kiểm tra lại.";
-      message.error(errorMessage);
-    }
-  };
-  const validateMinMax = (minField: string, maxField: string, label: string) => {
-    const minValue = Number(form.getFieldValue(minField));
-    const maxValue = Number(form.getFieldValue(maxField));
-
-    console.log(`Kiểm tra ${label}: Min = ${minValue}, Max = ${maxValue}`);
-
-    if (isNaN(minValue) || isNaN(maxValue)) {
-      message.error(`${label}: Dữ liệu không hợp lệ!`);
-      return false;
-    }
-
-    if (maxValue <= minValue) {
-      message.error(`${label}: Giá trị Max phải lớn hơn Min!`);
-      return false;
-    }
-
-    return true;
-  };
-  const onFinish = async (values: any) => {
-    setLoading(true);
-    const payload = {
-        id,
-        plant_name: values.plant_name?.trim() || "Unnamed Plant",
-        description: values.description?.trim() || "No description",
-        is_available: values.is_available === "Available",
-        quantity: Number(values.quantity) || 0,
-        unit: values.unit || "unit",
-        min_temp: Number(values.min_temp),
-        max_temp: Number(values.max_temp),
-        min_humid: Number(values.min_humid),
-        max_humid: Number(values.max_humid),
-        min_moisture: Number(values.min_moisture),
-        max_moisture: Number(values.max_moisture),
-        min_brix_point: Number(values.min_brix_point),
-        max_brix_point: Number(values.max_brix_point),
-        min_fertilizer: Number(values.min_fertilizer),
-        max_fertilizer: Number(values.max_fertilizer),
-        min_pesticide: Number(values.min_pesticide),
-        max_pesticide: Number(values.max_pesticide),
-        fertilizer_unit: values.fertilizer_unit || "kg",
-        pesticide_unit: values.pesticide_unit || "ml",
-        gt_test_kit_color: values.gt_test_kit_color || "Green",
-        image_url: imageUrl || "https://example.com/default-image.jpg",
-    };
-
-    try {
-        let response;
-        let isNew = action !== "edit"; 
-        if (action === "edit") {
-            response = await axiosClient.put(`/api/plants/${id}`, payload);
-        } else {
-            response = await axiosClient.post("/api/plants", payload);
-        }
-
-        if (response.data.status === 200) {
-            message.success(action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!");
-
-            // ✅ Gọi `onMutationSuccess` để cập nhật UI ngay lập tức
-            onMutationSuccess?.(response.data.data, isNew);
-
-            onDrawerClose();
-        } else {
-            message.error(response.data.message || "Có lỗi xảy ra!");
-        }
-    } catch (error) {
-        message.error("Lỗi khi cập nhật dữ liệu!");
-    } finally {
-        setLoading(false);
-    }
-};
-
-
-  // Hàm kiểm tra cho Form.Item rules
-  const validateMaxField = (minField: string) => ({
-    validator(_: any, value: any) {
-      const minValue = form.getFieldValue(minField);
-      if (minValue !== undefined && value !== undefined && value <= minValue) {
-        return Promise.reject(new Error(`Giá trị (max) phải lớn hơn giá trị (min)`));
-      }
-      return Promise.resolve();
-    },
-  });
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "plants",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image_url) {
+            setPreviewImage(data.data.image_url);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+              image_url: data?.data.image_url,
+            });
+          }
+        },
+      },
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
+    close();
+    if (props?.onClose) {
+      props.onClose();
       return;
     }
     go({
@@ -216,121 +77,346 @@ export const SeedDrawerForm = ({ id, action, onClose, onMutationSuccess }: Props
     });
   };
 
+  useEffect(() => {
+    if (props.action === "edit" && formProps.form) {
+      const currentImage = formProps.form.getFieldValue("image_url");
+      if (currentImage) {
+        setPreviewImage(currentImage);
+      }
+    }
+  }, [props.action, formProps.form]);
+
+  const uploadImage = async ({ onSuccess, onError, file }: any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+    try {
+      const response = await axios.post(
+        `${apiUrl}/plants/images/upload`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      if (response.data.status === 200 && response.data.data?.length) {
+        const uploadedImageUrl = response.data.data[0];
+        setPreviewImage(uploadedImageUrl);
+        onSuccess(uploadedImageUrl);
+        formProps.form.setFieldValue("image_url", uploadedImageUrl);
+      } else {
+        throw new Error(response.data.message || "Upload failed.");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      message.error("Image upload failed.");
+      onError(error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const title = props.action === "edit" ? "Edit Seed" : "Add Seed";
+
+  // Nhóm các trường liên quan đến nhiệt độ
+  const temperatureFields = ["min_temp", "max_temp"];
+
+  // Nhóm các trường liên quan đến độ ẩm
+  const humidityFields = ["min_humid", "max_humid"];
+
+  // Nhóm các trường liên quan đến độ ẩm đất
+  const moistureFields = ["min_moisture", "max_moisture"];
+
+  // Nhóm các trường liên quan đến phân bón
+  const fertilizerFields = ["min_fertilizer", "max_fertilizer"];
+
+  // Nhóm các trường liên quan đến thuốc trừ sâu
+  const pesticideFields = ["min_pesticide", "max_pesticide"];
+
+  // Nhóm các trường liên quan đến độ ngọt
+  const brixFields = ["min_brix_point", "max_brix_point"];
+
+  // Hàm format tiêu đề trường và thêm đơn vị phần trăm cho các trường môi trường
+  const formatFieldLabel = (field: string) => {
+    const formattedField = field
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+    // Thêm kí hiệu % cho các trường độ ẩm và độ ẩm đất
+    if (field.includes('humid') || field.includes('moisture')) {
+      return `${formattedField} (%)`;
+    }
+
+    return formattedField;
+  };
+
+  // Đơn vị mặc định
+  const unitOptions = [
+    { label: "kg", value: "kg" },
+    { label: "g", value: "g" },
+    { label: "lb", value: "lb" },
+    { label: "oz", value: "oz" },
+  ];
+
   return (
-    <Drawer open={true} title={action === "edit" ? "Edit Plant" : "Add Plant"} width={breakpoint.sm ? "400px" : "100%"} onClose={onDrawerClose}>
-      <Spin spinning={loading}>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-          {/* Image Upload */}
-          <Form.Item label="Image">
-            <Upload.Dragger name="file" beforeUpload={() => false} maxCount={1} accept="image/*" customRequest={handleUpload} showUploadList={false}>
-              <Flex vertical align="center" justify="center">
-                <Avatar shape="square" size={120} src={imageUrl || "/images/plant-default-img.png"} />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>Upload Image</Button>
+    <Drawer
+      {...drawerProps}
+      open={true}
+      title={title}
+      width={breakpoint.sm ? "400px" : "100%"}
+      onClose={onDrawerClose}
+    >
+      <Spin spinning={formLoading}>
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
+          {/* Upload Image Section */}
+          <Form.Item name="image_url" valuePropName="file">
+            <Upload.Dragger
+              name="file"
+              customRequest={uploadImage}
+              maxCount={1}
+              accept=".png,.jpg,.jpeg"
+              showUploadList={false}
+            >
+              <Flex vertical align="center" justify="center" style={{ padding: "20px 0" }}>
+                <Avatar
+                  shape="square"
+                  style={{
+                    aspectRatio: 1,
+                    objectFit: "contain",
+                    width: previewImage ? "120px" : "80px",
+                    height: previewImage ? "120px" : "80px",
+                    marginBottom: 16
+                  }}
+                  src={previewImage || "/images/seed-default-img.png"}
+                  alt="Seed Image"
+                />
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Image"}
+                </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          {/* Text Inputs */}
-          <Form.Item label="Plant Name" name="plant_name" rules={[{ required: true }]}><Input /></Form.Item>
-          <Form.Item label="Description" name="description" rules={[{ required: true }]}><Input.TextArea rows={3} /></Form.Item>
-          <Form.Item label="Quantity" name="quantity" rules={[{ required: true }]}><InputNumber /></Form.Item>
-          <Form.Item label="Unit" name="unit" rules={[{ required: true }]}><Input /></Form.Item>
-          {/* Select Fields */}
-          <Form.Item label="Availability" name="is_available" rules={[{ required: true }]}><Select options={[{ label: "Available", value: "Available" }, { label: "Not Available", value: "Not Available" }]} /></Form.Item>
+          {/* Basic Information Section */}
+          <Divider orientation="left">Basic Information</Divider>
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label="Plant Name"
+                name="plant_name"
+                rules={[{ required: true, message: "Enter plant name!" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
 
-          {/* Temperature */}
-          <Form.Item label="Temperature">
-            <Flex gap={8}>
-              <Form.Item name="min_temp" noStyle>
-                <InputNumber placeholder="Min" />
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Quantity"
+                name="quantity"
+                rules={[{ required: true, message: "Enter quantity!" }]}
+              >
+                <InputNumber min={0} style={{ width: "100%" }} />
               </Form.Item>
-              <Form.Item name="max_temp" noStyle rules={[validateMaxField("min_temp")]}>
-                <InputNumber placeholder="Max" />
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Unit"
+                name="unit"
+                rules={[{ required: true, message: "Enter unit!" }]}
+              >
+                <Select options={unitOptions} />
               </Form.Item>
-            </Flex>
+            </Col>
+          </Row>
+
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[{ required: true, message: "Enter description!" }]}
+          >
+            <Input.TextArea rows={3} />
           </Form.Item>
 
-          {/* Humidity */}
-          <Form.Item label="Humidity">
-            <Flex gap={8}>
-              <Form.Item name="min_humid" noStyle>
-                <InputNumber placeholder="Min" />
-              </Form.Item>
-              <Form.Item name="max_humid" noStyle rules={[validateMaxField("min_humid")]}>
-                <InputNumber placeholder="Max" />
-              </Form.Item>
-            </Flex>
+          <Form.Item
+            label="Availability"
+            name="is_available"
+            rules={[{ required: true }]}
+          >
+            <Select
+              options={[
+                { label: "Available", value: true },
+                { label: "Not Available", value: false },
+              ]}
+            />
           </Form.Item>
 
-          {/* Moisture */}
-          <Form.Item label="Moisture">
-            <Flex gap={8}>
-              <Form.Item name="min_moisture" noStyle>
-                <InputNumber placeholder="Min" />
-              </Form.Item>
-              <Form.Item name="max_moisture" noStyle rules={[validateMaxField("min_moisture")]}>
-                <InputNumber placeholder="Max" />
-              </Form.Item>
-            </Flex>
-          </Form.Item>
+          {/* Environmental Requirements Section */}
+          <Divider orientation="left">Environmental Requirements</Divider>
 
-          {/* Brix Point */}
-          <Form.Item label="Brix Point">
-            <Flex gap={8}>
-              <Form.Item name="min_brix_point" noStyle>
-                <InputNumber placeholder="Min" />
-              </Form.Item>
-              <Form.Item name="max_brix_point" noStyle rules={[validateMaxField("min_brix_point")]}>
-                <InputNumber placeholder="Max" />
-              </Form.Item>
-            </Flex>
-          </Form.Item>
-
-          {/* Fertilizer - with kg or ha options */}
-          <Form.Item label="Fertilizer">
-            <Flex gap={8}>
-              <Form.Item name="min_fertilizer" noStyle>
-                <InputNumber placeholder="Min" />
-              </Form.Item>
-              <Form.Item name="max_fertilizer" noStyle rules={[validateMaxField("min_fertilizer")]}>
-                <InputNumber placeholder="Max" />
-              </Form.Item>
-              <Form.Item name="fertilizer_unit" noStyle>
-                <Select
-                  style={{ width: 80 }}
-                  options={[
-                    { label: "kg", value: "kg" },
-                    { label: "ha", value: "ha" },
+          {/* Temperature Group */}
+          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8 }}>Temperature (°C)</Typography.Text>
+          <Row gutter={16}>
+            {temperatureFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
+                    },
                   ]}
-                  placeholder="Unit"
-                />
-              </Form.Item>
-            </Flex>
-          </Form.Item>
+                >
+                  <InputNumber min={0} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
 
-          {/* Pesticide */}
-          <Form.Item label="Pesticide">
-            <Flex gap={8}>
-              <Form.Item name="min_pesticide" noStyle>
-                <InputNumber placeholder="Min" />
-              </Form.Item>
-              <Form.Item name="max_pesticide" noStyle rules={[validateMaxField("min_pesticide")]}>
-                <InputNumber placeholder="Max" />
-              </Form.Item>
-              <Form.Item name="pesticide_unit" noStyle>
-                <Select
-                  style={{ width: 80 }}
-                  options={[
-                    { label: "L", value: "L" },
-                    { label: "ml", value: "ml" },
+          {/* Humidity Group */}
+          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8, marginTop: 16 }}>Humidity</Typography.Text>
+          <Row gutter={16}>
+            {humidityFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${field.split('_').join(' ')}!`,
+                    },
                   ]}
-                  placeholder="Unit"
-                />
-              </Form.Item>
-            </Flex>
+                >
+                  <InputNumber min={0} max={100} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
+          {/* Moisture Group */}
+          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8, marginTop: 16 }}>Soil Moisture</Typography.Text>
+          <Row gutter={16}>
+            {moistureFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${field.split('_').join(' ')}!`,
+                    },
+                  ]}
+                >
+                  <InputNumber min={0} max={100} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
+          {/* Fertilizer Group */}
+          <Divider orientation="left">Fertilizer</Divider>
+          <Row gutter={16}>
+            {fertilizerFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
+                    },
+                  ]}
+                >
+                  <InputNumber min={0} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
+          <Form.Item
+            label="Fertilizer Unit"
+            name="fertilizer_unit"
+            rules={[{ required: true, message: "Select fertilizer unit!" }]}
+          >
+            <Select
+              options={[
+                { label: "kg", value: "kg" },
+                { label: "ha", value: "ha" },
+              ]}
+            />
           </Form.Item>
 
-          {/* GT Test Kit Color */}
+          {/* Pesticide Group */}
+          <Divider orientation="left">Pesticide</Divider>
+          <Row gutter={16}>
+            {pesticideFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
+                    },
+                  ]}
+                >
+                  <InputNumber min={0} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
+          <Form.Item
+            label="Pesticide Unit"
+            name="pesticide_unit"
+            rules={[{ required: true, message: "Select pesticide unit!" }]}
+          >
+            <Select
+              options={[
+                { label: "ml", value: "ml" },
+                { label: "l", value: "l" },
+              ]}
+            />
+          </Form.Item>
+
+          {/* Brix Points Group */}
+          <Divider orientation="left">Brix Points</Divider>
+          <Row gutter={16}>
+            {brixFields.map((field) => (
+              <Col span={12} key={field}>
+                <Form.Item
+                  label={formatFieldLabel(field)}
+                  name={field}
+                  rules={[
+                    {
+                      required: true,
+                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
+                    },
+                  ]}
+                >
+                  <InputNumber min={0} style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
+            ))}
+          </Row>
+
+          {/* Other Settings */}
+          <Divider orientation="left">Other Settings</Divider>
           <Form.Item label="GT Test Kit Color" name="gt_test_kit_color">
             <Select
               options={[
@@ -341,9 +427,13 @@ export const SeedDrawerForm = ({ id, action, onClose, onMutationSuccess }: Props
               ]}
             />
           </Form.Item>
-          <Flex align="center" justify="space-between">
+
+          {/* Form Actions */}
+          <Flex justify="space-between" style={{ marginTop: 24 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <SaveButton htmlType="submit" type="primary">Save</SaveButton>
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
+              Save
+            </SaveButton>
           </Flex>
         </Form>
       </Spin>

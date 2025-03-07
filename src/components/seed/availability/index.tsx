@@ -1,17 +1,18 @@
-import { SeedAvailability  } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
 import { Tag } from "antd";
 
-
 interface Props {
-  value: SeedAvailability;
+  value?: string | boolean; 
 }
 
 export const SeedAvailabilityTag: React.FC<Props> = ({ value }) => {
-  switch (value) {
+  const status = value === true || value === "Available" ? "Available" : "Unavailable";
+
+  switch (status) {
     case "Available":
       return <Tag color="green">Available</Tag>;
     case "Unavailable":
-      return <Tag color="red">Unavailablek</Tag>;
+      return <Tag color="red">Unavailable</Tag>;
+    default:
+      return <Tag color="gray">Unknown</Tag>;
   }
 };

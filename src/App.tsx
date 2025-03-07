@@ -63,7 +63,7 @@ import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-man
 import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from "./pages/pesticides";
 import Logout from "./pages/auth/Logout";
 import { InspectorCreate, InspectorsList, InspectorsShow } from "./pages/inspections";
-
+import { dataProvider } from "./rest-data-provider";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -80,9 +80,9 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
-  const dataProvider = jsonServerDataProvider(API_URL);
+  const appDataProvider = dataProvider(API_URL);
 
   const { t, i18n } = useTranslation();
   interface TranslationParams {
@@ -105,7 +105,7 @@ const App: React.FC = () => {
         <RefineKbarProvider>
           <Refine
             routerProvider={routerProvider}
-            dataProvider={dataProvider}
+            dataProvider={appDataProvider}
             authProvider={authProvider}
             i18nProvider={i18nProvider}
             options={{

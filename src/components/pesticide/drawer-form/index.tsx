@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import axios from "axios";
 import {
   Form,
   Input,
+  InputNumber,
   Select,
   Upload,
   Grid,
@@ -10,72 +13,54 @@ import {
   Avatar,
   Spin,
   message,
+  Drawer,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { Drawer } from "../../drawer";
-import { axiosClient } from "@/lib/api/config/axios-client";
-import { SaveButton } from "@refinedev/antd";
-import { IPesticide } from "@/interfaces";
-import { useGetToPath, useGo } from "@refinedev/core";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id?: string;
-  action: "create" | "edit";
-  onClose?: () => void;
-  onMutationSuccess?: () => void;
+  id: BaseKey;
+  action: "edit" | "create";
+  open: boolean;
+  onClose: () => void;
+  onMutationSuccess: () => void;
 };
 
-export const PesticideDrawerForm = ({
-  id,
-  action,
-  onClose,
-  onMutationSuccess,
-}: Props) => {
-  const [form] = Form.useForm();
-  const breakpoint = Grid.useBreakpoint();
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+export const PesticideDrawerForm = (props: Props) => {
+  const [previewImage, setPreviewImage] = useState<string>("");
+  const [uploading, setUploading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
+  const apiUrl = useApiUrl();
+  const breakpoint = Grid.useBreakpoint();
 
-  // Fetch pesticide details if action is 'edit' and id is provided
-  useEffect(() => {
-    if (id && action === "edit") {
-      fetchPesticideDetails();
-    }
-  }, [id, action]);
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "pesticides",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image) {
+            setPreviewImage(data.data.image);
+          }
+          formProps.form.setFieldsValue(data?.data);
+        },
+      },
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
-  // Fetch pesticide details for editing
-  const fetchPesticideDetails = async () => {
-    setLoading(true);
-    try {
-      const response = await axiosClient.get(`/api/pesticides/${id}`);
-      if (response.data.status === 1) {
-        const pesticideData = response.data.data;
-        form.setFieldsValue({
-          name: pesticideData.name,
-          description: pesticideData.description,
-          status: pesticideData.status,
-          type: pesticideData.type,
-          available_quantity: pesticideData.available_quantity,
-          total_quantity: pesticideData.total_quantity,
-          unit: pesticideData.unit,
-        });
-        setImageUrl(pesticideData.image); // Set image URL for editing
-      } else {
-        message.error("Không thể tải thông tin thuốc trừ sâu.");
-      }
-    } catch (error) {
-      message.error("Lỗi khi tải dữ liệu.");
-    } finally {
-      setLoading(false);
-    }
-  };
   const onDrawerClose = () => {
-    if (onClose) {
-      onClose();
+    close();
+
+    if (props?.onClose) {
+      props.onClose();
       return;
     }
     go({
@@ -86,102 +71,88 @@ export const PesticideDrawerForm = ({
     });
   };
 
-  // Handle image upload
-  const handleUpload = async ({ file }: any) => {
+  useEffect(() => {
+    if (props.action === "edit" && formProps.form) {
+      const currentImage = formProps.form.getFieldValue("image");
+      if (currentImage) {
+        setPreviewImage(currentImage);
+      }
+    }
+  }, [props.action, formProps.form]);
+
+  const uploadImage = async ({ onSuccess, onError, file }: any) => {
     const formData = new FormData();
     formData.append("image", file);
-
+    setUploading(true);
     try {
-      const response = await axiosClient.post(
-        "/api/pesticides/images/upload",
+      const response = await axios.post(
+        `${apiUrl}/pesticides/images/upload`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
-      if (response.data.status === 200) {
-        setImageUrl(response.data.image_url);
-        message.success("Tải ảnh lên thành công!");
+      if (response.data.status === 200 && response.data.data?.length) {
+        const uploadedImageUrl = response.data.data[0];
+        setPreviewImage(uploadedImageUrl);
+        onSuccess(uploadedImageUrl);
+        formProps.form.setFieldValue("image", uploadedImageUrl);
       } else {
-        message.error("Lỗi khi tải ảnh lên.");
+        throw new Error(response.data.message || "Upload failed.");
       }
     } catch (error) {
-      message.error("Lỗi kết nối server.");
-    }
-  };
-
-  // Submit form data to API for creating or editing pesticide
-  const onFinish = async (values: any) => {
-    setLoading(true);
-
-    const payload = {
-      name: values.name,
-      description: values.description,
-      status: values.status,
-      type: values.type,
-      image: imageUrl || "", // Send the image URL (either uploaded or default)
-      available_quantity: values.available_quantity,
-      total_quantity: values.total_quantity,
-      unit: values.unit,
-    };
-
-    try {
-      let response;
-      if (action === "edit") {
-        // Update pesticide if action is 'edit'
-        response = await axiosClient.put(`/api/pesticides/${id}`, payload);
-      } else {
-        // Create new pesticide if action is 'create'
-        response = await axiosClient.post("/api/pesticides", payload);
-      }
-
-      if (response.data.status === 200) {
-        message.success(
-          action === "edit" ? "Cập nhật thành công!" : "Tạo mới thành công!"
-        );
-        onMutationSuccess?.();
-        onClose?.();
-      } else {
-        message.error("Có lỗi xảy ra!");
-      }
-    } catch (error) {
-      message.error("Lỗi kết nối server.");
+      console.error("Upload error:", error);
+      message.error("Image upload failed.");
+      onError(error);
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
+
+  const title = props.action === "edit" ? "Edit Pesticide" : "Add Pesticide";
 
   return (
     <Drawer
+      {...drawerProps}
       open={true}
-      title={action === "edit" ? "Edit Pesticide" : "Add Pesticide"}
-      width={breakpoint.sm ? "378px" : "100%"}
+      title={title}
+      width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >
-      <Spin spinning={loading}>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Image">
+      <Spin spinning={formLoading}>
+        <Form
+          form={formProps?.form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
+          <Form.Item name="image" valuePropName="file">
             <Upload.Dragger
               name="file"
-              beforeUpload={() => false} // Prevent auto-upload
+              customRequest={uploadImage}
               maxCount={1}
-              accept="image/*"
-              customRequest={handleUpload} // Custom upload handler
+              accept=".png,.jpg,.jpeg"
               showUploadList={false}
             >
               <Flex vertical align="center" justify="center">
                 <Avatar
                   shape="square"
                   style={{
-                    width: "100%",
-                    maxHeight: "240px",
+                    aspectRatio: 1,
                     objectFit: "contain",
+                    width: previewImage ? "100%" : "80px",
+                    height: previewImage ? "100%" : "80px",
                   }}
-                  src={imageUrl || "/images/pesticide-default-img.png"} // Display default or uploaded image
+                  src={previewImage || "/images/pesticide-default-img.png"}
+                  alt="Pesticide Image"
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 8 }}>
-                  Upload Image
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -190,77 +161,81 @@ export const PesticideDrawerForm = ({
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please enter a name" }]}
+            rules={[{ required: true, message: "Enter name!" }]}
           >
-            <Input />
+            <Input placeholder="Enter pesticide name" />
           </Form.Item>
 
           <Form.Item
             label="Description"
             name="description"
-            rules={[{ required: true, message: "Please enter a description" }]}
+            rules={[{ required: true, message: "Enter description!" }]}
           >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "Please select a status" }]}
-          >
-            <Select
-              options={[
-                { label: "UnActived", value: "UnActived" },
-                { label: "In Stock", value: "InStock" },
-                { label: "Out of Stock", value: "OutStock" },
-              ]}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Please select a type" }]}
-          >
-            <Select
-              options={[
-                { label: "Productive", value: "Productive" },
-                { label: "Harvestive", value: "Harvestive" },
-                { label: "Packaging", value: "Packaging" },
-                { label: "Inspecting", value: "Inspecting" },
-              ]}
+            <Input.TextArea
+              rows={3}
+              placeholder="Enter pesticide description"
             />
           </Form.Item>
 
           <Form.Item
             label="Available Quantity"
             name="available_quantity"
-            rules={[
-              { required: true, message: "Please enter available quantity" },
-            ]}
+            rules={[{ required: true, message: "Enter available quantity!" }]}
           >
-            <Input type="number" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Enter available quantity"
+            />
           </Form.Item>
 
           <Form.Item
             label="Total Quantity"
             name="total_quantity"
-            rules={[{ required: true, message: "Please enter total quantity" }]}
+            rules={[{ required: true, message: "Enter total quantity!" }]}
           >
-            <Input type="number" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Enter total quantity"
+            />
           </Form.Item>
 
           <Form.Item
             label="Unit"
             name="unit"
-            rules={[{ required: true, message: "Please enter unit" }]}
+            rules={[{ required: true, message: "Enter unit!" }]}
           >
-            <Input />
+            <Input placeholder="ml, l, kg, g" />
           </Form.Item>
 
-          <Flex align="center" justify="space-between">
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[{ required: true, message: "Enter type!" }]}
+          >
+            <Select placeholder="Select type">
+              <Select.Option value="Trừ sâu">Trừ sâu</Select.Option>
+              <Select.Option value="Trừ nấm">Trừ nấm</Select.Option>
+              <Select.Option value="Diệt cỏ">Diệt cỏ</Select.Option>
+              <Select.Option value="Trừ rầy">Trừ rầy</Select.Option>
+              <Select.Option value="Trừ bọ xít">Trừ bọ xít</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Trạng thái"
+            name="status"
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+          >
+            <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Available">Available</Select.Option>
+              <Select.Option value="UnAvailable">UnAvailable</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <SaveButton htmlType="submit" type="primary">
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Save
             </SaveButton>
           </Flex>

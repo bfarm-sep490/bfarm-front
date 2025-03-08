@@ -6,17 +6,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { DateField, TextField } from "@refinedev/antd";
-import {
-  Card,
-  Col,
-  Flex,
-  FormProps,
-  Row,
-  Space,
-  Table,
-  Tabs,
-  Typography,
-} from "antd";
+import { Card, Col, Flex, FormProps, Row, Space, Table, Tabs, Typography } from "antd";
 import dayjs from "dayjs";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 
@@ -76,9 +66,7 @@ export const VerifyPlanInformation = ({
       title: "Loại chăm sóc",
       dataIndex: "type",
       key: "type",
-      render: (text: any, record: any) => (
-        <CaringTypeTag status={record?.task_type} />
-      ),
+      render: (text: any, record: any) => <CaringTypeTag status={record?.task_type} />,
     },
     {
       title: "Nông dân",
@@ -87,8 +75,7 @@ export const VerifyPlanInformation = ({
       render: (text: any, record: any) => (
         <TextField
           value={
-            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
-              ?.name || "Chưa xác định"
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)?.name || "Chưa xác định"
           }
         />
       ),
@@ -129,8 +116,7 @@ export const VerifyPlanInformation = ({
       render: (text: any, record: any) => (
         <TextField
           value={
-            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
-              ?.name || "Chưa xác định"
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)?.name || "Chưa xác định"
           }
         />
       ),
@@ -170,8 +156,7 @@ export const VerifyPlanInformation = ({
       render: (text: any, record: any) => (
         <TextField
           value={
-            farmers?.find((farmer: any) => farmer.id === record.farmer_id)
-              ?.name || "Chưa xác định"
+            farmers?.find((farmer: any) => farmer.id === record.farmer_id)?.name || "Chưa xác định"
           }
         />
       ),
@@ -211,9 +196,8 @@ export const VerifyPlanInformation = ({
       render: (text: any, record: any) => (
         <TextField
           value={
-            inspectors?.find(
-              (inspector: any) => inspector.id === record.inspector_id
-            )?.name || "Chưa xác định"
+            inspectors?.find((inspector: any) => inspector.id === record.inspector_id)?.name ||
+            "Chưa xác định"
           }
         />
       ),
@@ -233,8 +217,7 @@ export const VerifyPlanInformation = ({
 
                 <Typography.Text>
                   {plants?.find(
-                    (plant: any) =>
-                      plant.id === formProps?.form?.getFieldValue("plant_id")
+                    (plant: any) => plant.id === formProps?.form?.getFieldValue("plant_id"),
                   )?.plant_name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
@@ -244,9 +227,7 @@ export const VerifyPlanInformation = ({
                 <Typography.Text strong>Khu đất:</Typography.Text>
                 <Typography.Text>
                   {yields?.find(
-                    (yieldItem: any) =>
-                      yieldItem.id ===
-                      formProps?.form?.getFieldValue("yield_id")
+                    (yieldItem: any) => yieldItem.id === formProps?.form?.getFieldValue("yield_id"),
                   )?.yield_name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
@@ -279,8 +260,7 @@ export const VerifyPlanInformation = ({
                 <Typography.Text strong>Chuyên gia:</Typography.Text>
                 <Typography.Text>
                   {experts?.find(
-                    (expert: any) =>
-                      expert.id === formProps.form?.getFieldValue("expert_id")
+                    (expert: any) => expert.id === formProps.form?.getFieldValue("expert_id"),
                   )?.name || "Không có dữ liệu"}
                 </Typography.Text>
               </Space>
@@ -297,15 +277,8 @@ export const VerifyPlanInformation = ({
           </Col>
         </Row>
       </Card>
-      <Card
-        title={"Xác nhận công việc đã phân công của kế hoạch"}
-        style={{ minHeight: "600px" }}
-      >
-        <Tabs
-          defaultActiveKey={"1"}
-          tabPosition={"left"}
-          style={{ minHeight: 220 }}
-        >
+      <Card title={"Xác nhận công việc đã phân công của kế hoạch"} style={{ minHeight: "600px" }}>
+        <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
           <Tabs.TabPane key="1" tab="Chăm sóc">
             <Table
               pagination={{

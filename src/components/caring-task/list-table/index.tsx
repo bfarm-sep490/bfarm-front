@@ -97,7 +97,7 @@ export const CaringListTable = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `caring-tasks/${record.id}`
+                        : `caring-tasks/${record.id}`,
                     )
                   }
                 />

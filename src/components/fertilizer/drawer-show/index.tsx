@@ -12,7 +12,6 @@ import {
   type HttpError,
   useGetToPath,
   useGo,
-  useNavigation,
   useShow,
   useTranslate,
 } from "@refinedev/core";
@@ -47,15 +46,16 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { query: queryResult } = useShow<IFertilizer, HttpError>({
-    resource: "fertilizer",
-    id: props?.id,
+  const { queryResult } = useShow<IFertilizer, HttpError>({
+    resource: "fertilizers",
+    id: id,
   });
-  const fertilizer = queryResult.data?.data;
+
+  const fertilizer = queryResult?.data?.data;
 
   const handleDrawerClose = () => {
-    if (props?.onClose) {
-      props.onClose();
+    if (onClose) {
+      onClose();
       return;
     }
 
@@ -68,38 +68,13 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
   };
 
   return (
-    <Drawer
-      open={true}
-      width={breakpoint.sm ? "378px" : "100%"}
-      zIndex={1001}
-      onClose={handleDrawerClose}
-    >
-      <Flex vertical align="center" justify="center">
-        <Avatar
-          shape="square"
-          style={{
-            aspectRatio: 1,
-            objectFit: "contain",
-            width: "240px",
-            height: "240px",
-            margin: "16px auto",
-            borderRadius: "8px",
-          }}
-          src={fertilizer?.image}
-          alt={fertilizer?.name}
-        />
-      </Flex>
-      <Flex
-        vertical
-        style={{
-          backgroundColor: token.colorBgContainer,
-        }}
-      >
-        <Flex
-          vertical
-          style={{
-            padding: "16px",
-          }}
+    <>
+      {!isEditing && (
+        <Drawer
+          open={!!id}
+          width={breakpoint.sm ? "400px" : "100%"}
+          zIndex={1001}
+          onClose={handleDrawerClose}
         >
           <Typography.Title level={5}>{fertilizer?.name}</Typography.Title>
           <Typography.Text type="secondary">{fertilizer?.description}</Typography.Text>
@@ -167,17 +142,92 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               return props.onEdit();
             }
 
-            return go({
-              to: `${editUrl("fertilizer", fertilizer?.id?.toString() || "")}`,
-              query: { to: "/fertilizer" },
-              options: { keepQuery: true },
-              type: "replace",
-            });
+              <Flex
+                vertical
+                style={{ backgroundColor: token.colorBgContainer }}
+              >
+                <Flex vertical style={{ padding: "16px" }}>
+                  <Typography.Title level={5}>
+                    {fertilizer.name}
+                  </Typography.Title>
+                </Flex>
+              </Flex>
+
+              <Divider />
+
+              <List
+                dataSource={[
+                  { label: "Description", value: fertilizer.description },
+                  {
+                    label: "Available Quantity",
+                    value: `${fertilizer.available_quantity} ${fertilizer.unit}`,
+                  },
+                  {
+                    label: "Total Quantity",
+                    value: `${fertilizer.total_quantity} ${fertilizer.unit}`,
+                  },
+                  {
+                    label: "Type",
+                    value: <FertilizerTypeTag value={fertilizer.type} />,
+                  },
+                  {
+                    label: "Status",
+                    value: <FertilizerStatusTag status={fertilizer.status} />,
+                  },
+                ]}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      style={{
+                        padding: "0 16px",
+                      }}
+                      avatar={
+                        <Typography.Text type="secondary">
+                          {item.label}
+                        </Typography.Text>
+                      }
+                      title={item.value}
+                    />
+                  </List.Item>
+                )}
+              />
+
+              {/* Buttons */}
+              <Flex
+                align="center"
+                justify="space-between"
+                style={{ padding: "16px 16px 16px 0" }}
+              >
+                <DeleteButton
+                  type="text"
+                  recordItemId={fertilizer.id}
+                  resource="fertilizers"
+                  onSuccess={handleDrawerClose}
+                />
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => setIsEditing(true)}
+                >
+                  {t("actions.edit")}
+                </Button>
+              </Flex>
+            </>
+          )}
+        </Drawer>
+      )}
+
+      {isEditing && fertilizer && (
+        <FertilizerDrawerForm
+          id={fertilizer.id}
+          action="edit"
+          open={isEditing}
+          onClose={() => setIsEditing(false)}
+          onMutationSuccess={() => {
+            setIsEditing(false);
+            queryResult.refetch();
           }}
-        >
-          {t("actions.edit")}
-        </Button>
-      </Flex>
-    </Drawer>
+        />
+      )}
+    </>
   );
 };

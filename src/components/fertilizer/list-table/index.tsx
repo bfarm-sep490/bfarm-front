@@ -10,7 +10,6 @@ import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@ref
 import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerDrawerShow } from "@/components/fertilizer/drawer-show";
@@ -24,29 +23,18 @@ export const FertilizersListTable: React.FC = () => {
     resource: "fertilizers",
     filters: {
       initial: [
-        {
-          field: "name",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "description",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "status",
-          operator: "in",
-          value: [],
-        },
-        {
-          field: "type",
-          operator: "in",
-          value: [],
-        },
+        { field: "id", operator: "eq", value: "" },
+        { field: "name", operator: "contains", value: "" },
+        { field: "type", operator: "contains", value: "" },
+        { field: "status", operator: "in", value: [] },
+        { field: "available_quantity", operator: "eq", value: "" },
       ],
     },
   });
+
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<
+    string | undefined
+  >(undefined);
 
   return (
     <Table
@@ -166,14 +154,10 @@ export const FertilizersListTable: React.FC = () => {
               placeholder="Filter by status"
               allowClear
             >
-              <Select.Option value="InStock">In Stock</Select.Option>
-              <Select.Option value="OutStock">Out of Stock</Select.Option>
-              <Select.Option value="UnActived">Inactive</Select.Option>
-            </Select>
-          </FilterDropdown>
-        )}
-        render={(value) => <FertilizerStatusTag value={value} />}
-      />
+              {value}
+            </Typography.Paragraph>
+          )}
+        />
 
       <Table.Column
         title="Type"
@@ -201,29 +185,66 @@ export const FertilizersListTable: React.FC = () => {
         )}
       />
 
-      <Table.Column
-        title="Actions"
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: IFertilizer) => (
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => {
-              go({
-                to: `${showUrl("fertilizer", record.id)}`,
-                query: {
-                  to: pathname,
-                },
-                options: {
-                  keepQuery: true,
-                },
-                type: "replace",
-              });
-            }}
-          />
-        )}
-      />
-    </Table>
+        <Table.Column
+          title="Total Quantity"
+          dataIndex="total_quantity"
+          key="total_quantity"
+          width={"auto"}
+          filterIcon={(filtered) => (
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
+          )}
+          defaultFilteredValue={getDefaultFilter(
+            "total_quantity",
+            filters,
+            "eq"
+          )}
+          filterDropdown={(props) => (
+            <InputNumber
+              placeholder="Search total quantity"
+              style={{ width: "100%" }}
+            />
+          )}
+          render={(value, record) => `${value} ${record.unit}`}
+        />
+
+        <Table.Column
+          title="Type"
+          dataIndex="type"
+          key="type"
+          width={120}
+          render={(value) => <FertilizerTypeTag value={value} />}
+        />
+
+        <Table.Column
+          title="Status"
+          dataIndex="status"
+          key="status"
+          width={120}
+          render={(value) => <FertilizerStatusTag value={value} />}
+        />
+
+        <Table.Column
+          title="Actions"
+          key="actions"
+          fixed="right"
+          align="center"
+          render={(_, record: IFertilizer) => (
+            <Button
+              icon={<EyeOutlined />}
+              onClick={() => setSelectedFertilizerId(record.id.toString())}
+            />
+          )}
+        />
+      </Table>
+
+      {selectedFertilizerId && (
+        <FertilizerDrawerShow
+          id={selectedFertilizerId}
+          onClose={() => setSelectedFertilizerId(undefined)}
+        />
+      )}
+    </>
   );
 };

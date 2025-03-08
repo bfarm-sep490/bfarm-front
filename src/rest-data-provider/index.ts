@@ -107,6 +107,7 @@ export const dataProvider = (
     const { data } = await httpClient[requestMethod](url, variables, {
       headers,
     });
+
     const responseData = data.data !== undefined ? data.data : data;
 
     return {

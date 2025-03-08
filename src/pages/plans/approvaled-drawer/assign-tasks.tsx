@@ -1,7 +1,6 @@
 import { DateField } from "@refinedev/antd";
 import { Card, FormProps, Select, Table, Tabs } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { inspect } from "util";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 
 type Props = {
@@ -62,9 +61,7 @@ export const AssignTasks = ({
       title: "Loại chăm sóc",
       dataIndex: "task_type",
       key: "type",
-      render: (text: any, record: any) => (
-        <CaringTypeTag status={record?.task_type} />
-      ),
+      render: (text: any, record: any) => <CaringTypeTag status={record?.task_type} />,
     },
     {
       title: "Lựa chọn nông dân",
@@ -279,11 +276,7 @@ export const AssignTasks = ({
 
   return (
     <Card title="Phân bổ công việc" style={{ minHeight: "600px" }}>
-      <Tabs
-        defaultActiveKey={"1"}
-        tabPosition={"left"}
-        style={{ minHeight: 220 }}
-      >
+      <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
         <Tabs.TabPane key="1" tab="Chăm sóc">
           <Table
             pagination={{

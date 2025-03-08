@@ -7,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -34,9 +24,7 @@ type Props = {
 
 const YieldStatusTag = ({ isAvailable }: { isAvailable: boolean }) => {
   return (
-    <Tag color={isAvailable ? "green" : "red"}>
-      {isAvailable ? "Available" : "Not Available"}
-    </Tag>
+    <Tag color={isAvailable ? "green" : "red"}>{isAvailable ? "Available" : "Not Available"}</Tag>
   );
 };
 
@@ -51,7 +39,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
   const { queryResult } = useShow<IYield, HttpError>({
     resource: "yields",
-    id: id,
+    id,
   });
 
   const yieldData = queryResult?.data?.data;
@@ -81,14 +69,9 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
         >
           {yieldData && (
             <>
-              <Flex
-                vertical
-                style={{ backgroundColor: token.colorBgContainer }}
-              >
+              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>
-                    {yieldData.yield_name}
-                  </Typography.Title>
+                  <Typography.Title level={5}>{yieldData.yield_name}</Typography.Title>
                 </Flex>
               </Flex>
 
@@ -102,11 +85,17 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   },
                   {
                     label: "Type",
-                    value: <YieldTypeTag value={yieldData.type} />,
+                    value: (
+                      <YieldTypeTag
+                        value={
+                          yieldData.type as "Lúa" | "Rau" | "Tổng hợp" | "Trái cây" | "Ngô" | "Khác"
+                        }
+                      />
+                    ),
                   },
                   {
                     label: "Size",
-                    value: <YieldSizeTag value={yieldData.size} />,
+                    value: <YieldSizeTag value={yieldData.size as "Nhỏ" | "Vừa" | "Lớn"} />,
                   },
                   {
                     label: "Status",
@@ -123,31 +112,20 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                       style={{
                         padding: "0 16px",
                       }}
-                      avatar={
-                        <Typography.Text type="secondary">
-                          {item.label}
-                        </Typography.Text>
-                      }
+                      avatar={<Typography.Text type="secondary">{item.label}</Typography.Text>}
                       title={item.value}
                     />
                   </List.Item>
                 )}
               />
-              <Flex
-                align="center"
-                justify="space-between"
-                style={{ padding: "16px 16px 16px 0" }}
-              >
+              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
                 <DeleteButton
                   type="text"
                   recordItemId={yieldData.id}
                   resource="yields"
                   onSuccess={handleDrawerClose}
                 />
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={() => setIsEditing(true)}
-                >
+                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                   {t("actions.edit")}
                 </Button>
               </Flex>

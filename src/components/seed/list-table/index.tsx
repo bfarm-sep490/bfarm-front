@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { useTable } from "@refinedev/antd";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
-import {
-  Table,
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Typography,
-  Tag,
-  theme,
-} from "antd";
+import { Table, Avatar, Button, Input, InputNumber, Typography, Tag, theme } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { ISeed, SeedAvailability } from "@/interfaces";
@@ -54,9 +45,7 @@ export const SeedsListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="plants" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
         }}
       >
         {/* ✅ ID - Bộ lọc tìm kiếm */}
@@ -66,9 +55,7 @@ export const SeedsListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
@@ -96,15 +83,9 @@ export const SeedsListTable: React.FC = () => {
           dataIndex="plant_name"
           key="plant_name"
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
-          defaultFilteredValue={getDefaultFilter(
-            "plant_name",
-            filters,
-            "contains"
-          )}
+          defaultFilteredValue={getDefaultFilter("plant_name", filters, "contains")}
           filterDropdown={(props) => <Input placeholder="Search name" />}
         />
 
@@ -115,10 +96,7 @@ export const SeedsListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -131,16 +109,11 @@ export const SeedsListTable: React.FC = () => {
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber
-              placeholder="Search total quantity"
-              style={{ width: "100%" }}
-            />
+            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
@@ -163,9 +136,7 @@ export const SeedsListTable: React.FC = () => {
           key="gt_test_kit_color"
           width={120}
           align="center"
-          render={(value) => (
-            <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>
-          )}
+          render={(value) => <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>}
         />
 
         {/* ✅ Actions */}
@@ -186,10 +157,7 @@ export const SeedsListTable: React.FC = () => {
         />
       </Table>
       {selectedPlantId && (
-        <SeedDrawerShow
-          id={selectedPlantId}
-          onClose={() => setSelectedPlantId(undefined)}
-        />
+        <SeedDrawerShow id={selectedPlantId} onClose={() => setSelectedPlantId(undefined)} />
       )}
     </>
   );

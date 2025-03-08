@@ -1,7 +1,7 @@
 import { Tag } from "antd";
 
 interface Props {
-  value?: string | boolean; 
+  value?: string | boolean;
 }
 
 export const SeedAvailabilityTag: React.FC<Props> = ({ value }) => {

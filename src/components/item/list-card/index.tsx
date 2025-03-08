@@ -1,41 +1,28 @@
 import { useSimpleList } from "@refinedev/antd";
-import {
-  type HttpError,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, useGo, useNavigation, useTranslate } from "@refinedev/core";
 
-import {
-  Card,
-  Divider,
-  Flex,
-  List,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined } from "@ant-design/icons";
 import { CSSProperties } from "react";
 import { useLocation } from "react-router";
-import { IItem, ItemType } from "@/interfaces";
+import { IItem } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { ItemStatusTag } from "../status";
 import { useStyles } from "./styled";
 
 const additionalStyles = {
   image: {
-    aspectRatio: '288/160',
-    objectFit: 'cover',
-    width: '100%',
+    aspectRatio: "288/160",
+    objectFit: "cover",
+    width: "100%",
   } as CSSProperties,
   typeTag: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
+    position: "absolute",
+    top: "10px",
+    left: "10px",
     zIndex: 1,
-  } as CSSProperties
+  } as CSSProperties,
 };
 
 export const ItemsListCard = () => {
@@ -54,18 +41,14 @@ export const ItemsListCard = () => {
     },
   });
 
-  const getTypeColor = (type: ItemType) => {
+  const getTypeColor = (type: IItem["type"]) => {
     switch (type) {
-      case 'Productive':
-        return 'blue';
-      case 'Harvestive':
-        return 'green';
-      case 'Packaging':
-        return 'orange';
-      case 'Inspecting':
-        return 'purple';
+      case "Uncountable":
+        return "blue";
+      case "Countable":
+        return "green";
       default:
-        return 'default';
+        return "default";
     }
   };
 
@@ -76,9 +59,7 @@ export const ItemsListCard = () => {
         {...listProps}
         pagination={{
           ...listProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="items" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="items" />,
         }}
         grid={{
           gutter: [16, 16],
@@ -127,17 +108,10 @@ export const ItemsListCard = () => {
                   >
                     View
                   </Tag>
-                  <Tag
-                    color={getTypeColor(item.type)}
-                    style={additionalStyles.typeTag}
-                  >
+                  <Tag color={getTypeColor(item.type)} style={additionalStyles.typeTag}>
                     {item.type}
                   </Tag>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={additionalStyles.image}
-                  />
+                  <img src={item.image} alt={item.name} style={additionalStyles.image} />
                 </>
               }
               actions={[

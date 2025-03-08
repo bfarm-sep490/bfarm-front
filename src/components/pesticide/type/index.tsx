@@ -1,23 +1,20 @@
-import { ItemStatus, ItemType, PesticideType } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
+import { IPesticide } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: PesticideType;
+  value: IPesticide["type"];
 }
 
 export const PesticideTypeTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Trừ sâu":
+    case "Insecticide":
       return <Tag color="green">Trừ sâu</Tag>;
-    case "Trừ nấm":
+    case "Fungicide":
       return <Tag color="orange">Trừ nấm</Tag>;
-    case "Diệt cỏ":
+    case "Herbicide":
       return <Tag color="red">Diệt cỏ</Tag>;
-    case "Trừ rầy":
+    case "Other":
       return <Tag color="blue">Trừ rầy</Tag>;
-    case "Trừ bọ xít":
-      return <Tag color="purple">Trừ bọ xít</Tag>;
     default:
       return null;
   }

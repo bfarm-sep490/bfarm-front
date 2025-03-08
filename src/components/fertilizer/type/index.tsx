@@ -1,23 +1,18 @@
-import { FertilizerType } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
+import { IFertilizer } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: FertilizerType;
+  value: IFertilizer["type"];
 }
 
 export const FertilizerTypeTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Đạm":
-      return <Tag color="green">Đạm</Tag>;
-    case "Kali":
-      return <Tag color="orange">Kali</Tag>;
-    case "Lân":
-      return <Tag color="red">Lân</Tag>;
-    case "Hữu cơ":
-      return <Tag color="blue">Hữu cơ</Tag>;
-    case "Vi sinh":
-      return <Tag color="purple">Vi sinh</Tag>;
+    case "Organic":
+      return <Tag color="green">Organic</Tag>;
+    case "Chemical":
+      return <Tag color="orange">Chemical</Tag>;
+    case "Mixed":
+      return <Tag color="red">Mixed</Tag>;
     default:
       return null;
   }

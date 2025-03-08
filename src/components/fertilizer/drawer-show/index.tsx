@@ -8,36 +8,14 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Grid, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
-import { Drawer } from "../../drawer";
-import { DeleteButton } from "@refinedev/antd";
-import { EditOutlined } from "@ant-design/icons";
-import { IFertilizer, FertilizerStatus } from "@/interfaces";
 import { FertilizerDrawerForm } from "../drawer-form";
-import { FertilizerTypeTag } from "../type";
+import { IFertilizer } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;
   onClose?: () => void;
-};
-
-const FertilizerStatusTag = ({ status }: { status: FertilizerStatus }) => {
-  const colorMap = {
-    Available: "green",
-    Unavailable: "red",
-  };
-  return <Tag color={colorMap[status]}>{status}</Tag>;
 };
 
 export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
@@ -51,7 +29,7 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
   const { queryResult } = useShow<IFertilizer, HttpError>({
     resource: "fertilizers",
-    id: id,
+    id,
   });
 
   const fertilizer = queryResult?.data?.data;
@@ -76,7 +54,6 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
         <FertilizerDrawerForm
           id={fertilizer.id}
           action="edit"
-          open={isEditing}
           onClose={() => setIsEditing(false)}
           onMutationSuccess={() => {
             setIsEditing(false);

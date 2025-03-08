@@ -18,6 +18,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import { IPesticide } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;
@@ -36,11 +37,11 @@ export const PesticideDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IPesticide>(
+    {
       resource: "pesticides",
       id: props?.id,
-      action: props.action,
+      action: props.action ?? "create",
       redirect: false,
       queryOptions: {
         enabled: props.action === "edit",
@@ -54,7 +55,8 @@ export const PesticideDrawerForm = (props: Props) => {
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
       },
-    });
+    },
+  );
 
   const onDrawerClose = () => {
     close();
@@ -85,13 +87,9 @@ export const PesticideDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/pesticides/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/pesticides/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -147,22 +145,14 @@ export const PesticideDrawerForm = (props: Props) => {
                   src={previewImage || "/images/pesticide-default-img.png"}
                   alt="Pesticide Image"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
                   {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Enter name!" }]}
-          >
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
             <Input placeholder="Enter pesticide name" />
           </Form.Item>
 
@@ -171,10 +161,7 @@ export const PesticideDrawerForm = (props: Props) => {
             name="description"
             rules={[{ required: true, message: "Enter description!" }]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder="Enter pesticide description"
-            />
+            <Input.TextArea rows={3} placeholder="Enter pesticide description" />
           </Form.Item>
 
           <Form.Item
@@ -182,11 +169,7 @@ export const PesticideDrawerForm = (props: Props) => {
             name="available_quantity"
             rules={[{ required: true, message: "Enter available quantity!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter available quantity"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter available quantity" />
           </Form.Item>
 
           <Form.Item
@@ -194,26 +177,14 @@ export const PesticideDrawerForm = (props: Props) => {
             name="total_quantity"
             rules={[{ required: true, message: "Enter total quantity!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter total quantity"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter total quantity" />
           </Form.Item>
 
-          <Form.Item
-            label="Unit"
-            name="unit"
-            rules={[{ required: true, message: "Enter unit!" }]}
-          >
+          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
             <Input placeholder="ml, l, kg, g" />
           </Form.Item>
 
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Enter type!" }]}
-          >
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Enter type!" }]}>
             <Select placeholder="Select type">
               <Select.Option value="Trừ sâu">Trừ sâu</Select.Option>
               <Select.Option value="Trừ nấm">Trừ nấm</Select.Option>

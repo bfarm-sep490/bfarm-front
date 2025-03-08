@@ -1,35 +1,12 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import axios from "axios";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-  DatePicker,
-  message,
-} from "antd";
+import { Form, Input, Select, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
 import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
-import { IFarmer, IFertilizer } from "@/interfaces";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import { before, set } from "lodash";
-import moment from "moment";
 
 type Props = {
   id?: BaseKey;
@@ -49,31 +26,30 @@ export const InspectorDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<{
-      avatar_image: string;
-      name: string;
-      phone: string;
-      email: string;
-      status: string;
-    }>({
-      resource: "inspectors",
-      id: id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data: any) => {
-          if (data?.data?.image_url) {
-            setPreviewImage(data?.data?.image_url);
-          }
-          formProps.form.setFieldsValue(data?.data);
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<{
+    avatar_image: string;
+    name: string;
+    phone: string;
+    email: string;
+    status: string;
+  }>({
+    resource: "inspectors",
+    id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data: any) => {
+        if (data?.data?.image_url) {
+          setPreviewImage(data?.data?.image_url);
+        }
+        formProps.form.setFieldsValue(data?.data);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -111,7 +87,7 @@ export const InspectorDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -270,18 +246,9 @@ export const InspectorDrawerForm = (props: Props) => {
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
               <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 Save
               </SaveButton>
             </Flex>

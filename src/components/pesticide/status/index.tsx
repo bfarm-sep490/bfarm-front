@@ -1,16 +1,18 @@
-import { PesticideStatus } from "@/interfaces";
+import { IPesticide } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: PesticideStatus;
+  value: IPesticide["status"];
 }
 
 export const PesticideStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Available":
-      return <Tag color="green">Available</Tag>;
-    case "UnAvailable":
-      return <Tag color="red">UnAvailable</Tag>;
+    case "InStock":
+      return <Tag color="green">In Stock</Tag>;
+    case "OutStock":
+      return <Tag color="red">Out of Stock</Tag>;
+    case "UnActived":
+      return <Tag color="gray">UnActived</Tag>;
     default:
       return null;
   }

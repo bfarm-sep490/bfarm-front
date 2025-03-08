@@ -1,26 +1,15 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Button,
-  Flex,
-  Drawer,
-  Spin,
-  message,
-  Switch,
-} from "antd";
-import { useState, useEffect } from "react";
+import { Form, Input, InputNumber, Select, Button, Flex, Drawer, Spin, Switch } from "antd";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id: BaseKey;
+  id?: BaseKey;
   action: "edit" | "create";
-  open: boolean;
-  onClose: () => void;
-  onMutationSuccess: () => void;
+  open?: boolean;
+  onClose?: () => void;
+  onMutationSuccess?: () => void;
 };
 
 export const YieldDrawerForm = (props: Props) => {
@@ -30,23 +19,21 @@ export const YieldDrawerForm = (props: Props) => {
   const go = useGo();
   const apiUrl = useApiUrl();
 
-  const { drawerProps, formProps, close, saveButtonProps } = useDrawerForm<any>(
-    {
-      resource: "yields",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          formProps.form.setFieldsValue(data?.data);
-        },
+  const { drawerProps, formProps, close, saveButtonProps } = useDrawerForm<any>({
+    resource: "yields",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        formProps.form.setFieldsValue(data?.data);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    }
-  );
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -66,13 +53,7 @@ export const YieldDrawerForm = (props: Props) => {
   const title = props.action === "edit" ? "Edit Yield" : "Add Yield";
 
   return (
-    <Drawer
-      {...drawerProps}
-      open={true}
-      title={title}
-      width={400}
-      onClose={onDrawerClose}
-    >
+    <Drawer {...drawerProps} open={true} title={title} width={400} onClose={onDrawerClose}>
       <Spin spinning={formLoading}>
         <Form
           form={formProps?.form}
@@ -93,11 +74,7 @@ export const YieldDrawerForm = (props: Props) => {
             name="area"
             rules={[{ required: true, message: "Please enter area!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter area"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter area" />
           </Form.Item>
 
           <Form.Item
@@ -149,10 +126,7 @@ export const YieldDrawerForm = (props: Props) => {
             valuePropName="checked"
             initialValue={true}
           >
-            <Switch
-              checkedChildren="Available"
-              unCheckedChildren="Unavailable"
-            />
+            <Switch checkedChildren="Available" unCheckedChildren="Unavailable" />
           </Form.Item>
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>

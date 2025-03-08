@@ -1,4 +1,3 @@
-
 import { ItemsListCard } from "@/components/item/list-card";
 import { ItemsListTable } from "@/components/item/list-table";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
@@ -16,9 +15,7 @@ export const ItemsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>(
-    (localStorage.getItem("item-view") as View) || "table",
-  );
+  const [view, setView] = useState<View>((localStorage.getItem("item-view") as View) || "table");
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view

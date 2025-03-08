@@ -1,19 +1,11 @@
-import {
-  type HttpError,
-  getDefaultFilter,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, getDefaultFilter, useNavigation } from "@refinedev/core";
 import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@refinedev/antd";
 
 import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography } from "antd";
-import { theme } from "antd";
 
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { FertilizerDrawerShow } from "@/components/fertilizer/drawer-show";
 import { FertilizerTypeTag } from "../type";
 import { FertilizerStatusTag } from "../status";
 import { useLocation } from "react-router";
@@ -35,9 +27,7 @@ export const FertilizersListTable: React.FC = () => {
     },
   });
 
-  const [selectedFertilizerId, setSelectedFertilizerId] = useState<
-    string | undefined
-  >(undefined);
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
 
   return (
     <Table
@@ -54,7 +44,6 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="id"
         key="id"
         width={80}
-        
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -74,7 +63,6 @@ export const FertilizersListTable: React.FC = () => {
         title="Name"
         dataIndex="name"
         key="name"
-        
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -131,13 +119,7 @@ export const FertilizersListTable: React.FC = () => {
 
       <Table.Column title="Unit" dataIndex="unit" key="unit" width={100} />
 
-      <Table.Column
-        title="Status"
-        dataIndex="status"
-        key="status"
-        width={120}
-      
-        />
+      <Table.Column title="Status" dataIndex="status" key="status" width={120} />
 
       <Table.Column
         title="Type"
@@ -165,55 +147,46 @@ export const FertilizersListTable: React.FC = () => {
         )}
       />
 
-        <Table.Column
-          title="Total Quantity"
-          dataIndex="total_quantity"
-          key="total_quantity"
-          width={"auto"}
-         
-          defaultFilteredValue={getDefaultFilter(
-            "total_quantity",
-            filters,
-            "eq"
-          )}
-          filterDropdown={(props) => (
-            <InputNumber
-              placeholder="Search total quantity"
-              style={{ width: "100%" }}
-            />
-          )}
-          render={(value, record) => `${value} ${record.unit}`}
-        />
+      <Table.Column
+        title="Total Quantity"
+        dataIndex="total_quantity"
+        key="total_quantity"
+        width={"auto"}
+        defaultFilteredValue={getDefaultFilter("total_quantity", filters, "eq")}
+        filterDropdown={(props) => (
+          <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+        )}
+        render={(value, record) => `${value} ${record.unit}`}
+      />
 
-        <Table.Column
-          title="Type"
-          dataIndex="type"
-          key="type"
-          width={120}
-          render={(value) => <FertilizerTypeTag value={value} />}
-        />
+      <Table.Column
+        title="Type"
+        dataIndex="type"
+        key="type"
+        width={120}
+        render={(value) => <FertilizerTypeTag value={value} />}
+      />
 
-        <Table.Column
-          title="Status"
-          dataIndex="status"
-          key="status"
-          width={120}
-          render={(value) => <FertilizerStatusTag value={value} />}
-        />
+      <Table.Column
+        title="Status"
+        dataIndex="status"
+        key="status"
+        width={120}
+        render={(value) => <FertilizerStatusTag value={value} />}
+      />
 
-        <Table.Column
-          title="Actions"
-          key="actions"
-          fixed="right"
-          align="center"
-          render={(_, record: IFertilizer) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => setSelectedFertilizerId(record.id.toString())}
-            />
-          )}
-        />
-      </Table>
-
+      <Table.Column
+        title="Actions"
+        key="actions"
+        fixed="right"
+        align="center"
+        render={(_, record: IFertilizer) => (
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => setSelectedFertilizerId(record.id.toString())}
+          />
+        )}
+      />
+    </Table>
   );
 };

@@ -1,42 +1,13 @@
-import { Area } from "@ant-design/plots";
 import axios from "axios";
-import { DateField, TextField, useForm } from "@refinedev/antd";
+import { useForm } from "@refinedev/antd";
 import { useBack, useList, useShow } from "@refinedev/core";
-import { useQueries, useQuery } from "@tanstack/react-query";
-import {
-  Avatar,
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  DatePicker,
-  Divider,
-  Drawer,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Steps,
-  Table,
-  Tabs,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
-import { DatePickerType } from "antd/es/date-picker";
-import { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
+import { Button, Drawer, Flex, Steps, theme } from "antd";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
-import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 import { VerifyPlanInformation } from "./verify";
 import { InputGeneralPlan } from "./input-general";
 import { ChooseFarmers } from "./choose-farmers";
-import { set } from "lodash";
 import { AssignTasks } from "./assign-tasks";
 
 interface GainingPlan {
@@ -68,7 +39,7 @@ interface GainingPlan {
   }[];
 }
 
-export const ApprovalingPlanDrawer = () => {
+export const ApprovingPlanDrawer = () => {
   const { id } = useParams();
   const [current, setCurrent] = React.useState<number>(0);
   const [productiveTasks, setProductiveTasks] = React.useState<any[]>([]);
@@ -237,12 +208,7 @@ export const ApprovalingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan
-          experts={experts}
-          yields={yields}
-          plants={plants}
-          formProps={formProps}
-        />
+        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
       ),
     },
     {
@@ -355,7 +321,7 @@ export const ApprovalingPlanDrawer = () => {
         },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       console.log("Response:", response.data.data);
@@ -374,7 +340,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -385,7 +351,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -396,7 +362,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -437,11 +403,7 @@ export const ApprovalingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button
-                loading={loading}
-                style={{ margin: "0 8px" }}
-                onClick={() => prev()}
-              >
+              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
                 Previous
               </Button>
             )}

@@ -1,5 +1,4 @@
-import { PesticidesListCard } from "@/components/pesticide";
-import { PesticidesListTable } from "@/components/pesticide";
+import { PesticidesListCard, PesticidesListTable } from "@/components/pesticide";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
 import { useGo, useNavigation, useTranslate } from "@refinedev/core";

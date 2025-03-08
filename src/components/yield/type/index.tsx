@@ -1,8 +1,8 @@
-import { FertilizerType, YieldType } from "@/interfaces";
+import { IYield } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: YieldType;
+  value: IYield["type"];
 }
 
 export const YieldTypeTag: React.FC<Props> = ({ value }) => {

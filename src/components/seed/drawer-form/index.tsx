@@ -40,28 +40,27 @@ export const SeedDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "plants",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image_url) {
-            setPreviewImage(data.data.image_url);
-            formProps.form.setFieldsValue({
-              ...data?.data,
-              image_url: data?.data.image_url,
-            });
-          }
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "plants",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image_url) {
+          setPreviewImage(data.data.image_url);
+          formProps.form.setFieldsValue({
+            ...data?.data,
+            image_url: data?.data.image_url,
+          });
+        }
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -91,11 +90,9 @@ export const SeedDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/plants/images/upload`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await axios.post(`${apiUrl}/plants/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -137,12 +134,12 @@ export const SeedDrawerForm = (props: Props) => {
   // Hàm format tiêu đề trường và thêm đơn vị phần trăm cho các trường môi trường
   const formatFieldLabel = (field: string) => {
     const formattedField = field
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
 
     // Thêm kí hiệu % cho các trường độ ẩm và độ ẩm đất
-    if (field.includes('humid') || field.includes('moisture')) {
+    if (field.includes("humid") || field.includes("moisture")) {
       return `${formattedField} (%)`;
     }
 
@@ -189,15 +186,12 @@ export const SeedDrawerForm = (props: Props) => {
                     objectFit: "contain",
                     width: previewImage ? "120px" : "80px",
                     height: previewImage ? "120px" : "80px",
-                    marginBottom: 16
+                    marginBottom: 16,
                   }}
                   src={previewImage || "/images/seed-default-img.png"}
                   alt="Seed Image"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} disabled={uploading}>
                   {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
@@ -247,11 +241,7 @@ export const SeedDrawerForm = (props: Props) => {
             <Input.TextArea rows={3} />
           </Form.Item>
 
-          <Form.Item
-            label="Availability"
-            name="is_available"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Availability" name="is_available" rules={[{ required: true }]}>
             <Select
               options={[
                 { label: "Available", value: true },
@@ -264,7 +254,9 @@ export const SeedDrawerForm = (props: Props) => {
           <Divider orientation="left">Environmental Requirements</Divider>
 
           {/* Temperature Group */}
-          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8 }}>Temperature (°C)</Typography.Text>
+          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8 }}>
+            Temperature (°C)
+          </Typography.Text>
           <Row gutter={16}>
             {temperatureFields.map((field) => (
               <Col span={12} key={field}>
@@ -285,7 +277,12 @@ export const SeedDrawerForm = (props: Props) => {
           </Row>
 
           {/* Humidity Group */}
-          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8, marginTop: 16 }}>Humidity</Typography.Text>
+          <Typography.Text
+            type="secondary"
+            style={{ display: "block", marginBottom: 8, marginTop: 16 }}
+          >
+            Humidity
+          </Typography.Text>
           <Row gutter={16}>
             {humidityFields.map((field) => (
               <Col span={12} key={field}>
@@ -295,7 +292,7 @@ export const SeedDrawerForm = (props: Props) => {
                   rules={[
                     {
                       required: true,
-                      message: `Enter ${field.split('_').join(' ')}!`,
+                      message: `Enter ${field.split("_").join(" ")}!`,
                     },
                   ]}
                 >
@@ -306,7 +303,12 @@ export const SeedDrawerForm = (props: Props) => {
           </Row>
 
           {/* Moisture Group */}
-          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8, marginTop: 16 }}>Soil Moisture</Typography.Text>
+          <Typography.Text
+            type="secondary"
+            style={{ display: "block", marginBottom: 8, marginTop: 16 }}
+          >
+            Soil Moisture
+          </Typography.Text>
           <Row gutter={16}>
             {moistureFields.map((field) => (
               <Col span={12} key={field}>
@@ -316,7 +318,7 @@ export const SeedDrawerForm = (props: Props) => {
                   rules={[
                     {
                       required: true,
-                      message: `Enter ${field.split('_').join(' ')}!`,
+                      message: `Enter ${field.split("_").join(" ")}!`,
                     },
                   ]}
                 >

@@ -1,13 +1,15 @@
-
 import { InspectorDrawerForm } from "@/components/inspection";
 import { useGetToPath, useGo } from "@refinedev/core";
 import { useSearchParams } from "react-router";
 
 export const InspectorCreate = () => {
-      const getToPath = useGetToPath();
+  const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-    return <InspectorDrawerForm action="create" onMutationSuccess={() => {
+  return (
+    <InspectorDrawerForm
+      action="create"
+      onMutationSuccess={() => {
         go({
           to:
             searchParams.get("to") ??
@@ -24,5 +26,6 @@ export const InspectorCreate = () => {
           type: "replace",
         });
       }}
-    />;
+    />
+  );
 };

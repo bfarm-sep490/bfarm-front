@@ -1,28 +1,11 @@
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import { getValueFromEvent } from "@refinedev/antd";
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-} from "antd";
+import { SaveButton, useDrawerForm, getValueFromEvent } from "@refinedev/antd";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import { Form, Input, Select, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
-import { IInspector, InspectorAvailability } from "@/interfaces";
+import { IInspectingForm } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;
@@ -41,7 +24,7 @@ export const InspectorDrawerForm = (props: Props) => {
   const { styles, theme } = useStyles();
 
   const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IInspector>({
+    useDrawerForm<IInspectingForm>({
       resource: "inspector",
       id: props?.id,
       action: props.action,
@@ -193,11 +176,7 @@ export const InspectorDrawerForm = (props: Props) => {
           </Form.Item>
 
           {/* Buttons */}
-          <Flex
-            align="center"
-            justify="space-between"
-            style={{ padding: "16px 16px 0px 16px" }}
-          >
+          <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
               Save

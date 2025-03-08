@@ -1,5 +1,4 @@
-import { InspectorListCard } from "@/components/inspection";
-import { InspectorListTable } from "@/components/inspection";
+import { InspectionListCard, InspectionListTable } from "@/components/inspection";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { List } from "@refinedev/antd";
 import { useNavigation } from "@refinedev/core";
@@ -9,12 +8,12 @@ import { Outlet, useLocation } from "react-router";
 
 type View = "table" | "card";
 
-export const InspectorsList = ({ children }: PropsWithChildren) => {
+export const InspectionsList = ({ children }: PropsWithChildren) => {
   const { replace } = useNavigation();
   const { pathname } = useLocation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("inspector-view") as View) || "table"
+    (localStorage.getItem("inspector-view") as View) || "table",
   );
 
   const handleViewChange = (value: View) => {
@@ -49,8 +48,8 @@ export const InspectorsList = ({ children }: PropsWithChildren) => {
         />,
       ]}
     >
-      {view === "table" && <InspectorListTable />}
-      {view === "card" && <InspectorListCard />}
+      {view === "table" && <InspectionListTable />}
+      {view === "card" && <InspectionListCard />}
       {children}
       <Outlet />
     </List>

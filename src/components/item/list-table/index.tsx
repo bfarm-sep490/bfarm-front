@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { useTable } from "@refinedev/antd";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
-import {
-  Table,
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Typography,
-  theme,
-} from "antd";
+import { Table, Avatar, Button, Input, InputNumber, Typography, theme } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IItem } from "@/interfaces";
@@ -40,9 +32,7 @@ export const ItemsListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="items" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="items" />,
         }}
       >
         <Table.Column
@@ -51,9 +41,7 @@ export const ItemsListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
@@ -79,9 +67,7 @@ export const ItemsListTable: React.FC = () => {
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterDropdown={(props) => <Input placeholder="Search name" />}
@@ -93,10 +79,7 @@ export const ItemsListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -107,16 +90,11 @@ export const ItemsListTable: React.FC = () => {
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber
-              placeholder="Search total quantity"
-              style={{ width: "100%" }}
-            />
+            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
@@ -152,10 +130,7 @@ export const ItemsListTable: React.FC = () => {
       </Table>
 
       {selectedItemId && (
-        <ItemDrawerShow
-          id={selectedItemId}
-          onClose={() => setSelectedItemId(undefined)}
-        />
+        <ItemDrawerShow id={selectedItemId} onClose={() => setSelectedItemId(undefined)} />
       )}
     </>
   );

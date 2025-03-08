@@ -1,8 +1,7 @@
-import { YieldAvailability } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: YieldAvailability;
+  value: "Available" | "Unavailable";
 }
 
 export const YieldAvailabilityTag: React.FC<Props> = ({ value }) => {

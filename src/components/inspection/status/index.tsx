@@ -1,7 +1,6 @@
-import { InspectorAvailability } from "@/interfaces";
+import { IInspectingTask } from "@/interfaces";
 import { Status } from "@googlemaps/react-wrapper";
 import { Tag } from "antd";
-
 
 interface Props {
   value: InspectorAvailability;

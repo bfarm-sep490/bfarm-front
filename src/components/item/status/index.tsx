@@ -1,19 +1,18 @@
-import { ItemStatus } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
+import { IItem } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: ItemStatus;
+  value: IItem["status"];
 }
 
 export const ItemStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "In-stock":
+    case "InStock":
       return <Tag color="green">In Stock</Tag>;
-    case "Out-stock":
+    case "OutStock":
       return <Tag color="red">Out Stock</Tag>;
-    case "Active":
-      return <Tag color="default">Active</Tag>;
+    case "UnActived":
+      return <Tag color="default">UnActived</Tag>;
     default:
       return null;
   }

@@ -21,10 +21,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id: BaseKey;
+  id?: BaseKey;
   action: "edit" | "create";
-  open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   onMutationSuccess: () => void;
 };
 
@@ -37,26 +36,25 @@ export const FertilizerDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "fertilizers",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image) {
-            console.log("Fetched data:", data);
-            setPreviewImage(data.data.image);
-          }
-          formProps.form.setFieldsValue(data?.data);
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "fertilizers",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image) {
+          console.log("Fetched data:", data);
+          setPreviewImage(data.data.image);
+        }
+        formProps.form.setFieldsValue(data?.data);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -87,13 +85,9 @@ export const FertilizerDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/fertilizers/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/fertilizers/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -149,22 +143,14 @@ export const FertilizerDrawerForm = (props: Props) => {
                   src={previewImage || "/images/fertilizer-default-img.png"}
                   alt="Fertilizer Image"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
                   {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Enter name!" }]}
-          >
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
             <Input placeholder="Enter fertilizer name" />
           </Form.Item>
 
@@ -173,10 +159,7 @@ export const FertilizerDrawerForm = (props: Props) => {
             name="description"
             rules={[{ required: true, message: "Enter description!" }]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder="Enter fertilizer description"
-            />
+            <Input.TextArea rows={3} placeholder="Enter fertilizer description" />
           </Form.Item>
 
           <Form.Item
@@ -184,11 +167,7 @@ export const FertilizerDrawerForm = (props: Props) => {
             name="available_quantity"
             rules={[{ required: true, message: "Enter available quantity!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter available quantity"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter available quantity" />
           </Form.Item>
 
           <Form.Item
@@ -196,18 +175,10 @@ export const FertilizerDrawerForm = (props: Props) => {
             name="total_quantity"
             rules={[{ required: true, message: "Enter total quantity!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter total quantity"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter total quantity" />
           </Form.Item>
 
-          <Form.Item
-            label="Unit"
-            name="unit"
-            rules={[{ required: true, message: "Enter unit!" }]}
-          >
+          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
             <Input placeholder="e.g., kg, ton" />
           </Form.Item>
 
@@ -221,11 +192,7 @@ export const FertilizerDrawerForm = (props: Props) => {
               <Select.Option value="Unavailable">Unavailable</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Select type!" }]}
-          >
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Select type!" }]}>
             <Select placeholder="Select type">
               <Select.Option value="Đạm">Đạm</Select.Option>
               <Select.Option value="Lân">Lân</Select.Option>

@@ -1,21 +1,17 @@
-import {
-  type HttpError,
-  useGo,
-  useList,
-} from "@refinedev/core";
+import { type HttpError, useGo, useList } from "@refinedev/core";
 import { Table, Avatar, Button, Tag, Typography, theme } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
-import { IInspector, InspectorAvailability, IInspectingTask } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
+import { IInspectingTask } from "@/interfaces";
 
 // Interface kết hợp Inspector và Task
-export interface IInspectorWithTaskTable extends IInspector {
+export interface IInspectorWithTaskTable extends IInspectingTask {
   task?: IInspectingTask;
 }
 
 // Hàm lấy màu trạng thái của Availability
-const getAvailabilityColor = (availability: InspectorAvailability) => {
+const getAvailabilityColor = (availability: any) => {
   return availability === "Available" ? "green" : "red";
 };
 
@@ -30,16 +26,24 @@ const getStatusColor = (status?: string) => {
   return colorMap[status || ""] || "gray";
 };
 
-export const InspectorListTable: React.FC = () => {
+export const InspectionListTable: React.FC = () => {
   const go = useGo();
   const { pathname } = useLocation();
 
   // Fetch dữ liệu từ API
-  const { data: inspectorData, isLoading: loadingInspectors, error: inspectorError } = useList<IInspector>({
+  const {
+    data: inspectorData,
+    isLoading: loadingInspectors,
+    error: inspectorError,
+  } = useList<IInspectingTask>({
     resource: "inspector",
   });
 
-  const { data: taskData, isLoading: loadingTasks, error: taskError } = useList<IInspectingTask>({
+  const {
+    data: taskData,
+    isLoading: loadingTasks,
+    error: taskError,
+  } = useList<IInspectingTask>({
     resource: "inspectingTask",
   });
 
@@ -50,7 +54,7 @@ export const InspectorListTable: React.FC = () => {
   // Kết hợp dữ liệu inspectors với tasks
   const combinedData: IInspectorWithTaskTable[] =
     inspectorData?.data.map((inspector) => {
-      const task = taskData?.data.find((t) => t.inspectorID === inspector.id);
+      const task = taskData?.data.find((t) => t.inspectorID === 1);
       return { ...inspector, task };
     }) || [];
 
@@ -85,7 +89,7 @@ export const InspectorListTable: React.FC = () => {
         dataIndex="isAvailable"
         key="isAvailable"
         width={120}
-        render={(value: InspectorAvailability) => <Tag color={getAvailabilityColor(value)}>{value}</Tag>}
+        render={(value: any) => <Tag color={getAvailabilityColor(value)}>{value}</Tag>}
       />
 
       <Table.Column
@@ -109,9 +113,9 @@ export const InspectorListTable: React.FC = () => {
         dataIndex="task"
         key="status"
         width={120}
-        render={(task?: IInspectingTask) => (
+        render={(task?: IInspectingTask) =>
           task ? <Tag color={getStatusColor(task.status)}>{task.status.toUpperCase()}</Tag> : "-"
-        )}
+        }
       />
 
       <Table.Column
@@ -124,7 +128,7 @@ export const InspectorListTable: React.FC = () => {
             icon={<EyeOutlined />}
             onClick={() => {
               go({
-                to: `/inspector/show/${record.id}`,
+                to: `/inspection/show/1`,
                 query: { to: pathname },
                 options: { keepQuery: true },
                 type: "replace",

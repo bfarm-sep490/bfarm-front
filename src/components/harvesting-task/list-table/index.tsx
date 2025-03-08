@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Typography,
-  TableProps,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
@@ -58,10 +50,7 @@ export const HarvestedTaskList = ({
             title={translate("end_date")}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
-          <Table.Column
-            dataIndex="harvested_quantity"
-            title={"harvested_quantity"}
-          />
+          <Table.Column dataIndex="harvested_quantity" title={"harvested_quantity"} />
           <Table.Column dataIndex="harvested_unit" title={"unit"} />
           <Table.Column
             dataIndex="status"
@@ -98,7 +87,7 @@ export const HarvestedTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/harvesting-tasks/${record.id}`
+                        : `/harvesting-tasks/${record.id}`,
                     )
                   }
                 />

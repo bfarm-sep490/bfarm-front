@@ -1,101 +1,267 @@
+import { notification } from "antd";
+import { disableAutoLogin } from "./hooks";
 import type { AuthProvider } from "@refinedev/core";
-import { message } from "antd";
-import { loginUser, logoutUser } from "@/services/authService";
-import * as yup from "yup";
+import axios from "axios";
 
+export const TOKEN_KEY = "bfarmx-auth";
+export const USER_KEY = "bfarmx-user";
 
-const loginSchema = yup.object().shape({
-  email: yup.string().email("Invalid email").required("Email is required"),
-  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const authApiClient = axios.create({
+  baseURL: `${API_URL}`,
+  headers: {
+    "Content-Type": "application/json",
+    accept: "text/plain",
+  },
 });
 
+function safelyDecodeJwt(token: string) {
+  try {
+    const base64Url = token.split(".")[1];
+
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(""),
+    );
+
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("Error decoding JWT:", error);
+    return null;
+  }
+}
+
 export const authProvider: AuthProvider = {
-  login: async ({ email, password }: { email: string; password: string }) => {
+  login: async ({ email, password }) => {
     try {
-     
-      await loginSchema.validate({ email, password }, { abortEarly: false });
+      const response = await authApiClient.post("/auth/login", {
+        email,
+        password,
+      });
 
+      if (response.data.status === 200) {
+        const { accessToken } = response.data.data;
 
-      const response = await loginUser(email, password);
-      const { accessToken, role } = response.data;
+        localStorage.setItem(TOKEN_KEY, accessToken);
 
-      if (!accessToken) throw new Error("No access token received from server.");
+        const tokenPayload = safelyDecodeJwt(accessToken);
 
-   
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("role", role || "");
-      localStorage.setItem("loginSuccess", "true");
+        if (!tokenPayload) {
+          return {
+            success: false,
+            error: {
+              message: "Failed to decode token",
+              name: "Token decode error",
+            },
+          };
+        }
 
-      message.success("Login successful!");
-      return {
-        success: true,
-        redirectTo: "/",
-      };
-    } catch (error: any) {
-      let errorMessage = "Invalid credentials";
+        const userInfo = {
+          id: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+          name: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+          email: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"],
+          role: tokenPayload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+          avatar: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/uri"],
+        };
 
- 
-      if (error.name === "ValidationError") {
-        errorMessage = error.errors.join(", ");
-      } else if (error.message) {
-        errorMessage = error.message;
+        localStorage.setItem(USER_KEY, JSON.stringify(userInfo));
+
+        // enableAutoLogin();
+
+        return {
+          success: true,
+          redirectTo: "/",
+        };
       }
 
-      message.error(errorMessage);
       return {
         success: false,
         error: {
-          name: "Login Error",
-          message: errorMessage,
+          message: "Login failed",
+          name: "Invalid response from server",
+        },
+      };
+    } catch (error) {
+      const errorMessage =
+        (axios.isAxiosError(error) && error.response?.data?.message) ||
+        "Login failed. Please check your credentials.";
+
+      notification.error({
+        message: "Login Error",
+        description: errorMessage,
+      });
+
+      return {
+        success: false,
+        error: {
+          message: "Login failed",
+          name: errorMessage,
         },
       };
     }
   },
-
+  register: async ({ email, password }) => {
+    try {
+      await authProvider.login({ email, password });
+      return {
+        success: true,
+      };
+    } catch {
+      return {
+        success: false,
+        error: {
+          message: "Register failed",
+          name: "Invalid email or password",
+        },
+      };
+    }
+  },
+  updatePassword: async () => {
+    notification.success({
+      message: "Updated Password",
+      description: "Password updated successfully",
+    });
+    return {
+      success: true,
+    };
+  },
+  forgotPassword: async ({ email }) => {
+    notification.success({
+      message: "Reset Password",
+      description: `Reset password link sent to "${email}"`,
+    });
+    return {
+      success: true,
+    };
+  },
   logout: async () => {
-    logoutUser();
-    message.success("Logged out successfully!");
+    disableAutoLogin();
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+
     return {
       success: true,
       redirectTo: "/login",
     };
   },
+  onError: async (error) => {
+    if (error.response?.status === 401) {
+      return {
+        logout: true,
+        redirectTo: "/login",
+        error: {
+          message: "Session expired",
+          name: "Unauthorized",
+        },
+      };
+    }
 
+    return { error };
+  },
   check: async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN_KEY);
 
     if (!token) {
-      message.error("Please log in first.");
       return {
         authenticated: false,
         error: {
-          name: "Not Authenticated",
-          message: "You must be logged in",
+          message: "Check failed",
+          name: "Token not found",
         },
         logout: true,
         redirectTo: "/login",
       };
     }
 
-    return {
-      authenticated: true,
-    };
+    try {
+      const tokenPayload = safelyDecodeJwt(token);
+
+      if (!tokenPayload) {
+        return {
+          authenticated: false,
+          error: {
+            message: "Invalid token format",
+            name: "Token decode error",
+          },
+          logout: true,
+          redirectTo: "/login",
+        };
+      }
+
+      const expirationTime = tokenPayload.exp * 1000;
+
+      if (Date.now() >= expirationTime) {
+        return {
+          authenticated: false,
+          error: {
+            message: "Session expired",
+            name: "Token expired",
+          },
+          logout: true,
+          redirectTo: "/login",
+        };
+      }
+
+      return {
+        authenticated: true,
+      };
+    } catch (error) {
+      console.error("Token verification error:", error);
+      return {
+        authenticated: false,
+        error: {
+          message: "Invalid token",
+          name: "Token verification error",
+        },
+        logout: true,
+        redirectTo: "/login",
+      };
+    }
   },
 
   getPermissions: async () => {
-    return localStorage.getItem("role") || null;
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+
+      if (!token) {
+        return null;
+      }
+
+      const tokenPayload = safelyDecodeJwt(token);
+      return tokenPayload
+        ? tokenPayload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        : null;
+    } catch (error) {
+      console.error("Error getting permissions:", error);
+      return null;
+    }
   },
 
   getIdentity: async () => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    try {
+      const userStr = localStorage.getItem(USER_KEY);
 
-    return token && role ? { token, role } : null;
-  },
+      if (!userStr) {
+        return null;
+      }
 
-  onError: async (error: any) => {
-    console.error(error);
-    message.error(error?.message || "Something went wrong");
-    return { error };
+      const user = JSON.parse(userStr);
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar || "https://i.pravatar.cc/150",
+      };
+    } catch (error) {
+      console.error("Error getting identity:", error);
+      return null;
+    }
   },
 };

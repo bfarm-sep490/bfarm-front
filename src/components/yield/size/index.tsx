@@ -1,8 +1,8 @@
-import { YieldSize } from "@/interfaces";
+import { IYield } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: YieldSize;
+  value: IYield["size"];
 }
 
 export const YieldSizeTag: React.FC<Props> = ({ value }) => {

@@ -1,10 +1,5 @@
 import { useSimpleList } from "@refinedev/antd";
-import {
-  type HttpError,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, useGo, useNavigation, useTranslate } from "@refinedev/core";
 
 import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
@@ -49,9 +44,7 @@ export const SeedListCard = () => {
         {...listProps}
         pagination={{
           ...listProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="plants" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
         }}
         grid={{
           gutter: [16, 16],
@@ -132,9 +125,7 @@ export const SeedListCard = () => {
 
               {/* Trạng thái */}
               <Flex justify="space-between" align="center" style={{ marginBottom: 8 }}>
-                <Typography.Text type="secondary">
-                  Availability:
-                </Typography.Text>
+                <Typography.Text type="secondary">Availability:</Typography.Text>
                 <Tag color={plant.is_available ? "green" : "red"}>
                   {plant.is_available ? "Available" : "Not Available"}
                 </Tag>
@@ -153,12 +144,14 @@ export const SeedListCard = () => {
               {/* Phân bón & Thuốc trừ sâu */}
               <Flex justify="space-between" style={{ marginTop: 8 }}>
                 <Typography.Text type="secondary">
-                  Fertilizer: {plant.min_fertilizer ?? "-"} - {plant.max_fertilizer ?? "-"} {plant.fertilizer_unit}
+                  Fertilizer: {plant.min_fertilizer ?? "-"} - {plant.max_fertilizer ?? "-"}{" "}
+                  {plant.fertilizer_unit}
                 </Typography.Text>
               </Flex>
               <Flex justify="space-between">
                 <Typography.Text type="secondary">
-                  Pesticide: {plant.min_pesticide ?? "-"} - {plant.max_pesticide ?? "-"} {plant.pesticide_unit}
+                  Pesticide: {plant.min_pesticide ?? "-"} - {plant.max_pesticide ?? "-"}{" "}
+                  {plant.pesticide_unit}
                 </Typography.Text>
               </Flex>
             </Card>

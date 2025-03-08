@@ -1,16 +1,11 @@
 import { useSimpleList } from "@refinedev/antd";
-import {
-  type HttpError,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, useGo, useNavigation, useTranslate } from "@refinedev/core";
 
 import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
-import { IYield, YieldType, YieldAvailability, YieldSize } from "@/interfaces";
+import { IYield } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { useStyles } from "./styled";
 
@@ -37,9 +32,7 @@ export const YieldListCard = () => {
         {...listProps}
         pagination={{
           ...listProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="yields" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="yields" />,
         }}
         grid={{
           gutter: [16, 16],
@@ -86,11 +79,7 @@ export const YieldListCard = () => {
                 View
               </Tag>
 
-              <Flex
-                align="center"
-                justify="space-between"
-                style={{ marginBottom: 8 }}
-              >
+              <Flex align="center" justify="space-between" style={{ marginBottom: 8 }}>
                 <Typography.Title
                   level={5}
                   ellipsis={{ rows: 1, tooltip: item.yield_name }}
@@ -108,29 +97,17 @@ export const YieldListCard = () => {
                 {item.description || "-"}
               </Typography.Paragraph>
 
-              <Flex
-                justify="space-between"
-                align="center"
-                style={{ marginBottom: 8 }}
-              >
-                <Typography.Text type="secondary">
-                  Availability:
-                </Typography.Text>
-                <Tag color={item.isAvailable === "Available" ? "green" : "red"}>
-                  {item.isAvailable}
-                </Tag>
+              <Flex justify="space-between" align="center" style={{ marginBottom: 8 }}>
+                <Typography.Text type="secondary">Availability:</Typography.Text>
+                <Tag color={item.is_available ? "green" : "red"}>{item.is_available}</Tag>
               </Flex>
 
               <Flex justify="space-between">
+                <Typography.Text type="secondary">Area: {item.area ?? "-"}</Typography.Text>
                 <Typography.Text type="secondary">
-                  Area: {item.area ?? "-"}
+                  Area Unit: {item.area_unit ?? "-"}
                 </Typography.Text>
-                <Typography.Text type="secondary">
-                  Area Unit: {item.areaUnit ?? "-"}
-                </Typography.Text>
-                <Typography.Text type="secondary">
-                  Size: {item.size ?? "-"}
-                </Typography.Text>
+                <Typography.Text type="secondary">Size: {item.size ?? "-"}</Typography.Text>
               </Flex>
             </Card>
           </List.Item>

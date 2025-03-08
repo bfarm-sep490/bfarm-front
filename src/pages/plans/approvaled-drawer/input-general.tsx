@@ -12,12 +12,7 @@ type Props = {
   formProps: FormProps;
 };
 
-export const InputGeneralPlan = ({
-  experts,
-  yields,
-  plants,
-  formProps,
-}: Props) => {
+export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) => {
   const [expertLoading, setExpertLoading] = useState(true);
   const [yieldLoading, setYieldLoading] = useState(true);
   const [plantLoading, setPlantLoading] = useState(true);
@@ -72,9 +67,7 @@ export const InputGeneralPlan = ({
               >
                 <Select
                   value={formProps.form?.getFieldValue("plant_id")}
-                  onChange={(value: any) =>
-                    formProps.form?.setFieldValue("plant_id", value)
-                  }
+                  onChange={(value: any) => formProps.form?.setFieldValue("plant_id", value)}
                 >
                   {plants &&
                     plants.map((plant: any) => (
@@ -91,9 +84,7 @@ export const InputGeneralPlan = ({
               >
                 <Select
                   value={formProps.form?.getFieldValue("yield_id")}
-                  onChange={(value: any) =>
-                    formProps.form?.setFieldValue("yield_id", value)
-                  }
+                  onChange={(value: any) => formProps.form?.setFieldValue("yield_id", value)}
                 >
                   {yields &&
                     yields.map((expert: any) => (
@@ -110,9 +101,7 @@ export const InputGeneralPlan = ({
               >
                 <Select
                   value={formProps.form?.getFieldValue("expert_id")}
-                  onChange={(value: any) =>
-                    formProps.form?.setFieldValue("expert_id", value)
-                  }
+                  onChange={(value: any) => formProps.form?.setFieldValue("expert_id", value)}
                 >
                   {experts &&
                     experts.map((expert: any) => (
@@ -127,9 +116,7 @@ export const InputGeneralPlan = ({
                   label="Sản lượng dự kiến"
                   name="estimated_product"
                   style={{ flex: 1 }}
-                  rules={[
-                    { required: true, message: "Nhập sản lượng dự kiến" },
-                  ]}
+                  rules={[{ required: true, message: "Nhập sản lượng dự kiến" }]}
                 >
                   <Input />
                 </Form.Item>
@@ -158,14 +145,12 @@ export const InputGeneralPlan = ({
                 <Form.Item label="Ngày bắt đầu dự kiến">
                   <Flex gap={10}>
                     <DatePicker
-                      value={dayjs(
-                        formProps?.form?.getFieldValue("start_date")
-                      )}
+                      value={dayjs(formProps?.form?.getFieldValue("start_date"))}
                       format="DD/MM/YYYY"
                       onChange={(value: any) => {
                         formProps?.form?.setFieldValue(
                           "start_date",
-                          dayjs(value).format("YYYY-MM-DD")
+                          dayjs(value).format("YYYY-MM-DD"),
                         );
                       }}
                       key={"start_date"}
@@ -177,14 +162,12 @@ export const InputGeneralPlan = ({
                   <Flex gap={10}>
                     <DatePicker
                       value={dayjs(formProps?.form?.getFieldValue("end_date"))}
-                      defaultValue={dayjs(
-                        formProps?.form?.getFieldValue("end_date")
-                      )}
+                      defaultValue={dayjs(formProps?.form?.getFieldValue("end_date"))}
                       format="DD/MM/YYYY"
                       onChange={(value: any) => {
                         formProps?.form?.setFieldValue(
                           "end_date",
-                          dayjs(value).format("YYYY-MM-DD")
+                          dayjs(value).format("YYYY-MM-DD"),
                         );
                       }}
                       key={"end_date"}

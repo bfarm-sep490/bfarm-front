@@ -1,38 +1,22 @@
-import { useSimpleList } from "@refinedev/antd";
-import {
-  type HttpError,
-  useGo,
-  useNavigation,
-  useTranslate,
-  useList,
-} from "@refinedev/core";
-import {
-  Button,
-  Card,
-  Divider,
-  Flex,
-  List,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { useGo, useNavigation, useList } from "@refinedev/core";
+import { Button, Card, Divider, List, Tag, Typography, theme } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { CSSProperties } from "react";
 import { useLocation } from "react-router";
-import { IInspector, InspectorAvailability, IInspectingTask } from "@/interfaces";
+import { IInspectingForm } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { useStyles } from "./styled";
 
 const additionalStyles = {
   image: {
-    aspectRatio: '288/160',
-    objectFit: 'cover',
-    width: '100%',
+    aspectRatio: "288/160",
+    objectFit: "cover",
+    width: "100%",
   } as CSSProperties,
   availabilityTag: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
+    position: "absolute",
+    top: "10px",
+    left: "10px",
     zIndex: 1,
   } as CSSProperties,
 };
@@ -49,11 +33,11 @@ const getStatusColor = (status?: string) => {
 };
 
 // Interface kết hợp Inspector và Task
-export interface IInspectorWithTask extends IInspector {
-  task?: IInspectingTask;
+export interface IInspectorWithTask extends IInspectingForm {
+  task?: IInspectingForm;
 }
 
-export const InspectorListCard = () => {
+export const InspectionListCard = () => {
   const { token } = theme.useToken();
   const { styles, cx } = useStyles();
   const go = useGo();
@@ -61,19 +45,19 @@ export const InspectorListCard = () => {
   const { showUrl } = useNavigation();
 
   // Fetch danh sách inspectors
-  const { data: inspectorData } = useList<IInspector>({
+  const { data: inspectorData } = useList<IInspectingForm>({
     resource: "inspector",
   });
 
   // Fetch danh sách inspectingTasks
-  const { data: taskData } = useList<IInspectingTask>({
+  const { data: taskData } = useList<IInspectingForm>({
     resource: "inspectingTask",
   });
 
   // Kết hợp dữ liệu inspectors với tasks
   const combinedData: IInspectorWithTask[] =
     inspectorData?.data.map((inspector) => {
-      const task = taskData?.data.find((t) => t.inspectorID === inspector.id);
+      const task = taskData?.data.find((t) => t.inspectorID === 1);
       return { ...inspector, task };
     }) || [];
 
@@ -92,12 +76,20 @@ export const InspectorListCard = () => {
         renderItem={(inspector) => (
           <List.Item>
             <Card hoverable bordered={false}>
-              <Tag color={getStatusColor(inspector.task?.status)}>{inspector.task?.status?.toUpperCase()}</Tag>
-              <Typography.Title level={5}>{inspector.name}</Typography.Title>
+              <Tag color={getStatusColor(inspector.task?.status)}>
+                {inspector.task?.status?.toUpperCase()}
+              </Tag>
+              <Typography.Title level={5}>BFARm</Typography.Title>
               <Typography.Text>{inspector.task?.taskName}</Typography.Text>
               <Button
                 icon={<EyeOutlined />}
-                onClick={() => go({ to: `/inspector/show/${inspector.id}`, query: { to: pathname }, type: "replace" })}
+                onClick={() =>
+                  go({
+                    to: `/inspector/show/1`,
+                    query: { to: pathname },
+                    type: "replace",
+                  })
+                }
               >
                 View
               </Button>

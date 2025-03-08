@@ -7,16 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -39,7 +30,7 @@ export const SeedDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
   const { queryResult } = useShow({
     resource: "plants",
-    id: id,
+    id,
   });
 
   const seed = queryResult?.data?.data;
@@ -84,14 +75,9 @@ export const SeedDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   alt={seed.plant_name}
                 />
               </Flex>
-              <Flex
-                vertical
-                style={{ backgroundColor: token.colorBgContainer }}
-              >
+              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>
-                    {seed.plant_name}
-                  </Typography.Title>
+                  <Typography.Title level={5}>{seed.plant_name}</Typography.Title>
                 </Flex>
               </Flex>
 
@@ -131,32 +117,21 @@ export const SeedDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   <List.Item>
                     <List.Item.Meta
                       style={{ padding: "0 16px" }}
-                      avatar={
-                        <Typography.Text type="secondary">
-                          {itemData.label}
-                        </Typography.Text>
-                      }
+                      avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
                       title={itemData.value}
                     />
                   </List.Item>
                 )}
               />
 
-              <Flex
-                align="center"
-                justify="space-between"
-                style={{ padding: "16px 16px 16px 0" }}
-              >
+              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
                 <DeleteButton
                   type="text"
                   recordItemId={seed.id}
                   resource="plants"
                   onSuccess={handleDrawerClose}
                 />
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={() => setIsEditing(true)}
-                >
+                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                   {t("actions.edit")}
                 </Button>
               </Flex>

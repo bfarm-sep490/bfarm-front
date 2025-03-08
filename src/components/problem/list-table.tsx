@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Typography,
-  TableProps,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ProblemTypeTag } from "./type-tag";
@@ -75,9 +67,7 @@ export const ProblemListTable = ({
                   size="small"
                   onClick={() =>
                     navigate(
-                      showNavigation
-                        ? showNavigation + `/${record.id}`
-                        : `/problems/${record.id}`
+                      showNavigation ? showNavigation + `/${record.id}` : `/problems/${record.id}`,
                     )
                   }
                 />

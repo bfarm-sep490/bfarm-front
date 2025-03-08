@@ -36,29 +36,28 @@ export const ItemDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "items",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image) {
-            console.log("Fetched data:", data);
-            setPreviewImage(data.data.image);
-            formProps.form.setFieldsValue({
-              ...data?.data,
-              image_url: data?.data.image,
-            });
-          }
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "items",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image) {
+          console.log("Fetched data:", data);
+          setPreviewImage(data.data.image);
+          formProps.form.setFieldsValue({
+            ...data?.data,
+            image_url: data?.data.image,
+          });
+        }
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -89,13 +88,9 @@ export const ItemDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/items/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/items/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -151,22 +146,14 @@ export const ItemDrawerForm = (props: Props) => {
                   src={previewImage || "/images/item-default-img.png"}
                   alt="Item Image"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
                   {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item
-            label="Name"
-            name="name"
-            rules={[{ required: true, message: "Enter name!" }]}
-          >
+          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
             <Input placeholder="Enter item name" />
           </Form.Item>
           <Form.Item
@@ -181,18 +168,10 @@ export const ItemDrawerForm = (props: Props) => {
             name="quantity"
             rules={[{ required: true, message: "Enter quantity!" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Enter quantity"
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
           </Form.Item>
 
-          <Form.Item
-            label="Unit"
-            name="unit"
-            rules={[{ required: true, message: "Enter unit!" }]}
-          >
+          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
             <Input placeholder="cái, hộp, máy, giỏ" />
           </Form.Item>
 
@@ -207,11 +186,7 @@ export const ItemDrawerForm = (props: Props) => {
               <Select.Option value="Out-stock">Out-stock</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Select type!" }]}
-          >
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Select type!" }]}>
             <Select placeholder="Select type">
               <Select.Option value="Packaging">Packaging</Select.Option>
               <Select.Option value="Caring">Caring</Select.Option>

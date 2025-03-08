@@ -54,7 +54,6 @@ import { PackagingTaskShow } from "./components/packaging-task/show";
 import { ProblemListInProblems } from "./pages/problems/list";
 import { CaringCreate } from "./pages/plans/tasks/caring-create";
 import { CaringUpdate } from "./pages/plans/tasks/caring-update";
-import { dataProvider } from "./rest-data-provider";
 import { useAutoLoginForDemo } from "./hooks";
 import {
   FertilizersCreate,
@@ -69,8 +68,6 @@ import { FarmerEdit } from "./pages/farmers/edit";
 import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
-import { InspectorCreate } from "./pages/inspectors/create";
-import { InspectorShow } from "./pages/inspectors/show";
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { SeedCreate, SeedEdit, SeedsList, SeedsShow } from "./pages/seed";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/land-managements";
@@ -78,6 +75,7 @@ import { PesticidesCreate, PesticideShow, PesticidesList, PesticidesEdit } from 
 import Logout from "./pages/auth/Logout";
 import { InspectorCreate, InspectorsList, InspectorsShow } from "./pages/inspections";
 import { dataProvider } from "./rest-data-provider";
+import { InspectorShow } from "./pages/inspectors/show";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }

@@ -7,7 +7,8 @@ import {
 } from "@refinedev/core";
 import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography } from "antd";
+import { theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { IFertilizer } from "@/interfaces";
@@ -15,6 +16,8 @@ import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerDrawerShow } from "@/components/fertilizer/drawer-show";
 import { FertilizerTypeTag } from "../type";
 import { FertilizerStatusTag } from "../status";
+import { useLocation } from "react-router";
+import { useState } from "react";
 export const FertilizersListTable: React.FC = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
@@ -51,14 +54,7 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="id"
         key="id"
         width={80}
-        render={(value) => <Typography.Text>#{value}</Typography.Text>}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
+        
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -78,13 +74,7 @@ export const FertilizersListTable: React.FC = () => {
         title="Name"
         dataIndex="name"
         key="name"
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
+        
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -146,17 +136,7 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="status"
         key="status"
         width={120}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Select
-              style={{ width: "200px" }}
-              mode="multiple"
-              placeholder="Filter by status"
-              allowClear
-            >
-              {value}
-            </Typography.Paragraph>
-          )}
+      
         />
 
       <Table.Column
@@ -190,11 +170,7 @@ export const FertilizersListTable: React.FC = () => {
           dataIndex="total_quantity"
           key="total_quantity"
           width={"auto"}
-          filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
-          )}
+         
           defaultFilteredValue={getDefaultFilter(
             "total_quantity",
             filters,
@@ -239,12 +215,5 @@ export const FertilizersListTable: React.FC = () => {
         />
       </Table>
 
-      {selectedFertilizerId && (
-        <FertilizerDrawerShow
-          id={selectedFertilizerId}
-          onClose={() => setSelectedFertilizerId(undefined)}
-        />
-      )}
-    </>
   );
 };

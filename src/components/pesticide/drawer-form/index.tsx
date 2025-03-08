@@ -20,11 +20,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id: BaseKey;
-  action: "edit" | "create";
+  id?: BaseKey;
+  action?: "edit" | "create";
   open: boolean;
-  onClose: () => void;
-  onMutationSuccess: () => void;
+  onClose?: () => void;
+  onMutationSuccess?: () => void;
 };
 
 export const PesticideDrawerForm = (props: Props) => {

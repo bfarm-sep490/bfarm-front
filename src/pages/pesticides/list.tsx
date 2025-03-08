@@ -57,7 +57,7 @@ export const PesticidesList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("pesticide")}`,
+              to: `${createUrl("pesticides")}`,
               query: {
                 to: pathname,
               },

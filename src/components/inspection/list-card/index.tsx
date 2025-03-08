@@ -57,7 +57,7 @@ export const InspectionListCard = () => {
   // Kết hợp dữ liệu inspectors với tasks
   const combinedData: IInspectorWithTask[] =
     inspectorData?.data.map((inspector) => {
-      const task = taskData?.data.find((t) => t.inspectorID === 1);
+      const task = taskData?.data.find((t) => t.inspector_id === 1);
       return { ...inspector, task };
     }) || [];
 
@@ -80,7 +80,7 @@ export const InspectionListCard = () => {
                 {inspector.task?.status?.toUpperCase()}
               </Tag>
               <Typography.Title level={5}>BFARm</Typography.Title>
-              <Typography.Text>{inspector.task?.taskName}</Typography.Text>
+              <Typography.Text>{inspector.task?.task_name}</Typography.Text>
               <Button
                 icon={<EyeOutlined />}
                 onClick={() =>

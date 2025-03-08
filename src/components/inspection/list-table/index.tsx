@@ -3,11 +3,11 @@ import { Table, Avatar, Button, Tag, Typography, theme } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { IInspectingTask } from "@/interfaces";
+import { IIdentity, IInspectingForm } from "@/interfaces";
 
 // Interface kết hợp Inspector và Task
-export interface IInspectorWithTaskTable extends IInspectingTask {
-  task?: IInspectingTask;
+export interface IInspectorWithTaskTable extends IInspectingForm {
+  task?: IInspectingForm;
 }
 
 // Hàm lấy màu trạng thái của Availability
@@ -35,7 +35,7 @@ export const InspectionListTable: React.FC = () => {
     data: inspectorData,
     isLoading: loadingInspectors,
     error: inspectorError,
-  } = useList<IInspectingTask>({
+  } = useList<IInspectingForm>({
     resource: "inspector",
   });
 
@@ -43,24 +43,27 @@ export const InspectionListTable: React.FC = () => {
     data: taskData,
     isLoading: loadingTasks,
     error: taskError,
-  } = useList<IInspectingTask>({
-    resource: "inspectingTask",
+  } = useList<IInspectingForm>({
+    resource: "inspecting-forms",
   });
 
   // Debug lỗi nếu có
-  if (inspectorError) console.error("Error fetching inspectors:", inspectorError);
+  if (inspectorError)
+    console.error("Error fetching inspectors:", inspectorError);
   if (taskError) console.error("Error fetching inspecting tasks:", taskError);
 
   // Kết hợp dữ liệu inspectors với tasks
   const combinedData: IInspectorWithTaskTable[] =
     inspectorData?.data.map((inspector) => {
-      const task = taskData?.data.find((t) => t.inspectorID === 1);
+      const task = taskData?.data.find((t) => t.inspector_id === 1);
       return { ...inspector, task };
     }) || [];
 
   // Kiểm tra trạng thái loading hoặc lỗi
-  if (loadingInspectors || loadingTasks) return <Typography.Text>Loading...</Typography.Text>;
-  if (inspectorError || taskError) return <Typography.Text>Error fetching data!</Typography.Text>;
+  if (loadingInspectors || loadingTasks)
+    return <Typography.Text>Loading...</Typography.Text>;
+  if (inspectorError || taskError)
+    return <Typography.Text>Error fetching data!</Typography.Text>;
 
   return (
     <Table
@@ -68,7 +71,9 @@ export const InspectionListTable: React.FC = () => {
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
-        showTotal: (total) => <PaginationTotal total={total} entityName="inspector" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="inspector" />
+        ),
       }}
     >
       <Table.Column title="ID" dataIndex="id" key="id" width={80} />
@@ -78,7 +83,10 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="imageUrl"
         key="imageUrl"
         render={(imageUrl: string) => (
-          <Avatar shape="square" src={imageUrl || "/images/inspector-default-img.png"} />
+          <Avatar
+            shape="square"
+            src={imageUrl || "/images/inspector-default-img.png"}
+          />
         )}
       />
 
@@ -89,7 +97,9 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="isAvailable"
         key="isAvailable"
         width={120}
-        render={(value: any) => <Tag color={getAvailabilityColor(value)}>{value}</Tag>}
+        render={(value: any) => (
+          <Tag color={getAvailabilityColor(value)}>{value}</Tag>
+        )}
       />
 
       <Table.Column
@@ -97,7 +107,7 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="task"
         key="taskID"
         width={80}
-        render={(task?: IInspectingTask) => (task ? `#${task.taskID}` : "-")}
+        render={(task?: IInspectingForm) => (task ? `#${task.id}` : "-")}
       />
 
       <Table.Column
@@ -105,7 +115,7 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="task"
         key="taskName"
         width={150}
-        render={(task?: IInspectingTask) => (task ? task.taskName : "-")}
+        render={(task?: IInspectingForm) => (task ? task.task_name : "-")}
       />
 
       <Table.Column
@@ -113,8 +123,14 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="task"
         key="status"
         width={120}
-        render={(task?: IInspectingTask) =>
-          task ? <Tag color={getStatusColor(task.status)}>{task.status.toUpperCase()}</Tag> : "-"
+        render={(task?: IInspectingForm) =>
+          task ? (
+            <Tag color={getStatusColor(task.status)}>
+              {task.status.toUpperCase()}
+            </Tag>
+          ) : (
+            "-"
+          )
         }
       />
 

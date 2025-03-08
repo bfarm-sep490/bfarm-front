@@ -15,7 +15,9 @@ export const ItemsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("item-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("item-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view
@@ -56,7 +58,7 @@ export const ItemsList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("item")}`,
+              to: `${createUrl("items")}`,
               query: {
                 to: pathname,
               },

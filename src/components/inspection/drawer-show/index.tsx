@@ -27,7 +27,11 @@ import {
 } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import { IInspector, IInspectingForm } from "@/interfaces";
 import { useState } from "react";
 
@@ -57,7 +61,9 @@ export const InspectorDrawerShow = (props: Props) => {
   const t = useTranslate();
   const { token } = theme.useToken();
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<IInspectingForm | null>(null); // Lưu task được chọn để chỉnh sửa
+  const [selectedTask, setSelectedTask] = useState<IInspectingForm | null>(
+    null
+  ); // Lưu task được chọn để chỉnh sửa
   const breakpoint = Grid.useBreakpoint();
   const [form] = Form.useForm(); // Form instance
 
@@ -78,7 +84,8 @@ export const InspectorDrawerShow = (props: Props) => {
   const inspector = queryResult.data?.data;
 
   // Lọc chỉ các `inspectingTask` có `inspectorID` khớp với `inspector` hiện tại
-  const inspectorTasks = taskData?.data.filter((task) => task.inspector_id === inspector?.id) || [];
+  const inspectorTasks =
+    taskData?.data.filter((task) => task.inspector_id === inspector?.id) || [];
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -127,7 +134,12 @@ export const InspectorDrawerShow = (props: Props) => {
         onClose={handleDrawerClose}
       >
         {/* Avatar + Name + Description */}
-        <Flex vertical align="center" justify="center" style={{ padding: "16px" }}>
+        <Flex
+          vertical
+          align="center"
+          justify="center"
+          style={{ padding: "16px" }}
+        >
           <Avatar
             shape="square"
             style={{
@@ -143,7 +155,10 @@ export const InspectorDrawerShow = (props: Props) => {
           <Typography.Title level={4} style={{ marginTop: "12px" }}>
             {inspector?.name}
           </Typography.Title>
-          <Typography.Paragraph type="secondary" style={{ textAlign: "center", padding: "0 16px" }}>
+          <Typography.Paragraph
+            type="secondary"
+            style={{ textAlign: "center", padding: "0 16px" }}
+          >
             {inspector?.description}
           </Typography.Paragraph>
         </Flex>
@@ -158,7 +173,11 @@ export const InspectorDrawerShow = (props: Props) => {
           ]}
           renderItem={(data) => (
             <List.Item
-              style={{ display: "flex", justifyContent: "space-between", padding: "12px 16px" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "12px 16px",
+              }}
             >
               <Typography.Text type="secondary">{data.label}: </Typography.Text>
               <Typography.Text strong>{data.value}</Typography.Text>
@@ -171,48 +190,77 @@ export const InspectorDrawerShow = (props: Props) => {
           <>
             <Divider>Inspecting Tasks</Divider>
             {inspectorTasks.map((task, index) => (
-              <div key={task.taskID}>
-                <Typography.Title level={5} style={{ padding: "0 16px", marginTop: "16px" }}>
-                  {task.taskName}
+              <div key={task.id}>
+                <Typography.Title
+                  level={5}
+                  style={{ padding: "0 16px", marginTop: "16px" }}
+                >
+                  {task.task_name}
                 </Typography.Title>
                 <List
                   dataSource={[
-                    { label: "Task ID", value: task.taskID },
-                    { label: "Plan ID", value: task.planID },
-                    { label: "Task Name", value: task.taskName },
-                    { label: "Task Type", value: task.taskType },
+                    { label: "Task ID", value: task.id },
+                    { label: "Plan ID", value: task.plan_id },
+                    { label: "Task Name", value: task.task_name },
+                    { label: "Task Type", value: task.task_type },
                     { label: "Description", value: task.description },
-                    { label: "Start Date", value: new Date(task.startDate).toLocaleDateString() },
-                    { label: "End Date", value: new Date(task.endDate).toLocaleDateString() },
+                    {
+                      label: "Start Date",
+                      value: new Date(task.start_date).toLocaleDateString(),
+                    },
+                    {
+                      label: "End Date",
+                      value: new Date(task.end_date).toLocaleDateString(),
+                    },
                     {
                       label: "Completed Date",
-                      value: task.completedDate
-                        ? new Date(task.completedDate).toLocaleDateString()
+                      value: task.completed_date
+                        ? new Date(task.completed_date).toLocaleDateString()
                         : "N/A",
                     },
-                    { label: "Result Content", value: task.resultContent },
+                    { label: "Result Content", value: task.result_content },
                     {
                       label: "Brix Point",
-                      value: task.brixPoint !== null ? `${task.brixPoint}` : "N/A",
+                      value:
+                        task.brix_point !== null ? `${task.brix_point}` : "N/A",
                     },
-                    { label: "Temperature (°C)", value: `${task.temperature}°C` },
+                    {
+                      label: "Temperature (°C)",
+                      value: `${task.temperature}°C`,
+                    },
                     { label: "Humidity (%)", value: `${task.humidity}%` },
                     {
                       label: "Moisture (%)",
-                      value: task.moisture !== null ? `${task.moisture}%` : "N/A",
+                      value:
+                        task.moisture !== null ? `${task.moisture}%` : "N/A",
                     },
-                    { label: "Shell Color", value: task.shellColor || "N/A" },
-                    { label: "Test GT Kit Color", value: task.testGTKitColor || "N/A" },
+                    { label: "Shell Color", value: task.shell_color || "N/A" },
+                    {
+                      label: "Test GT Kit Color",
+                      value: task.test_gt_kit_color || "N/A",
+                    },
                     {
                       label: "Inspecting Quantity",
-                      value: `${task.inspectingQuantity} ${task.unit}`,
+                      value: `${task.inspecting_quantity} ${task.unit}`,
                     },
-                    { label: "Issue Percent", value: `${task.issuePercent}%` },
-                    { label: "Can Harvest", value: task.canHarvest ? "Yes" : "No" },
-                    { label: "Status", value: <TaskStatusTag status={task.status} /> },
-                    { label: "Inspector ID", value: task.inspectorID },
-                    { label: "Created At", value: new Date(task.createdAt).toLocaleString() },
-                    { label: "Updated At", value: new Date(task.updatedAt).toLocaleString() },
+                    { label: "Issue Percent", value: `${task.issue_percent}%` },
+                    {
+                      label: "Can Harvest",
+                      value: task.can_harvest ? "Yes" : "No",
+                    },
+                    {
+                      label: "Status",
+                      value: <TaskStatusTag status={task.status} />,
+                    },
+                    { label: "Inspector ID", value: task.inspector_id },
+                    {
+                      label: "Created At",
+                      value: new Date(task.created_at).toLocaleString(),
+                    },
+                    {
+                      label: "Updated At",
+                      value: new Date(task.updated_at).toLocaleString(),
+                    },
                   ]}
                   renderItem={(data) => (
                     <List.Item
@@ -222,14 +270,25 @@ export const InspectorDrawerShow = (props: Props) => {
                         padding: "8px 16px",
                       }}
                     >
-                      <Typography.Text type="secondary">{data.label}: </Typography.Text>
+                      <Typography.Text type="secondary">
+                        {data.label}:{" "}
+                      </Typography.Text>
                       <Typography.Text strong>{data.value}</Typography.Text>
                     </List.Item>
                   )}
                 />
-                {index < inspectorTasks.length - 1 && <Divider style={{ margin: "8px 0" }} />}
-                <Flex align="center" justify="flex-end" style={{ padding: "16px" }}>
-                  <Button icon={<EditOutlined />} onClick={() => handleEditClick(task)}>
+                {index < inspectorTasks.length - 1 && (
+                  <Divider style={{ margin: "8px 0" }} />
+                )}
+                <Flex
+                  align="center"
+                  justify="flex-end"
+                  style={{ padding: "16px" }}
+                >
+                  <Button
+                    icon={<EditOutlined />}
+                    onClick={() => handleEditClick(task)}
+                  >
                     Complete
                   </Button>
                 </Flex>

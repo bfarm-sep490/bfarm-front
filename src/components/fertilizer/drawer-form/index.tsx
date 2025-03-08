@@ -24,7 +24,7 @@ type Props = {
   id?: BaseKey;
   action: "edit" | "create";
   onClose?: () => void;
-  onMutationSuccess: () => void;
+  onMutationSuccess?: () => void;
 };
 
 export const FertilizerDrawerForm = (props: Props) => {

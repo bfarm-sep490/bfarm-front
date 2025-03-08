@@ -6,6 +6,38 @@ export interface IIdentity {
   name: string;
   avatar: string;
 }
+export interface IUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  gender: string;
+  gsm: string;
+  createdAt: string;
+  isActive: boolean;
+  avatar: IFile[];
+  addresses: IAddress[];
+}
+export interface IUserFilterVariables {
+  q: string;
+  status: boolean;
+  createdAt: [Dayjs, Dayjs];
+  gender: string;
+  isActive: boolean;
+}
+export interface IOrder {
+  id: number;
+  user: IUser;
+  createdAt: string;
+  products: IProduct[];
+  status: IOrderStatus;
+  adress: IAddress;
+  store: IStore;
+  courier: ICourier;
+  events: IEvent[];
+  orderNumber: number;
+  amount: number;
+}
 
 export interface IQuickStatsEntry {
   key: number;
@@ -18,6 +50,27 @@ export interface ISeasonProgressEntry {
   key: number;
   timestamp: string;
   progress: number;
+}
+export type FarmerStatus = "Active" | "Inactive";
+export type ExpertStatus = "Active" | "Inactive";
+
+export interface IFarmer {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  DOB: string;
+  avatar: string;
+  status: FarmerStatus;
+}
+export interface IExpert {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+  DOB: string;
+  avatar: string;
+  status: ExpertStatus;
 }
 export interface IFarmerPermission {
   id: number;

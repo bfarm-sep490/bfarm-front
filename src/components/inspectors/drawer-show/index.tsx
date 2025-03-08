@@ -7,12 +7,22 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+  Tag,
+} from "antd";
 import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
-import { FarmerStatus, FertilizerStatus, FertilizerType, IFarmer, IFertilizer } from "@/interfaces";
+import { FarmerStatus, IFarmer, IFertilizer } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;
@@ -100,7 +110,9 @@ export const InspectorDrawerShow = (props: Props) => {
         <List
           dataSource={[
             {
-              label: <Typography.Text type="secondary">Address</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">Address</Typography.Text>
+              ),
               value: inspector?.address,
             },
             {
@@ -114,14 +126,24 @@ export const InspectorDrawerShow = (props: Props) => {
 
             {
               label: <Typography.Text type="secondary">Status</Typography.Text>,
-              value: inspector?.status && <FarmerStatusTag status={inspector.status} />,
+              value: inspector?.status && (
+                <FarmerStatusTag status={inspector.status} />
+              ),
             },
             {
-              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
-              value: inspector?.created_at && <DateField value={inspector?.created_at} />,
+              label: (
+                <Typography.Text type="secondary">Ngày tạo</Typography.Text>
+              ),
+              value: inspector?.created_at && (
+                <DateField value={inspector?.created_at} />
+              ),
             },
             {
-              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  Ngày cập nhập
+                </Typography.Text>
+              ),
               value: inspector?.updated_at ? (
                 <FarmerStatusTag status={inspector?.updated_at} />
               ) : (

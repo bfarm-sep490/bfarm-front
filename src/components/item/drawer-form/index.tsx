@@ -20,11 +20,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 
 type Props = {
-  id: BaseKey;
+  id?: BaseKey;
   action: "edit" | "create";
-  open: boolean;
-  onClose: () => void;
-  onMutationSuccess: () => void;
+  open?: boolean;
+  onClose?: () => void;
+  onMutationSuccess?: () => void;
 };
 
 export const ItemDrawerForm = (props: Props) => {

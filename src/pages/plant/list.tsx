@@ -56,7 +56,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("plant")}`,
+              to: `${createUrl("plants")}`,
               query: {
                 to: pathname,
               },

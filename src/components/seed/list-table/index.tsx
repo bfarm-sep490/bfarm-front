@@ -4,7 +4,7 @@ import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { Table, Avatar, Button, Input, InputNumber, Typography, Tag, theme } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { ISeed, SeedAvailability } from "@/interfaces";
+import { ISeed } from "@/interfaces";
 import { SeedDrawerShow } from "../drawer-show";
 import { SeedAvailabilityTag } from "../availability";
 

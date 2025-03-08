@@ -86,7 +86,6 @@ export const ApprovingPlanDrawer = () => {
   const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
     resource: `plans/${id}/farmers`,
     queryOptions: {
-      staleTime: 60000,
       onSuccess(data: any) {
         setChosenFarmers(data?.data || []);
       },
@@ -95,7 +94,8 @@ export const ApprovingPlanDrawer = () => {
   const { data: farmerData, isLoading: farmerLoading } = useList({
     resource: `farmers`,
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
+
       onSuccess(data: any) {
         setFarmers(data?.data || []);
       },
@@ -106,7 +106,7 @@ export const ApprovingPlanDrawer = () => {
     resource: `experts`,
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setExperts(data?.data || []);
       },
@@ -117,7 +117,7 @@ export const ApprovingPlanDrawer = () => {
     resource: "yields",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setYields(data?.data || []);
       },
@@ -127,7 +127,7 @@ export const ApprovingPlanDrawer = () => {
     resource: "plants",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setPlants(data?.data || []);
       },
@@ -137,7 +137,7 @@ export const ApprovingPlanDrawer = () => {
     resource: "inspectors",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setInspectors(data?.data || []);
       },
@@ -208,7 +208,12 @@ export const ApprovingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
+        <InputGeneralPlan
+          experts={experts}
+          yields={yields}
+          plants={plants}
+          formProps={formProps}
+        />
       ),
     },
     {
@@ -321,7 +326,7 @@ export const ApprovingPlanDrawer = () => {
         },
         {
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
 
       console.log("Response:", response.data.data);
@@ -340,7 +345,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -351,7 +356,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -362,7 +367,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -378,8 +383,7 @@ export const ApprovingPlanDrawer = () => {
         yieldLoading &&
         expertLoading &&
         farmerLoading &&
-        chosenFarmerLoading &&
-        formLoading
+        chosenFarmerLoading
       }
       open
       title={
@@ -403,7 +407,11 @@ export const ApprovingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}

@@ -1,7 +1,11 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
+import {
+  ThemedLayoutV2,
+  ErrorComponent,
+  useNotificationProvider,
+} from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -63,7 +67,12 @@ import { FarmerList } from "./pages/farmers";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
+import {
+  ExpertCreate,
+  ExpertEdit,
+  ExpertList,
+  ExpertShow,
+} from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { PlantCreate, PlantEdit, PlantsList, PlantsShow } from "./pages/plant";
@@ -93,7 +102,8 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   // const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -167,7 +177,7 @@ const App: React.FC = () => {
                   edit: "/yield/edit/:id",
                   show: "/yield/show/:id",
                   meta: {
-                    label: "Yield Management",
+                    label: "Yields",
                     icon: <EnvironmentOutlined />,
                   },
                 },
@@ -192,7 +202,7 @@ const App: React.FC = () => {
                 {
                   name: "fertilizers",
                   list: "/fertilizers",
-                  create: "/fertilizers/new",
+                  create: "/fertilizers/create",
                   edit: "/fertilizers/edit/:id",
                   show: "/fertilizers/:id",
                   meta: { parent: "material", canDelete: true },
@@ -200,7 +210,7 @@ const App: React.FC = () => {
                 {
                   name: "pesticides",
                   list: "/pesticides",
-                  create: "/pesticides/new",
+                  create: "/pesticides/create",
                   edit: "/pesticides/edit/:id",
                   show: "/pesticides/:id",
                   meta: { parent: "material", canDelete: true },
@@ -208,7 +218,7 @@ const App: React.FC = () => {
                 {
                   name: "items",
                   list: "/items",
-                  create: "/items/new",
+                  create: "/items/create",
                   edit: "/items/edit/:id",
                   show: "/items/:id",
                   meta: { parent: "material", canDelete: true },
@@ -319,7 +329,10 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
                       <Route
                         path="problems"
                         element={
@@ -338,10 +351,19 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<ProductiveTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<ProductiveTaskShow />}
+                        />
                       </Route>
-                      <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
-                      <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
+                      <Route
+                        path="caring-tasks/create"
+                        element={<CaringCreate />}
+                      ></Route>
+                      <Route
+                        path="caring-tasks/:taskId/edit"
+                        element={<CaringUpdate />}
+                      ></Route>
                       <Route
                         path="harvesting-tasks"
                         element={
@@ -350,7 +372,10 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<HarvestingTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<HarvestingTaskShow />}
+                        />
                       </Route>
                       <Route
                         path="packaging-tasks"
@@ -502,7 +527,7 @@ const App: React.FC = () => {
                       </PlantsList>
                     }
                   >
-                    <Route path="new" element={<PlantCreate />} />
+                    <Route path="create" element={<PlantCreate />} />
                     <Route path=":id" element={<PlantsShow />} />
                     <Route path="edit/:id" element={<PlantEdit />} />
                   </Route>
@@ -543,8 +568,14 @@ const App: React.FC = () => {
                       />
                     }
                   />
-                  <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
-                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<AuthPage type="forgotPassword" />}
+                  />
+                  <Route
+                    path="/update-password"
+                    element={<AuthPage type="updatePassword" />}
+                  />
                 </Route>
 
                 <Route

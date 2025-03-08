@@ -23,7 +23,7 @@ import { IPesticide } from "@/interfaces";
 type Props = {
   id?: BaseKey;
   action?: "edit" | "create";
-  open: boolean;
+  open?: boolean;
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };

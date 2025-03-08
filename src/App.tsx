@@ -13,6 +13,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import {
   CalendarOutlined,
   DashboardOutlined,
+  EnvironmentOutlined,
   GoldOutlined,
   HddOutlined,
   PaperClipOutlined,
@@ -65,8 +66,17 @@ import { FarmerEdit } from "./pages/farmers/edit";
 import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
+import { PlantCreate, PlantEdit, PlantsList, PlantsShow } from "./pages/plant";
+import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/yields";
 import { InspectorCreate } from "./pages/inspectors/create";
 import { InspectorShow } from "./pages/inspectors/show";
+import {
+  PesticidesCreate,
+  PesticidesEdit,
+  PesticideShow,
+  PesticidesList,
+} from "./pages/pesticides";
+import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -151,6 +161,28 @@ const App: React.FC = () => {
                   },
                 },
                 {
+                  name: "yield",
+                  list: "/yield",
+                  create: "/yield/create",
+                  edit: "/yield/edit/:id",
+                  show: "/yield/show/:id",
+                  meta: {
+                    label: "Yield Management",
+                    icon: <EnvironmentOutlined />,
+                  },
+                },
+                {
+                  name: "plants",
+                  list: "/plants",
+                  create: "/plants/new",
+                  edit: "/plants/edit/:id",
+                  show: "/plants/:id",
+                  meta: {
+                    label: "Plants",
+                    icon: <EnvironmentOutlined />,
+                  },
+                },
+                {
                   name: "material",
                   meta: {
                     label: "Material",
@@ -158,27 +190,27 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "fertilizer",
+                  name: "fertilizers",
                   list: "/fertilizers",
-                  create: "/fertilizer/new",
-                  edit: "/fertilizer/edit/:id",
-                  show: "/fertilizer/:id",
+                  create: "/fertilizers/new",
+                  edit: "/fertilizers/edit/:id",
+                  show: "/fertilizers/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {
-                  name: "item",
+                  name: "pesticides",
+                  list: "/pesticides",
+                  create: "/pesticides/new",
+                  edit: "/pesticides/edit/:id",
+                  show: "/pesticides/:id",
+                  meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "items",
                   list: "/items",
-                  create: "/items/create",
+                  create: "/items/new",
                   edit: "/items/edit/:id",
-                  show: "/items/show/:id",
-                  meta: { parent: "material", canDelete: true },
-                },
-                {
-                  name: "pesticide",
-                  list: "/pesticide",
-                  create: "/pesticide/create",
-                  edit: "/pesticide/edit/:id",
-                  show: "/pesticide/show/:id",
+                  show: "/items/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {
@@ -187,6 +219,22 @@ const App: React.FC = () => {
                     label: "Employees",
                     icon: <GoldOutlined />,
                   },
+                },
+                {
+                  name: "farmers",
+                  list: "/farmers",
+                  create: "/farmers/create",
+                  edit: "/farmers/edit/:id",
+                  show: "/farmers/show/:id",
+                  meta: { parent: "employees", canDelete: true },
+                },
+                {
+                  name: "experts",
+                  list: "/experts",
+                  create: "/experts/create",
+                  edit: "/experts/edit/:id",
+                  show: "/experts/show/:id",
+                  meta: { parent: "employees", canDelete: true },
                 },
                 {
                   name: "farmers",
@@ -344,6 +392,32 @@ const App: React.FC = () => {
                   </Route>
 
                   <Route
+                    path="/yield"
+                    element={
+                      <YieldsList>
+                        <Outlet />
+                      </YieldsList>
+                    }
+                  >
+                    <Route path="create" element={<YieldCreate />} />
+                    <Route path="edit/:id" element={<YieldEdit />} />
+                    <Route path="show/:id" element={<YieldsShow />} />
+                  </Route>
+
+                  <Route
+                    path="/inspector"
+                    element={
+                      <InspectorList>
+                        <Outlet />
+                      </InspectorList>
+                    }
+                  >
+                    <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorCreate />} />
+                    <Route path="show/:id" element={<InspectorShow />} />
+                  </Route>
+
+                  <Route
                     path="/fertilizers"
                     element={
                       <FertilizersList>
@@ -355,6 +429,33 @@ const App: React.FC = () => {
                     <Route path=":id" element={<FertilizersShow />} />
                     <Route path="edit/:id" element={<FertilizersEdit />} />
                   </Route>
+
+                  <Route
+                    path="/pesticides"
+                    element={
+                      <PesticidesList>
+                        <Outlet />
+                      </PesticidesList>
+                    }
+                  >
+                    <Route path="create" element={<PesticidesCreate />} />
+                    <Route path=":id" element={<PesticideShow />} />
+                    <Route path="edit/:id" element={<PesticidesEdit />} />
+                  </Route>
+
+                  <Route
+                    path="/items"
+                    element={
+                      <ItemsList>
+                        <Outlet />
+                      </ItemsList>
+                    }
+                  >
+                    <Route path="create" element={<ItemCreate />} />
+                    <Route path=":id" element={<ItemsShow />} />
+                    <Route path="edit/:id" element={<ItemEdit />} />
+                  </Route>
+
                   <Route
                     path="/farmers"
                     element={
@@ -391,6 +492,19 @@ const App: React.FC = () => {
                     <Route path=":id" element={<InspectorShow />} />
                     <Route path="create" element={<InspectorCreate />} />
                     <Route path="edit/:id" element={<InspectorEdit />} />
+                  </Route>
+
+                  <Route
+                    path="/plants"
+                    element={
+                      <PlantsList>
+                        <Outlet />
+                      </PlantsList>
+                    }
+                  >
+                    <Route path="new" element={<PlantCreate />} />
+                    <Route path=":id" element={<PlantsShow />} />
+                    <Route path="edit/:id" element={<PlantEdit />} />
                   </Route>
                 </Route>
 

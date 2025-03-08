@@ -1,18 +1,7 @@
-import React, { PropsWithChildren } from "react";
-import { useBack, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  EditButton,
-  ShowButton,
-  ImageField,
-  TagField,
-  EmailField,
-  DateField,
-  TextField,
-} from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
-import { Link, useLocation, useNavigate, useParams } from "react-router";
+import { PropsWithChildren } from "react";
+import { useTable } from "@refinedev/antd";
+import { Button, Flex, Typography } from "antd";
+import { useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ProblemListTable } from "../../../components/problem/list-table";
 

@@ -11,9 +11,6 @@ import {
   FieldTimeOutlined,
   GoldOutlined,
   GroupOutlined,
-  SunOutlined,
-  CloudOutlined,
-  BulbOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
   EditOutlined,
@@ -27,10 +24,8 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { DropDownSection } from "../../components/section/drop-down-section";
 import { ActivityCard } from "../../components/card/card-activity";
-import { RealTimeContentCard } from "../../components/card/card-real-time";
 import { StatusTag } from "../../components/caring-task/status-tag";
 import { StatusModal } from "@/components/plan/completd-modal";
-import { set } from "lodash";
 
 interface IGeneralPlan {
   plan_id: number;

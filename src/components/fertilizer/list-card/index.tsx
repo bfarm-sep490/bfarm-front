@@ -35,7 +35,7 @@ export const FertilizersListCard = () => {
   const { showUrl } = useNavigation();
 
   const { listProps } = useSimpleList<IFertilizer, HttpError>({
-    resource: "fertilizer",
+    resource: "fertilizers",
     pagination: {
       current: 1,
       pageSize: 12,

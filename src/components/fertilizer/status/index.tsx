@@ -1,8 +1,8 @@
-import { FertilizerStatus } from "@/interfaces";
+import { IFertilizer } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: FertilizerStatus;
+  value: IFertilizer["status"];
 }
 
 export const FertilizerStatusTag: React.FC<Props> = ({ value }) => {
@@ -12,7 +12,7 @@ export const FertilizerStatusTag: React.FC<Props> = ({ value }) => {
     case "OutStock":
       return <Tag color="red">Out of Stock</Tag>;
     case "UnActived":
-      return <Tag color="default">Inactive</Tag>;
+      return <Tag color="gray">Unactivated</Tag>;
     default:
       return null;
   }

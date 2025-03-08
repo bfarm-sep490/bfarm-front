@@ -1,14 +1,5 @@
-import React from "react";
 import { BaseRecord, useGo, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  ShowButton,
-  TagField,
-  DateField,
-  EditButton,
-  TextField,
-} from "@refinedev/antd";
+import { useTable, List, ShowButton, TagField, DateField, TextField } from "@refinedev/antd";
 import { Table, Space } from "antd";
 import { StatusTag } from "../../components/caring-task/status-tag";
 export const PlanList = () => {

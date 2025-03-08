@@ -64,17 +64,11 @@ export const RealTimeContentCard = ({
   return (
     <Card loading={loading} title={<span>{title}</span>} extra={icon}>
       {error ? (
-        <Typography.Text
-          type="danger"
-          style={{ textAlign: "center", display: "block" }}
-        >
+        <Typography.Text type="danger" style={{ textAlign: "center", display: "block" }}>
           {error}
         </Typography.Text>
       ) : (
-        <Typography.Title
-          id={component_id}
-          style={{ fontWeight: "bold", textAlign: "center" }}
-        >
+        <Typography.Title id={component_id} style={{ fontWeight: "bold", textAlign: "center" }}>
           {value ?? "--"}
         </Typography.Title>
       )}

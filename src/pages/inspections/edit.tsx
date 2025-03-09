@@ -1,5 +1,5 @@
-import { AntdInferencer } from "@refinedev/inferencer/antd";
+import { InspectorDrawerForm } from "@/components/inspection";
 
 export const InspectionEdit = () => {
-  return <AntdInferencer />;
+  return <InspectorDrawerForm action="edit" />;
 };

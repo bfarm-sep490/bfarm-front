@@ -81,6 +81,7 @@ import {
   PesticideShow,
   PesticidesList,
 } from "./pages/pesticides";
+import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/yields";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -173,6 +174,17 @@ const App: React.FC = () => {
                   meta: {
                     label: "Inspecting Forms",
                     icon: <ScheduleOutlined />,
+                  },
+                },
+                {
+                  name: "yield",
+                  list: "/yield",
+                  create: "/yield/create",
+                  edit: "/yield/edit/:id",
+                  show: "/yield/show/:id",
+                  meta: {
+                    label: "Yields",
+                    icon: <EnvironmentOutlined />,
                   },
                 },
                 {
@@ -352,6 +364,18 @@ const App: React.FC = () => {
                         <Route path=":taskId" element={<PackagingTaskShow />} />
                       </Route>
                     </Route>
+                  </Route>
+                  <Route
+                    path="/yield"
+                    element={
+                      <YieldsList>
+                        <Outlet />
+                      </YieldsList>
+                    }
+                  >
+                    <Route path="create" element={<YieldCreate />} />
+                    <Route path="edit/:id" element={<YieldEdit />} />
+                    <Route path="show/:id" element={<YieldsShow />} />
                   </Route>
                   <Route
                     path="/pesticides"

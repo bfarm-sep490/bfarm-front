@@ -72,6 +72,7 @@ import { InspectorCreate } from "./pages/inspectors/create";
 import { InspectorShow } from "./pages/inspectors/show";
 import { ablyClient } from "./utils/ablyClient";
 import { liveProvider } from "@refinedev/ably";
+import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -182,11 +183,11 @@ const App: React.FC = () => {
                   meta: { parent: "material", canDelete: true },
                 },
                 {
-                  name: "item",
+                  name: "items",
                   list: "/items",
                   create: "/items/create",
                   edit: "/items/edit/:id",
-                  show: "/items/show/:id",
+                  show: "/items/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {
@@ -351,6 +352,19 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<CustomerShow />} />
+                  </Route>
+
+                  <Route
+                    path="/items"
+                    element={
+                      <ItemsList>
+                        <Outlet />
+                      </ItemsList>
+                    }
+                  >
+                    <Route path="create" element={<ItemCreate />} />
+                    <Route path=":id" element={<ItemsShow />} />
+                    <Route path="edit/:id" element={<ItemEdit />} />
                   </Route>
 
                   <Route path="/device" element={<DeviceList />}>

@@ -12,7 +12,7 @@ import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
-import { FarmerStatus, FertilizerStatus, FertilizerType, IFarmer, IFertilizer } from "@/interfaces";
+import { FarmerStatus } from "@/interfaces";
 
 type Props = {
   id?: BaseKey;

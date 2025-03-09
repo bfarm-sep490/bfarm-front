@@ -5,20 +5,12 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import {
-  DateField,
-  FilterDropdown,
-  NumberField,
-  TextField,
-  getDefaultSortOrder,
-  useTable,
-} from "@refinedev/antd";
+import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
-import { IFarmer, IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FarmerStatusTag } from "@/components/farmer";
 

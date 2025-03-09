@@ -58,7 +58,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("fertilizer")}`,
+              to: `${createUrl("fertilizers")}`,
               query: {
                 to: pathname,
               },

@@ -1,24 +1,16 @@
-import {
-  type HttpError,
-  getDefaultFilter,
-  useGo,
-  useNavigation,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, getDefaultFilter, useNavigation } from "@refinedev/core";
 import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography } from "antd";
 
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
+import { EyeOutlined } from "@ant-design/icons";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
+import { FertilizerTypeTag } from "../type";
 import { FertilizerStatusTag } from "../status";
-
+import { useLocation } from "react-router";
+import { useState } from "react";
 export const FertilizersListTable: React.FC = () => {
-  const { token } = theme.useToken();
-  const t = useTranslate();
-  const go = useGo();
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
@@ -26,29 +18,16 @@ export const FertilizersListTable: React.FC = () => {
     resource: "fertilizers",
     filters: {
       initial: [
-        {
-          field: "name",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "description",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "status",
-          operator: "in",
-          value: [],
-        },
-        {
-          field: "type",
-          operator: "in",
-          value: [],
-        },
+        { field: "id", operator: "eq", value: "" },
+        { field: "name", operator: "contains", value: "" },
+        { field: "type", operator: "contains", value: "" },
+        { field: "status", operator: "in", value: [] },
+        { field: "available_quantity", operator: "eq", value: "" },
       ],
     },
   });
+
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
 
   return (
     <Table
@@ -65,14 +44,6 @@ export const FertilizersListTable: React.FC = () => {
         dataIndex="id"
         key="id"
         width={80}
-        render={(value) => <Typography.Text>#{value}</Typography.Text>}
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -92,13 +63,6 @@ export const FertilizersListTable: React.FC = () => {
         title="Name"
         dataIndex="name"
         key="name"
-        filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
-          />
-        )}
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -155,27 +119,7 @@ export const FertilizersListTable: React.FC = () => {
 
       <Table.Column title="Unit" dataIndex="unit" key="unit" width={100} />
 
-      <Table.Column
-        title="Status"
-        dataIndex="status"
-        key="status"
-        width={120}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Select
-              style={{ width: "200px" }}
-              mode="multiple"
-              placeholder="Filter by status"
-              allowClear
-            >
-              <Select.Option value="InStock">In Stock</Select.Option>
-              <Select.Option value="OutStock">Out of Stock</Select.Option>
-              <Select.Option value="UnActived">Inactive</Select.Option>
-            </Select>
-          </FilterDropdown>
-        )}
-        render={(value) => <FertilizerStatusTag value={value} />}
-      />
+      <Table.Column title="Status" dataIndex="status" key="status" width={120} />
 
       <Table.Column
         title="Type"
@@ -204,6 +148,34 @@ export const FertilizersListTable: React.FC = () => {
       />
 
       <Table.Column
+        title="Total Quantity"
+        dataIndex="total_quantity"
+        key="total_quantity"
+        width={"auto"}
+        defaultFilteredValue={getDefaultFilter("total_quantity", filters, "eq")}
+        filterDropdown={(props) => (
+          <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+        )}
+        render={(value, record) => `${value} ${record.unit}`}
+      />
+
+      <Table.Column
+        title="Type"
+        dataIndex="type"
+        key="type"
+        width={120}
+        render={(value) => <FertilizerTypeTag value={value} />}
+      />
+
+      <Table.Column
+        title="Status"
+        dataIndex="status"
+        key="status"
+        width={120}
+        render={(value) => <FertilizerStatusTag value={value} />}
+      />
+
+      <Table.Column
         title="Actions"
         key="actions"
         fixed="right"
@@ -211,18 +183,7 @@ export const FertilizersListTable: React.FC = () => {
         render={(_, record: IFertilizer) => (
           <Button
             icon={<EyeOutlined />}
-            onClick={() => {
-              go({
-                to: `${showUrl("fertilizer", record.id)}`,
-                query: {
-                  to: pathname,
-                },
-                options: {
-                  keepQuery: true,
-                },
-                type: "replace",
-              });
-            }}
+            onClick={() => setSelectedFertilizerId(record.id.toString())}
           />
         )}
       />

@@ -14,17 +14,7 @@ import {
   useTable,
 } from "@refinedev/antd";
 
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  Table,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -79,9 +69,7 @@ export const InspectorListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="inspectors" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="inspectors" />,
       }}
     >
       <Table.Column
@@ -90,9 +78,7 @@ export const InspectorListTable: React.FC = () => {
         key="id"
         width={"auto"}
         render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>
-            #{value}
-          </Typography.Text>
+          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
         )}
         filterIcon={(filtered) => (
           <SearchOutlined
@@ -104,11 +90,7 @@ export const InspectorListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber
-              addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder="Search ID"
-            />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
           </FilterDropdown>
         )}
       />
@@ -118,9 +100,7 @@ export const InspectorListTable: React.FC = () => {
         width={"auto"}
         dataIndex="image_url"
         key="image_url"
-        render={(image: string) => (
-          <Avatar shape="square" src={image} alt="Inspector" />
-        )}
+        render={(image: string) => <Avatar shape="square" src={image} alt="Inspector" />}
       />
 
       <Table.Column
@@ -149,10 +129,7 @@ export const InspectorListTable: React.FC = () => {
         key="phone"
         width={"auto"}
         render={(value) => (
-          <Typography.Paragraph
-            ellipsis={{ rows: 2, tooltip: true }}
-            style={{ marginBottom: 0 }}
-          >
+          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}

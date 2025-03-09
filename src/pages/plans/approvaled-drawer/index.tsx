@@ -68,7 +68,7 @@ interface GainingPlan {
   }[];
 }
 
-export const ApprovalingPlanDrawer = () => {
+export const ApprovingPlanDrawer = () => {
   const { id } = useParams();
   const [current, setCurrent] = React.useState<number>(0);
   const [productiveTasks, setProductiveTasks] = React.useState<any[]>([]);
@@ -237,12 +237,7 @@ export const ApprovalingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan
-          experts={experts}
-          yields={yields}
-          plants={plants}
-          formProps={formProps}
-        />
+        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
       ),
     },
     {
@@ -355,7 +350,7 @@ export const ApprovalingPlanDrawer = () => {
         },
         {
           headers: { "Content-Type": "application/json" },
-        }
+        },
       );
 
       console.log("Response:", response.data.data);
@@ -374,7 +369,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -385,7 +380,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -396,7 +391,7 @@ export const ApprovalingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -437,11 +432,7 @@ export const ApprovalingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button
-                loading={loading}
-                style={{ margin: "0 8px" }}
-                onClick={() => prev()}
-              >
+              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
                 Previous
               </Button>
             )}

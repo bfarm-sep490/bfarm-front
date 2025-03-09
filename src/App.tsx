@@ -156,14 +156,14 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "inspection",
-                  list: "/inspection",
-                  create: "/inspection/create",
-                  edit: "/inspection/edit/:id",
-                  show: "/inspection/show/:id",
+                  name: "inspecting-forms",
+                  list: "/inspecting-forms",
+                  create: "/inspecting-forms/create",
+                  edit: "/inspecting-forms/edit/:id",
+                  show: "/inspecting-forms/show/:id",
                   meta: {
-                    label: "Inspection",
-                    icon: <SearchOutlined />,
+                    label: "Inspecting Forms",
+                    icon: <ScheduleOutlined />,
                   },
                 },
                 {

@@ -75,6 +75,12 @@ import { ablyClient } from "./utils/ablyClient";
 import { liveProvider } from "@refinedev/ably";
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { PlantCreate, PlantEdit, PlantsList, PlantsShow } from "./pages/plant";
+import {
+  PesticidesCreate,
+  PesticidesEdit,
+  PesticideShow,
+  PesticidesList,
+} from "./pages/pesticides";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -204,11 +210,11 @@ const App: React.FC = () => {
                   meta: { parent: "material", canDelete: true },
                 },
                 {
-                  name: "pesticide",
-                  list: "/pesticide",
-                  create: "/pesticide/create",
-                  edit: "/pesticide/edit/:id",
-                  show: "/pesticide/show/:id",
+                  name: "pesticides",
+                  list: "/pesticides",
+                  create: "/pesticides/create",
+                  edit: "/pesticides/edit/:id",
+                  show: "/pesticides/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {
@@ -312,6 +318,7 @@ const App: React.FC = () => {
                       >
                         <Route path=":id" element={<ProblemShowV2 />}></Route>
                       </Route>
+
                       <Route
                         path="caring-tasks"
                         element={
@@ -345,6 +352,18 @@ const App: React.FC = () => {
                         <Route path=":taskId" element={<PackagingTaskShow />} />
                       </Route>
                     </Route>
+                  </Route>
+                  <Route
+                    path="/pesticides"
+                    element={
+                      <PesticidesList>
+                        <Outlet />
+                      </PesticidesList>
+                    }
+                  >
+                    <Route path="create" element={<PesticidesCreate />} />
+                    <Route path=":id" element={<PesticideShow />} />
+                    <Route path="edit/:id" element={<PesticidesEdit />} />
                   </Route>
                   <Route
                     path="/problems"

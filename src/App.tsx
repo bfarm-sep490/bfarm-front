@@ -12,6 +12,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router";
 import {
   CalendarOutlined,
   DashboardOutlined,
+  EnvironmentOutlined,
   GoldOutlined,
   HddOutlined,
   PaperClipOutlined,
@@ -73,6 +74,7 @@ import { InspectorShow } from "./pages/inspectors/show";
 import { ablyClient } from "./utils/ablyClient";
 import { liveProvider } from "@refinedev/ably";
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
+import { PlantCreate, PlantEdit, PlantsList, PlantsShow } from "./pages/plant";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -165,6 +167,17 @@ const App: React.FC = () => {
                   meta: {
                     label: "Inspecting Forms",
                     icon: <ScheduleOutlined />,
+                  },
+                },
+                {
+                  name: "plants",
+                  list: "/plants",
+                  create: "/plants/new",
+                  edit: "/plants/edit/:id",
+                  show: "/plants/:id",
+                  meta: {
+                    label: "Plants",
+                    icon: <EnvironmentOutlined />,
                   },
                 },
                 {
@@ -352,6 +365,19 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<CustomerShow />} />
+                  </Route>
+
+                  <Route
+                    path="/plants"
+                    element={
+                      <PlantsList>
+                        <Outlet />
+                      </PlantsList>
+                    }
+                  >
+                    <Route path="create" element={<PlantCreate />} />
+                    <Route path=":id" element={<PlantsShow />} />
+                    <Route path="edit/:id" element={<PlantEdit />} />
                   </Route>
 
                   <Route

@@ -325,6 +325,7 @@ export interface IFertilizer {
   image: string;
   unit: string;
   quantity: number;
+  available_quantity: number;
   total_quantity: number;
   status: "Available" | "Out of Stock" | "Limited Stock";
   type: "Organic" | "Chemical" | "Mineral";

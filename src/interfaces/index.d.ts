@@ -324,10 +324,10 @@ export interface IFertilizer {
   description: string;
   image: string;
   unit: string;
-  available_quantity: number;
+  quantity: number;
   total_quantity: number;
-  status: "UnActived" | "InStock" | "OutStock";
-  type: "Organic" | "Chemical" | "Mixed";
+  status: "Available" | "Out of Stock" | "Limited Stock";
+  type: "Organic" | "Chemical" | "Mineral";
 }
 
 export interface IItem {

@@ -1,20 +1,17 @@
-import { type HttpError, getDefaultFilter, useNavigation } from "@refinedev/core";
-import { FilterDropdown, NumberField, getDefaultSortOrder, useTable } from "@refinedev/antd";
-
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography } from "antd";
-
-import { EyeOutlined } from "@ant-design/icons";
+import { type HttpError, getDefaultFilter } from "@refinedev/core";
+import { useTable } from "@refinedev/antd";
+import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { FertilizerTypeTag } from "../type";
 import { FertilizerStatusTag } from "../status";
-import { useLocation } from "react-router";
 import { useState } from "react";
-export const FertilizersListTable: React.FC = () => {
-  const { pathname } = useLocation();
-  const { showUrl } = useNavigation();
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { FertilizerTypeTag } from "../type";
+import { FertilizerDrawerShow } from "../drawer-show";
 
-  const { tableProps, sorters, filters } = useTable<IFertilizer, HttpError>({
+export const FertilizersListTable: React.FC = () => {
+  const { token } = theme.useToken();
+  const { tableProps, filters } = useTable<IFertilizer, HttpError>({
     resource: "fertilizers",
     filters: {
       initial: [
@@ -30,163 +27,114 @@ export const FertilizersListTable: React.FC = () => {
   const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
 
   return (
-    <Table
-      {...tableProps}
-      rowKey="id"
-      scroll={{ x: true }}
-      pagination={{
-        ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
-      }}
-    >
-      <Table.Column
-        title="ID"
-        dataIndex="id"
-        key="id"
-        width={80}
-        defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
-          </FilterDropdown>
-        )}
-      />
+    <>
+      <Table
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: true }}
+        pagination={{
+          ...tableProps.pagination,
+          showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
+        }}
+      >
+        <Table.Column
+          title="ID"
+          dataIndex="id"
+          key="id"
+          width={80}
+          filterIcon={(filtered) => (
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+          )}
+          defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
+          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
+        />
 
-      <Table.Column
-        title="Image"
-        dataIndex="image"
-        key="image"
-        render={(image: string) => <Avatar shape="square" src={image} alt="Fertilizer" />}
-      />
+        <Table.Column
+          title="Image"
+          dataIndex="image"
+          key="image"
+          render={(image) => (
+            <Avatar
+              shape="square"
+              src={image?.trim() ? image : "/images/default-image.png"}
+              alt="Item"
+            />
+          )}
+        />
 
-      <Table.Column
-        title="Name"
-        dataIndex="name"
-        key="name"
-        defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Input placeholder="Search name" />
-          </FilterDropdown>
-        )}
-      />
+        <Table.Column
+          title="Name"
+          dataIndex="name"
+          key="name"
+          filterIcon={(filtered) => (
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+          )}
+          defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
+          filterDropdown={() => <Input placeholder="Search name" />}
+        />
 
-      <Table.Column
-        title="Description"
-        dataIndex="description"
-        key="description"
-        width={300}
-        render={(value) => (
-          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
-            {value}
-          </Typography.Paragraph>
-        )}
-      />
+        <Table.Column
+          title="Description"
+          dataIndex="description"
+          key="description"
+          width={300}
+          render={(value) => (
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+              {value}
+            </Typography.Paragraph>
+          )}
+        />
 
-      <Table.Column
-        title="Available Quantity"
-        dataIndex="available_quantity"
-        key="available_quantity"
-        align="right"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("available_quantity", sorters)}
-        render={(value: number) => (
-          <NumberField
-            value={value}
-            options={{
-              maximumFractionDigits: 2,
-            }}
-          />
-        )}
-      />
+        <Table.Column
+          title="Quantity"
+          dataIndex="quantity"
+          key="quantity"
+          width={120}
+          filterIcon={(filtered) => (
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+          )}
+          defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
+          filterDropdown={() => (
+            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+          )}
+          render={(value, record) => `${value} ${record.unit}`}
+        />
 
-      <Table.Column
-        title="Total Quantity"
-        dataIndex="total_quantity"
-        key="total_quantity"
-        align="right"
-        sorter
-        defaultSortOrder={getDefaultSortOrder("total_quantity", sorters)}
-        render={(value: number) => (
-          <NumberField
-            value={value}
-            options={{
-              maximumFractionDigits: 2,
-            }}
-          />
-        )}
-      />
+        <Table.Column
+          title="Type"
+          dataIndex="type"
+          key="type"
+          width={120}
+          render={(value) => <FertilizerTypeTag value={value} />}
+        />
 
-      <Table.Column title="Unit" dataIndex="unit" key="unit" width={100} />
+        <Table.Column
+          title="Status"
+          dataIndex="status"
+          key="status"
+          width={120}
+          render={(value) => <FertilizerStatusTag value={value} />}
+        />
 
-      <Table.Column title="Status" dataIndex="status" key="status" width={120} />
-
-      <Table.Column
-        title="Type"
-        dataIndex="type"
-        key="type"
-        width={120}
-        filterDropdown={(props) => (
-          <FilterDropdown {...props}>
-            <Select
-              style={{ width: "200px" }}
-              mode="multiple"
-              placeholder="Filter by type"
-              allowClear
-            >
-              <Select.Option value="Organic">Organic</Select.Option>
-              <Select.Option value="Chemical">Chemical</Select.Option>
-              <Select.Option value="Mixed">Mixed</Select.Option>
-            </Select>
-          </FilterDropdown>
-        )}
-        render={(value) => (
-          <Tag color={value === "Organic" ? "green" : value === "Chemical" ? "red" : "blue"}>
-            {value}
-          </Tag>
-        )}
-      />
-
-      <Table.Column
-        title="Total Quantity"
-        dataIndex="total_quantity"
-        key="total_quantity"
-        width={"auto"}
-        defaultFilteredValue={getDefaultFilter("total_quantity", filters, "eq")}
-        filterDropdown={(props) => (
-          <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
-        )}
-        render={(value, record) => `${value} ${record.unit}`}
-      />
-
-      <Table.Column
-        title="Type"
-        dataIndex="type"
-        key="type"
-        width={120}
-        render={(value) => <FertilizerTypeTag value={value} />}
-      />
-
-      <Table.Column
-        title="Status"
-        dataIndex="status"
-        key="status"
-        width={120}
-        render={(value) => <FertilizerStatusTag value={value} />}
-      />
-
-      <Table.Column
-        title="Actions"
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: IFertilizer) => (
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => setSelectedFertilizerId(record.id.toString())}
-          />
-        )}
-      />
-    </Table>
+        <Table.Column
+          title="Actions"
+          key="actions"
+          fixed="right"
+          align="center"
+          render={(_, record) => (
+            <Button
+              icon={<EyeOutlined />}
+              onClick={() => setSelectedFertilizerId(record.id.toString())}
+            />
+          )}
+        />
+      </Table>
+      {selectedFertilizerId && (
+        <FertilizerDrawerShow
+          id={selectedFertilizerId}
+          onClose={() => setSelectedFertilizerId(undefined)}
+        />
+      )}
+    </>
   );
 };

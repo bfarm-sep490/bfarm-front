@@ -7,12 +7,12 @@ interface Props {
 
 export const FertilizerStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "InStock":
-      return <Tag color="green">In Stock</Tag>;
-    case "OutStock":
+    case "Available":
+      return <Tag color="green">Available</Tag>;
+    case "Out of Stock":
       return <Tag color="red">Out of Stock</Tag>;
-    case "UnActived":
-      return <Tag color="gray">Unactivated</Tag>;
+    case "Limited Stock":
+      return <Tag color="gray">Limited Stock</Tag>;
     default:
       return null;
   }

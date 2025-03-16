@@ -132,8 +132,8 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              notificationProvider={useNotificationProvider}
-              liveProvider={liveProvider(ablyClient)}
+              // notificationProvider={useNotificationProvider}
+              // liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
                   name: "dashboard",
@@ -206,11 +206,11 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "fertilizer",
+                  name: "fertilizers",
                   list: "/fertilizers",
-                  create: "/fertilizer/new",
-                  edit: "/fertilizer/edit/:id",
-                  show: "/fertilizer/:id",
+                  create: "/fertilizers/create",
+                  edit: "/fertilizers/edit/:id",
+                  show: "/fertilizers/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {

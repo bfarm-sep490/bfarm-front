@@ -11,8 +11,8 @@ export const FertilizerTypeTag: React.FC<Props> = ({ value }) => {
       return <Tag color="green">Organic</Tag>;
     case "Chemical":
       return <Tag color="orange">Chemical</Tag>;
-    case "Mixed":
-      return <Tag color="red">Mixed</Tag>;
+    case "Mineral":
+      return <Tag color="red">Mineral</Tag>;
     default:
       return null;
   }

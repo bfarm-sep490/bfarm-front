@@ -15,10 +15,7 @@ import {
   EnvironmentOutlined,
   GoldOutlined,
   HddOutlined,
-  PaperClipOutlined,
-  PlusCircleOutlined,
   ScheduleOutlined,
-  SearchOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import { authProvider } from "./authProvider";
@@ -206,11 +203,11 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "fertilizer",
+                  name: "fertilizers",
                   list: "/fertilizers",
-                  create: "/fertilizer/new",
-                  edit: "/fertilizer/edit/:id",
-                  show: "/fertilizer/:id",
+                  create: "/fertilizers/create",
+                  edit: "/fertilizers/edit/:id",
+                  show: "/fertilizers/:id",
                   meta: { parent: "material", canDelete: true },
                 },
                 {

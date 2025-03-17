@@ -1,26 +1,15 @@
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  EditButton,
-  ShowButton,
-  ImageField,
-  TagField,
-  EmailField,
-  DateField,
-  TextField,
-} from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
-import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { List, ShowButton, DateField, TextField } from "@refinedev/antd";
+import { Table, Space, TableProps } from "antd";
+import { useNavigate, useParams } from "react-router";
 import { StatusTag } from "../../caring-task/status-tag";
 type PackagingTableProps = {
   tableProps: TableProps;
   showNavigation?: string;
 };
 
-export const PakagingTaskList = ({
+export const PackagingTaskList = ({
   children,
   tableProps,
   showNavigation,

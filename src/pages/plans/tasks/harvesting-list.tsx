@@ -1,8 +1,6 @@
 import { useTable } from "@refinedev/antd";
 import { useParams } from "react-router";
-import { CaringListTable } from "../../../components/caring-task/list-table";
 import { PropsWithChildren } from "react";
-import { Table, TableProps } from "antd";
 import { HarvestedTaskList } from "../../../components/harvesting-task/list-table";
 
 export const HarvestingTaskListInPlan = ({ children }: PropsWithChildren) => {

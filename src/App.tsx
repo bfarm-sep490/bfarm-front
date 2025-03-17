@@ -15,10 +15,7 @@ import {
   EnvironmentOutlined,
   GoldOutlined,
   HddOutlined,
-  PaperClipOutlined,
-  PlusCircleOutlined,
   ScheduleOutlined,
-  SearchOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import { authProvider } from "./authProvider";
@@ -132,8 +129,8 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              // notificationProvider={useNotificationProvider}
-              // liveProvider={liveProvider(ablyClient)}
+              notificationProvider={useNotificationProvider}
+              liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
                   name: "dashboard",

@@ -374,6 +374,7 @@ export interface IYield {
   area: number;
   type: YieldType;
   description: string;
+  status: "Available" | "Maintenance" | "In-Use";
   is_available: YieldAvailability;
   size: YieldSize;
 }

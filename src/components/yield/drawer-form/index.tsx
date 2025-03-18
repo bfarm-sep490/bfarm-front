@@ -92,6 +92,13 @@ export const YieldDrawerForm = (props: Props) => {
           >
             <Input.TextArea rows={3} placeholder="Enter description" />
           </Form.Item>
+          <Form.Item
+            label="Size"
+            name="size"
+            rules={[{ required: true, message: "Please enter size!" }]}
+          >
+            <Input placeholder="Enter size" />
+          </Form.Item>
 
           <Form.Item
             label="Type"
@@ -99,34 +106,25 @@ export const YieldDrawerForm = (props: Props) => {
             rules={[{ required: true, message: "Please select type!" }]}
           >
             <Select placeholder="Select type">
-              <Select.Option value="Lúa">Lúa</Select.Option>
-              <Select.Option value="Rau">Rau</Select.Option>
-              <Select.Option value="Tổng hợp">Tổng hợp</Select.Option>
-              <Select.Option value="Trái cây">Trái cây</Select.Option>
-              <Select.Option value="Ngô">Ngô</Select.Option>
-              <Select.Option value="Khác">Khác</Select.Option>
+              <Select.Option value="Đất xám">Đất xám</Select.Option>
+              <Select.Option value="Đất cát">Đất cát</Select.Option>
+              <Select.Option value="Đất đỏ">Đất đỏ</Select.Option>
+              <Select.Option value="Đất đen">Đất đen</Select.Option>
+              <Select.Option value="Đất phèn">Đất phèn</Select.Option>
+              <Select.Option value="Đất chua">Đất chua</Select.Option>
+              <Select.Option value="Đất hữu cơ">Đất hữu cơ</Select.Option>
             </Select>
           </Form.Item>
-
           <Form.Item
-            label="Size"
-            name="size"
-            rules={[{ required: true, message: "Please enter size!" }]}
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Select status!" }]}
           >
-            <Select placeholder="Select type">
-              <Select.Option value="Lớn">Lớn</Select.Option>
-              <Select.Option value="Vừa">Vừa</Select.Option>
-              <Select.Option value="Nhỏ">Nhỏ</Select.Option>
+            <Select placeholder="Select status">
+              <Select.Option value="Available">Available</Select.Option>
+              <Select.Option value="Maintenance">Maintenance</Select.Option>
+              <Select.Option value="In-Use">In-Use</Select.Option>
             </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Available"
-            name="is_available"
-            valuePropName="checked"
-            initialValue={true}
-          >
-            <Switch checkedChildren="Available" unCheckedChildren="Unavailable" />
           </Form.Item>
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>

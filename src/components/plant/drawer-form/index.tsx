@@ -5,7 +5,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Select,
   Upload,
   Grid,
   Button,
@@ -14,10 +13,7 @@ import {
   Spin,
   message,
   Drawer,
-  Row,
-  Col,
-  Typography,
-  Divider,
+  Select,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -26,6 +22,7 @@ import { useSearchParams } from "react-router";
 type Props = {
   id?: BaseKey;
   action: "edit" | "create";
+  open?: boolean;
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };
@@ -51,7 +48,6 @@ export const PlantDrawerForm = (props: Props) => {
           setPreviewImage(data.data.image_url);
           formProps.form.setFieldsValue({
             ...data?.data,
-            image_url: data?.data.image_url,
           });
         }
       },
@@ -75,15 +71,6 @@ export const PlantDrawerForm = (props: Props) => {
     });
   };
 
-  useEffect(() => {
-    if (props.action === "edit" && formProps.form) {
-      const currentImage = formProps.form.getFieldValue("image_url");
-      if (currentImage) {
-        setPreviewImage(currentImage);
-      }
-    }
-  }, [props.action, formProps.form]);
-
   const uploadImage = async ({ onSuccess, onError, file }: any) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -92,7 +79,6 @@ export const PlantDrawerForm = (props: Props) => {
       const response = await axios.post(`${apiUrl}/plants/images/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
@@ -102,7 +88,6 @@ export const PlantDrawerForm = (props: Props) => {
         throw new Error(response.data.message || "Upload failed.");
       }
     } catch (error) {
-      console.error("Upload error:", error);
       message.error("Image upload failed.");
       onError(error);
     } finally {
@@ -110,65 +95,16 @@ export const PlantDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Edit Plant" : "Add Plant";
-
-  // Nhóm các trường liên quan đến nhiệt độ
-  const temperatureFields = ["min_temp", "max_temp"];
-
-  // Nhóm các trường liên quan đến độ ẩm
-  const humidityFields = ["min_humid", "max_humid"];
-
-  // Nhóm các trường liên quan đến độ ẩm đất
-  const moistureFields = ["min_moisture", "max_moisture"];
-
-  // Nhóm các trường liên quan đến phân bón
-  const fertilizerFields = ["min_fertilizer", "max_fertilizer"];
-
-  // Nhóm các trường liên quan đến thuốc trừ sâu
-  const pesticideFields = ["min_pesticide", "max_pesticide"];
-
-  // Nhóm các trường liên quan đến độ ngọt
-  const brixFields = ["min_brix_point", "max_brix_point"];
-
-  // Hàm format tiêu đề trường và thêm đơn vị phần trăm cho các trường môi trường
-  const formatFieldLabel = (field: string) => {
-    const formattedField = field
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    // Thêm kí hiệu % cho các trường độ ẩm và độ ẩm đất
-    if (field.includes("humid") || field.includes("moisture")) {
-      return `${formattedField} (%)`;
-    }
-
-    return formattedField;
-  };
-
-  // Đơn vị mặc định
-  const unitOptions = [
-    { label: "kg", value: "kg" },
-    { label: "g", value: "g" },
-    { label: "lb", value: "lb" },
-    { label: "oz", value: "oz" },
-  ];
-
   return (
     <Drawer
       {...drawerProps}
       open={true}
-      title={title}
+      title={props.action === "edit" ? "Edit Plant" : "Add Plant"}
       width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form
-          form={formProps?.form}
-          layout="vertical"
-          onFinish={formProps?.onFinish}
-          onValuesChange={formProps?.onValuesChange}
-        >
-          {/* Upload Image Section */}
+        <Form {...formProps} layout="vertical">
           <Form.Item name="image_url" valuePropName="file">
             <Upload.Dragger
               name="file"
@@ -177,260 +113,77 @@ export const PlantDrawerForm = (props: Props) => {
               accept=".png,.jpg,.jpeg"
               showUploadList={false}
             >
-              <Flex vertical align="center" justify="center" style={{ padding: "20px 0" }}>
+              <Flex vertical align="center" justify="center">
                 <Avatar
                   shape="square"
-                  style={{
-                    aspectRatio: 1,
-                    objectFit: "contain",
-                    width: previewImage ? "120px" : "80px",
-                    height: previewImage ? "120px" : "80px",
-                    marginBottom: 16,
-                  }}
-                  src={previewImage || "/images/seed-default-img.png"}
+                  src={previewImage || "/images/plant-default-img.png"}
                   alt="Plant Image"
+                  style={{ width: "100%", height: "100%" }}
                 />
-                <Button icon={<UploadOutlined />} disabled={uploading}>
+                <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
                   {uploading ? "Uploading..." : "Upload Image"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
-
-          {/* Basic Information Section */}
-          <Divider orientation="left">Basic Information</Divider>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                label="Plant Name"
-                name="plant_name"
-                rules={[{ required: true, message: "Enter plant name!" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                label="Quantity"
-                name="quantity"
-                rules={[{ required: true, message: "Enter quantity!" }]}
-              >
-                <InputNumber min={0} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="Unit"
-                name="unit"
-                rules={[{ required: true, message: "Enter unit!" }]}
-              >
-                <Select options={unitOptions} />
-              </Form.Item>
-            </Col>
-          </Row>
-
+          <Form.Item
+            label="Plant Name"
+            name="plant_name"
+            rules={[{ required: true, message: "Enter plant name!" }]}
+          >
+            <Input placeholder="Enter plant name" />
+          </Form.Item>
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            rules={[{ required: true, message: "Enter quantity!" }]}
+          >
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
+          </Form.Item>
           <Form.Item
             label="Description"
             name="description"
             rules={[{ required: true, message: "Enter description!" }]}
           >
-            <Input.TextArea rows={3} />
+            <Input.TextArea rows={3} placeholder="Enter description" />
           </Form.Item>
-
-          <Form.Item label="Availability" name="is_available" rules={[{ required: true }]}>
-            <Select
-              options={[
-                { label: "Available", value: true },
-                { label: "Not Available", value: false },
-              ]}
-            />
-          </Form.Item>
-
-          {/* Environmental Requirements Section */}
-          <Divider orientation="left">Environmental Requirements</Divider>
-
-          {/* Temperature Group */}
-          <Typography.Text type="secondary" style={{ display: "block", marginBottom: 8 }}>
-            Temperature (°C)
-          </Typography.Text>
-          <Row gutter={16}>
-            {temperatureFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
-          {/* Humidity Group */}
-          <Typography.Text
-            type="secondary"
-            style={{ display: "block", marginBottom: 8, marginTop: 16 }}
-          >
-            Humidity
-          </Typography.Text>
-          <Row gutter={16}>
-            {humidityFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${field.split("_").join(" ")}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} max={100} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
-          {/* Moisture Group */}
-          <Typography.Text
-            type="secondary"
-            style={{ display: "block", marginBottom: 8, marginTop: 16 }}
-          >
-            Soil Moisture
-          </Typography.Text>
-          <Row gutter={16}>
-            {moistureFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${field.split("_").join(" ")}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} max={100} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
-          {/* Fertilizer Group */}
-          <Divider orientation="left">Fertilizer</Divider>
-          <Row gutter={16}>
-            {fertilizerFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
           <Form.Item
-            label="Fertilizer Unit"
-            name="fertilizer_unit"
-            rules={[{ required: true, message: "Select fertilizer unit!" }]}
+            label="Base Price"
+            name="base_price"
+            rules={[{ required: true, message: "Enter base price!" }]}
           >
-            <Select
-              options={[
-                { label: "kg", value: "kg" },
-                { label: "ha", value: "ha" },
-              ]}
-            />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter base price" />
           </Form.Item>
-
-          {/* Pesticide Group */}
-          <Divider orientation="left">Pesticide</Divider>
-          <Row gutter={16}>
-            {pesticideFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
+          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Enter type!" }]}>
+            <Input placeholder="Enter type" />
+          </Form.Item>
+          <Form.Item label="Delta One" name="delta_one">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta one" />
+          </Form.Item>
+          <Form.Item label="Delta Two" name="delta_two">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta two" />
+          </Form.Item>
+          <Form.Item label="Delta Three" name="delta_three">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta three" />
+          </Form.Item>
+          <Form.Item label="Preservation Day" name="preservation_day">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter preservation day" />
+          </Form.Item>
+          <Form.Item label="Estimated Per One" name="estimated_per_one">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter estimated per one" />
+          </Form.Item>
           <Form.Item
-            label="Pesticide Unit"
-            name="pesticide_unit"
-            rules={[{ required: true, message: "Select pesticide unit!" }]}
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Select status!" }]}
           >
-            <Select
-              options={[
-                { label: "ml", value: "ml" },
-                { label: "l", value: "l" },
-              ]}
-            />
+            <Select placeholder="Select status">
+              <Select.Option value="Available">Available</Select.Option>
+              <Select.Option value="Out of Stock">Out of Stock</Select.Option>
+              <Select.Option value="Limited Stock">Limited Stock</Select.Option>
+            </Select>
           </Form.Item>
-
-          {/* Brix Points Group */}
-          <Divider orientation="left">Brix Points</Divider>
-          <Row gutter={16}>
-            {brixFields.map((field) => (
-              <Col span={12} key={field}>
-                <Form.Item
-                  label={formatFieldLabel(field)}
-                  name={field}
-                  rules={[
-                    {
-                      required: true,
-                      message: `Enter ${formatFieldLabel(field).toLowerCase()}!`,
-                    },
-                  ]}
-                >
-                  <InputNumber min={0} style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-
-          {/* Other Settings */}
-          <Divider orientation="left">Other Settings</Divider>
-          <Form.Item label="GT Test Kit Color" name="gt_test_kit_color">
-            <Select
-              options={[
-                { label: "Green", value: "Green" },
-                { label: "Yellow", value: "Yellow" },
-                { label: "Red", value: "Red" },
-                { label: "Orange", value: "Orange" },
-              ]}
-            />
-          </Form.Item>
-
-          {/* Form Actions */}
-          <Flex justify="space-between" style={{ marginTop: 24 }}>
+          <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Save

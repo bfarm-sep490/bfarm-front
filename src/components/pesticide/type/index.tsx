@@ -7,14 +7,12 @@ interface Props {
 
 export const PesticideTypeTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Insecticide":
-      return <Tag color="green">Trừ sâu</Tag>;
-    case "Fungicide":
-      return <Tag color="orange">Trừ nấm</Tag>;
-    case "Herbicide":
-      return <Tag color="red">Diệt cỏ</Tag>;
-    case "Other":
-      return <Tag color="blue">Trừ rầy</Tag>;
+    case "Organic":
+      return <Tag color="green">Organic</Tag>;
+    case "Chemical":
+      return <Tag color="orange">Chemical</Tag>;
+    case "Mineral":
+      return <Tag color="red">Mineral</Tag>;
     default:
       return null;
   }

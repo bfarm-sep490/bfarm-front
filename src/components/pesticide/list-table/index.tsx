@@ -87,29 +87,14 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Available Quantity"
-          dataIndex="available_quantity"
-          key="available_quantity"
+          title="Quantity"
+          dataIndex="quantity"
+          key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
-          defaultFilteredValue={getDefaultFilter("available_quantity", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber placeholder="Search available quantity" style={{ width: "100%" }} />
-          )}
-          render={(value, record) => `${value} ${record.unit}`}
-        />
-
-        <Table.Column
-          title="Total Quantity"
-          dataIndex="total_quantity"
-          key="total_quantity"
-          width={"auto"}
-          filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-          )}
-          defaultFilteredValue={getDefaultFilter("total_quantity", filters, "eq")}
+          defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
             <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
           )}

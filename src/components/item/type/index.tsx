@@ -7,10 +7,12 @@ interface Props {
 
 export const ItemtypeTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Uncountable":
-      return <Tag color="green">Uncountable</Tag>;
-    case "Countable":
-      return <Tag color="red">Countable</Tag>;
+    case "Caring":
+      return <Tag color="green">Caring</Tag>;
+    case "Harvesting":
+      return <Tag color="red">Harvesting</Tag>;
+    case "Packaging":
+      return <Tag color="yellow">Packaging</Tag>;
     default:
       return null;
   }

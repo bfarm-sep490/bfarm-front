@@ -7,12 +7,12 @@ interface Props {
 
 export const PesticideStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "InStock":
-      return <Tag color="green">In Stock</Tag>;
-    case "OutStock":
+    case "Limited Stock":
+      return <Tag color="green">Limited Stock</Tag>;
+    case "Out of Stock":
       return <Tag color="red">Out of Stock</Tag>;
-    case "UnActived":
-      return <Tag color="gray">UnActived</Tag>;
+    case "Available":
+      return <Tag color="gray">Available</Tag>;
     default:
       return null;
   }

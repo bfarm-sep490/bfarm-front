@@ -42,7 +42,7 @@ export const ProblemListTable = ({
           />
           <Table.Column dataIndex="problem_name" title={translate("name")} />
           <Table.Column
-            dataIndex="date"
+            dataIndex="created_date"
             title={"Ngày phát sinh"}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />

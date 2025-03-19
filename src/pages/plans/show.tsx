@@ -31,6 +31,11 @@ import { RealTimeContentCard } from "../../components/card/card-real-time";
 import { StatusTag } from "../../components/caring-task/status-tag";
 import { StatusModal } from "@/components/plan/completd-modal";
 import { set } from "lodash";
+import { T } from "node_modules/react-router/dist/development/fog-of-war-BALYJxf_.mjs";
+import { ProblemsDashBoard } from "@/components/plan/dashboard-problems";
+import { IProblem } from "@/interfaces";
+import { MaterialDashboard } from "@/components/plan/dashboard-fertilizer-pesticide-item";
+import { CaringTaskDashboard } from "@/components/plan/dashboard-caring-tasks";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -58,20 +63,7 @@ interface IGeneralPlan {
   };
   description: string;
 }
-interface IProblem {
-  id: number;
-  plan_id: number;
-  problem_name: string;
-  description: string;
-  date: Date;
-  problem_type: string;
-  status: string;
-  result_content: string;
-  problem_images: {
-    image_id: number;
-    url: string;
-  }[];
-}
+
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const { id } = useParams();
   const [completedModal, setCompletedModal] = React.useState(false);
@@ -103,218 +95,6 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const general_info = generalData?.data;
   const farmers_info = farmersData?.data as any[];
   const navigate = useNavigate();
-
-  const [state, setState] = React.useState({
-    series: [
-      {
-        name: "Chưa sửa dụng",
-        data: [44, 55, 41, 67, 22, 43, 21, 49],
-      },
-      {
-        name: "Đã sử dụng",
-        data: [13, 23, 20, 8, 13, 27, 33, 12],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 350,
-        stacked: true,
-        stackType: "100%",
-        toolbar: {
-          show: true,
-        },
-        zoom: {
-          enabled: true,
-        },
-      },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: "top",
-              offsetX: -10,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
-      xaxis: {
-        categories: [
-          "Phân bón loại 1",
-          "Phân bón loại 2",
-          "Phân bón loại 3",
-          "Phân bón loại 4",
-          "Phân bón loại 5",
-          "Thuốc trừ sâu 1",
-          "Thuốc trừ sâu 2",
-          "Vật tư",
-        ],
-      },
-      fill: {
-        opacity: 1,
-      },
-      legend: {
-        position: "bottom",
-        offsetX: 0,
-        offsetY: 0,
-      },
-    },
-  });
-  const [state1, setState1] = React.useState({
-    series: [
-      {
-        name: "Tổng số",
-        data: [12, 1, 1],
-      },
-      {
-        name: "Đã hoàn thành",
-        data: [11, 0, 0],
-      },
-      {
-        name: "Chưa hoàn thành",
-        data: [1, 0, 0],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 430,
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          dataLabels: {
-            position: "top",
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-        offsetX: -6,
-        style: {
-          fontSize: "12px",
-          colors: ["#fff"],
-        },
-      },
-      stroke: {
-        show: true,
-        width: 1,
-        colors: ["#fff"],
-      },
-      tooltip: {
-        shared: true,
-        intersect: false,
-      },
-      xaxis: {
-        categories: ["Chăm sóc", "Kiểm định", "Thu hoạch"],
-      },
-    },
-  });
-  const [state3, setState3] = React.useState({
-    series: [
-      {
-        name: "Flies",
-        data: [
-          { x: new Date("2023-01-01").getTime(), y: 400 },
-          { x: new Date("2023-01-02").getTime(), y: 430 },
-          { x: new Date("2023-01-03").getTime(), y: 448 },
-          { x: new Date("2023-01-04").getTime(), y: 470 },
-          { x: new Date("2023-01-05").getTime(), y: 540 },
-          { x: new Date("2023-01-06").getTime(), y: 580 },
-          { x: new Date("2023-01-07").getTime(), y: 690 },
-          { x: new Date("2023-01-08").getTime(), y: 1100 },
-          { x: new Date("2023-01-09").getTime(), y: 1200 },
-          { x: new Date("2023-01-10").getTime(), y: 1380 },
-        ],
-      },
-    ],
-    options: {
-      chart: {
-        id: "chart2",
-        type: "line",
-        height: 250,
-        toolbar: {
-          show: false,
-        },
-      },
-      colors: ["#FF4560"],
-      stroke: {
-        width: 2,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      markers: {
-        size: 0,
-      },
-      xaxis: {
-        type: "datetime",
-      },
-      yaxis: {
-        labels: {
-          formatter: (value: any) => `${value} units`,
-        },
-      },
-    },
-    seriesLine: [
-      {
-        name: "Flies",
-        data: [
-          { x: new Date("2023-01-01").getTime(), y: 400 },
-          { x: new Date("2023-01-02").getTime(), y: 430 },
-          { x: new Date("2023-01-03").getTime(), y: 448 },
-          { x: new Date("2023-01-04").getTime(), y: 470 },
-          { x: new Date("2023-01-05").getTime(), y: 540 },
-          { x: new Date("2023-01-06").getTime(), y: 580 },
-          { x: new Date("2023-01-07").getTime(), y: 690 },
-          { x: new Date("2023-01-08").getTime(), y: 1100 },
-          { x: new Date("2023-01-09").getTime(), y: 1200 },
-          { x: new Date("2023-01-10").getTime(), y: 1380 },
-        ],
-      },
-    ],
-    optionsLine: {
-      chart: {
-        id: "chart1",
-        height: 120,
-        type: "area",
-        brush: {
-          target: "chart2",
-          enabled: true,
-        },
-        selection: {
-          enabled: true,
-          xaxis: {
-            min: new Date("2023-01-03").getTime(),
-            max: new Date("2023-01-08").getTime(),
-          },
-        },
-      },
-      colors: ["#008FFB"],
-      stroke: {
-        width: [1, 2],
-        curve: "smooth",
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          opacityFrom: 0.85,
-          opacityTo: 0.1,
-        },
-      },
-      xaxis: {
-        type: "datetime",
-        tooltip: {
-          enabled: false,
-        },
-      },
-      yaxis: {
-        tickAmount: 2,
-      },
-    },
-  });
   const [state5, setState5] = React.useState({
     series: [
       {
@@ -511,7 +291,11 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <CalendarOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Ngày tạo:</Typography.Text>
                     <Typography.Text type="secondary">
-                      <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
+                      {general_info?.created_at ? (
+                        <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
+                      ) : (
+                        <Typography.Text type="danger">Chưa xác định</Typography.Text>
+                      )}
                     </Typography.Text>
                   </Space>
                 </Col>
@@ -547,65 +331,35 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
-                title="⚠️ Vấn đề"
-                navigate={`/plans/${id}/problems`}
-                completedTasks={problemsData?.data?.length || 0}
+                loading={generalLoading}
+                title={`🌍 Số lượng đơn hàng`}
+                completedTasks={2}
               />
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
-                loading={generalLoading}
-                title={`🌍 Tổng diện tích (${general_info?.yield_information?.area})`}
-                completedTasks={general_info?.yield_information?.area || 0}
+                title="⚠️ Vấn đề mới"
+                navigate={`/plans/${id}/problems`}
+                completedTasks={
+                  problemsData?.data?.filter((x) => x.status === "Pending").length || 0
+                }
               />
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
                 loading={farmersLoading}
                 title="👨‍🌾 Số nông dân"
-                completedTasks={farmers_info?.length}
+                completedTasks={farmers_info?.length || 0}
               />
             </Col>
           </Row>
 
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "20px" }}>
             <Col xs={24} md={12}>
-              <Card title="📊 Phân bón & Thuốc trừ sâu">
-                <ReactApexChart
-                  options={state.options as ApexOptions}
-                  series={state.series}
-                  type="bar"
-                  height={280}
-                />
-              </Card>
+              <MaterialDashboard />
             </Col>
             <Col xs={24} md={12}>
-              <Card
-                title={
-                  <Flex gap={8}>
-                    <DashboardOutlined />
-                    {"Biểu đổ xu hướng xảy ra vấn đề"}
-                  </Flex>
-                }
-              >
-                <div id="chart-line2" style={{ marginBottom: "0px" }}>
-                  <ReactApexChart
-                    options={state3.options as ApexOptions}
-                    series={state3.series}
-                    type="line"
-                    height={180}
-                  />
-                </div>
-                <div id="chart-line">
-                  <ReactApexChart
-                    style={{ marginTop: "0px" }}
-                    options={state3.optionsLine as ApexOptions}
-                    series={state3.seriesLine}
-                    type="area"
-                    height={80}
-                  />
-                </div>
-              </Card>
+              <ProblemsDashBoard data={problemsData?.data || []} />
             </Col>
           </Row>
         </DropDownSection>
@@ -661,22 +415,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             </Col>
 
             <Col xs={24} md={12} lg={12} xl={12}>
-              <Card
-                title={
-                  <Flex align="center" gap={8}>
-                    <DashboardOutlined />
-                    {"Biểu đồ tổng hợp công việc"}
-                  </Flex>
-                }
-                extra={<ShowButton hideText size="small" />}
-              >
-                <ReactApexChart
-                  options={state1.options as ApexOptions}
-                  series={state1.series}
-                  type="bar"
-                  height={300}
-                />
-              </Card>
+              <CaringTaskDashboard />
             </Col>
           </Row>
         </DropDownSection>

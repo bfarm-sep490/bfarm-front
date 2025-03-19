@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
+import { BaseRecord, useBack, useList, useTranslate } from "@refinedev/core";
 import {
   useTable,
   List,
@@ -33,7 +33,15 @@ export const CaringListTable = ({
   const navigate = useNavigate();
   const { id } = useParams();
   const translate = useTranslate();
+  const { data: planData } = useList({
+    resource: "plans",
+  });
+  const plans = planData?.data || [];
 
+  const { data: farmerData } = useList({
+    resource: "farmers",
+  });
+  const farmers = farmerData?.data || [];
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
@@ -67,8 +75,22 @@ export const CaringListTable = ({
             title={"status"}
             render={(value) => <StatusTag status={value} />}
           />
-          <Table.Column title={translate("farmer_id")} dataIndex="farmer_id" />
-          <Table.Column title={translate("plan_id")} dataIndex="plan_id" />
+          <Table.Column
+            title={translate("farmer_id")}
+            dataIndex="farmer_id"
+            render={(value) => {
+              const farmer = farmers.find((x) => x.id === value);
+              return <TextField value={farmer ? farmer.name : "Không xác định được nông dân"} />;
+            }}
+          />
+          <Table.Column
+            title={translate("plan_id")}
+            dataIndex="plan_id"
+            render={(value) => {
+              const plan = plans.find((x) => x.id === value);
+              return <TextField value={plan ? plan.plan_name : "Không xác định được kế hoạch"} />;
+            }}
+          />
           <Table.Column
             title={translate("create_at")}
             dataIndex="create_at"

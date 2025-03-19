@@ -300,7 +300,7 @@ export interface IProblem {
   issue_id?: number;
   name: string;
   description: string;
-  date: string;
+  created_date: string;
   type_problem: string;
   status: "Pending" | "Approved" | "Cancelled";
   result: string;

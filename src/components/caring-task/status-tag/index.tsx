@@ -3,9 +3,9 @@ const getStatusTagColor = (value: string) => {
   switch (value) {
     case "Pending":
       return "orange";
-    case "Completed":
+    case "Complete":
       return "green";
-    case "Cancelled":
+    case "Cancel":
       return "red";
     case "Ongoing":
       return "blue";
@@ -18,9 +18,9 @@ const getStatusTagValue = (value: string) => {
   switch (value) {
     case "Pending":
       return "Đợi xác nhận";
-    case "Completed":
+    case "Complete":
       return "Hoàn thành";
-    case "Cancelled":
+    case "Cancel":
       return "Hủy bỏ";
     case "Ongoing":
       return "Trong quá trình";
@@ -35,5 +35,7 @@ type StatusTagProps = {
 };
 
 export const StatusTag = ({ status }: StatusTagProps) => {
-  return <Tag color={getStatusTagColor(status)}> {getStatusTagValue(status)}</Tag>;
+  return (
+    <Tag color={getStatusTagColor(status)}> {getStatusTagValue(status)}</Tag>
+  );
 };

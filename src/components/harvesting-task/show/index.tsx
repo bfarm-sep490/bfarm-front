@@ -1,5 +1,5 @@
-import { DateField, TagField, Title } from "@refinedev/antd";
-import { useShow, useNavigation, useBack } from "@refinedev/core";
+import { DateField, TagField, TextField, Title } from "@refinedev/antd";
+import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {
   Drawer,
   Flex,
@@ -14,8 +14,11 @@ import {
   Button,
 } from "antd";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { StatusTag } from "../../caring-task/status-tag";
+import ChangeAssignedTasksModal, {
+  HistoryAssignedModal,
+} from "@/components/caring-task/show";
 
 export const HarvestingTaskShow = () => {
   const { taskId } = useParams();
@@ -23,13 +26,29 @@ export const HarvestingTaskShow = () => {
     resource: "harvesting-tasks",
     id: taskId,
   });
-
+  const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
   const { data } = queryResult;
-  const task = data?.data;
+  const task = data?.data?.[0];
+  const { data: historyAssignedData } = useList({
+    resource: `harvesting-tasks/${taskId}/assigned-farmers`,
+  });
+  const [assignedModal, setAssignedModal] = useState(false);
 
+  const historyAssignedFarmers = historyAssignedData?.data || [];
+  const { data: chosenFarmersData } = useList({
+    resource: `plans/${task?.plan_id}/farmers`,
+  });
+  const chosenFarmers = chosenFarmersData?.data || [];
+  const [visible, setVisible] = useState(false);
+  const columns = [
+    { title: "ID", dataIndex: "item_id", key: "item_id" },
+    { title: "Tên", dataIndex: "name", key: "name" },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+    { title: "Đơn vị", dataIndex: "unit", key: "unit" },
+  ];
   return (
     <Drawer
       open={open}
@@ -37,14 +56,23 @@ export const HarvestingTaskShow = () => {
       onClose={back}
       title={
         <>
-          {task?.status !== "Completed" && (
+          {task?.status === "Ongoing" && (
             <Flex justify="end">
               <Space>
                 <Button color="danger" variant="solid">
                   Hủy bỏ
                 </Button>
+              </Space>
+            </Flex>
+          )}
+          {task?.status === "Pending" && (
+            <Flex justify="end">
+              <Space>
+                <Button color="danger" variant="solid">
+                  Không chấp nhận
+                </Button>
                 <Button color="primary" variant="solid">
-                  Thay đổi
+                  Tiến hành
                 </Button>
               </Space>
             </Flex>
@@ -59,14 +87,14 @@ export const HarvestingTaskShow = () => {
 
         <Divider />
         <Typography.Title level={4}>Kết quả</Typography.Title>
-        {task?.status === "Completed" ? (
+        {task?.status === "Complete" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
               <Image.PreviewGroup items={task?.images || []}>
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
-                  src={task?.harvesting_images?.[0]}
+                  src={task?.harvest_images?.[0]}
                 />
               </Image.PreviewGroup>
             )}
@@ -75,24 +103,34 @@ export const HarvestingTaskShow = () => {
               dataSource={[
                 {
                   label: "Ngày hoàn thành",
-                  value: <DateField value={task?.complete_at} />,
+                  value: (
+                    <DateField
+                      format="hh:mm DD/MM/YYYY"
+                      value={task?.complete_date}
+                    />
+                  ),
                 },
                 {
                   label: "Sản lượng thu hoạch",
                   value: (
                     <Typography.Text>
-                      {task?.harvested_quantity} {" " + task?.harvested_unit}
+                      {task?.harvested_quantity} {" kg"}
                     </Typography.Text>
                   ),
                 },
                 {
                   label: "Nội dung",
-                  value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
+                  value: (
+                    <Typography.Paragraph>
+                      {task?.result_content}
+                    </Typography.Paragraph>
+                  ),
                 },
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                  {item.value}
                 </List.Item>
               )}
             />
@@ -102,35 +140,162 @@ export const HarvestingTaskShow = () => {
         )}
 
         <Divider />
-        <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
+        <Flex justify="space-between" align="center">
+          <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
+          <Button
+            color="primary"
+            variant="solid"
+            onClick={() => navigate("edit")}
+          >
+            Thay đổi
+          </Button>
+        </Flex>
         <List
           bordered
           dataSource={[
             {
               label: "Ngày bắt đầu",
-              value: <DateField value={task?.start_date} />,
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.start_date}
+                />
+              ),
             },
             {
               label: "Ngày kết thúc",
-              value: <DateField value={task?.end_date} />,
+              value: (
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />
+              ),
             },
             {
               label: "Trạng thái",
               value: <StatusTag status={task?.status} />,
             },
-            { label: "Mức độ ưu tiên", value: task?.priority },
-            { label: "ID Nông dân", value: task?.farmer_id },
-            { label: "ID Kế hoạch", value: task?.plan_id },
+            {
+              label: "Nông dân",
+              value: task?.farmer_information?.[0]?.farmer_name,
+            },
+            { label: "Kế hoạch", value: task?.plan_name },
             {
               label: "Mô tả công việc",
-              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+              value: (
+                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
+        />
+        <List
+          bordered
+          dataSource={[
+            {
+              label: "Ngày tạo",
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.created_at}
+                />
+              ),
+            },
+            {
+              label: "Người tạo",
+              value: <TextField value={task?.created_by} />,
+            },
+            {
+              label: "Câp nhật lần cuối",
+              value: task?.updated_at ? (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.updated_at}
+                />
+              ) : (
+                "Chưa cập nhập lần nào"
+              ),
+            },
+            {
+              label: "Người cập nhập cuối",
+              value: <TextField value={task?.updated_by} />,
+            },
+          ]}
+          renderItem={(item) => (
+            <List.Item>
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
+            </List.Item>
+          )}
+        />
+        <Divider />
+        <Flex justify="space-between" gap={5}>
+          <Typography.Title level={4}>Người thực hiện</Typography.Title>
+          <Space>
+            {" "}
+            <Button type="dashed" onClick={() => setVisible(true)}>
+              Lịch sử giao việc
+            </Button>
+            <Button
+              type="primary"
+              color="cyan"
+              onClick={() => setAssignedModal(true)}
+            >
+              Thay đổi
+            </Button>
+          </Space>
+        </Flex>
+        <List
+          bordered
+          dataSource={[
+            {
+              label: "Id",
+              value: (
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
+                  }
+                />
+              ),
+            },
+            {
+              label: "Tên nông dân",
+              value: (
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
+                  }
+                />
+              ),
+            },
+          ]}
+          renderItem={(item) => (
+            <List.Item>
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
+            </List.Item>
+          )}
+        />
+        <Divider />
+        <Typography.Title level={4}>Vật tư</Typography.Title>
+        <Table
+          pagination={{ pageSize: 5 }}
+          bordered
+          columns={columns}
+          dataSource={task?.harvesting_items as any[]}
+        ></Table>
+        <HistoryAssignedModal
+          visible={visible}
+          onClose={() => setVisible(false)}
+          data={historyAssignedFarmers}
+        />
+        <ChangeAssignedTasksModal
+          chosenFarmers={chosenFarmers}
+          onClose={() => setAssignedModal(false)}
+          visible={assignedModal}
+          assignedFarmers={chosenFarmers.find((x) => x.id === task.farmer_id)}
         />
       </Flex>
     </Drawer>

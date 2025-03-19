@@ -1,5 +1,11 @@
-import { DateField, SaveButton, TextField, useForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useBack, useGo, useList, useTranslate } from "@refinedev/core";
+import { TextField, useForm } from "@refinedev/antd";
+import {
+  type BaseKey,
+  useBack,
+  useGo,
+  useList,
+  useTranslate,
+} from "@refinedev/core";
 import {
   Form,
   Input,
@@ -8,293 +14,662 @@ import {
   Spin,
   DatePicker,
   Card,
-  Flex,
   Row,
   Col,
-  Divider,
-  Table,
+  InputNumber,
+  notification,
 } from "antd";
-import { useParams, useSearchParams } from "react-router";
+import { useState, useEffect } from "react";
+import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
+import { StatusTag } from "../status-tag";
+import { ProblemStatusTag } from "@/components/problem/status-tag";
 import dayjs from "dayjs";
-import Typography from "antd/es/typography/Typography";
-import { useState } from "react";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useParams } from "react-router";
+
 type Props = {
   taskId?: BaseKey;
   action: "edit" | "create";
   onMutationSuccess?: () => void;
 };
-interface ICaringTask {
-  id: number;
-  plan_id: number;
-  farmer_id: number;
-  problem_id: number;
-  task_name: string;
-  result_content: string;
-  task_type: string;
-  start_date: Date;
-  end_date: Date;
-  priority: number;
-  status: string;
-  complete_date: Date;
-  created_at: Date;
-  updated_at: Date;
-  care_images: string[];
-  care_pesticides: {
-    pesticide_id: number;
-    pesticide_quantity: number;
-    pesticide_unit: string;
-  };
-  care_fertilizers: {
-    fertilizer_id: number;
-    fertilizer_quantity: number;
-    fertilizer_unit: string;
-  };
-  care_items: {
-    item_id: number;
-    item_quantity: number;
-    item_unit: string;
-  };
-}
+
 export const CaringTaskPage = (props: Props) => {
+  const { taskId } = useParams();
   const back = useBack();
-  const [searchParams] = useSearchParams();
-  const [chosenFertilizers, setChosenFertilizer] = useState<
-    {
-      fertilizer_id: number;
-      fertilizer_quantity: number;
-      fertilizer_unit: string;
-    }[]
-  >();
-  const [chosenPesticides, setChosenPesticides] = useState<
-    {
-      pesticide_id: number;
-      pesticide_quantity: number;
-      pesticide_unit: string;
-    }[]
-  >();
-
-  const [chosenItems, setChosenItems] = useState<
-    {
-      item_id: number;
-      item_quantity: number;
-      item_unit: string;
-    }[]
-  >();
-  const go = useGo();
   const t = useTranslate();
-  const queryPlans = useList({ resource: "plans" });
-  const plans = queryPlans.data?.data;
+  const [idProblem, setIdProblem] = useState<number | null>(null);
+  const [idPlan, setIdPlan] = useState<number | null>(null);
+  const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(null);
+  const [fertilizerFields, setFertilizerFields] = useState<
+    { id: number; quantity: number; id_block: number }[]
+  >([]);
+  const [pesticideFields, setPesticideFields] = useState<
+    { id: number; quantity: number; id_block: number }[]
+  >([]);
+  const [itemFields, setItemFields] = useState<
+    { id: number; quantity: number; id_block: number }[]
+  >([]);
 
-  const queryProblems = useList({ resource: "problems" });
-  const problems = queryProblems.data?.data;
+  const queryPendingPlans = useList({
+    resource: "plans",
+    filters: [{ field: "status", operator: "eq", value: "Pending" }],
+  });
 
-  const queryFarmers = useList({ resource: "farmers" });
-  const farmers = queryFarmers.data?.data;
+  const queryOngoingPlans = useList({
+    resource: "plans",
+    filters: [{ field: "status", operator: "eq", value: "Ongoing" }],
+  });
 
-  const queryFerilizers = useList({ resource: "fertilizers" });
-  const fertilizers = queryFerilizers.data?.data;
-  const fertilizer_columns = [
-    {
-      title: "Tên phân bón",
-      dataIndex: "fertilizer_id",
-      key: "fertilizer_id",
-      render: (value: any) => (
-        <TextField value={fertilizers?.find((x) => x.id === value)?.name || "Không xác định"} />
-      ),
-    },
-    {
-      title: "Số lượng",
-      dataIndex: "fertilizer_quantity",
-      key: "fertilizer_quantity",
-      render: (text: any, record: any) => (
-        <Input
-          type="number"
-          value={record?.fertilizer_quantity}
-          onChange={(e) => {
-            const newFertilizers = chosenFertilizers?.map((x) =>
-              x.fertilizer_id === record.fertilizer_id
-                ? {
-                    ...x,
-                    fertilizer_quantity: e.target.value as unknown as number,
-                  }
-                : x,
-            );
-            if (newFertilizers) setChosenFertilizer(newFertilizers);
-          }}
-        />
-      ),
-    },
-    {
-      title: "Đơn vị",
-      dataIndex: "fertilizer_unit",
-      key: "fertilizer_unit",
-      render: (text: any, record: any) => (
-        <Select
-          defaultValue={record?.fertilizer_unit || "kg"}
-          onChange={(value) => {
-            const newFertilizers = chosenFertilizers?.map((x) =>
-              x.fertilizer_id === record.fertilizer_id ? { ...x, fertilizer_unit: value } : x,
-            );
-            if (newFertilizers) setChosenFertilizer(newFertilizers);
-          }}
-        >
-          <Select.Option key="kg" value="kg">
-            Kg
-          </Select.Option>
-          <Select.Option key="ton" value="ton">
-            Tấn
-          </Select.Option>
-        </Select>
-      ),
-    },
+  const plans = [
+    ...(queryPendingPlans.data?.data || []),
+    ...(queryOngoingPlans?.data?.data || []),
   ];
 
-  const queryPesticides = useList({ resource: "pesticides" });
-  const pesticides = queryPesticides.data?.data;
+  const queryPendingProblems = useList({
+    resource: "problems",
+    filters: [{ field: "status", operator: "eq", value: "Pending" }],
+  });
 
-  const queryItems = useList({ resource: "items" });
-  const items = queryItems.data?.data;
-
-  const { formProps, formLoading } = useForm<ICaringTask>({
-    id: props?.taskId,
-    action: props.action,
+  const filteredProblems = idPlan
+    ? queryPendingProblems.data?.data?.filter(
+        (problem) => problem.plan_id === idPlan
+      )
+    : [];
+  const { data: fertilizerData } = useList({
+    resource: "fertilizers",
+    filters: [
+      {
+        field: "status",
+        operator: "eq",
+        value: "Available",
+      },
+    ],
+  });
+  const { data: pesticideData } = useList({
+    resource: "pesticides",
+    filters: [
+      {
+        field: "status",
+        operator: "eq",
+        value: "Available",
+      },
+    ],
+  });
+  const { data: itemData } = useList({
+    resource: "items",
+  });
+  const { formProps, formLoading, onFinish, saveButtonProps } = useForm<{
+    id?: number;
+    task_name: string;
+    start_date: string;
+    end_date: string;
+    status: string;
+    description: string;
+    plan_id: number;
+    problem_id: number;
+    task_type: string;
+    fertilizers: { fertilizer_id: number; quantity: number; unit: string }[];
+    pesticides: { pesticide_id: number; quantity: number; unit: string }[];
+    items: { item_id: number; quantity: number; unit: string }[];
+  }>({
+    id: taskId,
+    action: props?.action,
     resource: "caring-tasks",
     redirect: false,
     onMutationSuccess: () => {
       props.onMutationSuccess?.();
     },
+    queryOptions: {
+      onSuccess(data: any) {
+        const caring_tasks = data?.data?.[0];
+        if (caring_tasks) {
+          const fertilizers = caring_tasks.care_fertilizers;
+          const pesticides = caring_tasks.care_pesticides;
+          const items = caring_tasks.care_items;
+
+          setFertilizerFields(
+            fertilizers.map((fertilizer: any, index: any) => ({
+              id: fertilizer.fertilizer_id,
+              quantity: fertilizer.quantity,
+              id_block: index,
+            }))
+          );
+          setPesticideFields(
+            pesticides.map((pesticide: any, index: any) => ({
+              id: pesticide.pesticide_id,
+              quantity: pesticide.quantity,
+              id_block: index,
+            }))
+          );
+          setItemFields(
+            items.map((item: any, index: any) => ({
+              id: item.item_id,
+              quantity: item.quantity,
+              id_block: index,
+            }))
+          );
+
+          formProps.form?.setFieldsValue({
+            id: caring_tasks.id,
+            task_name: caring_tasks.task_name,
+            start_date: dayjs(caring_tasks.start_date),
+            end_date: dayjs(caring_tasks.end_date),
+            status: caring_tasks.status,
+            description: caring_tasks.description,
+            plan_id: caring_tasks.plan_id,
+            problem_id: caring_tasks.problem_id,
+            task_type: caring_tasks.task_type,
+          });
+          setIdPlan(caring_tasks.plan_id);
+          setIdProblem(caring_tasks.problem_id);
+        }
+      },
+    },
+    updateMutationOptions: {
+      onSuccess: () => {
+        notification.success({
+          message: "Cập nhật công việc chăm sóc thành công",
+        });
+        back();
+      },
+    },
+
+    createMutationOptions: {
+      onSuccess: () => {
+        notification.success({
+          message: "Cập nhật công việc chăm sóc thành công",
+        });
+        back();
+      },
+    },
   });
 
   const title =
-    props?.action === "edit" ? "Chỉnh sửa công việc chăm sóc" : "Thêm công việc chăm sóc";
+    props?.action === "edit"
+      ? "Chỉnh sửa công việc chăm sóc #" + taskId
+      : "Thêm công việc chăm sóc";
 
   const statusOptions = [
+    { label: t("status.draft", "Nháp"), value: "Draft" },
     { label: t("status.pending", "Chờ xử lý"), value: "Pending" },
-    { label: t("status.ongoing", "Đang thực hiện"), value: "Ongoing" },
-    { label: t("status.completed", "Hoàn thành"), value: "Completed" },
+    { label: t("status.cancel", "Đang thực hiện"), value: "Ongoing" },
+    { label: t("status.complete", "Hoàn thành"), value: "Complete" },
+    { label: t("status.cancel", "Hủy bỏ"), value: "Cancel" },
   ];
-  const handleFertilizerChange = (value: any) => {
-    const existingFertilizer = chosenFertilizers?.find((x) => x.fertilizer_id === value);
+  const taskTypeOptions = [
+    { label: t("status.watering", "Watering"), value: "Watering" },
+    {
+      label: t("status.fertilizering", "Fertilizering"),
+      value: "Fertilizering",
+    },
+    { label: t("status.pesticiding", "Pesticiding"), value: "Pesticiding" },
+  ];
+  const addField = (
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const newList = [
+      ...list,
+      {
+        id: null,
+        quantity: 0,
+        id_block: list[list.length - 1]?.id_block + 1 || 0,
+      },
+    ];
+    setList(newList);
+  };
 
-    if (!existingFertilizer) {
-      setChosenFertilizer(
-        [
-          {
-            fertilizer_id: value as number,
-            fertilizer_quantity: 0,
-            fertilizer_unit: "kg",
-          },
-        ].concat(chosenFertilizers as any),
+  const removeField = (
+    id: number,
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const newList = list.filter((item) => item.id !== id);
+    setList(newList);
+  };
+  const handleFinish = () => {
+    fertilizerFields &&
+      formProps.form?.setFieldValue(
+        "fertilizers",
+        fertilizerFields.map((field) => ({
+          fertilizer_id: field.id,
+          quantity: field.quantity,
+          unit: "kg",
+        }))
       );
-    }
+    pesticideFields &&
+      formProps.form?.setFieldValue(
+        "pesticides",
+        pesticideFields.map((field) => ({
+          pesticide_id: field.id,
+          quantity: field.quantity,
+          unit: "lit",
+        }))
+      );
+    itemFields &&
+      formProps.form?.setFieldValue(
+        "items",
+        itemFields.map((field) => ({
+          item_id: field.id,
+          quantity: field.quantity,
+          unit: "unit",
+        }))
+      );
+    formProps.form?.setFieldValue("created_by", "Farm Owner");
+    onFinish();
   };
   return (
     <>
-      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={back}>
-        <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
+      <Button
+        type="text"
+        onClick={back}
+        style={{ width: "40px", height: "40px" }}
+      >
+        <ArrowLeftOutlined style={{ fontSize: "20px" }} />
       </Button>
-      <Card title={title} style={{ width: "100%", margin: "0 auto", padding: "16px" }}>
+      <Card
+        title={title}
+        style={{ width: "100%", margin: "0 auto", padding: "16px" }}
+      >
         <Spin spinning={formLoading}>
-          <Form {...formProps} layout="vertical">
-            <Form.Item label="Tên công việc" name="task_name" rules={[{ required: true }]}>
-              {" "}
-              <Input />{" "}
+          <Form
+            form={formProps?.form}
+            onValuesChange={formProps?.onValuesChange}
+            layout="vertical"
+            onFinish={handleFinish}
+          >
+            <Form.Item
+              label="Tên công việc"
+              name="task_name"
+              rules={[{ required: true }]}
+            >
+              <Input name="task_name" />
             </Form.Item>
-            <Form.Item label="Loại công việc" name="task_type" rules={[{ required: true }]}>
-              <Select>
-                <Select.Option value="Watering">Tưới nước</Select.Option>
-                <Select.Option value="Planting">Gieo trồng</Select.Option>
-                <Select.Option value="Fertilizering">Bón phân</Select.Option>
-                <Select.Option value="Pesticiding">Phun thuốc</Select.Option>
-              </Select>
-            </Form.Item>
-            <Flex gap={"10px"}>
-              <Form.Item
-                label="Ngày bắt đầu dự kiến"
-                name="start_date"
-                rules={[{ required: true }]}
-              >
-                {" "}
-                <DatePicker format="DD-MM-YYYY" />{" "}
-              </Form.Item>
-              <Form.Item label="Ngày kết thúc dự kiến" name="end_date" rules={[{ required: true }]}>
-                {" "}
-                <DatePicker format="DD-MM-YYYY" />{" "}
-              </Form.Item>
-            </Flex>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={12} md={6}>
-                <Form.Item label="Vấn đề liên quan" name="problem_id">
-                  <Select style={{ width: "100%" }}>
-                    {problems?.map((x) => (
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Ngày bắt đầu dự kiến"
+                  name="start_date"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker
+                    showTime
+                    value={startDate}
+                    onChange={(date) => {
+                      setStartDate(date);
+                      if (endDate && date && date.isAfter(endDate, "day")) {
+                        setEndDate(null);
+                      }
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Ngày kết thúc dự kiến"
+                  name="end_date"
+                  rules={[{ required: true }]}
+                >
+                  <DatePicker
+                    showTime
+                    value={endDate}
+                    onChange={setEndDate}
+                    disabledDate={(current) => {
+                      return startDate
+                        ? current && current.isBefore(startDate, "day")
+                        : false;
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="Kế hoạch liên quan"
+                  name="plan_id"
+                  rules={[{ required: true }]}
+                >
+                  <Select
+                    value={idPlan}
+                    onChange={(value) => {
+                      setIdPlan(value);
+                      setIdProblem(null);
+                    }}
+                  >
+                    {plans.map((x) => (
                       <Select.Option key={x.id} value={x.id}>
-                        <Typography style={{ color: "gray" }}>#{x.id}</Typography> {x.problem_name}
+                        <StatusTag status={x.status} /> {x.plan_name}
                       </Select.Option>
                     ))}
-                    <Select.Option value={null}>Khác</Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Form.Item label="Kế hoạch liên quan" name="plan_id">
-                  <Select style={{ width: "100%" }}>
-                    {plans?.map((x) => (
+
+              <Col span={12}>
+                <Form.Item label="Vấn đề liên quan" name="problem_id">
+                  <Select
+                    value={idProblem}
+                    onChange={(value) => setIdProblem(value)}
+                    disabled={!idPlan}
+                  >
+                    {filteredProblems?.map((x) => (
                       <Select.Option key={x.id} value={x.id}>
-                        <Typography style={{ color: "gray" }}>#{x.id}</Typography> {x.plan_name}
+                        <ProblemStatusTag status={x.status} /> {x.problem_name}
                       </Select.Option>
                     ))}
-                    <Select.Option value={null}>Khác</Select.Option>
+                    <Select.Option value={null}>
+                      Không vấn đề liên quan
+                    </Select.Option>
                   </Select>
                 </Form.Item>
               </Col>
             </Row>
-            <Form.Item label="Nông dân thực hiện" name="farmer_id">
-              <Select>
-                {farmers?.map((x) => (
-                  <Select.Option key={x.id} value={x.id}>
-                    <Typography style={{ color: "gray" }}>#{x.id}</Typography> {x.name}
-                  </Select.Option>
-                ))}
-                <Select.Option value={null}>Khác</Select.Option>
-              </Select>
+            <Form.Item
+              label="Loại công việc"
+              name="task_type"
+              rules={[{ required: true }]}
+            >
+              <Select options={taskTypeOptions} />
             </Form.Item>
-            <Form.Item label="Trạng thái" name="status" rules={[{ required: true }]}>
-              {" "}
-              <Select options={statusOptions} />{" "}
+            <Form.Item
+              label="Trạng thái"
+              name="status"
+              rules={[{ required: true }]}
+            >
+              <Select options={statusOptions} />
             </Form.Item>
-            <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
-              {" "}
-              <Input.TextArea rows={7} />{" "}
+            <Form.Item
+              label="Mô tả"
+              name="description"
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea rows={7} />
             </Form.Item>
+            <div className="form-section">
+              <div className="section-header">
+                <h4>{t("plans.fields.fertilizers.label", "Fertilizers")}</h4>
+                <Button
+                  type="dashed"
+                  onClick={() =>
+                    addField(fertilizerFields, setFertilizerFields)
+                  }
+                  style={{ marginBottom: 16 }}
+                >
+                  + {t("buttons.addFertilizer", "Add Fertilizer")}
+                </Button>
+              </div>
 
-            {/* <Divider />
-          <Form.Item label="Chọn phân bón" name="fertilizers">
-            <Select
-              mode="multiple"
-              onChange={handleFertilizerChange}
+              {fertilizerFields.map((field) => (
+                <div
+                  key={field.id}
+                  style={{
+                    marginBottom: 16,
+                    border: "1px dashed #d9d9d9",
+                    padding: 16,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Row gutter={16} align="middle">
+                    <Col span={10}>
+                      <Form.Item
+                        label="Fertilizer"
+                        rules={[{ required: true }]}
+                      >
+                        <Select
+                          value={field.id}
+                          placeholder="Select fertilizer"
+                          onChange={(value) => {
+                            setFertilizerFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, id: value }
+                                  : f
+                              )
+                            );
+                          }}
+                        >
+                          {fertilizerData?.data.map((fertilizer) => (
+                            <Select.Option
+                              key={`fetilizer_${fertilizer.id}`}
+                              value={fertilizer.id}
+                            >
+                              {fertilizer.name}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <Form.Item label="Quantity" rules={[{ required: true }]}>
+                        <InputNumber
+                          value={field.quantity}
+                          disabled={field.id === null}
+                          min={0.1}
+                          step={0.1}
+                          style={{ width: "100%" }}
+                          onChange={(value) =>
+                            setFertilizerFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, quantity: value || 0 }
+                                  : f
+                              )
+                            )
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <TextField value={"/kg"} />
+                    </Col>
+                    <Col>
+                      <Button
+                        shape="circle"
+                        danger
+                        onClick={() =>
+                          removeField(
+                            field.id,
+                            fertilizerFields,
+                            setFertilizerFields
+                          )
+                        }
+                      >
+                        <DeleteOutlined />
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </div>
+            <div className="form-section">
+              <div className="section-header">
+                <h4>{t("plans.fields.pesticides.label", "Pesticides")}</h4>
+                <Button
+                  type="dashed"
+                  onClick={() => addField(pesticideFields, setPesticideFields)}
+                  style={{ marginBottom: 16 }}
+                >
+                  + {t("buttons.addPesticides", "Add Pesticides")}
+                </Button>
+              </div>
+
+              {pesticideFields.map((field) => (
+                <div
+                  key={field.id}
+                  style={{
+                    marginBottom: 16,
+                    border: "1px dashed #d9d9d9",
+                    padding: 16,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Row gutter={16} align="middle">
+                    <Col span={10}>
+                      <Form.Item
+                        label="Pesticides"
+                        rules={[{ required: true }]}
+                      >
+                        <Select
+                          value={field.id}
+                          placeholder="Select Pesticides"
+                          onChange={(value) => {
+                            setPesticideFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, id: value }
+                                  : f
+                              )
+                            );
+                          }}
+                        >
+                          {pesticideData?.data.map((fertilizer) => (
+                            <Select.Option
+                              key={`pesticide_${fertilizer.id}`}
+                              value={fertilizer.id}
+                            >
+                              {fertilizer.name}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <Form.Item label="Quantity" rules={[{ required: true }]}>
+                        <InputNumber
+                          value={field.quantity}
+                          disabled={field.id === null}
+                          min={0.1}
+                          step={0.1}
+                          style={{ width: "100%" }}
+                          onChange={(value) =>
+                            setPesticideFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, quantity: value || 0 }
+                                  : f
+                              )
+                            )
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <TextField value={"lit"} />
+                    </Col>
+                    <Col>
+                      <Button
+                        shape="circle"
+                        danger
+                        onClick={() =>
+                          removeField(
+                            field.id,
+                            pesticideFields,
+                            setPesticideFields
+                          )
+                        }
+                      >
+                        <DeleteOutlined />
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </div>
+            <div className="form-section">
+              <div className="section-header">
+                <h4>{t("plans.fields.items.label", "Items")}</h4>
+                <Button
+                  type="dashed"
+                  onClick={() => addField(itemFields, setItemFields)}
+                  style={{ marginBottom: 16 }}
+                >
+                  + {t("buttons.addItems", "Add Items")}
+                </Button>
+              </div>
+
+              {itemFields.map((field) => (
+                <div
+                  key={field.id}
+                  style={{
+                    marginBottom: 16,
+                    border: "1px dashed #d9d9d9",
+                    padding: 16,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Row gutter={16} align="middle">
+                    <Col span={10}>
+                      <Form.Item label="Items" rules={[{ required: true }]}>
+                        <Select
+                          value={field.id}
+                          placeholder="Select Items"
+                          onChange={(value) => {
+                            setItemFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, id: value }
+                                  : f
+                              )
+                            );
+                          }}
+                        >
+                          {itemData?.data.map((fertilizer) => (
+                            <Select.Option
+                              key={`item_${fertilizer.id}`}
+                              value={fertilizer.id}
+                            >
+                              {fertilizer.name}
+                            </Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <Form.Item label="Quantity" rules={[{ required: true }]}>
+                        <InputNumber
+                          disabled={field.id === null}
+                          value={field.quantity}
+                          min={0.1}
+                          step={0.1}
+                          style={{ width: "100%" }}
+                          onChange={(value) =>
+                            setItemFields((prev) =>
+                              prev.map((f) =>
+                                f.id_block === field.id_block
+                                  ? { ...f, quantity: value || 0 }
+                                  : f
+                              )
+                            )
+                          }
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                      <TextField value={"unit"} />
+                    </Col>
+                    <Col>
+                      <Button
+                        shape="circle"
+                        danger
+                        onClick={() =>
+                          removeField(field.id, itemFields, setItemFields)
+                        }
+                      >
+                        <DeleteOutlined />
+                      </Button>
+                    </Col>
+                  </Row>
+                </div>
+              ))}
+            </div>
+            <Button
+              type="primary"
+              {...saveButtonProps}
               style={{ width: "100%" }}
             >
-              {fertilizers?.map((x) => (
-                <Select.Option key={x.id} value={x.id}>
-                  <Typography style={{ color: "gray" }}>#{x.id}</Typography>{" "}
-                  {x.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Table
-            pagination={false}
-            columns={fertilizer_columns}
-            dataSource={chosenFertilizers}
-            rowKey="fertilizer_id"
-          />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button onClick={() => go({ to: "/caring-tasks" })}>Hủy</Button>
-            <SaveButton htmlType="submit" type="primary">
-              Lưu
-            </SaveButton>
-          </div> */}
+              {t("buttons.save", "Save")}
+            </Button>
           </Form>
         </Spin>
       </Card>

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useTable } from "@refinedev/antd";
-import { type HttpError, getDefaultFilter } from "@refinedev/core";
-import { Table, Avatar, Button, Input, InputNumber, Typography, Tag, theme } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { type HttpError } from "@refinedev/core";
+import { Table, Avatar, Button, Typography, Tag, theme } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IPlant } from "@/interfaces";
 import { PlantDrawerShow } from "../drawer-show";
-import { PlantAvailabilityTag } from "../availability";
+import { PlantStatusTag } from "../status";
 
 export const PlantsListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -24,17 +24,6 @@ export const PlantsListTable: React.FC = () => {
 
   const [selectedPlantId, setSelectedPlantId] = useState<number | undefined>();
 
-  const getGTTestKitColor = (color: string | null | undefined) => {
-    const colorMap: Record<string, string> = {
-      Blue: "blue",
-      Yellow: "gold",
-      Red: "red",
-      Orange: "orange",
-      Green: "green",
-    };
-    return colorMap[color || ""] || "default";
-  };
-
   return (
     <>
       <Table
@@ -46,21 +35,7 @@ export const PlantsListTable: React.FC = () => {
           showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
         }}
       >
-        <Table.Column
-          title="ID"
-          dataIndex="id"
-          key="id"
-          width={80}
-          filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-          )}
-          defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
-          )}
-        />
-
-        {/* ✅ Image */}
+        <Table.Column title="ID" dataIndex="id" key="id" width={80} />
         <Table.Column
           title="Image"
           dataIndex="image_url"
@@ -74,19 +49,8 @@ export const PlantsListTable: React.FC = () => {
           )}
         />
 
-        {/* ✅ Name - Bộ lọc tìm kiếm */}
-        <Table.Column
-          title="Plant Name"
-          dataIndex="plant_name"
-          key="plant_name"
-          filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-          )}
-          defaultFilteredValue={getDefaultFilter("plant_name", filters, "contains")}
-          filterDropdown={(props) => <Input placeholder="Search name" />}
-        />
+        <Table.Column title="Plant Name" dataIndex="plant_name" key="plant_name" />
 
-        {/* ✅ Description */}
         <Table.Column
           title="Description"
           dataIndex="description"
@@ -99,44 +63,43 @@ export const PlantsListTable: React.FC = () => {
           )}
         />
 
-        {/* ✅ Quantity - Bộ lọc tìm kiếm */}
+        <Table.Column title="Quantity" dataIndex="quantity" key="quantity" />
+
         <Table.Column
-          title="Quantity"
-          dataIndex="quantity"
-          key="quantity"
-          width={"auto"}
-          filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-          )}
-          defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
-          )}
-          render={(value, record) => `${value} ${record.unit}`}
-        />
-        <Table.Column
-          title="Availability"
-          dataIndex="is_available"
-          key="is_available"
-          width={140}
-          align="center"
-          render={(value: boolean | string) => {
-            const availability = value === true ? "Available" : "Unavailable";
-            return <PlantAvailabilityTag value={availability} />;
-          }}
+          title="Base Price"
+          dataIndex="base_price"
+          key="base_price"
+          render={(value) => `$${value.toFixed(2)}`}
         />
 
-        {/* ✅ GT Test Kit Color */}
+        <Table.Column title="Type" dataIndex="type" key="type" />
+
+        <Table.Column title="Delta One" dataIndex="delta_one" key="delta_one" />
+
+        <Table.Column title="Delta Two" dataIndex="delta_two" key="delta_two" />
+
+        <Table.Column title="Delta Three" dataIndex="delta_three" key="delta_three" />
+
         <Table.Column
-          title="GT Test Kit Color"
-          dataIndex="gt_test_kit_color"
-          key="gt_test_kit_color"
+          title="Preservation Days"
+          dataIndex="preservation_day"
+          key="preservation_day"
+        />
+
+        <Table.Column
+          title="Estimated Per One"
+          dataIndex="estimated_per_one"
+          key="estimated_per_one"
+        />
+
+        <Table.Column
+          title="Status"
+          dataIndex="status"
+          key="status"
           width={120}
-          align="center"
-          render={(value) => <Tag color={getGTTestKitColor(value)}>{value || "-"}</Tag>}
+          render={(value) => <PlantStatusTag value={value} />}
         />
 
-        {/* ✅ Actions */}
         <Table.Column
           title="Actions"
           key="actions"
@@ -146,13 +109,13 @@ export const PlantsListTable: React.FC = () => {
             <Button
               icon={<EyeOutlined />}
               onClick={() => {
-                console.log("Selected Plant ID:", record.id);
                 setSelectedPlantId(record.id);
               }}
             />
           )}
         />
       </Table>
+
       {selectedPlantId && (
         <PlantDrawerShow id={selectedPlantId} onClose={() => setSelectedPlantId(undefined)} />
       )}

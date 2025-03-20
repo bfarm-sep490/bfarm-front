@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { type BaseKey, useGetToPath, useGo, useShow, useTranslate } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme } from "antd";
+import { type BaseKey, useGetToPath, useGo, useList, useShow, useTranslate } from "@refinedev/core";
+import { Avatar, Button, Card, Divider, Flex, Grid, List, Tag, Typography, theme } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { PlantDrawerForm } from "../drawer-form";
+import { IYield } from "@/interfaces";
+import { PlantStatusTag } from "../status";
 
 type Props = {
   id?: BaseKey;
@@ -28,6 +30,15 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
   const plant = queryResult?.data?.data;
 
+  const { data: yieldsData, isLoading: isYieldsLoading } = useList({
+    resource: `plants/${id}/suggest-yields`,
+    queryOptions: {
+      enabled: !!id,
+    },
+  });
+
+  const yields = (yieldsData?.data as IYield[]) ?? [];
+
   const handleDrawerClose = () => {
     if (onClose) {
       onClose();
@@ -47,7 +58,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
       {!isEditing && (
         <Drawer
           open={!!id}
-          width={breakpoint.sm ? "400px" : "100%"}
+          width={breakpoint.sm ? "40%" : "100%"}
           zIndex={1001}
           onClose={handleDrawerClose}
         >
@@ -71,6 +82,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
                 <Flex vertical style={{ padding: "16px" }}>
                   <Typography.Title level={5}>{plant.plant_name}</Typography.Title>
+                  <Typography.Text type="secondary">{plant.type}</Typography.Text>
                 </Flex>
               </Flex>
 
@@ -79,32 +91,17 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               <List
                 dataSource={[
                   { label: "Description", value: plant.description },
-                  { label: "Quantity", value: `${plant.quantity} ${plant.unit}` },
+                  { label: "Quantity", value: plant.quantity },
+                  { label: "Base Price", value: `${plant.base_price.toLocaleString()} VND` },
+                  { label: "Preservation Days", value: `${plant.preservation_day} days` },
+                  { label: "Estimated Per One", value: `${plant.estimated_per_one} kg` },
+                  { label: "Delta One", value: plant.delta_one },
+                  { label: "Delta Two", value: plant.delta_two },
+                  { label: "Delta Three", value: plant.delta_three },
                   {
-                    label: "Temperature",
-                    value: `${plant.min_temp} - ${plant.max_temp} °C`,
+                    label: "Status",
+                    value: <PlantStatusTag value={plant.status} />,
                   },
-                  {
-                    label: "Humidity",
-                    value: `${plant.min_humid} - ${plant.max_humid} %`,
-                  },
-                  {
-                    label: "Moisture",
-                    value: `${plant.min_moisture} - ${plant.max_moisture} %`,
-                  },
-                  {
-                    label: "Fertilizer",
-                    value: `${plant.min_fertilizer} - ${plant.max_fertilizer} ${plant.fertilizer_unit}`,
-                  },
-                  {
-                    label: "Pesticide",
-                    value: `${plant.min_pesticide} - ${plant.max_pesticide} ${plant.pesticide_unit}`,
-                  },
-                  {
-                    label: "Brix Point",
-                    value: `${plant.min_brix_point} - ${plant.max_brix_point}`,
-                  },
-                  { label: "GT Test Kit Color", value: plant.gt_test_kit_color },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
@@ -116,6 +113,43 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   </List.Item>
                 )}
               />
+
+              <Divider />
+
+              <Card bordered style={{ padding: 16, margin: 16 }}>
+                <Typography.Title level={4} style={{ paddingBottom: 8 }}>
+                  List Suggest Yields
+                </Typography.Title>
+                {isYieldsLoading ? (
+                  <Typography.Text>Loading...</Typography.Text>
+                ) : (
+                  <List
+                    dataSource={yields}
+                    renderItem={(yieldItem) => (
+                      <List.Item>
+                        <List.Item.Meta
+                          title={<Typography.Text strong>{yieldItem.yield_name}</Typography.Text>}
+                          description={
+                            <>
+                              <Typography.Text type="secondary">
+                                {yieldItem.description}
+                              </Typography.Text>
+                              <br />
+                              <Typography.Text>
+                                Area: {yieldItem.area} {yieldItem.area_unit}
+                              </Typography.Text>
+                              <br />
+                              <Typography.Text>Type: {yieldItem.type}</Typography.Text>
+                              <br />
+                              <Typography.Text>Status: {yieldItem.status}</Typography.Text>
+                            </>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </Card>
 
               <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
                 <DeleteButton

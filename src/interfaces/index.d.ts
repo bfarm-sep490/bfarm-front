@@ -343,29 +343,20 @@ export interface IItem {
   unit: string;
 }
 
-export interface ISeed {
+export interface IPlant {
   id: number;
   plant_name: string;
   description: string;
   quantity: number;
-  unit: string;
-  is_available: boolean;
-  min_temp: number;
-  max_temp: number;
-  min_humid: number;
-  max_humid: number;
-  min_moisture: number;
-  max_moisture: number;
-  min_fertilizer: number;
-  max_fertilizer: number;
-  fertilizer_unit: string;
-  min_pesticide: number;
-  max_pesticide: number;
-  pesticide_unit: string;
-  min_brix_point: number;
-  max_brix_point: number;
-  gt_test_kit_color: SeedTestKitColor;
+  base_price: number;
+  type: string;
   image_url: string;
+  delta_one: number;
+  delta_two: number;
+  delta_three: number;
+  preservation_day: number;
+  estimated_per_one: number;
+  status: "Available" | "Maintenance" | "In-Use";
 }
 
 export interface IYield {

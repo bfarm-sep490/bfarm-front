@@ -43,9 +43,9 @@ export const ItemsListCard = () => {
 
   const getTypeColor = (type: IItem["type"]) => {
     switch (type) {
-      case "Uncountable":
+      case "Caring":
         return "blue";
-      case "Countable":
+      case "Harvesting":
         return "green";
       default:
         return "default";

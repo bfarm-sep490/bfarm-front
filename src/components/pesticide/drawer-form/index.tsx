@@ -165,16 +165,8 @@ export const PesticideDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="Available Quantity"
-            name="available_quantity"
-            rules={[{ required: true, message: "Enter available quantity!" }]}
-          >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter available quantity" />
-          </Form.Item>
-
-          <Form.Item
-            label="Total Quantity"
-            name="total_quantity"
+            label="Quantity"
+            name="quantity"
             rules={[{ required: true, message: "Enter total quantity!" }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter total quantity" />
@@ -186,11 +178,9 @@ export const PesticideDrawerForm = (props: Props) => {
 
           <Form.Item label="Type" name="type" rules={[{ required: true, message: "Enter type!" }]}>
             <Select placeholder="Select type">
-              <Select.Option value="Trừ sâu">Trừ sâu</Select.Option>
-              <Select.Option value="Trừ nấm">Trừ nấm</Select.Option>
-              <Select.Option value="Diệt cỏ">Diệt cỏ</Select.Option>
-              <Select.Option value="Trừ rầy">Trừ rầy</Select.Option>
-              <Select.Option value="Trừ bọ xít">Trừ bọ xít</Select.Option>
+              <Select.Option value="Organic">Organic</Select.Option>
+              <Select.Option value="Chemical">Chemical</Select.Option>
+              <Select.Option value="Mineral">Mineral</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -199,8 +189,9 @@ export const PesticideDrawerForm = (props: Props) => {
             rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
           >
             <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Limited Stock">Limited Stock</Select.Option>
+              <Select.Option value="Out of Stock">Out of Stock</Select.Option>
               <Select.Option value="Available">Available</Select.Option>
-              <Select.Option value="UnAvailable">UnAvailable</Select.Option>
             </Select>
           </Form.Item>
 

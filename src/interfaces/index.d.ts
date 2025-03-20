@@ -145,8 +145,8 @@ export interface IItem {
   description: string;
   image: string;
   quantity: number;
-  status: "UnActived" | "InStock" | "OutStock";
-  type: "Uncountable" | "Countable";
+  status: "Active" | "In-stock" | "OutStock";
+  type: "Caring" | "Harvesting" | "Packaging";
 }
 
 export interface IAccount {
@@ -314,8 +314,9 @@ export interface IPesticide {
   unit: string;
   available_quantity: number;
   total_quantity: number;
-  status: "UnActived" | "InStock" | "OutStock";
-  type: "Insecticide" | "Fungicide" | "Herbicide" | "Other";
+  quantity: number;
+  status: "Available" | "Limited Stock" | "Out of Stock";
+  type: "Organic" | "Chemical" | "Mineral" | "Other";
 }
 
 export interface IFertilizer {

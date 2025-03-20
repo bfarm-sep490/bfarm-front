@@ -1,31 +1,18 @@
 import React, { useState } from "react";
-import {
-  type BaseKey,
-  type HttpError,
-  useGetToPath,
-  useGo,
-  useShow,
-  useTranslate,
-} from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
+import { type BaseKey, useGetToPath, useGo, useShow, useList, useTranslate } from "@refinedev/core";
+import { Avatar, Button, Card, Divider, Flex, Grid, List, Typography, theme } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
-import { DeleteButton } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { IYield } from "@/interfaces";
-import { YieldDrawerForm } from "../drawer-form";
 import { YieldTypeTag } from "../type";
-import { YieldSizeTag } from "../size";
+import { YieldStatusTag } from "../status";
+import { DeleteButton } from "@refinedev/antd";
+import { YieldDrawerForm } from "../drawer-form";
 
 type Props = {
   id?: BaseKey;
   onClose?: () => void;
-};
-
-const YieldStatusTag = ({ isAvailable }: { isAvailable: boolean }) => {
-  return (
-    <Tag color={isAvailable ? "green" : "red"}>{isAvailable ? "Available" : "Not Available"}</Tag>
-  );
 };
 
 export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
@@ -37,19 +24,27 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
-  const { queryResult } = useShow<IYield, HttpError>({
+  const { queryResult } = useShow({
     resource: "yields",
     id,
   });
 
   const yieldData = queryResult?.data?.data;
 
+  const { data: suggestPlantsData, isLoading: isPlantsLoading } = useList({
+    resource: `yields/${id}/suggest-plants`,
+    queryOptions: {
+      enabled: !!id,
+    },
+  });
+
+  const suggestedPlants = suggestPlantsData?.data ?? [];
+
   const handleDrawerClose = () => {
     if (onClose) {
       onClose();
       return;
     }
-
     go({
       to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
       query: { to: undefined },
@@ -63,61 +58,33 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
       {!isEditing && (
         <Drawer
           open={!!id}
-          width={breakpoint.sm ? "400px" : "100%"}
+          width={breakpoint.sm ? "40%" : "100%"}
           zIndex={1001}
           onClose={handleDrawerClose}
         >
           {yieldData && (
             <>
-              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
-                <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>{yieldData.yield_name}</Typography.Title>
-                </Flex>
-              </Flex>
-
+              <Typography.Title level={4}>{yieldData.yield_name}</Typography.Title>
               <Divider />
+
               <List
                 dataSource={[
-                  { label: "Description", value: yieldData.description },
-                  {
-                    label: "Area",
-                    value: `${yieldData.area} ${yieldData.area_unit}`,
-                  },
-                  {
-                    label: "Type",
-                    value: (
-                      <YieldTypeTag
-                        value={
-                          yieldData.type as "Lúa" | "Rau" | "Tổng hợp" | "Trái cây" | "Ngô" | "Khác"
-                        }
-                      />
-                    ),
-                  },
-                  {
-                    label: "Size",
-                    value: <YieldSizeTag value={yieldData.size as "Nhỏ" | "Vừa" | "Lớn"} />,
-                  },
-                  {
-                    label: "Status",
-                    value: yieldData.is_available ? (
-                      <Tag color="green">Available</Tag>
-                    ) : (
-                      <Tag color="red">Unavailable</Tag>
-                    ),
-                  },
+                  { label: "Description ", value: yieldData.description },
+                  { label: "Area ", value: `${yieldData.area} ${yieldData.area_unit}` },
+                  { label: "Type ", value: <YieldTypeTag value={yieldData.type} /> },
+                  { label: "Status ", value: <YieldStatusTag value={yieldData.status} /> },
                 ]}
-                renderItem={(item) => (
+                renderItem={(itemData) => (
                   <List.Item>
                     <List.Item.Meta
-                      style={{
-                        padding: "0 16px",
-                      }}
-                      avatar={<Typography.Text type="secondary">{item.label}</Typography.Text>}
-                      title={item.value}
+                      style={{ padding: "0 16px" }}
+                      avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
+                      title={itemData.value}
                     />
                   </List.Item>
                 )}
               />
+              <Divider />
               <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
                 <DeleteButton
                   type="text"
@@ -129,12 +96,73 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   {t("actions.edit")}
                 </Button>
               </Flex>
+              <Card bordered style={{ padding: 16, margin: 16 }}>
+                <Typography.Title level={5}>Suggested Plants</Typography.Title>
+                {isPlantsLoading ? (
+                  <Typography.Text>Loading...</Typography.Text>
+                ) : (
+                  <List
+                    dataSource={suggestedPlants}
+                    renderItem={(plant) => (
+                      <List.Item>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar src={plant.image_url} size={200} style={{ borderRadius: 8 }} />
+                          }
+                          title={
+                            <Typography.Text strong style={{ fontSize: "30px" }}>
+                              {plant.plant_name}
+                            </Typography.Text>
+                          }
+                          description={
+                            <>
+                              <Typography.Text> Description: {plant.description}</Typography.Text>
+                              <br />
+                              <div
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns: "1fr 1fr",
+                                  gap: "12px",
+                                  marginTop: 4,
+                                  alignItems: "start",
+                                }}
+                              >
+                                <div
+                                  style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+                                >
+                                  <Typography.Text>
+                                    Preservation (days): {plant.preservation_day}
+                                  </Typography.Text>
+                                  <Typography.Text>Status: {plant.status}</Typography.Text>
+                                  <Typography.Text>Price: {plant.base_price} VND</Typography.Text>
+                                </div>
+                                <div
+                                  style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+                                >
+                                  <Typography.Text>
+                                    Estimated per unit: {plant.estimated_per_one}
+                                  </Typography.Text>
+                                  <Typography.Text>Type: {plant.type}</Typography.Text>
+                                  <Typography.Text>Quantity: {plant.quantity}</Typography.Text>
+                                </div>
+                              </div>
+                              <div style={{ display: "flex", gap: "50px" }}>
+                                <Typography.Text>Delta One: {plant.delta_one}</Typography.Text>
+                                <Typography.Text>Delta Two: {plant.delta_two}</Typography.Text>
+                                <Typography.Text>Delta Three: {plant.delta_three}</Typography.Text>
+                              </div>
+                            </>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </Card>
             </>
           )}
         </Drawer>
       )}
-
-      {/* Drawer Form Edit */}
       {isEditing && yieldData && (
         <YieldDrawerForm
           id={yieldData.id}

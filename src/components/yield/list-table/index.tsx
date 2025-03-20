@@ -1,25 +1,23 @@
-import React, { useState } from "react";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { IYield } from "@/interfaces";
+import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { YieldDrawerShow } from "@/components/yield/drawer-show";
+import { useState } from "react";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { YieldStatusTag } from "../status";
 import { YieldTypeTag } from "../type";
-import { YieldSizeTag } from "../size";
-import { YieldAvailabilityTag } from "../availability";
+import { YieldDrawerShow } from "../drawer-show";
 
 export const YieldListTable: React.FC = () => {
   const { token } = theme.useToken();
-  const { tableProps, filters } = useTable<IYield, HttpError>({
+  const { tableProps, filters } = useTable<any, HttpError>({
     resource: "yields",
     filters: {
       initial: [
         { field: "id", operator: "eq", value: "" },
         { field: "yield_name", operator: "contains", value: "" },
         { field: "type", operator: "contains", value: "" },
-        { field: "is_available", operator: "in", value: [] },
+        { field: "status", operator: "in", value: [] },
         { field: "area", operator: "eq", value: "" },
       ],
     },
@@ -47,12 +45,7 @@ export const YieldListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
-          )}
-          render={(value) => (
-            <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
-          )}
+          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
         />
 
         <Table.Column
@@ -63,7 +56,15 @@ export const YieldListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("yield_name", filters, "contains")}
-          filterDropdown={(props) => <Input placeholder="Search yield name" />}
+          filterDropdown={() => <Input placeholder="Search name" />}
+        />
+
+        <Table.Column
+          title="Area"
+          dataIndex="area"
+          key="area"
+          width={120}
+          render={(value, record) => `${value} ${record.area_unit}`}
         />
 
         <Table.Column
@@ -77,22 +78,6 @@ export const YieldListTable: React.FC = () => {
             </Typography.Paragraph>
           )}
         />
-
-        <Table.Column
-          title="Area"
-          dataIndex="area"
-          key="area"
-          width={"auto"}
-          filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
-          )}
-          defaultFilteredValue={getDefaultFilter("area", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber placeholder="Search area" style={{ width: "100%" }} />
-          )}
-          render={(value, record) => `${value} ${record.area_unit}`}
-        />
-
         <Table.Column
           title="Type"
           dataIndex="type"
@@ -102,41 +87,19 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Size"
-          dataIndex="size"
-          key="type"
-          width={120}
-          render={(value) => <YieldSizeTag value={value} />}
-        />
-        <Table.Column
           title="Status"
-          dataIndex="is_available"
-          key="is_available"
-          width={"auto"}
-          render={(is_available: boolean) => (
-            <Typography.Text>
-              {is_available ? (
-                <Tag color="green">Available</Tag>
-              ) : (
-                <Tag color="red">Unavailable</Tag>
-              )}
-            </Typography.Text>
-          )}
-        />
-        {/* <Table.Column
-          title="Status"
-          dataIndex="is_available"
-          key="is_available"
+          dataIndex="status"
+          key="status"
           width={120}
-          render={(value) => <YieldAvailabilityTag value={value} />}
-        /> */}
+          render={(value) => <YieldStatusTag value={value} />}
+        />
 
         <Table.Column
           title="Actions"
           key="actions"
           fixed="right"
           align="center"
-          render={(_, record: IYield) => (
+          render={(_, record) => (
             <Button
               icon={<EyeOutlined />}
               onClick={() => setSelectedYieldId(record.id.toString())}
@@ -144,7 +107,6 @@ export const YieldListTable: React.FC = () => {
           )}
         />
       </Table>
-
       {selectedYieldId && (
         <YieldDrawerShow id={selectedYieldId} onClose={() => setSelectedYieldId(undefined)} />
       )}

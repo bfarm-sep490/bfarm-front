@@ -42,7 +42,5 @@ type StatusTagProps = {
 };
 
 export const StatusTag = ({ status }: StatusTagProps) => {
-  return (
-    <Tag color={getStatusTagColor(status)}> {getStatusTagValue(status)}</Tag>
-  );
+  return <Tag color={getStatusTagColor(status)}> {getStatusTagValue(status)}</Tag>;
 };

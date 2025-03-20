@@ -43,8 +43,8 @@ export const PackagingTaskShow = () => {
   const [visible, setVisible] = useState(false);
   const historyAssignedFarmers = historyAssignedData?.data || [];
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Tên", dataIndex: "name", key: "name" },
+    { title: "ID", dataIndex: "item_id", key: "id" },
+    { title: "Tên", dataIndex: "item_name", key: "name" },
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];
@@ -142,7 +142,11 @@ export const PackagingTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+          <Button
+            color="primary"
+            variant="solid"
+            onClick={() => navigate("edit")}
+          >
             Thay đổi
           </Button>
         </Flex>

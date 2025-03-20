@@ -210,33 +210,33 @@ export const ProductiveTaskShow = () => {
     switch (mode) {
       case "fertilizer":
         return [
-          { title: "ID", dataIndex: "id", key: "id" },
+          { title: "ID", dataIndex: "fertilizer_id", key: "id" },
           { title: "Tên", dataIndex: "fertilizer_name", key: "name" },
           {
             title: "Số lượng",
-            dataIndex: "fertilizer_quantity",
+            dataIndex: "quantity",
             key: "quantity",
           },
           { title: "Đơn vị", dataIndex: "unit", key: "unit", value: "kg" },
         ];
       case "pesticide":
         return [
-          { title: "ID", dataIndex: "id", key: "id" },
+          { title: "ID", dataIndex: "pesticide_id", key: "id" },
           { title: "Tên", dataIndex: "pesticide_name", key: "name" },
           {
             title: "Số lượng",
-            dataIndex: "pesticide_quantity",
+            dataIndex: "quantity",
             key: "quantity",
           },
           { title: "Đơn vị", dataIndex: "unit", key: "unit", value: "ml" },
         ];
       case "item":
         return [
-          { title: "ID", dataIndex: "id", key: "id" },
+          { title: "ID", dataIndex: "item_id", key: "id" },
           { title: "Tên", dataIndex: "item_name", key: "name" },
           {
             title: "Số lượng",
-            dataIndex: "item_quantity",
+            dataIndex: "quantity",
             key: "quantity",
           },
           { title: "Đơn vị", dataIndex: "unit", key: "unit", value: "cái" },

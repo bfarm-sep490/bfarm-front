@@ -45,7 +45,7 @@ export const HarvestingTaskShow = () => {
   const [visible, setVisible] = useState(false);
   const columns = [
     { title: "ID", dataIndex: "item_id", key: "item_id" },
-    { title: "Tên", dataIndex: "name", key: "name" },
+    { title: "Tên", dataIndex: "item_name", key: "name" },
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];

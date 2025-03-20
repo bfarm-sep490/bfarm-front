@@ -1,9 +1,36 @@
 import axios from "axios";
-import { useForm } from "@refinedev/antd";
-import { useBack, useList, useShow } from "@refinedev/core";
-import { Button, Drawer, Flex, Steps, theme } from "antd";
+import { DateField, TextField, useForm } from "@refinedev/antd";
+import { useBack, useList, useOne, useShow } from "@refinedev/core";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import {
+  Avatar,
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
+  Divider,
+  Drawer,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Spin,
+  Steps,
+  Table,
+  Tabs,
+  Tag,
+  theme,
+  Typography,
+} from "antd";
+import { DatePickerType } from "antd/es/date-picker";
+import { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { VerifyPlanInformation } from "./verify";
 import { InputGeneralPlan } from "./input-general";
@@ -52,15 +79,23 @@ export const ApprovingPlanDrawer = () => {
   const [experts, setExperts] = React.useState<any[]>([]);
   const [yields, setYields] = React.useState<any[]>([]);
   const [packagingTasks, setPackagingTasks] = React.useState<any[]>([]);
-  const { formProps, formLoading } = useForm<GainingPlan>({
+
+  const { formProps, formLoading, onFinish } = useForm<GainingPlan>({
+    resource: "plans",
+    id: `${id}/tasks-assign`,
+    action: "edit",
+    queryOptions: {
+      enabled: false,
+    },
+  });
+  const { data: generalData, isLoading: generalLoading } = useOne({
     resource: "plans",
     id: `${id}/general`,
-    action: "edit",
     queryOptions: {
       onSuccess(data: any) {
         const plan = data?.data;
         formProps?.form?.setFieldsValue({
-          description: plan.description,
+          description: data.description,
           end_date: plan.end_date,
           plant_id: plan.plant_information.plant_id,
           yield_id: plan.yield_information.yield_id,
@@ -70,14 +105,13 @@ export const ApprovingPlanDrawer = () => {
           start_date: plan.start_date,
           estimated_unit: plan.estimated_unit,
           caring_tasks: [],
-          inspecting_tasks: [],
+          inspecting_forms: [],
           harvesting_tasks: [],
           farmers: [],
         });
       },
     },
   });
-
   const { query: queryResult } = useShow({
     resource: "plans",
     id: `${id}/general`,
@@ -86,7 +120,7 @@ export const ApprovingPlanDrawer = () => {
   const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
     resource: `plans/${id}/farmers`,
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setChosenFarmers(data?.data || []);
       },
@@ -95,7 +129,7 @@ export const ApprovingPlanDrawer = () => {
   const { data: farmerData, isLoading: farmerLoading } = useList({
     resource: `farmers`,
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setFarmers(data?.data || []);
       },
@@ -106,7 +140,7 @@ export const ApprovingPlanDrawer = () => {
     resource: `experts`,
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setExperts(data?.data || []);
       },
@@ -117,7 +151,7 @@ export const ApprovingPlanDrawer = () => {
     resource: "yields",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setYields(data?.data || []);
       },
@@ -127,23 +161,23 @@ export const ApprovingPlanDrawer = () => {
     resource: "plants",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setPlants(data?.data || []);
       },
     },
   });
-  const { data: inspectorsData } = useList({
+  const { data: inspectorsData, isLoading: inspectorLoading } = useList({
     resource: "inspectors",
 
     queryOptions: {
-      staleTime: 60000,
+      cacheTime: 60000,
       onSuccess(data: any) {
         setInspectors(data?.data || []);
       },
     },
   });
-  const { data: CaringTaskData } = useList({
+  const { data: CaringTaskData, isLoading: caringLoading } = useList({
     resource: "caring-tasks",
     filters: [
       {
@@ -158,7 +192,7 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: PackagingTaskData } = useList({
+  const { data: PackagingTaskData, isLoading: packagingLoading } = useList({
     resource: "packaging-tasks",
     filters: [
       {
@@ -173,7 +207,7 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: HarvestingTaskData } = useList({
+  const { data: HarvestingTaskData, isLoading: harvestingLoading } = useList({
     resource: "harvesting-tasks",
     filters: [
       {
@@ -188,7 +222,7 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: InspectingTaskData } = useList({
+  const { data: InspectingTaskData, isLoading: inspectingLoading } = useList({
     resource: "inspecting-forms",
     filters: [
       {
@@ -208,7 +242,12 @@ export const ApprovingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
+        <InputGeneralPlan
+          experts={experts}
+          yields={yields}
+          plants={plants}
+          formProps={formProps}
+        />
       ),
     },
     {
@@ -292,43 +331,35 @@ export const ApprovingPlanDrawer = () => {
     try {
       setLoading(true);
 
-      const response = await axios.put(
-        `https://api.outfit4rent.online/api/plans/${id}/tasks-assign
-`,
-        {
-          ...formProps?.form?.getFieldsValue(true),
-          caring_tasks: productiveTasks.map((task) => ({
-            task_id: task.id,
-            farmer_id: task.farmer_id,
-            status: "Ongoing",
-          })),
-          harvesting_tasks: harvestingTasks.map((task) => ({
-            task_id: task.id,
-            farmer_id: task.farmer_id,
-            status: "Ongoing",
-          })),
-          inspecting_forms: inspectingTasks.map((task) => ({
-            task_id: task.id,
-            inspector_id: task.inspector_id,
-            status: "Ongoing",
-          })),
-          packaging_tasks: packagingTasks.map((task) => ({
-            task_id: task.id,
-            farmer_id: task.farmer_id,
-            status: "Ongoing",
-          })),
-          status: "Ongoing",
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-
-      console.log("Response:", response.data.data);
-
+      const caring_tasks = productiveTasks.map((task) => ({
+        task_id: task.id,
+        farmer_id: task.farmer_id,
+        status: "Ongoing",
+      }));
+      const harvesting_tasks = harvestingTasks.map((task) => ({
+        task_id: task.id,
+        farmer_id: task.farmer_id,
+        status: "Ongoing",
+      }));
+      const inspecting_forms = inspectingTasks.map((task) => ({
+        task_id: task.id,
+        inspector_id: task.inspector_id,
+        status: "Ongoing",
+      }));
+      const packaging_tasks = packagingTasks.map((task) => ({
+        task_id: task.id,
+        farmer_id: task.farmer_id,
+        status: "Ongoing",
+      }));
+      formProps.form?.setFieldValue("caring_tasks", caring_tasks);
+      formProps.form?.setFieldValue("harvesting_tasks", harvesting_tasks);
+      formProps.form?.setFieldValue("inspecting_forms", inspecting_forms);
+      formProps.form?.setFieldValue("packaging_tasks", packaging_tasks);
+      formProps.form?.setFieldValue("status", "Ongoing");
+      await onFinish();
       back();
     } catch (error) {
-      console.error("Submit error:", error);
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -340,7 +371,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -351,7 +382,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -362,25 +393,48 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
     }
     return true;
   };
+  const [loadingForm, setLoadingForm] = useState(true);
+  useEffect(() => {
+    if (
+      queryResult?.isLoading === false &&
+      plantLoading === false &&
+      yieldLoading === false &&
+      expertLoading === false &&
+      farmerLoading === false &&
+      chosenFarmerLoading === false &&
+      caringLoading === false &&
+      harvestingLoading === false &&
+      inspectingLoading === false &&
+      packagingLoading === false &&
+      inspectorLoading === false &&
+      formLoading === false
+    ) {
+      setLoadingForm(false);
+    }
+  }, [
+    queryResult?.isLoading,
+    plantLoading,
+    yieldLoading,
+    expertLoading,
+    farmerLoading,
+    chosenFarmerLoading,
+    caringLoading,
+    harvestingLoading,
+    inspectingLoading,
+    packagingLoading,
+    inspectorLoading,
+    formLoading,
+  ]);
   return (
     <Drawer
-      loading={
-        loading &&
-        queryResult?.isLoading &&
-        plantLoading &&
-        yieldLoading &&
-        expertLoading &&
-        farmerLoading &&
-        chosenFarmerLoading &&
-        formLoading
-      }
+      loading={loadingForm}
       open
       title={
         <>
@@ -429,7 +483,9 @@ export const ApprovingPlanDrawer = () => {
         </>
       }
     >
-      <div style={contentStyle}>{steps[current].content}</div>
+      <Spin spinning={loadingForm}>
+        <div style={contentStyle}>{steps[current].content}</div>
+      </Spin>
     </Drawer>
   );
 };

@@ -10,6 +10,7 @@ import {
   Col,
   Grid,
   Button,
+  Badge,
 } from "antd";
 import {
   EnvironmentOutlined,
@@ -107,6 +108,19 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     resource: "plans",
     id: `${id}/problems`,
   });
+
+  const {
+    data: taskDashBoardData,
+    isLoading: isTaskDashboardLoading,
+    error: taskDashBoardError,
+  } = useOne<any, HttpError>({
+    resource: "plans",
+    id: `${id}/tasks/count`,
+  });
+  console.log(taskDashBoardData);
+  const caring_task_dashboard = taskDashBoardData?.data?.caring_tasks;
+  const havesting_task_dashboard = taskDashBoardData?.data?.harvesting_tasks;
+  const packaging_task_dashboard = taskDashBoardData?.data?.packaging_tasks;
   const general_info = generalData?.data;
   const farmers_info = farmersData?.data as any[];
   const navigate = useNavigate();
@@ -366,7 +380,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 title="⚠️ Vấn đề mới"
                 navigate={`/plans/${id}/problems`}
                 completedTasks={
-                  problemsData?.data?.filter((x) => x.status === "Pending").length || 0
+                  problemsData?.data?.filter((x) => x.status === "Pending")
+                    .length || 0
                 }
               />
             </Col>
@@ -396,14 +411,33 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             <Col xs={24} md={12} lg={12} xl={12}>
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <ActivityCard
-                    icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
-                    completedTasks={12}
-                    title="Chăm sóc"
-                    totalActivity={13}
-                    lastActivityDate="Lần cuối: 12/02/2025"
-                    navigate={`/plans/${id}/caring-tasks`}
-                  />
+                  <Badge.Ribbon
+                    color="red"
+                    text={`${caring_task_dashboard?.pending_quantity || 0}`}
+                  >
+                    <ActivityCard
+                      icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
+                      completedTasks={
+                        caring_task_dashboard?.complete_quantity || 0
+                      }
+                      title="Chăm sóc"
+                      loading={isTaskDashboardLoading}
+                      totalActivity={
+                        caring_task_dashboard?.cancel_quantity +
+                          caring_task_dashboard?.complete_quantity +
+                          caring_task_dashboard?.incomplete_quantity +
+                          caring_task_dashboard?.ongoing_quantity +
+                          caring_task_dashboard?.pending_quantity || 0
+                      }
+                      lastActivityDate={
+                        "Lần cuối: " +
+                        new Date(
+                          caring_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
+                      }
+                      navigate={`/plans/${id}/caring-tasks`}
+                    />
+                  </Badge.Ribbon>
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -412,30 +446,70 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     completedTasks={12}
                     title="Kiểm định"
                     totalActivity={13}
-                    lastActivityDate="Lần cuối: 12/02/2025"
+                    lastActivityDate={"Lần cuối: 13/12/2025"}
                     navigate={`/plans/${id}/inspecting-tasks`}
                   />
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <ActivityCard
-                    icon={<GiftOutlined style={{ color: "#52c41a" }} />}
-                    completedTasks={12}
-                    title="Thu hoạch"
-                    totalActivity={13}
-                    lastActivityDate="Lần cuối: 12/02/2025"
-                    navigate={`/plans/${id}/harvesting-tasks`}
-                  />
+                  <Badge.Ribbon
+                    color="red"
+                    text={`${havesting_task_dashboard?.pending_quantity || 0}`}
+                  >
+                    <ActivityCard
+                      icon={<GiftOutlined style={{ color: "#52c41a" }} />}
+                      completedTasks={
+                        havesting_task_dashboard?.complete_quantity || 0
+                      }
+                      loading={isTaskDashboardLoading}
+                      title="Thu hoạch"
+                      totalActivity={
+                        havesting_task_dashboard?.cancel_quantity +
+                          havesting_task_dashboard?.complete_quantity +
+                          havesting_task_dashboard?.incomplete_quantity +
+                          havesting_task_dashboard?.ongoing_quantity +
+                          havesting_task_dashboard?.pending_quantity || 0
+                      }
+                      lastActivityDate={
+                        "Lần cuối: " +
+                        new Date(
+                          havesting_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
+                      }
+                      navigate={`/plans/${id}/harvesting-tasks`}
+                    />
+                  </Badge.Ribbon>
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <ActivityCard
-                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                    completedTasks={12}
-                    title="Đóng gói"
-                    lastActivityDate="Chưa có công việc mới"
-                    navigate={`/plans/${id}/packaging-tasks`}
-                  />
+                  <Badge.Ribbon
+                    color="red"
+                    text={`${packaging_task_dashboard?.pending_quantity || 0}`}
+                    children={
+                      <ActivityCard
+                        icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
+                        completedTasks={
+                          packaging_task_dashboard?.complete_quantity || 0
+                        }
+                        loading={isTaskDashboardLoading}
+                        totalActivity={
+                          packaging_task_dashboard?.cancel_quantity +
+                            packaging_task_dashboard?.complete_quantity +
+                            packaging_task_dashboard?.incomplete_quantity +
+                            packaging_task_dashboard?.ongoing_quantity +
+                            packaging_task_dashboard?.pending_quantity || 0
+                        }
+                        title="Đóng gói"
+                        lastActivityDate={
+                          "Lần cuối: " +
+                          new Date(
+                            packaging_task_dashboard?.last_create_date
+                          ).toLocaleDateString()
+                        }
+                        navigate={`/plans/${id}/packaging-tasks`}
+                      />
+                    }
+                  ></Badge.Ribbon>
                 </Col>
               </Row>
             </Col>
@@ -532,3 +606,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     </div>
   );
 };
+
+export interface IDashbobardTask {
+  ongoing_quantity: number;
+  complete_quantity: number;
+  pending_quantity: number;
+  incomplete_quantity: number;
+  cancel_quantity: number;
+  last_create_date: Date;
+}

@@ -1,4 +1,10 @@
-import { DateField, TagField, Title, useModalForm } from "@refinedev/antd";
+import {
+  DateField,
+  TagField,
+  TextField,
+  Title,
+  useModalForm,
+} from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useUpdate } from "@refinedev/core";
 import {
   Drawer,
@@ -43,75 +49,56 @@ export const ProblemShowInProblem = () => {
         open={open}
         width={breakpoint.sm ? "736px" : "100%"}
         onClose={back}
-        title={"Chi tiết vấn đề"}
+        title={
+          <>
+            <Flex justify="space-between">
+              <TextField value="Chi tiết vấn đề" />
+
+              <Space>
+                {task?.status === "Pending" && (
+                  <>
+                    {" "}
+                    <Button
+                      color="danger"
+                      variant="solid"
+                      onClick={() => {
+                        setDefaultReportStatus("Cancelled");
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Hủy bỏ
+                    </Button>
+                    <Button
+                      color="primary"
+                      variant="solid"
+                      onClick={() => {
+                        setDefaultReportStatus("Resolved");
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Đồng ý
+                    </Button>
+                  </>
+                )}
+              </Space>
+            </Flex>
+          </>
+        }
       >
-        <Flex justify="end">
-          <Space>
-            <Button
-              color="danger"
-              variant="solid"
-              onClick={() => {
-                setDefaultReportStatus("Cancelled");
-                setIsModalOpen(true);
-              }}
-            >
-              Hủy bỏ
-            </Button>
-            <Button
-              color="primary"
-              variant="solid"
-              onClick={() => {
-                setDefaultReportStatus("Resolved");
-                setIsModalOpen(true);
-              }}
-            >
-              Đồng ý
-            </Button>
-          </Space>
-        </Flex>
         <Flex vertical gap={24} style={{ padding: "32px" }}>
           <Typography.Title level={3} style={{ margin: 0 }}>
             <strong>#{task?.id}</strong> - {task?.problem_name}
           </Typography.Title>
 
-          <Divider />
-          <Image.PreviewGroup items={task?.problem_images || []}>
+          <Image.PreviewGroup items={task?.problem_images?.map((x: any) => x?.url) || []}>
             <Image
               loading="lazy"
               style={{ borderRadius: "10px" }}
-              src={task?.problem_images?.[0]}
+              src={task?.problem_images?.[0]?.url}
             />
           </Image.PreviewGroup>
-          <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
-          <List
-            bordered
-            dataSource={[
-              {
-                label: "Loại vấn đề",
-                value: <ProblemTypeTag status={task?.problem_type as string} />,
-              },
-              {
-                label: "Ngày phát hiện",
-                value: <DateField value={task?.date} />,
-              },
-
-              {
-                label: "Trạng thái",
-                value: <ProblemStatusTag status={task?.status} />,
-              },
-              {
-                label: "Mô tả vấn đề",
-                value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
-              },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
-              </List.Item>
-            )}
-          />
-
           <Divider />
+
           <Typography.Title level={4}>Kết quả</Typography.Title>
           {task?.result_content && task?.status === "Resolved" ? (
             <Flex vertical gap={16}>
@@ -120,19 +107,57 @@ export const ProblemShowInProblem = () => {
                 dataSource={[
                   {
                     label: "Nội dung",
-                    value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
+                    value: (
+                      <Typography.Paragraph>
+                        {task?.result_content}
+                      </Typography.Paragraph>
+                    ),
                   },
                 ]}
                 renderItem={(item) => (
                   <List.Item>
-                    <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                    <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                    {item.value}
                   </List.Item>
                 )}
               />
             </Flex>
           ) : (
-            <Typography.Text type="secondary">Không có kết quả.</Typography.Text>
+            <Typography.Text type="secondary">
+              Không có kết quả.
+            </Typography.Text>
           )}
+          <Divider />
+          <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
+          <List
+            bordered
+            dataSource={[
+              {
+                label: "Ngày phát hiện",
+                value: <DateField value={task?.created_date} />,
+              },
+
+              {
+                label: "Trạng thái",
+                value: <ProblemStatusTag status={task?.status} />,
+              },
+              {
+                label: "Mô tả vấn đề",
+                value: (
+                  <Typography.Paragraph>
+                    {task?.description}
+                  </Typography.Paragraph>
+                ),
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item>
+                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                {item.value}
+              </List.Item>
+            )}
+          />
+
           <ReportProblemModal
             close={() => {
               setIsModalOpen(false);

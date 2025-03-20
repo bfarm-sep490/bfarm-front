@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
+import { BaseRecord, useBack, useList, useTranslate } from "@refinedev/core";
 import {
   useTable,
   List,
@@ -29,7 +29,15 @@ export const HarvestedTaskList = ({
   const navigate = useNavigate();
   const translate = useTranslate();
   const { id } = useParams();
+  const { data: planData } = useList({
+    resource: "plans",
+  });
+  const plans = planData?.data || [];
 
+  const { data: farmerData } = useList({
+    resource: "farmers",
+  });
+  const farmers = farmerData?.data || [];
   return (
     <>
       <List>
@@ -51,14 +59,33 @@ export const HarvestedTaskList = ({
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column dataIndex="harvested_quantity" title={"harvested_quantity"} />
-          <Table.Column dataIndex="harvested_unit" title={"unit"} />
+          <Table.Column
+            dataIndex="harvested_unit"
+            title={"unit"}
+            render={(value: any) => <TextField value={"kg"} />}
+          />
+
           <Table.Column
             dataIndex="status"
             title={"status"}
             render={(value) => <StatusTag status={value} />}
           />
-          <Table.Column title={translate("farmer_id")} dataIndex="farmer_id" />
-          <Table.Column title={translate("plan_id")} dataIndex="plan_id" />
+          <Table.Column
+            title={translate("farmer_id")}
+            dataIndex="farmer_id"
+            render={(value) => {
+              const farmer = farmers.find((x) => x.id === value);
+              return <TextField value={farmer ? farmer.name : "Không xác định được nông dân"} />;
+            }}
+          />
+          <Table.Column
+            title={translate("plan_id")}
+            dataIndex="plan_id"
+            render={(value) => {
+              const plan = plans.find((x) => x.id === value);
+              return <TextField value={plan ? plan.plan_name : "Không xác định được kế hoạch"} />;
+            }}
+          />
           <Table.Column
             title={translate("created_at")}
             dataIndex="created_at"
@@ -87,7 +114,7 @@ export const HarvestedTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/harvesting-tasks/${record.id}`,
+                        : `/harvesting-tasks/${record.id}`
                     )
                   }
                 />

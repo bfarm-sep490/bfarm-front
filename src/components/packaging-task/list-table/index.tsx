@@ -1,8 +1,27 @@
-import { PropsWithChildren } from "react";
-import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
-import { List, ShowButton, DateField, TextField } from "@refinedev/antd";
-import { Table, Space, TableProps } from "antd";
-import { useNavigate, useParams } from "react-router";
+import React, { PropsWithChildren } from "react";
+import { BaseRecord, useBack, useList, useTranslate } from "@refinedev/core";
+import {
+  useTable,
+  List,
+  EditButton,
+  ShowButton,
+  ImageField,
+  TagField,
+  EmailField,
+  DateField,
+  TextField,
+} from "@refinedev/antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Typography,
+  TableProps,
+} from "antd";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
 type PackagingTableProps = {
   tableProps: TableProps;
@@ -17,7 +36,16 @@ export const PackagingTaskList = ({
   const back = useBack();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { data: planData } = useList({
+    resource: "plans",
+  });
+  const plans = planData?.data || [];
 
+  const { data: farmerData } = useList({
+    resource: "farmers",
+  });
+  const farmers = farmerData?.data || [];
+  console.log(farmers);
   const translate = useTranslate();
 
   return (
@@ -27,7 +55,9 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+            render={(value) => (
+              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
+            )}
           />
           <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
@@ -43,20 +73,42 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="packed_quantity"
             title={"packed_quantity"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
           />
           <Table.Column
             dataIndex="packed_unit"
             title={"packed_unit"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
           />
           <Table.Column
             dataIndex="status"
             title={"status"}
             render={(value) => <StatusTag status={value} />}
           />
-          <Table.Column title={translate("farmer_id")} dataIndex="farmer_id" />
-          <Table.Column title={translate("plan_id")} dataIndex="plan_id" />
+          <Table.Column
+            title={translate("farmer_id")}
+            dataIndex="farmer_id"
+            render={(value) => {
+              const farmer = farmers.find((x) => x.id === value);
+              return <TextField value={farmer ? farmer.name : "Không xác định được nông dân"} />;
+            }}
+          />
+          <Table.Column
+            title={translate("plan_id")}
+            dataIndex="plan_id"
+            render={(value) => {
+              const plan = plans.find((x) => x.id === value);
+              return (
+                <TextField
+                  value={plan ? plan.plan_name : "Không xác định được kế hoạch"}
+                />
+              );
+            }}
+          />
           <Table.Column
             title={translate("created_at")}
             dataIndex="created_at"
@@ -86,7 +138,7 @@ export const PackagingTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/packaging-tasks/${record.id}`,
+                        : `/packaging-tasks/${record.id}`
                     )
                   }
                 />

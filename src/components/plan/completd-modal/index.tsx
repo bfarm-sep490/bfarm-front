@@ -15,6 +15,9 @@ export const StatusModal = ({ id, visible, onClose, status }: Props) => {
     resource: "plans",
     id: `${id}/status`,
     redirect: "show",
+    queryOptions: {
+      enabled: false,
+    }
   });
 
   const getMessage = () => {

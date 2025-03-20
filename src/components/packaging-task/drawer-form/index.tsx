@@ -58,32 +58,6 @@ export const HarvestingTaskForm = (props: Props) => {
     ...(queryPendingPlans.data?.data || []),
     ...(queryOngoingPlans?.data?.data || []),
   ];
-
-  const queryPendingProblems = useList({
-    resource: "problems",
-    filters: [{ field: "status", operator: "eq", value: "Pending" }],
-  });
-
-  const { data: fertilizerData } = useList({
-    resource: "fertilizers",
-    filters: [
-      {
-        field: "status",
-        operator: "eq",
-        value: "Available",
-      },
-    ],
-  });
-  const { data: pesticideData } = useList({
-    resource: "pesticides",
-    filters: [
-      {
-        field: "status",
-        operator: "eq",
-        value: "Available",
-      },
-    ],
-  });
   const { data: itemData } = useList({
     resource: "items",
   });
@@ -99,7 +73,7 @@ export const HarvestingTaskForm = (props: Props) => {
   }>({
     id: taskId,
     action: props?.action,
-    resource: "harvesting-tasks",
+    resource: "packaging-tasks",
     redirect: false,
     onMutationSuccess: () => {
       props.onMutationSuccess?.();
@@ -108,7 +82,7 @@ export const HarvestingTaskForm = (props: Props) => {
       onSuccess(data: any) {
         const caring_tasks = data?.data?.[0];
         if (caring_tasks) {
-          const items = caring_tasks.harvesting_items;
+          const items = caring_tasks.packaging_items;
           setItemFields(
             items.map((item: any, index: any) => ({
               id: item.item_id,

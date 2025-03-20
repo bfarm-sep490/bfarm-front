@@ -3,12 +3,16 @@ const getStatusTagColor = (value: string) => {
   switch (value) {
     case "Pending":
       return "orange";
-    case "Completed":
+    case "Complete":
       return "green";
-    case "Cancelled":
+    case "Cancel":
       return "red";
     case "Ongoing":
       return "blue";
+    case "Incomplete":
+      return "gray";
+    case "Unapprove":
+      return "purple";
     default:
       return "default";
   }
@@ -18,13 +22,16 @@ const getStatusTagValue = (value: string) => {
   switch (value) {
     case "Pending":
       return "Đợi xác nhận";
-    case "Completed":
+    case "Complete":
       return "Hoàn thành";
-    case "Cancelled":
+    case "Cancel":
       return "Hủy bỏ";
     case "Ongoing":
       return "Trong quá trình";
-
+    case "Incomplete":
+      return "Chưa hoàn thành";
+    case "Unapprove":
+      return "Không phê duyệt";
     default:
       return "Không xác định";
   }

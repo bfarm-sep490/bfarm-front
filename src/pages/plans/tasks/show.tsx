@@ -15,10 +15,11 @@ import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd"
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { CaringListTable } from "../../../components/caring-task/list-table";
-import { CaringTaskListInPlan } from "./caring-list";
 import { HarvestedTaskList } from "../../../components/harvesting-task/list-table";
+import { CaringTaskListInPlan } from "./caring-list";
 import { HarvestingTaskListInPlan } from "./harvesting-list";
 import { PackagingTaskListInPlan } from "./packaging-list";
+
 
 export const ShowTasksList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
@@ -61,9 +62,9 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
             onClick={() => {
               if (isProductingTask) navigate(`/plans/${id}/caring-tasks/create`);
 
-              if (isHarvestingTask) navigate("/harvesting-tasks/create");
+              if (isHarvestingTask) navigate(`/plans/${id}/harvesting-tasks/create`);
 
-              if (isPackagingTask) navigate("/packaging-tasks/create");
+              if (isPackagingTask) navigate(`/plans/${id}/packaging-tasks/create`);
             }}
           >
             Tạo mới

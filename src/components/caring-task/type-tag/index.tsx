@@ -10,9 +10,14 @@ const getTypeTagColor = (value: string) => {
       return "blue";
     case "Fertilizing":
       return "orange";
-
-    case "Pesticiding":
+    case "Pesticide":
       return "yellow";
+    case "Setup":
+      return "gray";
+    case "Weeding":
+      return "brown";
+    case "Pruning":
+      return "purple";
     default:
       return "default";
   }
@@ -30,15 +35,27 @@ const getTypeTagValue = (value: string) => {
       return "Bón phân";
     case "Setup":
       return "Lắp đặt";
-    case "Pesticiding":
+    case "Pesticide":
       return "Phun thuốc";
+    case "Weeding":
+      return "Làm cỏ";
+    case "Pruning":
+      return "Cắt tỉa";
     default:
       return "Không xác định";
   }
 };
 
 type TypeTagProps = {
-  status: "Planting" | "Nurturing" | "Watering" | "Fertilizing" | "Setup" | "Pesticiding";
+  status:
+    | "Planting"
+    | "Nurturing"
+    | "Watering"
+    | "Fertilizing"
+    | "Setup"
+    | "Pesticide"
+    | "Weeding"
+    | "Pruning";
 };
 
 export const CaringTypeTag = (props: TypeTagProps) => {

@@ -67,7 +67,6 @@ export const CaringTaskPage = (props: Props) => {
 
   const queryPendingProblems = useList({
     resource: "problems",
-    filters: [{ field: "status", operator: "eq", value: "Pending" }],
   });
 
   const filteredProblems = idPlan
@@ -195,14 +194,21 @@ export const CaringTaskPage = (props: Props) => {
     { label: t("status.cancel", "Đang thực hiện"), value: "Ongoing" },
     { label: t("status.complete", "Hoàn thành"), value: "Complete" },
     { label: t("status.cancel", "Hủy bỏ"), value: "Cancel" },
+    { label: t("status.incomplete", "Chưa hoàn thành"), value: "Incomplete" },
+    { label: t("status.unapprove", "Không phê duyệt"), value: "Unapprove" },
   ];
   const taskTypeOptions = [
-    { label: t("status.watering", "Watering"), value: "Watering" },
+    { label: t("status.watering", "Tưới nước"), value: "Watering" },
     {
-      label: t("status.fertilizering", "Fertilizering"),
+      label: t("status.fertilizering", "Bón phân"),
       value: "Fertilizering",
     },
-    { label: t("status.pesticiding", "Pesticiding"), value: "Pesticiding" },
+    { label: t("status.pesticiding", "Phun thuốc"), value: "Pesticide" },
+    { label: t("status.setup", "Cài đặt"), value: "Setup" },
+    { label: t("status.weeding", "Làm cỏ"), value: "Weeding" },
+    { label: t("status.pruning", "Cắt tỉa"), value: "Pruning" },
+    { label: t("status.planting", "Gieo trồng"), value: "Planting" },
+    { label: t("status.nurturing", "Chăm sóc"), value: "Nurturing" },
   ];
   const addField = (
     list: any[],

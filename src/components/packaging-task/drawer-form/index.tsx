@@ -134,6 +134,8 @@ export const HarvestingTaskForm = (props: Props) => {
     { label: t("status.cancel", "Đang thực hiện"), value: "Ongoing" },
     { label: t("status.complete", "Hoàn thành"), value: "Complete" },
     { label: t("status.cancel", "Hủy bỏ"), value: "Cancel" },
+    { label: t("status.incomplete", "Chưa hoàn thành"), value: "Incomplete" },
+    { label: t("status.unapprove", "Không phê duyệt"), value: "Unapprove" },
   ];
   const addField = (
     list: any[],

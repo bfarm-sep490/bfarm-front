@@ -3,15 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { onBackgroundMessage } from "firebase/messaging/sw";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDA2k49mxuKn6WH8kMWdA05LWH50CI_sxg",
-  authDomain: "blcap-sep490.firebaseapp.com",
-  projectId: "blcap-sep490",
-  storageBucket: "blcap-sep490.firebasestorage.app",
-  messagingSenderId: "1032682814172",
-  appId: "1:1032682814172:web:f4755eadc651a60d4a1219",
-  measurementId: "G-WZXSTSEQXE",
-};
+const firebaseConfig = {};
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
@@ -19,7 +11,9 @@ const FCMContext = createContext<
   { fcmToken: string | null; getFCMToken: () => Promise<void> } | undefined
 >(undefined);
 
-export const FCMProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FCMProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   const getFCMToken = async () => {

@@ -128,7 +128,10 @@ const App: React.FC = () => {
     navigator.serviceWorker
       .register("./firebase-messaging-sw.js")
       .then(function (registration) {
-        console.log("Service Worker registered with scope:", registration.scope);
+        console.log(
+          "Service Worker registered with scope:",
+          registration.scope
+        );
       })
       .catch(function (error) {
         console.error("Service Worker registration failed:", error);
@@ -141,485 +144,477 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ConfigProvider theme={themeConfig}>
-        <FCMProvider>
-          <AntdApp>
-            <RefineKbarProvider>
-              <Refine
-                routerProvider={routerProvider}
-                dataProvider={appDataProvider}
-                authProvider={authProvider}
-                i18nProvider={i18nProvider}
-                options={{
-                  syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
-                  liveMode: "auto",
-                }}
-                // notificationProvider={useNotificationProvider}
-                // liveProvider={liveProvider(ablyClient)}
-                resources={[
-                  {
-                    name: "dashboard",
-                    list: "/",
-                    meta: {
-                      label: "Dashboard",
-                      icon: <DashboardOutlined />,
-                    },
+        <AntdApp>
+          <RefineKbarProvider>
+            <Refine
+              routerProvider={routerProvider}
+              dataProvider={appDataProvider}
+              authProvider={authProvider}
+              i18nProvider={i18nProvider}
+              options={{
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+                liveMode: "auto",
+              }}
+              // notificationProvider={useNotificationProvider}
+              // liveProvider={liveProvider(ablyClient)}
+              resources={[
+                {
+                  name: "dashboard",
+                  list: "/",
+                  meta: {
+                    label: "Dashboard",
+                    icon: <DashboardOutlined />,
                   },
-                  {
-                    name: "device",
-                    list: "/device",
-                    create: "/device/create",
-                    edit: "/device/edit/:id",
-                    show: "/device/show/:id",
-                    meta: {
-                      label: "Device",
-                      icon: <HddOutlined />,
-                    },
+                },
+                {
+                  name: "device",
+                  list: "/device",
+                  create: "/device/create",
+                  edit: "/device/edit/:id",
+                  show: "/device/show/:id",
+                  meta: {
+                    label: "Device",
+                    icon: <HddOutlined />,
                   },
-                  {
-                    name: "inspector",
-                    list: "/inspectors",
-                    create: "/inspectors/create",
-                    edit: "/inspectors/edit/:id",
-                    show: "/inspectors/:id",
-                    meta: {
-                      parent: "employees",
-                      label: "Inspector",
-                    },
+                },
+                {
+                  name: "inspector",
+                  list: "/inspectors",
+                  create: "/inspectors/create",
+                  edit: "/inspectors/edit/:id",
+                  show: "/inspectors/:id",
+                  meta: {
+                    parent: "employees",
+                    label: "Inspector",
                   },
-                  {
-                    name: "inspecting-forms",
-                    list: "/inspecting-forms",
-                    create: "/inspecting-forms/create",
-                    edit: "/inspecting-forms/edit/:id",
-                    show: "/inspecting-forms/show/:id",
-                    meta: {
-                      label: "Inspecting Forms",
-                      icon: <ScheduleOutlined />,
-                    },
+                },
+                {
+                  name: "inspecting-forms",
+                  list: "/inspecting-forms",
+                  create: "/inspecting-forms/create",
+                  edit: "/inspecting-forms/edit/:id",
+                  show: "/inspecting-forms/show/:id",
+                  meta: {
+                    label: "Inspecting Forms",
+                    icon: <ScheduleOutlined />,
                   },
-                  {
-                    name: "yield",
-                    list: "/yield",
-                    create: "/yield/create",
-                    edit: "/yield/edit/:id",
-                    show: "/yield/show/:id",
-                    meta: {
-                      label: "Yields",
-                      icon: <EnvironmentOutlined />,
-                    },
+                },
+                {
+                  name: "yield",
+                  list: "/yield",
+                  create: "/yield/create",
+                  edit: "/yield/edit/:id",
+                  show: "/yield/show/:id",
+                  meta: {
+                    label: "Yields",
+                    icon: <EnvironmentOutlined />,
                   },
-                  {
-                    name: "plants",
-                    list: "/plants",
-                    create: "/plants/create",
-                    edit: "/plants/edit/:id",
-                    show: "/plants/:id",
-                    meta: {
-                      label: "Plants",
-                      icon: <EnvironmentOutlined />,
-                    },
+                },
+                {
+                  name: "plants",
+                  list: "/plants",
+                  create: "/plants/create",
+                  edit: "/plants/edit/:id",
+                  show: "/plants/:id",
+                  meta: {
+                    label: "Plants",
+                    icon: <EnvironmentOutlined />,
                   },
-                  {
-                    name: "material",
-                    meta: {
-                      label: "Material",
-                      icon: <GoldOutlined />,
-                    },
+                },
+                {
+                  name: "material",
+                  meta: {
+                    label: "Material",
+                    icon: <GoldOutlined />,
                   },
-                  {
-                    name: "fertilizers",
-                    list: "/fertilizers",
-                    create: "/fertilizers/create",
-                    edit: "/fertilizers/edit/:id",
-                    show: "/fertilizers/:id",
-                    meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "fertilizers",
+                  list: "/fertilizers",
+                  create: "/fertilizers/create",
+                  edit: "/fertilizers/edit/:id",
+                  show: "/fertilizers/:id",
+                  meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "items",
+                  list: "/items",
+                  create: "/items/create",
+                  edit: "/items/edit/:id",
+                  show: "/items/:id",
+                  meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "pesticides",
+                  list: "/pesticides",
+                  create: "/pesticides/create",
+                  edit: "/pesticides/edit/:id",
+                  show: "/pesticides/:id",
+                  meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "employees",
+                  meta: {
+                    label: "Employees",
+                    icon: <GoldOutlined />,
                   },
-                  {
-                    name: "items",
-                    list: "/items",
-                    create: "/items/create",
-                    edit: "/items/edit/:id",
-                    show: "/items/:id",
-                    meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "farmers",
+                  list: "/farmers",
+                  create: "/farmers/create",
+                  edit: "/farmers/edit/:id",
+                  show: "/farmers/:id",
+                  meta: { parent: "employees", canDelete: true },
+                },
+                {
+                  name: "experts",
+                  list: "/experts",
+                  create: "/experts/create",
+                  edit: "/experts/edit/:id",
+                  show: "/experts/:id",
+                  meta: { parent: "employees", canDelete: true },
+                },
+                {
+                  name: "plans",
+                  list: "/plans",
+                  create: "/plans/create",
+                  show: "/plans/:id",
+                  meta: {
+                    label: "Plans",
+                    icon: <CalendarOutlined />,
+                    route: "/plans",
                   },
-                  {
-                    name: "pesticides",
-                    list: "/pesticides",
-                    create: "/pesticides/create",
-                    edit: "/pesticides/edit/:id",
-                    show: "/pesticides/:id",
-                    meta: { parent: "material", canDelete: true },
+                },
+                {
+                  name: "problems",
+                  list: "/problems",
+                  show: "/problems/:id",
+                  meta: {
+                    label: "Vấn đề",
+                    icon: <WarningOutlined />,
+                    route: "/problems",
                   },
-                  {
-                    name: "employees",
-                    meta: {
-                      label: "Employees",
-                      icon: <GoldOutlined />,
-                    },
+                },
+                {
+                  name: "new-task",
+                  list: "/",
+                  meta: {
+                    label: "New Task",
+                    icon: <ScheduleOutlined />,
                   },
-                  {
-                    name: "farmers",
-                    list: "/farmers",
-                    create: "/farmers/create",
-                    edit: "/farmers/edit/:id",
-                    show: "/farmers/:id",
-                    meta: { parent: "employees", canDelete: true },
-                  },
-                  {
-                    name: "experts",
-                    list: "/experts",
-                    create: "/experts/create",
-                    edit: "/experts/edit/:id",
-                    show: "/experts/:id",
-                    meta: { parent: "employees", canDelete: true },
-                  },
-                  {
-                    name: "plans",
-                    list: "/plans",
-                    create: "/plans/create",
-                    show: "/plans/:id",
-                    meta: {
-                      label: "Plans",
-                      icon: <CalendarOutlined />,
-                      route: "/plans",
-                    },
-                  },
-                  {
-                    name: "problems",
-                    list: "/problems",
-                    show: "/problems/:id",
-                    meta: {
-                      label: "Vấn đề",
-                      icon: <WarningOutlined />,
-                      route: "/problems",
-                    },
-                  },
-                  {
-                    name: "new-task",
-                    list: "/",
-                    meta: {
-                      label: "New Task",
-                      icon: <ScheduleOutlined />,
-                    },
-                  },
-                ]}
-              >
-                <Routes>
-                  <Route
-                    element={
-                      <Authenticated
-                        key="authenticated-routes"
-                        fallback={<CatchAllNavigate to="/login" />}
+                },
+              ]}
+            >
+              <Routes>
+                <Route
+                  element={
+                    <Authenticated
+                      key="authenticated-routes"
+                      fallback={<CatchAllNavigate to="/login" />}
+                    >
+                      <ThemedLayoutV2
+                        Sider={() => <ThemedSiderV2 Title={Title} fixed />}
+                        Header={() => <Header sticky />}
                       >
-                        <ThemedLayoutV2
-                          Sider={() => <ThemedSiderV2 Title={Title} fixed />}
-                          Header={() => <Header sticky />}
+                        <div
+                          style={{
+                            maxWidth: "1600px",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                          }}
                         >
-                          <div
-                            style={{
-                              maxWidth: "1600px",
-                              marginLeft: "auto",
-                              marginRight: "auto",
-                            }}
-                          >
-                            <Outlet />
-                          </div>
-                        </ThemedLayoutV2>
-                      </Authenticated>
-                    }
-                  >
-                    <Route index element={<DashboardPage />} />
-                    <Route path="/plans">
-                      <Route index element={<PlanList />} />
-                      <Route path=":id">
-                        <Route
-                          index
-                          element={
-                            <PlanShow>
-                              <Outlet></Outlet>
-                            </PlanShow>
-                          }
-                        />
-                        <Route
-                          path="approve"
-                          element={<ApprovingPlanDrawer />}
-                        ></Route>
-                        <Route
-                          path="problems"
-                          element={
-                            <ShowProblemList>
-                              <Outlet />
-                            </ShowProblemList>
-                          }
-                        >
-                          <Route path=":id" element={<ProblemShowV2 />}></Route>
-                        </Route>
-
-                        <Route
-                          path="caring-tasks"
-                          element={
-                            <ShowTasksList>
-                              <Outlet />
-                            </ShowTasksList>
-                          }
-                        >
-                          <Route
-                            path=":taskId"
-                            element={<ProductiveTaskShow />}
-                          />
-                        </Route>
-                        <Route
-                          path="caring-tasks/create"
-                          element={<CaringCreate />}
-                        ></Route>
-                        <Route
-                          path="caring-tasks/:taskId/edit"
-                          element={<CaringUpdate />}
-                        ></Route>
-                        <Route
-                          path="harvesting-tasks"
-                          element={
-                            <ShowTasksList>
-                              <Outlet></Outlet>
-                            </ShowTasksList>
-                          }
-                        >
-                          <Route
-                            path=":taskId"
-                            element={<HarvestingTaskShow />}
-                          />
-                        </Route>
-                        <Route
-                          path="harvesting-tasks/create"
-                          element={<HarvestingCreate />}
-                        ></Route>
-                        <Route
-                          path="harvesting-tasks/:taskId/edit"
-                          element={<HarvestingUpdate />}
-                        ></Route>
-                        <Route
-                          path="packaging-tasks"
-                          element={
-                            <ShowTasksList>
-                              <Outlet />
-                            </ShowTasksList>
-                          }
-                        >
-                          <Route
-                            path=":taskId"
-                            element={<PackagingTaskShow />}
-                          />
-                        </Route>
-                        <Route
-                          path="packaging-tasks/create"
-                          element={<PackagingCreate />}
-                        ></Route>
-                        <Route
-                          path="packaging-tasks/:taskId/edit"
-                          element={<PackagingUpdate />}
-                        ></Route>
-                      </Route>
-                    </Route>
-                    <Route
-                      path="/yield"
-                      element={
-                        <YieldsList>
                           <Outlet />
-                        </YieldsList>
-                      }
-                    >
-                      <Route path="create" element={<YieldCreate />} />
-                      <Route path="edit/:id" element={<YieldEdit />} />
-                      <Route path="show/:id" element={<YieldsShow />} />
-                    </Route>
-                    <Route
-                      path="/pesticides"
-                      element={
-                        <PesticidesList>
-                          <Outlet />
-                        </PesticidesList>
-                      }
-                    >
-                      <Route path="create" element={<PesticidesCreate />} />
-                      <Route path=":id" element={<PesticideShow />} />
-                      <Route path="edit/:id" element={<PesticidesEdit />} />
-                    </Route>
-                    <Route
-                      path="/problems"
-                      element={
-                        <ProblemListInProblems>
-                          <Outlet></Outlet>
-                        </ProblemListInProblems>
-                      }
-                    >
-                      <Route path=":id" element={<ProblemShowV2 />} />
-                    </Route>
-                    <Route
-                      path="/customers"
-                      element={
-                        <CustomerList>
-                          <Outlet />
-                        </CustomerList>
-                      }
-                    >
-                      <Route path=":id" element={<CustomerShow />} />
-                    </Route>
-
-                    <Route
-                      path="/plants"
-                      element={
-                        <PlantsList>
-                          <Outlet />
-                        </PlantsList>
-                      }
-                    >
-                      <Route path="create" element={<PlantCreate />} />
-                      <Route path=":id" element={<PlantsShow />} />
-                      <Route path="edit/:id" element={<PlantEdit />} />
-                    </Route>
-
-                    <Route
-                      path="/items"
-                      element={
-                        <ItemsList>
-                          <Outlet />
-                        </ItemsList>
-                      }
-                    >
-                      <Route path="create" element={<ItemCreate />} />
-                      <Route path=":id" element={<ItemsShow />} />
-                      <Route path="edit/:id" element={<ItemEdit />} />
-                    </Route>
-
-                    <Route path="/device" element={<DeviceList />}>
-                      <Route path=":id" element={<FarmerManagementShow />} />
-                      <Route path="new" element={<FarmerManagementCreate />} />
+                        </div>
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route index element={<DashboardPage />} />
+                  <Route path="/plans">
+                    <Route index element={<PlanList />} />
+                    <Route path=":id">
                       <Route
-                        path=":id/edit"
-                        element={<FarmerManagementEdit />}
+                        index
+                        element={
+                          <PlanShow>
+                            <Outlet></Outlet>
+                          </PlanShow>
+                        }
                       />
-                    </Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
+                      <Route
+                        path="problems"
+                        element={
+                          <ShowProblemList>
+                            <Outlet />
+                          </ShowProblemList>
+                        }
+                      >
+                        <Route path=":id" element={<ProblemShowV2 />}></Route>
+                      </Route>
 
-                    <Route
-                      path="/fertilizers"
-                      element={
-                        <FertilizersList>
-                          <Outlet />
-                        </FertilizersList>
-                      }
-                    >
-                      <Route path="create" element={<FertilizersCreate />} />
-                      <Route path=":id" element={<FertilizersShow />} />
-                      <Route path="edit/:id" element={<FertilizersEdit />} />
+                      <Route
+                        path="caring-tasks"
+                        element={
+                          <ShowTasksList>
+                            <Outlet />
+                          </ShowTasksList>
+                        }
+                      >
+                        <Route
+                          path=":taskId"
+                          element={<ProductiveTaskShow />}
+                        />
+                      </Route>
+                      <Route
+                        path="caring-tasks/create"
+                        element={<CaringCreate />}
+                      ></Route>
+                      <Route
+                        path="caring-tasks/:taskId/edit"
+                        element={<CaringUpdate />}
+                      ></Route>
+                      <Route
+                        path="harvesting-tasks"
+                        element={
+                          <ShowTasksList>
+                            <Outlet></Outlet>
+                          </ShowTasksList>
+                        }
+                      >
+                        <Route
+                          path=":taskId"
+                          element={<HarvestingTaskShow />}
+                        />
+                      </Route>
+                      <Route
+                        path="harvesting-tasks/create"
+                        element={<HarvestingCreate />}
+                      ></Route>
+                      <Route
+                        path="harvesting-tasks/:taskId/edit"
+                        element={<HarvestingUpdate />}
+                      ></Route>
+                      <Route
+                        path="packaging-tasks"
+                        element={
+                          <ShowTasksList>
+                            <Outlet />
+                          </ShowTasksList>
+                        }
+                      >
+                        <Route path=":taskId" element={<PackagingTaskShow />} />
+                      </Route>
+                      <Route
+                        path="packaging-tasks/create"
+                        element={<PackagingCreate />}
+                      ></Route>
+                      <Route
+                        path="packaging-tasks/:taskId/edit"
+                        element={<PackagingUpdate />}
+                      ></Route>
                     </Route>
-                    <Route
-                      path="/farmers"
-                      element={
-                        <FarmerList>
-                          <Outlet />
-                        </FarmerList>
-                      }
-                    >
-                      <Route path=":id" element={<FarmersShow />} />
-                      <Route path="create" element={<FarmerCreate />} />
-                      <Route path="edit/:id" element={<FarmerEdit />} />
-                    </Route>
-                    <Route
-                      path="/experts"
-                      element={
-                        <ExpertList>
-                          <Outlet />
-                        </ExpertList>
-                      }
-                    >
-                      <Route path=":id" element={<ExpertShow />} />
-                      <Route path="create" element={<ExpertCreate />} />
-                      <Route path="edit/:id" element={<ExpertEdit />} />
-                    </Route>
-
-                    <Route
-                      path="/inspectors"
-                      element={
-                        <InspectorList>
-                          <Outlet />
-                        </InspectorList>
-                      }
-                    >
-                      <Route path=":id" element={<InspectorShow />} />
-                      <Route path="create" element={<InspectorCreate />} />
-                      <Route path="edit/:id" element={<InspectorEdit />} />
-                    </Route>
+                  </Route>
+                  <Route
+                    path="/yield"
+                    element={
+                      <YieldsList>
+                        <Outlet />
+                      </YieldsList>
+                    }
+                  >
+                    <Route path="create" element={<YieldCreate />} />
+                    <Route path="edit/:id" element={<YieldEdit />} />
+                    <Route path="show/:id" element={<YieldsShow />} />
+                  </Route>
+                  <Route
+                    path="/pesticides"
+                    element={
+                      <PesticidesList>
+                        <Outlet />
+                      </PesticidesList>
+                    }
+                  >
+                    <Route path="create" element={<PesticidesCreate />} />
+                    <Route path=":id" element={<PesticideShow />} />
+                    <Route path="edit/:id" element={<PesticidesEdit />} />
+                  </Route>
+                  <Route
+                    path="/problems"
+                    element={
+                      <ProblemListInProblems>
+                        <Outlet></Outlet>
+                      </ProblemListInProblems>
+                    }
+                  >
+                    <Route path=":id" element={<ProblemShowV2 />} />
+                  </Route>
+                  <Route
+                    path="/customers"
+                    element={
+                      <CustomerList>
+                        <Outlet />
+                      </CustomerList>
+                    }
+                  >
+                    <Route path=":id" element={<CustomerShow />} />
                   </Route>
 
                   <Route
+                    path="/plants"
                     element={
-                      <Authenticated key="auth-pages" fallback={<Outlet />}>
-                        <NavigateToResource resource="dashboard" />
-                      </Authenticated>
+                      <PlantsList>
+                        <Outlet />
+                      </PlantsList>
                     }
                   >
-                    <Route
-                      path="/login"
-                      element={
-                        <AuthPage
-                          type="login"
-                          formProps={{
-                            initialValues: {
-                              email: "farmowner@gmail.com",
-                              password: "1@",
-                            },
-                          }}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/register"
-                      element={
-                        <AuthPage
-                          hideForm={true}
-                          type="register"
-                          formProps={{
-                            initialValues: {
-                              email: "farmowner@gmail.com",
-                              password: "1@",
-                            },
-                          }}
-                        />
-                      }
-                    />
-                    <Route
-                      path="/forgot-password"
-                      element={<AuthPage type="forgotPassword" />}
-                    />
-                    <Route
-                      path="/update-password"
-                      element={<AuthPage type="updatePassword" />}
-                    />
+                    <Route path="create" element={<PlantCreate />} />
+                    <Route path=":id" element={<PlantsShow />} />
+                    <Route path="edit/:id" element={<PlantEdit />} />
                   </Route>
 
                   <Route
+                    path="/items"
                     element={
-                      <Authenticated key="catch-all">
-                        <ThemedLayoutV2
-                          Sider={() => <ThemedSiderV2 Title={Title} fixed />}
-                          Header={() => <Header sticky />}
-                        >
-                          <Outlet />
-                        </ThemedLayoutV2>
-                      </Authenticated>
+                      <ItemsList>
+                        <Outlet />
+                      </ItemsList>
                     }
                   >
-                    <Route path="*" element={<ErrorComponent />} />
+                    <Route path="create" element={<ItemCreate />} />
+                    <Route path=":id" element={<ItemsShow />} />
+                    <Route path="edit/:id" element={<ItemEdit />} />
                   </Route>
-                </Routes>
-                <UnsavedChangesNotifier />
-                <DocumentTitleHandler handler={customTitleHandler} />
-                <RefineKbar />
-              </Refine>
-            </RefineKbarProvider>
-          </AntdApp>
-        </FCMProvider>
+
+                  <Route path="/device" element={<DeviceList />}>
+                    <Route path=":id" element={<FarmerManagementShow />} />
+                    <Route path="new" element={<FarmerManagementCreate />} />
+                    <Route path=":id/edit" element={<FarmerManagementEdit />} />
+                  </Route>
+
+                  <Route
+                    path="/fertilizers"
+                    element={
+                      <FertilizersList>
+                        <Outlet />
+                      </FertilizersList>
+                    }
+                  >
+                    <Route path="create" element={<FertilizersCreate />} />
+                    <Route path=":id" element={<FertilizersShow />} />
+                    <Route path="edit/:id" element={<FertilizersEdit />} />
+                  </Route>
+                  <Route
+                    path="/farmers"
+                    element={
+                      <FarmerList>
+                        <Outlet />
+                      </FarmerList>
+                    }
+                  >
+                    <Route path=":id" element={<FarmersShow />} />
+                    <Route path="create" element={<FarmerCreate />} />
+                    <Route path="edit/:id" element={<FarmerEdit />} />
+                  </Route>
+                  <Route
+                    path="/experts"
+                    element={
+                      <ExpertList>
+                        <Outlet />
+                      </ExpertList>
+                    }
+                  >
+                    <Route path=":id" element={<ExpertShow />} />
+                    <Route path="create" element={<ExpertCreate />} />
+                    <Route path="edit/:id" element={<ExpertEdit />} />
+                  </Route>
+
+                  <Route
+                    path="/inspectors"
+                    element={
+                      <InspectorList>
+                        <Outlet />
+                      </InspectorList>
+                    }
+                  >
+                    <Route path=":id" element={<InspectorShow />} />
+                    <Route path="create" element={<InspectorCreate />} />
+                    <Route path="edit/:id" element={<InspectorEdit />} />
+                  </Route>
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated key="auth-pages" fallback={<Outlet />}>
+                      <NavigateToResource resource="dashboard" />
+                    </Authenticated>
+                  }
+                >
+                  <Route
+                    path="/login"
+                    element={
+                      <AuthPage
+                        type="login"
+                        formProps={{
+                          initialValues: {
+                            email: "farmowner@gmail.com",
+                            password: "1@",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/register"
+                    element={
+                      <AuthPage
+                        hideForm={true}
+                        type="register"
+                        formProps={{
+                          initialValues: {
+                            email: "farmowner@gmail.com",
+                            password: "1@",
+                          },
+                        }}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/forgot-password"
+                    element={<AuthPage type="forgotPassword" />}
+                  />
+                  <Route
+                    path="/update-password"
+                    element={<AuthPage type="updatePassword" />}
+                  />
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated key="catch-all">
+                      <ThemedLayoutV2
+                        Sider={() => <ThemedSiderV2 Title={Title} fixed />}
+                        Header={() => <Header sticky />}
+                      >
+                        <Outlet />
+                      </ThemedLayoutV2>
+                    </Authenticated>
+                  }
+                >
+                  <Route path="*" element={<ErrorComponent />} />
+                </Route>
+              </Routes>
+              <UnsavedChangesNotifier />
+              <DocumentTitleHandler handler={customTitleHandler} />
+              <RefineKbar />
+            </Refine>
+          </RefineKbarProvider>
+        </AntdApp>
       </ConfigProvider>
     </BrowserRouter>
   );

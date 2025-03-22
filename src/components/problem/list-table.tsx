@@ -46,9 +46,7 @@ export const ProblemListTable = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => (
-              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-            )}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
           <Table.Column dataIndex="problem_name" title={translate("name")} />
           <Table.Column

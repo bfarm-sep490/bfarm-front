@@ -1,16 +1,36 @@
-import { IInspectingForm } from "@/interfaces";
-import { Status } from "@googlemaps/react-wrapper";
+import React from "react";
 import { Tag } from "antd";
 
-interface InspectorAvailabilityTagProps {
-  value: string;
+interface InspectionStatusTagProps {
+  value?: string;
 }
 
-export const InspectorAvailabilityTag: React.FC<InspectorAvailabilityTagProps> = ({ value }) => {
-  switch (value) {
-    case "Available":
-      return <Tag color="green">In Stock</Tag>;
-    case "Unavailable":
-      return <Tag color="red">Out of Stock</Tag>;
+export const InspectionStatusTag: React.FC<InspectionStatusTagProps> = ({ value }) => {
+  const normalizedValue = value === "Complete" ? "Completed" : value;
+
+  let color = "default";
+  let text = normalizedValue || "Unknown";
+
+  switch (normalizedValue) {
+    case "Draft":
+      color = "gray";
+      break;
+    case "Pending":
+      color = "gold";
+      break;
+    case "Ongoing":
+      color = "blue";
+      break;
+    case "Completed":
+      color = "green";
+      break;
+    case "Cancelled":
+      color = "red";
+      break;
+    default:
+      color = "gray";
+      text = "Unknown";
   }
+
+  return <Tag color={color}>{text}</Tag>;
 };

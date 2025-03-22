@@ -1,11 +1,7 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import {
-  ThemedLayoutV2,
-  ErrorComponent,
-  useNotificationProvider,
-} from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -67,12 +63,7 @@ import { FarmerList } from "./pages/farmers";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-import {
-  ExpertCreate,
-  ExpertEdit,
-  ExpertList,
-  ExpertShow,
-} from "./pages/experts";
+import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
@@ -94,6 +85,7 @@ import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 import { FarmerListInPlan } from "./pages/plans/farmers/list";
 import { ShowProductList } from "./pages/plans/production";
+import { InspectionEdit, InspectionsList, InspectionsShow } from "./pages/inspections";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -110,8 +102,7 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -179,11 +170,10 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "inspecting-forms",
-                  list: "/inspecting-forms",
-                  create: "/inspecting-forms/create",
-                  edit: "/inspecting-forms/edit/:id",
-                  show: "/inspecting-forms/show/:id",
+                  name: "inspections",
+                  list: "/inspections",
+                  edit: "/inspections/edit/:id",
+                  show: "/inspections/show/:id",
                   meta: {
                     label: "Inspecting Forms",
                     icon: <ScheduleOutlined />,
@@ -381,10 +371,7 @@ const App: React.FC = () => {
                           element={<HarvestingTaskShow />}
                         />
                       </Route>
-                      <Route
-                        path="harvesting-tasks/create"
-                        element={<HarvestingCreate />}
-                      ></Route>
+                      <Route path="harvesting-tasks/create" element={<HarvestingCreate />}></Route>
                       <Route
                         path="harvesting-tasks/:taskId/edit"
                         element={<HarvestingUpdate />}
@@ -452,6 +439,18 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<CustomerShow />} />
+                  </Route>
+
+                  <Route
+                    path="/inspections"
+                    element={
+                      <InspectionsList>
+                        <Outlet />
+                      </InspectionsList>
+                    }
+                  >
+                    <Route path=":id" element={<InspectionsShow />} />
+                    <Route path="edit/:id" element={<InspectionEdit />} />
                   </Route>
 
                   <Route
@@ -573,14 +572,8 @@ const App: React.FC = () => {
                       />
                     }
                   />
-                  <Route
-                    path="/forgot-password"
-                    element={<AuthPage type="forgotPassword" />}
-                  />
-                  <Route
-                    path="/update-password"
-                    element={<AuthPage type="updatePassword" />}
-                  />
+                  <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
+                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
                 </Route>
 
                 <Route

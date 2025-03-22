@@ -92,6 +92,8 @@ import { HarvestingCreate } from "./pages/plans/tasks/harvesting-create";
 import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
 import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
+import { FarmerListInPlan } from "./pages/plans/farmers/list";
+import { ShowProductList } from "./pages/plans/production";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -330,10 +332,10 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route
-                        path="approve"
-                        element={<ApprovingPlanDrawer />}
-                      ></Route>
+                      <Route path="farmers" element={<FarmerListInPlan />}></Route>
+                      <Route path="harvesting-products" element={<ShowProductList />}></Route>
+                      <Route path="packaged-products" element={<ShowProductList />}></Route>
+                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
                       <Route
                         path="problems"
                         element={
@@ -353,10 +355,19 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<ProductiveTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<ProductiveTaskShow />}
+                        />
                       </Route>
-                      <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
-                      <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
+                      <Route
+                        path="caring-tasks/create"
+                        element={<CaringCreate />}
+                      ></Route>
+                      <Route
+                        path="caring-tasks/:taskId/edit"
+                        element={<CaringUpdate />}
+                      ></Route>
                       <Route
                         path="harvesting-tasks"
                         element={
@@ -365,7 +376,10 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<HarvestingTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<HarvestingTaskShow />}
+                        />
                       </Route>
                       <Route
                         path="harvesting-tasks/create"
@@ -385,7 +399,10 @@ const App: React.FC = () => {
                       >
                         <Route path=":taskId" element={<PackagingTaskShow />} />
                       </Route>
-                      <Route path="packaging-tasks/create" element={<PackagingCreate />}></Route>
+                      <Route
+                        path="packaging-tasks/create"
+                        element={<PackagingCreate />}
+                      ></Route>
                       <Route
                         path="packaging-tasks/:taskId/edit"
                         element={<PackagingUpdate />}

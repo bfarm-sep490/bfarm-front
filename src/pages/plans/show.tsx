@@ -249,24 +249,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             justify="center"
             align="center"
           >
-            <Image
-              loading="lazy"
-              style={{
-                borderRadius: 10,
-                width: breakpoint.md ? "300px" : "100%",
-              }}
-              width={300}
-              height={400}
-              src={
-                general_info?.plant_information?.plant_image ||
-                "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2024/1/13/xa-lach-1705113923296944450397.jpg"
-              }
-            />
             <Flex vertical gap={16} style={{ flex: 1 }}>
               <Typography.Title level={4}>
                 🌱 {general_info?.plan_name || "Chưa xác định"}
               </Typography.Title>
-              <Divider />
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={6}>
                   <Space align="start" style={{ marginTop: 12 }}>
@@ -361,11 +347,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         <DropDownSection title="Tổng quan">
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "30px" }}>
             <Col xs={24} sm={12} md={6}>
-              <Card title="📦 Sản lượng thu hoạch">
-                <Typography.Title level={2} style={{ textAlign: "center" }}>
-                  1000
-                </Typography.Title>
-              </Card>
+              <ActivityCard
+                title="Sản lượng thu hoạch còn lại"
+                completedTasks={1000}
+                totalActivity={1000}
+                navigate={`/plans/${id}/harvesting-products`}
+              />
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard

@@ -28,10 +28,18 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
   const back = useBack();
   const navigate = useNavigate();
   const { id } = useParams();
-  let resources = "harvesting-products";
-  if (id) resources = `plans/${id}/harvesting-products`;
+  let resources = "harvesting-product";
   const { tableProps } = useTable({
     resource: resources,
+    filters: {
+      initial: [
+        {
+          field: "plan_id",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
 
   const translate = useTranslate();
@@ -41,7 +49,7 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
       <List>
         <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
           <Table.Column
-            dataIndex="id"
+            dataIndex="harvesting_task_id"
             title={translate("ID")}
             render={(value) => (
               <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
@@ -70,15 +78,13 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
           <Table.Column
             dataIndex="harvesting_unit"
             title={"harvesting_unit"}
-            render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
-            )}
+            render={(value) => <TextField value={value} />}
           />
           <Table.Column
             dataIndex="expired_date"
             title={"expired_date"}
             render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
+              <DateField format="hh:mm DD/MM/YYYY" value={value ? value : "Chưa tính toán"} />
             )}
           />
           <Table.Column

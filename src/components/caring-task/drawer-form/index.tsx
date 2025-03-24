@@ -512,28 +512,20 @@ export const CaringTaskPage = (props: Props) => {
                 >
                   <Row gutter={16} align="middle">
                     <Col span={10}>
-                      <Form.Item
-                        label="Pesticides"
-                        rules={[{ required: true }]}
-                      >
+                      <Form.Item label="Pesticides" rules={[{ required: true }]}>
                         <Select
                           value={field.id}
                           placeholder="Select Pesticides"
                           onChange={(value) => {
                             setPesticideFields((prev) =>
                               prev.map((f) =>
-                                f.id_block === field.id_block
-                                  ? { ...f, id: value }
-                                  : f
+                                f.id_block === field.id_block ? { ...f, id: value } : f,
                               )
                             );
                           }}
                         >
                           {pesticideData?.data.map((fertilizer) => (
-                            <Select.Option
-                              key={`pesticide_${fertilizer.id}`}
-                              value={fertilizer.id}
-                            >
+                            <Select.Option key={`pesticide_${fertilizer.id}`} value={fertilizer.id}>
                               {fertilizer.name}
                             </Select.Option>
                           ))}
@@ -551,9 +543,7 @@ export const CaringTaskPage = (props: Props) => {
                           onChange={(value) =>
                             setPesticideFields((prev) =>
                               prev.map((f) =>
-                                f.id_block === field.id_block
-                                  ? { ...f, quantity: value || 0 }
-                                  : f
+                                f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
                               )
                             )
                           }

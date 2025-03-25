@@ -83,7 +83,9 @@ import { HarvestingCreate } from "./pages/plans/tasks/harvesting-create";
 import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
 import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
+
 import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -340,10 +342,19 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<ProductiveTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<ProductiveTaskShow />}
+                        />
                       </Route>
-                      <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
-                      <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
+                      <Route
+                        path="caring-tasks/create"
+                        element={<CaringCreate />}
+                      ></Route>
+                      <Route
+                        path="caring-tasks/:taskId/edit"
+                        element={<CaringUpdate />}
+                      ></Route>
                       <Route
                         path="harvesting-tasks"
                         element={
@@ -352,7 +363,10 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route path=":taskId" element={<HarvestingTaskShow />} />
+                        <Route
+                          path=":taskId"
+                          element={<HarvestingTaskShow />}
+                        />
                       </Route>
                       <Route path="harvesting-tasks/create" element={<HarvestingCreate />}></Route>
                       <Route
@@ -369,7 +383,10 @@ const App: React.FC = () => {
                       >
                         <Route path=":taskId" element={<PackagingTaskShow />} />
                       </Route>
-                      <Route path="packaging-tasks/create" element={<PackagingCreate />}></Route>
+                      <Route
+                        path="packaging-tasks/create"
+                        element={<PackagingCreate />}
+                      ></Route>
                       <Route
                         path="packaging-tasks/:taskId/edit"
                         element={<PackagingUpdate />}

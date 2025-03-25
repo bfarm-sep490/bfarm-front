@@ -1,5 +1,5 @@
-import { InspectionDrawerShow } from "@/components/inspection";
+import { InspectionsShow } from "@/components/inspection";
 
-export const InspectionsShow = () => {
-  return <InspectionDrawerShow />;
+export const InspectionShow = () => {
+  return <InspectionsShow />;
 };

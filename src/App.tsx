@@ -85,6 +85,8 @@ import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 
 import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
+import { FarmerListInPlan } from "./pages/plans/farmers/list";
+import { ShowProductList } from "./pages/plans/production";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -322,7 +324,22 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="farmers"
+                        element={<FarmerListInPlan />}
+                      ></Route>
+                      <Route
+                        path="harvesting-products"
+                        element={<ShowProductList />}
+                      ></Route>
+                      <Route
+                        path="packaged-products"
+                        element={<ShowProductList />}
+                      ></Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
                       <Route
                         path="problems"
                         element={

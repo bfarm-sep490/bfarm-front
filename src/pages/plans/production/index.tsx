@@ -61,11 +61,7 @@ export const ShowProductList = ({ children }: PropsWithChildren) => {
             </Radio.Group>
           </Space>
         </Flex>
-        {isPackagedProduct ? (
-          <PackagedProductListInPlan />
-        ) : (
-          <HarvestingProductionListInPlan />
-        )}
+        {isPackagedProduct ? <PackagedProductListInPlan /> : <HarvestingProductionListInPlan />}
         {children}
       </div>
     </>

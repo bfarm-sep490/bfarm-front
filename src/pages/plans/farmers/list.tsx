@@ -137,11 +137,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
         </Table>
         {children}
       </List>
-      <AddFarmerIntoPlanModal
-        open={open}
-        setOpen={setOpen}
-        chosenFarmers={farmers}
-      />
+      <AddFarmerIntoPlanModal open={open} setOpen={setOpen} chosenFarmers={farmers} />
       <DeleteFarmerInPlanModal
         open={deletedOpen}
         setOpen={setDeletedOpen}
@@ -169,7 +165,7 @@ export const DeleteFarmerInPlanModal = ({
   const handleDelete = async () => {
     mutate({
       resource: `plans`,
-      id: `/${id}/farmers/${famer_id}`,
+      id: `${id}/farmers/${famer_id}`,
     });
   };
   return (

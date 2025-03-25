@@ -332,10 +332,22 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route path="farmers" element={<FarmerListInPlan />}></Route>
-                      <Route path="harvesting-products" element={<ShowProductList />}></Route>
-                      <Route path="packaged-products" element={<ShowProductList />}></Route>
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="farmers"
+                        element={<FarmerListInPlan />}
+                      ></Route>
+                      <Route
+                        path="harvesting-products"
+                        element={<ShowProductList />}
+                      ></Route>
+                      <Route
+                        path="packaged-products"
+                        element={<ShowProductList />}
+                      ></Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
                       <Route
                         path="problems"
                         element={

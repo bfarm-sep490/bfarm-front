@@ -56,6 +56,7 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
             )}
           />
           <Table.Column dataIndex="plan_name" title={translate("name")} />
+          <Table.Column dataIndex="plant_name" title={translate("plant_name")} />
           <Table.Column
             dataIndex="harvesting_date"
             title={translate("start_date")}
@@ -84,7 +85,10 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
             dataIndex="expired_date"
             title={"expired_date"}
             render={(value) => (
-              <DateField format="hh:mm DD/MM/YYYY" value={value ? value : "Chưa tính toán"} />
+              <DateField
+                format="hh:mm DD/MM/YYYY"
+                value={value ? value : "Chưa tính toán"}
+              />
             )}
           />
           <Table.Column

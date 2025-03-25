@@ -258,19 +258,21 @@ export interface IInspectingForm {
   number_of_sample?: number | null;
   sample_weight?: number | null;
   can_harvest: boolean;
-  completed_date?: string;
+  complete_date?: string;
   status: "Draft" | "Pending" | "Ongoing" | "Completed" | "Cancelled";
   created_at: string;
   created_by: string;
   updated_at?: string | null;
   updated_by?: string | null;
+  evaluated_result: "Pass" | "Fail";
   inspecting_results: InspectingResult;
 }
 export interface IInspectingResult {
+  id: number;
   arsen: number;
   plumbum: number;
   cadmi: number;
-  hydragyrum: number;
+  hydrargyrum: number;
   salmonella: number;
   coliforms: number;
   ecoli: number;

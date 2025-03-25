@@ -1,35 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { type BaseKey, type HttpError, useShow, useTranslate } from "@refinedev/core";
 import {
-  type BaseKey,
-  type HttpError,
-  useGetToPath,
-  useGo,
-  useShow,
-  useTranslate,
-} from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Spin, Tag } from "antd";
-import { useSearchParams } from "react-router";
-import { Drawer } from "../../drawer";
-import { DeleteButton } from "@refinedev/antd";
-import { EditOutlined } from "@ant-design/icons";
+  Button,
+  Divider,
+  Grid,
+  List,
+  Typography,
+  theme,
+  Spin,
+  Card,
+  Table,
+  Tag,
+  Alert,
+} from "antd";
+import { EditOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { IInspectingForm, IInspectingResult } from "@/interfaces";
 import { InspectionDrawerForm } from "../drawer-form";
 import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
+import { useNavigate, useParams } from "react-router-dom";
+import { PageHeader } from "@refinedev/antd";
+import dayjs from "dayjs";
 
-type Props = {
-  id?: BaseKey;
-  onClose?: () => void;
-};
-
-export const InspectionDrawerShow: React.FC<Props> = ({ id, onClose }) => {
+export const InspectionsShow: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const getToPath = useGetToPath();
-  const [searchParams] = useSearchParams();
-  const go = useGo();
+  const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
+
+  const { id } = useParams();
+  const navigate = useNavigate();
   const t = useTranslate();
-  const { token } = theme.useToken();
-  const screens = Grid.useBreakpoint();
 
   // Fetch inspecting form
   const { queryResult: formQueryResult } = useShow<{ data: IInspectingForm[] }, HttpError>({
@@ -38,171 +37,200 @@ export const InspectionDrawerShow: React.FC<Props> = ({ id, onClose }) => {
     queryOptions: { enabled: !!id },
   });
 
-  // Fetch inspecting result
   const { queryResult: resultQueryResult } = useShow<{ data: IInspectingResult[] }, HttpError>({
     resource: "inspecting-results",
     id,
     queryOptions: { enabled: !!id },
   });
 
-  const inspection = (formQueryResult.data as { data: IInspectingForm[] } | undefined)?.data?.[0];
-  const inspectionResult = (resultQueryResult.data as { data: IInspectingResult[] } | undefined)
-    ?.data?.[0];
+  const isLoading = formQueryResult.isLoading || resultQueryResult.isLoading;
 
-  console.log("Inspection Status:", inspection?.status);
-  console.log("Evaluated Result:", inspectionResult?.evaluated_result);
+  const inspection = useMemo(
+    () => (formQueryResult.data as { data: IInspectingForm[] } | undefined)?.data?.[0],
+    [formQueryResult.data],
+  );
 
-  const handleDrawerClose = () => {
-    if (onClose) {
-      onClose();
-      return;
-    }
-    go({
-      to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
-      query: { to: undefined },
-      options: { keepQuery: true },
-      type: "replace",
-    });
+  const inspectionResult = useMemo(
+    () => (resultQueryResult.data as { data: IInspectingResult[] } | undefined)?.data?.[0],
+    [resultQueryResult.data],
+  );
+  const handleBack = () => {
+    navigate(-1);
   };
 
-  if (formQueryResult.isFetching || resultQueryResult.isFetching) {
-    return <Spin size="large" />;
-  }
+  const handleEdit = () => {
+    if (inspection) {
+      const formattedInspection = {
+        ...inspection,
+        start_date: inspection.start_date ? dayjs(inspection.start_date).toISOString() : "",
+        end_date: inspection.end_date ? dayjs(inspection.end_date).toISOString() : "",
+      };
 
-  // If no data is available, show a message
-  if (!inspection) {
-    return (
-      <Typography.Text style={{ padding: "16px" }}>No inspection data available.</Typography.Text>
-    );
-  }
+      console.log("Opening Edit Form with Data:", formattedInspection);
 
+      setSelectedResult(formattedInspection);
+      setIsEditing(true);
+    }
+  };
+
+  const handleCloseDrawer = () => {
+    setIsEditing(false);
+    setSelectedResult(null);
+  };
+
+  if (!id) return <Alert type="error" message="No inspection ID provided" />;
+  if (isLoading) return <Spin size="large" />;
+  if (formQueryResult.error || resultQueryResult.error)
+    return <Alert type="error" message="Failed to load inspection data" />;
+  if (!inspection) return <Card>No inspection data available.</Card>;
+  const chemicalData = inspectionResult
+    ? [
+        { key: "arsen", label: "Arsenic", value: inspectionResult.arsen },
+        { key: "plumbum", label: "Plumbum", value: inspectionResult.plumbum },
+        { key: "cadmi", label: "Cadmium", value: inspectionResult.cadmi },
+        { key: "hydragyrum", label: "Mercury", value: inspectionResult.hydrargyrum },
+        { key: "salmonella", label: "Salmonella", value: inspectionResult.salmonella },
+        { key: "coliforms", label: "Coliforms", value: inspectionResult.coliforms },
+        { key: "ecoli", label: "E. Coli", value: inspectionResult.ecoli },
+        {
+          key: "glyphosate_glufosinate",
+          label: "Glyphosate/Glufosinate",
+          value: inspectionResult.glyphosate_glufosinate,
+        },
+        { key: "sulfur_dioxide", label: "Sulfur Dioxide", value: inspectionResult.sulfur_dioxide },
+        { key: "methyl_bromide", label: "Methyl Bromide", value: inspectionResult.methyl_bromide },
+        {
+          key: "hydrogen_phosphide",
+          label: "Hydrogen Phosphide",
+          value: inspectionResult.hydrogen_phosphide,
+        },
+        {
+          key: "dithiocarbamate",
+          label: "Dithiocarbamate",
+          value: inspectionResult.dithiocarbamate,
+        },
+        { key: "nitrat", label: "Nitrate", value: inspectionResult.nitrat },
+        { key: "nano3_kno3", label: "Nano3/KNO3", value: inspectionResult.nano3_kno3 },
+        { key: "chlorate", label: "Chlorate", value: inspectionResult.chlorate },
+        { key: "perchlorate", label: "Perchlorate", value: inspectionResult.perchlorate },
+      ]
+    : [];
   return (
-    <>
-      {!isEditing && (
-        <Drawer
-          open={!!id}
-          width={screens.sm ? "40%" : "100%"}
-          zIndex={1001}
-          onClose={handleDrawerClose}
-        >
-          <>
-            <Flex vertical align="center" justify="center">
-              <Avatar
-                shape="square"
-                style={{
-                  aspectRatio: 1,
-                  objectFit: "contain",
-                  width: "240px",
-                  height: "240px",
-                  margin: "16px auto",
-                  borderRadius: "8px",
-                }}
-                src="/images/inspector-default-img.png"
-                alt={inspection.task_name}
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
+      <PageHeader
+        onBack={handleBack}
+        title={`Inspection Details - ${inspection.task_name}`}
+        extra={[
+          inspectionResult && (
+            <Button key="edit" icon={<EditOutlined />} onClick={handleEdit}>
+              {t("actions.edit")}
+            </Button>
+          ),
+        ]}
+      />
+
+      <Card>
+        <List
+          dataSource={[
+            { label: "Inspection ID", value: inspection.id },
+            { label: "Plan ID", value: inspection.plan_id },
+            { label: "Plan Name", value: inspection.plan_name },
+            { label: "Inspector ID", value: inspection.inspector_id },
+            { label: "Inspector Name", value: inspection.inspector_name },
+            { label: "Task Name", value: inspection.task_name },
+            { label: "Description", value: inspection.description || "N/A" },
+            { label: "Task Type", value: inspection.task_type },
+            { label: "Start Date", value: new Date(inspection.start_date).toLocaleDateString() },
+            { label: "End Date", value: new Date(inspection.end_date).toLocaleDateString() },
+            {
+              label: "Completed Date",
+              value: inspection.complete_date
+                ? new Date(inspection.complete_date).toLocaleDateString()
+                : "N/A",
+            },
+            { label: "Can Harvest", value: inspection.can_harvest ? "Yes" : "No" },
+            { label: "Status", value: <InspectionStatusTag value={inspection?.status} /> },
+            { label: "Result Content", value: inspection.result_content || "N/A" },
+            { label: "Number of Samples", value: inspection.number_of_sample ?? "N/A" },
+            { label: "Sample Weight", value: inspection.sample_weight ?? "N/A" },
+            { label: "Created At", value: new Date(inspection.created_at).toLocaleDateString() },
+            { label: "Created By", value: inspection.created_by || "N/A" },
+            {
+              label: "Updated At",
+              value: inspection.updated_at
+                ? new Date(inspection.updated_at).toLocaleDateString()
+                : "N/A",
+            },
+            { label: "Updated By", value: inspection.updated_by || "N/A" },
+            {
+              label: "Inspection Result ID",
+              value: inspection.inspecting_results?.result_id || "N/A",
+            },
+            {
+              label: "Evaluated Result",
+              value: (
+                <InspectionResultTag value={inspection.inspecting_results?.evaluated_result} />
+              ),
+            },
+
+            {
+              label: "Result Images",
+              value:
+                inspection.inspecting_results?.result_images.length > 0 ? "Available" : "No Images",
+            },
+          ]}
+          renderItem={(data) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Typography.Text type="secondary">{data.label}</Typography.Text>}
+                title={<Typography.Text strong>{data.value}</Typography.Text>}
               />
-            </Flex>
+            </List.Item>
+          )}
+        />
+      </Card>
 
-            <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
-              <Flex vertical style={{ padding: "16px" }}>
-                <Typography.Title level={5}>{inspection.task_name}</Typography.Title>
-                <Typography.Text type="secondary">{inspection.description}</Typography.Text>
-              </Flex>
-            </Flex>
-
-            <Divider />
-
-            <List
-              dataSource={[
-                { label: "Plan ID", value: inspection.plan_id },
-                { label: "Plan Name", value: inspection.plan_name },
-                { label: "Inspector ID", value: inspection.inspector_id },
-                { label: "Inspector Name", value: inspection.inspector_name },
-                { label: "Task Type", value: inspection.task_type },
-                {
-                  label: "Start Date",
-                  value: new Date(inspection.start_date).toLocaleDateString(),
-                },
-                { label: "End Date", value: new Date(inspection.end_date).toLocaleDateString() },
-                {
-                  label: "Completed Date",
-                  value: inspection.completed_date
-                    ? new Date(inspection.completed_date).toLocaleDateString()
-                    : "N/A",
-                },
-                { label: "Can Harvest", value: inspection.can_harvest ? "Yes" : "No" },
-                {
-                  label: "Status",
-                  value: <InspectionStatusTag value={inspection?.status} />,
-                },
-                { label: "Number of Samples", value: inspection.number_of_sample ?? "N/A" },
-                { label: "Sample Weight", value: inspection.sample_weight ?? "N/A" },
-                { label: "Result Content", value: inspection.result_content ?? "N/A" },
-                {
-                  label: "Evaluated Result",
-                  value: <InspectionResultTag value={inspectionResult?.evaluated_result} />,
-                },
-
-                { label: "Arsenic", value: inspectionResult?.arsen ?? "N/A" },
-                { label: "Plumbum", value: inspectionResult?.plumbum ?? "N/A" },
-                { label: "Cadmium", value: inspectionResult?.cadmi ?? "N/A" },
-                { label: "Mercury", value: inspectionResult?.hydragyrum ?? "N/A" },
-                { label: "Salmonella", value: inspectionResult?.salmonella ?? "N/A" },
-                { label: "Coliforms", value: inspectionResult?.coliforms ?? "N/A" },
-                { label: "E. Coli", value: inspectionResult?.ecoli ?? "N/A" },
-                {
-                  label: "Glyphosate/Glufosinate",
-                  value: inspectionResult?.glyphosate_glufosinate ?? "N/A",
-                },
-                { label: "Sulfur Dioxide", value: inspectionResult?.sulfur_dioxide ?? "N/A" },
-                { label: "Methyl Bromide", value: inspectionResult?.methyl_bromide ?? "N/A" },
-                {
-                  label: "Hydrogen Phosphide",
-                  value: inspectionResult?.hydrogen_phosphide ?? "N/A",
-                },
-                { label: "Dithiocarbamate", value: inspectionResult?.dithiocarbamate ?? "N/A" },
-                { label: "Nitrate", value: inspectionResult?.nitrat ?? "N/A" },
-                { label: "Nano3/KNO3", value: inspectionResult?.nano3_kno3 ?? "N/A" },
-                { label: "Chlorate", value: inspectionResult?.chlorate ?? "N/A" },
-                { label: "Perchlorate", value: inspectionResult?.perchlorate ?? "N/A" },
-              ]}
-              renderItem={(data) => (
-                <List.Item>
-                  <List.Item.Meta
-                    style={{ padding: "0 16px" }}
-                    avatar={<Typography.Text type="secondary">{data.label}</Typography.Text>}
-                    title={data.value}
-                  />
-                </List.Item>
-              )}
-            />
-            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
-              <DeleteButton
-                type="text"
-                recordItemId={inspection.id}
-                resource="inspecting-forms"
-                onSuccess={handleDrawerClose}
-              />
-              <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                {t("actions.edit")}
-              </Button>
-            </Flex>
-          </>
-        </Drawer>
+      <Divider />
+      {inspectionResult ? (
+        <Card title="Inspection Results">
+          <Table
+            dataSource={chemicalData}
+            columns={[
+              {
+                title: "Indicator",
+                dataIndex: "label",
+                key: "label",
+                render: (text) => <Typography.Text strong>{text}</Typography.Text>,
+              },
+              {
+                title: "Value",
+                dataIndex: "value",
+                key: "value",
+                render: (value) => <Tag color={value > 0.1 ? "red" : "green"}>{value}</Tag>,
+              },
+            ]}
+            pagination={false}
+            bordered
+          />
+        </Card>
+      ) : (
+        <Card>
+          <Typography.Text>No inspecting result data available.</Typography.Text>
+        </Card>
       )}
 
-      {isEditing && inspection && (
+      {isEditing && selectedResult && (
         <InspectionDrawerForm
-          id={inspection.id}
+          id={selectedResult.id}
           action="edit"
           open={isEditing}
-          onClose={() => setIsEditing(false)}
+          initialValues={selectedResult}
+          onClose={handleCloseDrawer}
           onMutationSuccess={() => {
-            setIsEditing(false);
-            formQueryResult.refetch();
-            resultQueryResult.refetch();
+            handleCloseDrawer();
           }}
         />
       )}
-    </>
+    </div>
   );
 };

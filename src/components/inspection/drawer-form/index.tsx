@@ -1,41 +1,68 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
-import { Form, Input, InputNumber, Select, Grid, Button, Flex, Spin, Drawer } from "antd";
-import { useEffect } from "react";
-import { IInspectingForm } from "@/interfaces";
+import { type BaseKey, useGetToPath, useGo } from "@refinedev/core";
+import { Form, Input, DatePicker, Button, Flex, Drawer, Spin, Select } from "antd";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import dayjs from "dayjs";
 
 type Props = {
   id?: BaseKey;
-  action: "edit";
+  action: "edit" | "create";
   open?: boolean;
   onClose?: () => void;
   onMutationSuccess?: () => void;
+  initialValues?: any;
 };
 
 export const InspectionDrawerForm = (props: Props) => {
-  const apiUrl = useApiUrl();
-  const breakpoint = Grid.useBreakpoint();
-  const go = useGo();
+  const [formLoading, setFormLoading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IInspectingForm>({
+  const go = useGo();
+  const [form] = Form.useForm();
+
+  const { drawerProps, formProps, close, saveButtonProps } = useDrawerForm<any>({
     resource: "inspecting-forms",
-    id: props.id, 
-    action: "edit",
+    id: props?.id,
+    action: props.action,
     redirect: false,
     queryOptions: {
-      enabled: !!props.id,
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data) {
+          setFormLoading(false);
+          const formattedData = {
+            ...data.data,
+            start_date: data.data.start_date ? dayjs(data.data.start_date) : null,
+            end_date: data.data.end_date ? dayjs(data.data.end_date) : null,
+          };
+          form.setFieldsValue(formattedData);
+        }
+      },
     },
     onMutationSuccess: () => {
       props.onMutationSuccess?.();
     },
   });
+  useEffect(() => {
+    if (props.open && props.initialValues) {
+      console.log("Received initialValues:", props.initialValues);
+
+      const formattedData = {
+        ...props.initialValues,
+        start_date: props.initialValues.start_date ? dayjs(props.initialValues.start_date) : null,
+        end_date: props.initialValues.end_date ? dayjs(props.initialValues.end_date) : null,
+      };
+
+      console.log("Formatted Data:", formattedData);
+
+      form.setFieldsValue(formattedData);
+    }
+  }, [props.open, props.initialValues]);
 
   const onDrawerClose = () => {
+    form.resetFields();
     close();
-
     if (props?.onClose) {
       props.onClose();
       return;
@@ -48,59 +75,69 @@ export const InspectionDrawerForm = (props: Props) => {
     });
   };
 
-  useEffect(() => {
-    if (formProps.form) {
-      formProps.form.validateFields().catch(() => { });
-    }
-  }, [formProps.form]);
+  const title = props.action === "edit" ? "Edit Inspection" : "Add Inspection";
 
   return (
-    <Drawer
-      {...drawerProps}
-      open={props.open}
-      title="Edit Inspection"
-      width={breakpoint.sm ? "400px" : "100%"}
-      onClose={onDrawerClose}
-    >
+    <Drawer {...drawerProps} open={props.open} title={title} width={500} onClose={onDrawerClose}>
       <Spin spinning={formLoading}>
         <Form
-          form={formProps.form}
+          form={form}
           layout="vertical"
-          onFinish={formProps.onFinish}
-          onValuesChange={formProps.onValuesChange}
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
         >
-          <Form.Item label="Task Name" name="task_name" rules={[{ required: true, message: "Enter task name!" }]}>
+          <Form.Item
+            label="Task Name"
+            name="task_name"
+            rules={[{ required: true, message: "Please enter task name!" }]}
+          >
             <Input placeholder="Enter task name" />
           </Form.Item>
 
-          <Form.Item label="Description" name="description" rules={[{ required: true, message: "Enter description!" }]}>
-            <Input.TextArea rows={3} placeholder="Enter task description" />
-          </Form.Item>
-
-          <Form.Item label="Plan ID" name="plan_id" rules={[{ required: true, message: "Enter plan ID!" }]}>
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter plan ID" />
-          </Form.Item>
-
-          <Form.Item label="Inspector ID" name="inspector_id" rules={[{ required: true, message: "Enter inspector ID!" }]}>
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter inspector ID" />
-          </Form.Item>
-
-          <Form.Item label="Status" name="status" rules={[{ required: true, message: "Select status!" }]}>
-            <Select placeholder="Select status">
-              <Select.Option value="Draft">Draft</Select.Option>
-              <Select.Option value="Pending">Pending</Select.Option>
-              <Select.Option value="Ongoing">Ongoing</Select.Option>
-              <Select.Option value="Completed">Completed</Select.Option>
-              <Select.Option value="Cancelled">Cancelled</Select.Option>
+          <Form.Item
+            label="Task Type"
+            name="task_type"
+            rules={[{ required: true, message: "Please select task type!" }]}
+          >
+            <Select placeholder="Select task type">
+              <Select.Option value="Routine">Routine Inspection</Select.Option>
+              <Select.Option value="Follow-up">Follow-up Inspection</Select.Option>
+              <Select.Option value="Special">Special Inspection</Select.Option>
             </Select>
           </Form.Item>
 
-          <Form.Item label="Can Harvest" name="can_harvest" rules={[{ required: true, message: "Select option!" }]}>
-            <Select placeholder="Can Harvest?">
-              <Select.Option value={true}>Yes</Select.Option>
-              <Select.Option value={false}>No</Select.Option>
-            </Select>
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[{ required: true, message: "Please enter description!" }]}
+          >
+            <Input.TextArea rows={3} placeholder="Enter description" />
           </Form.Item>
+
+          <Form.Item
+            label="Start Date"
+            name="start_date"
+            rules={[{ required: true, message: "Please select start date!" }]}
+          >
+            <DatePicker style={{ width: "100%" }} showTime placeholder="Select start date" />
+          </Form.Item>
+
+          <Form.Item
+            label="End Date"
+            name="end_date"
+            rules={[{ required: true, message: "Please select end date!" }]}
+          >
+            <DatePicker style={{ width: "100%" }} showTime placeholder="Select end date" />
+          </Form.Item>
+
+          <Form.Item
+            label="Updated By"
+            name="updated_by"
+            rules={[{ required: true, message: "Please enter who updated this form!" }]}
+          >
+            <Input placeholder="Enter name of person updating" />
+          </Form.Item>
+
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">

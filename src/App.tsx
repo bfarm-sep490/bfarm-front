@@ -1,7 +1,11 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
+import {
+  ThemedLayoutV2,
+  ErrorComponent,
+  useNotificationProvider,
+} from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -63,7 +67,12 @@ import { FarmerList } from "./pages/farmers";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
+import {
+  ExpertCreate,
+  ExpertEdit,
+  ExpertList,
+  ExpertShow,
+} from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
@@ -104,7 +113,8 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -161,17 +171,6 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "inspector",
-                  list: "/inspectors",
-                  create: "/inspectors/create",
-                  edit: "/inspectors/edit/:id",
-                  show: "/inspectors/:id",
-                  meta: {
-                    parent: "employees",
-                    label: "Inspector",
-                  },
-                },
-                {
                   name: "inspections",
                   list: "/inspections",
                   edit: "/inspections/edit/:id",
@@ -181,6 +180,28 @@ const App: React.FC = () => {
                     icon: <ScheduleOutlined />,
                   },
                 },
+                {
+                  name: "inspection-forms",
+                  list: "/inspection-forms",
+                  edit: "/inspection-forms/edit/:id",
+                  show: "/inspection-forms/show/:id",
+                  meta: {
+                    parent: "inspections",
+                    label: "Inspecting Forms",
+                  },
+                },
+                {
+                  name: "inspector",
+                  list: "/inspectors",
+                  create: "/inspectors/create",
+                  edit: "/inspectors/edit/:id",
+                  show: "/inspectors/:id",
+                  meta: {
+                    parent: "inspections",
+                    label: "Inspector",
+                  },
+                },
+
                 {
                   name: "yield",
                   list: "/yield",
@@ -350,7 +371,14 @@ const App: React.FC = () => {
                       >
                         <Route path=":id" element={<ProblemShowV2 />}></Route>
                       </Route>
-
+                      <Route
+                        path="inspecting-tasks"
+                        element={
+                          <ShowTasksList>
+                            <Outlet />
+                          </ShowTasksList>
+                        }
+                      ></Route>
                       <Route
                         path="caring-tasks"
                         element={
@@ -385,7 +413,10 @@ const App: React.FC = () => {
                           element={<HarvestingTaskShow />}
                         />
                       </Route>
-                      <Route path="harvesting-tasks/create" element={<HarvestingCreate />}></Route>
+                      <Route
+                        path="harvesting-tasks/create"
+                        element={<HarvestingCreate />}
+                      ></Route>
                       <Route
                         path="harvesting-tasks/:taskId/edit"
                         element={<HarvestingUpdate />}
@@ -455,9 +486,18 @@ const App: React.FC = () => {
                     <Route path=":id" element={<CustomerShow />} />
                   </Route>
 
-                  <Route path="/inspections" element={<InspectionsList />} />
-                  <Route path="/inspections/:id" element={<InspectionShow />} />
-                  <Route path="/inspections/edit/:id" element={<InspectionEdit />} />
+                  <Route
+                    path="/inspection-forms"
+                    element={<InspectionsList />}
+                  />
+                  <Route
+                    path="/inspection-forms/:id"
+                    element={<InspectionShow />}
+                  />
+                  <Route
+                    path="/inspection-forms/edit/:id"
+                    element={<InspectionEdit />}
+                  />
 
                   <Route
                     path="/plants"
@@ -578,8 +618,14 @@ const App: React.FC = () => {
                       />
                     }
                   />
-                  <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
-                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<AuthPage type="forgotPassword" />}
+                  />
+                  <Route
+                    path="/update-password"
+                    element={<AuthPage type="updatePassword" />}
+                  />
                 </Route>
 
                 <Route

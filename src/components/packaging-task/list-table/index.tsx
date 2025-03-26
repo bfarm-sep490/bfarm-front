@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Typography,
-  TableProps,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
@@ -55,9 +47,7 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => (
-              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-            )}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
           <Table.Column dataIndex="task_name" title={translate("name")} />
           <Table.Column
@@ -73,16 +63,12 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="packed_quantity"
             title={"packed_quantity"}
-            render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
-            )}
+            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="packed_unit"
             title={"packed_unit"}
-            render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
-            )}
+            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="status"
@@ -102,11 +88,7 @@ export const PackagingTaskList = ({
             dataIndex="plan_id"
             render={(value) => {
               const plan = plans.find((x) => x.id === value);
-              return (
-                <TextField
-                  value={plan ? plan.plan_name : "Không xác định được kế hoạch"}
-                />
-              );
+              return <TextField value={plan ? plan.plan_name : "Không xác định được kế hoạch"} />;
             }}
           />
           <Table.Column
@@ -138,7 +120,7 @@ export const PackagingTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/packaging-tasks/${record.id}`
+                        : `/packaging-tasks/${record.id}`,
                     )
                   }
                 />

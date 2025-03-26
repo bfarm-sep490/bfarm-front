@@ -5,12 +5,7 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import {
-  DateField,
-  FilterDropdown,
-  TextField,
-  useTable,
-} from "@refinedev/antd";
+import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd";
 
 import {
   Avatar,
@@ -39,7 +34,5 @@ export const FarmerListTableInPlan: React.FC<FarmerListTableInPlanProps> = ({ ta
   const { showUrl } = useNavigation();
   const { id } = useParams();
 
-  return (
-  
-  );
+  return <div></div>;
 };

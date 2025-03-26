@@ -242,12 +242,7 @@ export const ApprovingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan
-          experts={experts}
-          yields={yields}
-          plants={plants}
-          formProps={formProps}
-        />
+        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
       ),
     },
     {
@@ -371,7 +366,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -382,7 +377,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -393,7 +388,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }

@@ -1,11 +1,5 @@
 import { TextField, useForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useBack,
-  useGo,
-  useList,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useBack, useGo, useList, useTranslate } from "@refinedev/core";
 import {
   Form,
   Input,
@@ -54,10 +48,7 @@ export const HarvestingTaskForm = (props: Props) => {
     filters: [{ field: "status", operator: "eq", value: "Ongoing" }],
   });
 
-  const plans = [
-    ...(queryPendingPlans.data?.data || []),
-    ...(queryOngoingPlans?.data?.data || []),
-  ];
+  const plans = [...(queryPendingPlans.data?.data || []), ...(queryOngoingPlans?.data?.data || [])];
   const { data: itemData } = useList({
     resource: "items",
   });
@@ -88,7 +79,7 @@ export const HarvestingTaskForm = (props: Props) => {
               id: item.item_id,
               quantity: item.quantity,
               id_block: index,
-            }))
+            })),
           );
 
           formProps.form?.setFieldsValue({
@@ -137,10 +128,7 @@ export const HarvestingTaskForm = (props: Props) => {
     { label: t("status.incomplete", "Chưa hoàn thành"), value: "Incomplete" },
     { label: t("status.unapprove", "Không phê duyệt"), value: "Unapprove" },
   ];
-  const addField = (
-    list: any[],
-    setList: React.Dispatch<React.SetStateAction<any[]>>
-  ) => {
+  const addField = (list: any[], setList: React.Dispatch<React.SetStateAction<any[]>>) => {
     const newList = [
       ...list,
       {
@@ -155,7 +143,7 @@ export const HarvestingTaskForm = (props: Props) => {
   const removeField = (
     id: number,
     list: any[],
-    setList: React.Dispatch<React.SetStateAction<any[]>>
+    setList: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     const newList = list.filter((item) => item.id !== id);
     setList(newList);
@@ -168,24 +156,17 @@ export const HarvestingTaskForm = (props: Props) => {
           item_id: field.id,
           quantity: field.quantity,
           unit: "unit",
-        }))
+        })),
       );
     formProps.form?.setFieldValue("created_by", "Farm Owner");
     onFinish();
   };
   return (
     <>
-      <Button
-        type="text"
-        onClick={back}
-        style={{ width: "40px", height: "40px" }}
-      >
+      <Button type="text" onClick={back} style={{ width: "40px", height: "40px" }}>
         <ArrowLeftOutlined style={{ fontSize: "20px" }} />
       </Button>
-      <Card
-        title={title}
-        style={{ width: "100%", margin: "0 auto", padding: "16px" }}
-      >
+      <Card title={title} style={{ width: "100%", margin: "0 auto", padding: "16px" }}>
         <Spin spinning={formLoading}>
           <Form
             form={formProps?.form}
@@ -193,11 +174,7 @@ export const HarvestingTaskForm = (props: Props) => {
             layout="vertical"
             onFinish={handleFinish}
           >
-            <Form.Item
-              label="Tên công việc"
-              name="task_name"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Tên công việc" name="task_name" rules={[{ required: true }]}>
               <Input name="task_name" />
             </Form.Item>
             <Row gutter={16}>
@@ -230,20 +207,14 @@ export const HarvestingTaskForm = (props: Props) => {
                     value={endDate}
                     onChange={setEndDate}
                     disabledDate={(current) => {
-                      return startDate
-                        ? current && current.isBefore(startDate, "day")
-                        : false;
+                      return startDate ? current && current.isBefore(startDate, "day") : false;
                     }}
                   />
                 </Form.Item>
               </Col>
             </Row>
 
-            <Form.Item
-              label="Kế hoạch liên quan"
-              name="plan_id"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Kế hoạch liên quan" name="plan_id" rules={[{ required: true }]}>
               <Select
                 value={idPlan}
                 onChange={(value) => {
@@ -257,18 +228,10 @@ export const HarvestingTaskForm = (props: Props) => {
                 ))}
               </Select>
             </Form.Item>
-            <Form.Item
-              label="Trạng thái"
-              name="status"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Trạng thái" name="status" rules={[{ required: true }]}>
               <Select options={statusOptions} />
             </Form.Item>
-            <Form.Item
-              label="Mô tả"
-              name="description"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
               <Input.TextArea rows={7} />
             </Form.Item>
             <div className="form-section">
@@ -302,18 +265,13 @@ export const HarvestingTaskForm = (props: Props) => {
                           onChange={(value) => {
                             setItemFields((prev) =>
                               prev.map((f) =>
-                                f.id_block === field.id_block
-                                  ? { ...f, id: value }
-                                  : f
-                              )
+                                f.id_block === field.id_block ? { ...f, id: value } : f,
+                              ),
                             );
                           }}
                         >
                           {itemData?.data.map((fertilizer) => (
-                            <Select.Option
-                              key={`item_${fertilizer.id}`}
-                              value={fertilizer.id}
-                            >
+                            <Select.Option key={`item_${fertilizer.id}`} value={fertilizer.id}>
                               {fertilizer.name}
                             </Select.Option>
                           ))}
@@ -331,10 +289,8 @@ export const HarvestingTaskForm = (props: Props) => {
                           onChange={(value) =>
                             setItemFields((prev) =>
                               prev.map((f) =>
-                                f.id_block === field.id_block
-                                  ? { ...f, quantity: value || 0 }
-                                  : f
-                              )
+                                f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
+                              ),
                             )
                           }
                         />
@@ -347,9 +303,7 @@ export const HarvestingTaskForm = (props: Props) => {
                       <Button
                         shape="circle"
                         danger
-                        onClick={() =>
-                          removeField(field.id, itemFields, setItemFields)
-                        }
+                        onClick={() => removeField(field.id, itemFields, setItemFields)}
                       >
                         <DeleteOutlined />
                       </Button>
@@ -358,11 +312,7 @@ export const HarvestingTaskForm = (props: Props) => {
                 </div>
               ))}
             </div>
-            <Button
-              type="primary"
-              {...saveButtonProps}
-              style={{ width: "100%" }}
-            >
+            <Button type="primary" {...saveButtonProps} style={{ width: "100%" }}>
               {t("buttons.save", "Save")}
             </Button>
           </Form>

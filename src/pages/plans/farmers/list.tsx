@@ -19,16 +19,7 @@ import {
   useNavigation,
   useTable,
 } from "@refinedev/core";
-import {
-  Button,
-  Form,
-  Modal,
-  Segmented,
-  Select,
-  Table,
-  theme,
-  Typography,
-} from "antd";
+import { Button, Form, Modal, Segmented, Select, Table, theme, Typography } from "antd";
 import { filter } from "lodash";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -55,11 +46,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   const { token } = theme.useToken();
   return (
     <>
-      <Button
-        type="text"
-        style={{ width: "40px", height: "40px" }}
-        onClick={() => back()}
-      >
+      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <List
@@ -70,21 +57,14 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           </Button>,
         ]}
       >
-        <Table
-          dataSource={farmers}
-          loading={isLoading}
-          rowKey="id"
-          scroll={{ x: true }}
-        >
+        <Table dataSource={farmers} loading={isLoading} rowKey="id" scroll={{ x: true }}>
           <Table.Column
             title="ID"
             dataIndex="id"
             key="id"
             width={"auto"}
             render={(value) => (
-              <Typography.Text style={{ fontWeight: "bold" }}>
-                #{value}
-              </Typography.Text>
+              <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
             )}
             filterIcon={(filtered) => (
               <SearchOutlined
@@ -109,12 +89,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
             )}
           />
 
-          <Table.Column
-            title="Status"
-            dataIndex="status"
-            key="status"
-            width={"auto"}
-          />
+          <Table.Column title="Status" dataIndex="status" key="status" width={"auto"} />
 
           <Table.Column
             title="Actions"
@@ -152,11 +127,7 @@ type DeleteFarmerInPlanProps = {
   famer_id: number;
 };
 
-export const DeleteFarmerInPlanModal = ({
-  open,
-  setOpen,
-  famer_id,
-}: DeleteFarmerInPlanProps) => {
+export const DeleteFarmerInPlanModal = ({ open, setOpen, famer_id }: DeleteFarmerInPlanProps) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -184,9 +155,7 @@ export const DeleteFarmerInPlanModal = ({
         </>
       }
     >
-      <Typography.Text
-        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
-      >
+      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
         * Bạn có chắc chắn muốn xóa nông dân này khỏi kế hoạch?
       </Typography.Text>
     </Modal>
@@ -215,9 +184,7 @@ export const AddFarmerIntoPlanModal = ({
   });
   const navigate = useNavigate();
   const farmers = farmerData?.data as IFarmer[];
-  const filterFarmers = farmers?.filter(
-    (x) => !chosenFarmers.some((y: any) => y.id === x.id)
-  );
+  const filterFarmers = farmers?.filter((x) => !chosenFarmers.some((y: any) => y.id === x.id));
 
   const { id } = useParams();
 

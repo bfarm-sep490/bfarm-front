@@ -100,10 +100,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
       cacheTime: 1000 * 60,
     },
   });
-  const { data: problemsData, isLoading: problemsLoading } = useOne<
-    IProblem[],
-    HttpError
-  >({
+  const { data: problemsData, isLoading: problemsLoading } = useOne<IProblem[], HttpError>({
     resource: "plans",
     id: `${id}/problems`,
   });
@@ -276,8 +273,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <UserOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Cây trồng:</Typography.Text>
                     <Typography.Text>
-                      {general_info?.plant_information?.plant_name ||
-                        "Chưa xác định"}
+                      {general_info?.plant_information?.plant_name || "Chưa xác định"}
                     </Typography.Text>
                   </Space>
 
@@ -285,10 +281,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <GoldOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Khu đất</Typography.Text>
                     <Typography.Text>
-                      <Tag>
-                        {general_info?.yield_information?.yield_name ||
-                          "Chưa xác định"}
-                      </Tag>
+                      <Tag>{general_info?.yield_information?.yield_name || "Chưa xác định"}</Tag>
                     </Typography.Text>
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
@@ -310,14 +303,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <Typography.Text strong>Ngày tạo:</Typography.Text>
                     <Typography.Text type="secondary">
                       {general_info?.created_at ? (
-                        <DateField
-                          value={general_info?.created_at}
-                          format="hh:mm DD/MM/YYYY"
-                        />
+                        <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
                       ) : (
-                        <Typography.Text type="danger">
-                          Chưa xác định
-                        </Typography.Text>
+                        <Typography.Text type="danger">Chưa xác định</Typography.Text>
                       )}
                     </Typography.Text>
                   </Space>

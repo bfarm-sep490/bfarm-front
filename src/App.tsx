@@ -83,9 +83,9 @@ import { HarvestingCreate } from "./pages/plans/tasks/harvesting-create";
 import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
 import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
-import { FarmerListInPlan } from "./pages/plans/farmers/list";
-import { ShowProductList } from "./pages/plans/production";
+
 import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -322,9 +322,6 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route path="farmers" element={<FarmerListInPlan />}></Route>
-                      <Route path="harvesting-products" element={<ShowProductList />}></Route>
-                      <Route path="packaged-products" element={<ShowProductList />}></Route>
                       <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
                       <Route
                         path="problems"

@@ -114,7 +114,7 @@ export const HarvestedTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/harvesting-tasks/${record.id}`
+                        : `/harvesting-tasks/${record.id}`,
                     )
                   }
                 />

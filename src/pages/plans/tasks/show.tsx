@@ -19,7 +19,7 @@ import { HarvestedTaskList } from "../../../components/harvesting-task/list-tabl
 import { CaringTaskListInPlan } from "./caring-list";
 import { HarvestingTaskListInPlan } from "./harvesting-list";
 import { PackagingTaskListInPlan } from "./packaging-list";
-
+import { InspectingTaskList } from "./inspection-task";
 
 export const ShowTasksList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
@@ -45,13 +45,20 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
           <Space>
             <Radio.Group
               defaultValue={
-                isHarvestingTask ? "harvesting" : isPackagingTask ? "packaging" : "caring"
+                isHarvestingTask
+                  ? "harvesting"
+                  : isPackagingTask
+                    ? "packaging"
+                    : isProductingTask
+                      ? "caring"
+                      : "inspecting"
               }
               onChange={(e) => {
                 navigate(`/plans/${id}/${e.target.value}-tasks`);
               }}
             >
               <Radio.Button value="caring">Chăm sóc</Radio.Button>
+              <Radio.Button value="inspecting">Kiểm định</Radio.Button>
               <Radio.Button value="harvesting">Thu hoạch</Radio.Button>
               <Radio.Button value="packaging">Đóng gói</Radio.Button>
             </Radio.Group>
@@ -61,10 +68,9 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
             type="primary"
             onClick={() => {
               if (isProductingTask) navigate(`/plans/${id}/caring-tasks/create`);
-
-              if (isHarvestingTask) navigate(`/plans/${id}/harvesting-tasks/create`);
-
-              if (isPackagingTask) navigate(`/plans/${id}/packaging-tasks/create`);
+              else if (isHarvestingTask) navigate(`/plans/${id}/harvesting-tasks/create`);
+              else if (isPackagingTask) navigate(`/plans/${id}/packaging-tasks/create`);
+              else navigate(`/plans/${id}/inspecting-tasks/create`);
             }}
           >
             Tạo mới
@@ -74,8 +80,10 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
           <CaringTaskListInPlan />
         ) : isHarvestingTask ? (
           <HarvestingTaskListInPlan />
-        ) : (
+        ) : isPackagingTask ? (
           <PackagingTaskListInPlan />
+        ) : (
+          <InspectingTaskList />
         )}
         {children}
       </div>

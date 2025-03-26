@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Flex,
-  Typography,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { PackagedProductListInPlan } from "./harvesting/list";
@@ -43,15 +35,11 @@ export const ShowProductList = ({ children }: PropsWithChildren) => {
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <div>
-        <Typography.Title level={3}>
-          Sản phẩm của kế hoạch #{id}
-        </Typography.Title>
+        <Typography.Title level={3}>Sản phẩm của kế hoạch #{id}</Typography.Title>
         <Flex justify="space-between" align="center">
           <Space>
             <Radio.Group
-              defaultValue={
-                isPackagedProduct ? "packaged-products" : "harvesting-products"
-              }
+              defaultValue={isPackagedProduct ? "packaged-products" : "harvesting-products"}
               onChange={(e) => {
                 navigate(`/plans/${id}/${e.target.value}`);
               }}
@@ -61,11 +49,7 @@ export const ShowProductList = ({ children }: PropsWithChildren) => {
             </Radio.Group>
           </Space>
         </Flex>
-        {isPackagedProduct ? (
-          <PackagedProductListInPlan />
-        ) : (
-          <HarvestingProductionListInPlan />
-        )}
+        {isPackagedProduct ? <PackagedProductListInPlan /> : <HarvestingProductionListInPlan />}
         {children}
       </div>
     </>

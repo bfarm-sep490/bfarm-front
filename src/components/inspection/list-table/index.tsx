@@ -6,9 +6,11 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { InspectionStatusTag } from "../status";
+
 export const InspectionListTable: React.FC = () => {
   const { token } = theme.useToken();
   const go = useGo();
+
 
   const { tableProps, filters, setFilters } = useTable<IInspectingForm, HttpError>({
     resource: "inspecting-forms",
@@ -16,6 +18,7 @@ export const InspectionListTable: React.FC = () => {
       initial: [
         { field: "id", operator: "eq", value: "" },
         { field: "task_type", operator: "contains", value: "" },
+
       ],
     },
   });
@@ -72,7 +75,9 @@ export const InspectionListTable: React.FC = () => {
             style={{ width: "100%" }}
             placeholder="Search Task Type"
             onChange={(e) =>
+
               setFilters([{ field: "task_type", operator: "contains", value: e.target.value }])
+
             }
           />
         )}

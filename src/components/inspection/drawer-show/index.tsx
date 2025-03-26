@@ -18,7 +18,7 @@ import { IInspectingForm, IInspectingResult } from "@/interfaces";
 import { InspectionDrawerForm } from "../drawer-form";
 import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { PageHeader } from "@refinedev/antd";
 import dayjs from "dayjs";
 

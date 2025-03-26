@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Flex,
-  Typography,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined, PlusSquareOutlined } from "@ant-design/icons";
 import { CaringListTable } from "../../../components/caring-task/list-table";
@@ -48,9 +40,7 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <div>
-        <Typography.Title level={3}>
-          Danh sách công việc của kế hoạch #{id}
-        </Typography.Title>
+        <Typography.Title level={3}>Danh sách công việc của kế hoạch #{id}</Typography.Title>
         <Flex justify="space-between" align="center">
           <Space>
             <Radio.Group

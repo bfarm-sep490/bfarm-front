@@ -77,15 +77,10 @@ export const ShowTasksList = ({ children }: PropsWithChildren) => {
             icon={<PlusSquareOutlined />}
             type="primary"
             onClick={() => {
-              if (isProductingTask)
-                navigate(`/plans/${id}/caring-tasks/create`);
-
-              if (isHarvestingTask)
-                navigate(`/plans/${id}/harvesting-tasks/create`);
-
-              if (isPackagingTask)
-                navigate(`/plans/${id}/packaging-tasks/create`);
-              navigate(`/plans/${id}/inspecting-tasks/create`);
+              if (isProductingTask) navigate(`/plans/${id}/caring-tasks/create`);
+              else if (isHarvestingTask) navigate(`/plans/${id}/harvesting-tasks/create`);
+              else if (isPackagingTask) navigate(`/plans/${id}/packaging-tasks/create`);
+              else navigate(`/plans/${id}/inspecting-tasks/create`);
             }}
           >
             Tạo mới

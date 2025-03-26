@@ -44,7 +44,6 @@ import { RealTimeContentCard } from "../../components/card/card-real-time";
 import { StatusTag } from "../../components/caring-task/status-tag";
 import { StatusModal } from "@/components/plan/completd-modal";
 import { set } from "lodash";
-import { T } from "node_modules/react-router/dist/development/fog-of-war-BALYJxf_.mjs";
 import { ProblemsDashBoard } from "@/components/plan/dashboard-problems";
 import { IProblem } from "@/interfaces";
 import { MaterialDashboard } from "@/components/plan/dashboard-fertilizer-pesticide-item";

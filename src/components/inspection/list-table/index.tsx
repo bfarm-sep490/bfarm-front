@@ -1,121 +1,91 @@
-import { type HttpError, useGo, useList } from "@refinedev/core";
-import { Table, Avatar, Button, Tag, Typography, theme } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
+import React from "react";
+import { useTable } from "@refinedev/antd";
+import { getDefaultFilter, type HttpError, useGo } from "@refinedev/core";
+import { Table, Button, Input, InputNumber, Typography, theme, Space } from "antd";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
-import { IIdentity, IInspectingForm } from "@/interfaces";
-
-// Interface kết hợp Inspector và Task
-export interface IInspectorWithTaskTable extends IInspectingForm {
-  task?: IInspectingForm;
-}
-
-// Hàm lấy màu trạng thái của Availability
-const getAvailabilityColor = (availability: any) => {
-  return availability === "Available" ? "green" : "red";
-};
-
-// Hàm lấy màu trạng thái của Task
-const getStatusColor = (status?: string) => {
-  const colorMap: Record<string, string> = {
-    completed: "green",
-    ongoing: "blue",
-    pending: "gold",
-    cancel: "red",
-  };
-  return colorMap[status || ""] || "gray";
-};
-
+import { IInspectingForm } from "@/interfaces";
+import { InspectionStatusTag } from "../status";
 export const InspectionListTable: React.FC = () => {
+  const { token } = theme.useToken();
   const go = useGo();
-  const { pathname } = useLocation();
 
-  // Fetch dữ liệu từ API
-  const {
-    data: inspectorData,
-    isLoading: loadingInspectors,
-    error: inspectorError,
-  } = useList<IInspectingForm>({
-    resource: "inspector",
-  });
-
-  const {
-    data: taskData,
-    isLoading: loadingTasks,
-    error: taskError,
-  } = useList<IInspectingForm>({
+  const { tableProps, filters, setFilters } = useTable<IInspectingForm, HttpError>({
     resource: "inspecting-forms",
+    filters: {
+      initial: [
+        { field: "id", operator: "eq", value: "" },
+        { field: "task_type", operator: "contains", value: "" },
+      ],
+    },
   });
 
-  // Debug lỗi nếu có
-  if (inspectorError) console.error("Error fetching inspectors:", inspectorError);
-  if (taskError) console.error("Error fetching inspecting tasks:", taskError);
-
-  // Kết hợp dữ liệu inspectors với tasks
-  const combinedData: IInspectorWithTaskTable[] =
-    inspectorData?.data.map((inspector) => {
-      const task = taskData?.data.find((t) => t.inspector_id === 1);
-      return { ...inspector, task };
-    }) || [];
-
-  // Kiểm tra trạng thái loading hoặc lỗi
-  if (loadingInspectors || loadingTasks) return <Typography.Text>Loading...</Typography.Text>;
-  if (inspectorError || taskError) return <Typography.Text>Error fetching data!</Typography.Text>;
+  const handleView = (id?: number) => {
+    if (id) {
+      go({
+        to: `/inspections/${id}`,
+        type: "push",
+      });
+    }
+  };
 
   return (
     <Table
-      dataSource={combinedData}
+      {...tableProps}
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
-        showTotal: (total) => <PaginationTotal total={total} entityName="inspector" />,
+        ...tableProps.pagination,
+        showTotal: (total) => <PaginationTotal total={total} entityName="inspections" />,
       }}
     >
-      <Table.Column title="ID" dataIndex="id" key="id" width={80} />
-
       <Table.Column
-        title="Avatar"
-        dataIndex="imageUrl"
-        key="imageUrl"
-        render={(imageUrl: string) => (
-          <Avatar shape="square" src={imageUrl || "/images/inspector-default-img.png"} />
+        title="ID"
+        dataIndex="id"
+        key="id"
+        width={80}
+        filterIcon={(filtered) => (
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+        )}
+        defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
+        filterDropdown={(props) => (
+          <InputNumber
+            style={{ width: "100%" }}
+            placeholder="Search ID"
+            onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
+          />
         )}
       />
 
-      <Table.Column title="Name" dataIndex="name" key="name" />
-
+      <Table.Column title="Plant Name" dataIndex="plan_name" key="plan_name" />
+      <Table.Column title="Task Name" dataIndex="task_name" key="task_name" />
       <Table.Column
-        title="Availability"
-        dataIndex="isAvailable"
-        key="isAvailable"
-        width={120}
-        render={(value: any) => <Tag color={getAvailabilityColor(value)}>{value}</Tag>}
+        title="Task Type"
+        dataIndex="task_type"
+        key="task_type"
+        filterIcon={(filtered) => (
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+        )}
+        defaultFilteredValue={getDefaultFilter("task_type", filters, "contains")}
+        filterDropdown={(props) => (
+          <Input
+            style={{ width: "100%" }}
+            placeholder="Search Task Type"
+            onChange={(e) =>
+              setFilters([{ field: "task_type", operator: "contains", value: e.target.value }])
+            }
+          />
+        )}
       />
 
-      <Table.Column
-        title="Task ID"
-        dataIndex="task"
-        key="taskID"
-        width={80}
-        render={(task?: IInspectingForm) => (task ? `#${task.id}` : "-")}
-      />
-
-      <Table.Column
-        title="Task Name"
-        dataIndex="task"
-        key="taskName"
-        width={150}
-        render={(task?: IInspectingForm) => (task ? task.task_name : "-")}
-      />
-
+      <Table.Column title="Inspector Name" dataIndex="inspector_name" key="inspector_name" />
+      <Table.Column title="Start Date" dataIndex="start_date" key="start_date" />
+      <Table.Column title="End Date" dataIndex="end_date" key="end_date" />
       <Table.Column
         title="Status"
-        dataIndex="task"
+        dataIndex="status"
         key="status"
-        width={120}
-        render={(task?: IInspectingForm) =>
-          task ? <Tag color={getStatusColor(task.status)}>{task.status.toUpperCase()}</Tag> : "-"
-        }
+        render={(status) => <InspectionStatusTag value={status} />}
       />
 
       <Table.Column
@@ -123,18 +93,14 @@ export const InspectionListTable: React.FC = () => {
         key="actions"
         fixed="right"
         align="center"
-        render={(_, record: IInspectorWithTaskTable) => (
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => {
-              go({
-                to: `/inspection/show/1`,
-                query: { to: pathname },
-                options: { keepQuery: true },
-                type: "replace",
-              });
-            }}
-          />
+        render={(_, record: IInspectingForm) => (
+          <Space>
+            {record.id ? (
+              <Button icon={<EyeOutlined />} onClick={() => handleView(record.id)} />
+            ) : (
+              <Typography.Text type="secondary">N/A</Typography.Text>
+            )}
+          </Space>
         )}
       />
     </Table>

@@ -246,27 +246,47 @@ export interface IProductionImage {
 export interface IInspectingForm {
   id: number;
   plan_id: number;
+  plan_name: string;
+  inspector_id: number;
+  inspector_name: string;
   task_name: string;
   task_type: string;
   description: string;
   start_date: string;
   end_date: string;
   result_content?: string;
-  brix_point?: number;
-  temperature?: number;
-  humidity?: number;
-  moisture?: number;
-  shell_color?: string;
-  test_gt_kit_color?: string;
-  inspecting_quantity: number;
-  unit: string;
-  issue_percent?: number;
+  number_of_sample?: number | null;
+  sample_weight?: number | null;
   can_harvest: boolean;
-  completed_date?: string;
-  inspector_id: number;
+  complete_date?: string;
   status: "Draft" | "Pending" | "Ongoing" | "Completed" | "Cancelled";
   created_at: string;
-  updated_at: string;
+  created_by: string;
+  updated_at?: string | null;
+  updated_by?: string | null;
+  evaluated_result: "Pass" | "Fail";
+  inspecting_results: InspectingResult;
+}
+export interface IInspectingResult {
+  id: number;
+  arsen: number;
+  plumbum: number;
+  cadmi: number;
+  hydrargyrum: number;
+  salmonella: number;
+  coliforms: number;
+  ecoli: number;
+  glyphosate_glufosinate: number;
+  sulfur_dioxide: number;
+  methyl_bromide: number;
+  hydrogen_phosphide: number;
+  dithiocarbamate: number;
+  nitrat: number;
+  nano3_kno3: number;
+  chlorate: number;
+  perchlorate: number;
+  evaluated_result: "Pass" | "Fail";
+  inspect_images: string[];
 }
 
 export interface IPackagingTask {

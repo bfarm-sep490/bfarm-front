@@ -1,47 +1,72 @@
-import { SaveButton, useDrawerForm, getValueFromEvent } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
-import { Form, Input, Select, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
+import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { type BaseKey, useGetToPath, useGo } from "@refinedev/core";
+import { Form, Input, DatePicker, Button, Flex, Drawer, Spin, Select } from "antd";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { Drawer } from "../../drawer";
-import { UploadOutlined } from "@ant-design/icons";
-import { useStyles } from "./styled";
-import { IInspectingForm } from "@/interfaces";
+import dayjs from "dayjs";
 
 type Props = {
   id?: BaseKey;
-  action: "create" | "edit";
+  action: "edit" | "create";
+  open?: boolean;
   onClose?: () => void;
   onMutationSuccess?: () => void;
+  initialValues?: any;
 };
 
-export const InspectorDrawerForm = (props: Props) => {
+export const InspectionDrawerForm = (props: Props) => {
+  const [formLoading, setFormLoading] = useState<boolean>(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-  const t = useTranslate();
-  const apiUrl = useApiUrl();
-  const breakpoint = Grid.useBreakpoint();
-  const { styles, theme } = useStyles();
+  const [form] = Form.useForm();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IInspectingForm>({
-      resource: "inspector",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
+  const { drawerProps, formProps, close, saveButtonProps } = useDrawerForm<any>({
+    resource: "inspecting-forms",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data) {
+          setFormLoading(false);
+          const formattedData = {
+            ...data.data,
+            start_date: data.data.start_date ? dayjs(data.data.start_date) : null,
+            end_date: data.data.end_date ? dayjs(data.data.end_date) : null,
+          };
+          form.setFieldsValue(formattedData);
+        }
       },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
+  useEffect(() => {
+    if (props.open && props.initialValues) {
+      console.log("Received initialValues:", props.initialValues);
+
+      const formattedData = {
+        ...props.initialValues,
+        start_date: props.initialValues.start_date ? dayjs(props.initialValues.start_date) : null,
+        end_date: props.initialValues.end_date ? dayjs(props.initialValues.end_date) : null,
+      };
+
+      console.log("Formatted Data:", formattedData);
+
+      form.setFieldsValue(formattedData);
+    }
+  }, [props.open, props.initialValues]);
 
   const onDrawerClose = () => {
+    form.resetFields();
     close();
-
     if (props?.onClose) {
       props.onClose();
       return;
     }
-
     go({
       to: searchParams.get("to") ?? getToPath({ action: "list" }) ?? "",
       query: { to: undefined },
@@ -50,135 +75,72 @@ export const InspectorDrawerForm = (props: Props) => {
     });
   };
 
-  const image = Form.useWatch("imageUrl", formProps.form);
-  console.log("Selected image:", image);
-  const title = props.action === "edit" ? "Edit Inspector" : "Add Inspector";
-
-  const availabilityOptions = [
-    { label: "Available", value: "Available" },
-    { label: "Unavailable", value: "Unavailable" },
-  ];
+  const title = props.action === "edit" ? "Edit Inspection" : "Add Inspection";
 
   return (
-    <Drawer
-      {...drawerProps}
-      open={true}
-      title={title}
-      width={breakpoint.sm ? "378px" : "100%"}
-      zIndex={1001}
-      onClose={onDrawerClose}
-    >
+    <Drawer {...drawerProps} open={props.open} title={title} width={500} onClose={onDrawerClose}>
       <Spin spinning={formLoading}>
-        <Form {...formProps} layout="vertical">
-          {/* Image Upload */}
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={formProps?.onFinish}
+          onValuesChange={formProps?.onValuesChange}
+        >
           <Form.Item
-            name="imageUrl"
-            valuePropName="fileList"
-            getValueFromEvent={getValueFromEvent}
-            style={{ margin: 0 }}
-            rules={[{ required: true, message: "Please upload an image!" }]}
+            label="Task Name"
+            name="task_name"
+            rules={[{ required: true, message: "Please enter task name!" }]}
           >
-            <Upload.Dragger
-              name="file"
-              action={`${apiUrl}/media/upload`}
-              maxCount={1}
-              accept=".png,.jpg,.jpeg"
-              className={styles.uploadDragger}
-              showUploadList={false}
-              disabled={props.action === "edit"} // Disable khi ở chế độ edit
-            >
-              <Flex
-                vertical
-                align="center"
-                justify="center"
-                style={{ position: "relative", height: "100%" }}
-              >
-                <Avatar
-                  shape="square"
-                  style={{
-                    aspectRatio: 1,
-                    objectFit: "contain",
-                    width: image ? "100%" : "48px",
-                    height: image ? "100%" : "48px",
-                    marginTop: image ? undefined : "auto",
-                    transform: image ? undefined : "translateY(50%)",
-                  }}
-                  src={image || "/images/inspector-default-img.png"}
-                  alt="Inspector Image"
-                />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{
-                    marginTop: "auto",
-                    marginBottom: "16px",
-                    backgroundColor: theme.colorBgContainer,
-                    ...(!!image && {
-                      position: "absolute",
-                      bottom: 0,
-                    }),
-                  }}
-                  disabled={props.action === "edit"} // Disable khi ở chế độ edit
-                >
-                  Upload Image
-                </Button>
-              </Flex>
-            </Upload.Dragger>
+            <Input placeholder="Enter task name" />
           </Form.Item>
 
-          {/* Account ID */}
           <Form.Item
-            label="Account ID"
-            name="accountID"
-            className={styles.formItem}
-            rules={[{ required: true, message: "Account ID is required!" }]}
+            label="Task Type"
+            name="task_type"
+            rules={[{ required: true, message: "Please select task type!" }]}
           >
-            <Input disabled={props.action === "edit"} /> {/* Disable khi ở chế độ edit */}
+            <Select placeholder="Select task type">
+              <Select.Option value="Routine">Routine Inspection</Select.Option>
+              <Select.Option value="Follow-up">Follow-up Inspection</Select.Option>
+              <Select.Option value="Special">Special Inspection</Select.Option>
+            </Select>
           </Form.Item>
 
-          {/* Name */}
-          <Form.Item
-            label="Name"
-            name="name"
-            className={styles.formItem}
-            rules={[{ required: true, message: "Name is required!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          {/* Address */}
-          <Form.Item
-            label="Address"
-            name="address"
-            className={styles.formItem}
-            rules={[{ required: true, message: "Address is required!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          {/* Description */}
           <Form.Item
             label="Description"
             name="description"
-            className={styles.formItem}
-            rules={[{ required: true, message: "Description is required!" }]}
+            rules={[{ required: true, message: "Please enter description!" }]}
           >
-            <Input.TextArea rows={6} />
+            <Input.TextArea rows={3} placeholder="Enter description" />
           </Form.Item>
 
-          {/* Availability */}
           <Form.Item
-            label="Availability"
-            name="isAvailable"
-            className={styles.formItem}
-            rules={[{ required: true, message: "Availability is required!" }]}
+            label="Start Date"
+            name="start_date"
+            rules={[{ required: true, message: "Please select start date!" }]}
           >
-            <Select options={availabilityOptions} />
+            <DatePicker style={{ width: "100%" }} showTime placeholder="Select start date" />
           </Form.Item>
 
-          {/* Buttons */}
-          <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+          <Form.Item
+            label="End Date"
+            name="end_date"
+            rules={[{ required: true, message: "Please select end date!" }]}
+          >
+            <DatePicker style={{ width: "100%" }} showTime placeholder="Select end date" />
+          </Form.Item>
+
+          <Form.Item
+            label="Updated By"
+            name="updated_by"
+            rules={[{ required: true, message: "Please enter who updated this form!" }]}
+          >
+            <Input placeholder="Enter name of person updating" />
+          </Form.Item>
+
+          <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onDrawerClose}>Cancel</Button>
-            <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Save
             </SaveButton>
           </Flex>

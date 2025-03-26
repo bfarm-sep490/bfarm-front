@@ -1,5 +1,5 @@
-import { InspectorDrawerForm } from "@/components/inspection";
+import { InspectionDrawerForm } from "@/components/inspection";
 
 export const InspectionEdit = () => {
-  return <InspectorDrawerForm action="edit" />;
+  return <InspectionDrawerForm action="edit" />;
 };

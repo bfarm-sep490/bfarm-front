@@ -11,7 +11,15 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Typography,
+  TableProps,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
@@ -20,10 +28,18 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
   const back = useBack();
   const navigate = useNavigate();
   const { id } = useParams();
-  let resources = "packaged-products";
-  if (id) resources = `plans/${id}/packaged-products`;
+
   const { tableProps } = useTable({
-    resource: resources,
+    resource: `packaging-products`,
+    filters: {
+      initial: [
+        {
+          field: "plan_id",
+          operator: "eq",
+          value: id ?? "",
+        },
+      ],
+    },
   });
 
   const translate = useTranslate();
@@ -35,37 +51,51 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+            render={(value) => (
+              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
+            )}
           />
-          <Table.Column dataIndex="plan_name" title={translate("name")} />
           <Table.Column
-            dataIndex="packaged_date"
-            title={translate("start_date")}
+            dataIndex="plan_name"
+            title={translate("plan_name", "Tên kế hoạch")}
+          />
+          <Table.Column
+            dataIndex="packaging_date"
+            title={translate("packaging_date", "Ngày đóng gói")}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column
-            dataIndex="packed_quantity"
-            title={"packed_quantity"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
-          />
-          <Table.Column
-            dataIndex="available_packaged_quantity"
-            title={"available_packaged_quantity"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
-          />
-          <Table.Column
-            dataIndex="packed_unit"
-            title={"packed_unit"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
+            dataIndex="plant_name"
+            title={translate("plant_name", "Tên cây trồng")}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
           />
           <Table.Column
             dataIndex="expired_date"
-            title={"expired_date"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
+            title={translate("expired_date", "Ngày hết hạn")}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
+          />
+          <Table.Column
+            dataIndex="quantity_per_pack"
+            title={translate("quantity_per_pack", "Số lượng mỗi gói")}
+            render={(value) => (
+              <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />
+            )}
+          />
+
+          <Table.Column
+            dataIndex="pack_quantity"
+            title={translate("pack_quantity", "Số lượng gói")}
+            render={(value) => (
+              <TextField value={value ? value : "Chưa thu hoạch"} />
+            )}
           />
           <Table.Column
             dataIndex="status"
-            title={"status"}
+            title={translate("status", "Trạng thái")}
             render={(value) => <StatusTag status={value} />}
           />
 

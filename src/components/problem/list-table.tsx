@@ -11,7 +11,15 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Typography,
+  TableProps,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ProblemTypeTag } from "./type-tag";
@@ -38,23 +46,28 @@ export const ProblemListTable = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+            render={(value) => (
+              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
+            )}
           />
-          <Table.Column dataIndex="problem_name" title={translate("name")} />
+          <Table.Column
+            dataIndex="problem_name"
+            title={translate("problem_name", "Tên vấn đề")}
+          />
           <Table.Column
             dataIndex="created_date"
-            title={"Ngày phát sinh"}
+            title={translate("problem.created_date", "Ngày phát sinh")}
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
 
           <Table.Column
             dataIndex="status"
-            title={"status"}
+            title={translate("problem.status", "Trạng thái")}
             render={(value) => <ProblemStatusTag status={value} />}
           />
 
           <Table.Column
-            title={translate("table.actions")}
+            title={translate("table.actions", "Hành động")}
             dataIndex="actions"
             render={(_, record: BaseRecord) => (
               <Space>

@@ -1,5 +1,11 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import {
+  type BaseKey,
+  useApiUrl,
+  useGetToPath,
+  useGo,
+  useTranslate,
+} from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -44,24 +50,25 @@ export const ExpertDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "experts",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.[0]?.avatar_image) {
-          setPreviewImage(data?.data?.[0]?.avatar_image);
-        }
-        formProps.form.setFieldsValue(data?.data?.[0]);
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "experts",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.[0]?.avatar_image) {
+            setPreviewImage(data?.data?.[0]?.avatar_image);
+          }
+          formProps.form.setFieldsValue(data?.data?.[0]);
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
     close();
@@ -99,7 +106,7 @@ export const ExpertDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -109,7 +116,7 @@ export const ExpertDrawerForm = (props: Props) => {
         formProps.form.setFieldValue("avatar_image", uploadedImageUrl);
         console.log("Server response:", response.data);
       } else {
-        throw new Error(response.data.message || "Upload failed.");
+        throw new Error(response.data.message || "Tải ảnh lỗi.");
       }
     } catch (error) {
       console.error("Upload error:", error);
@@ -118,11 +125,14 @@ export const ExpertDrawerForm = (props: Props) => {
       setUploading(false);
     }
   };
-  const title = props.action === "edit" ? "Edit this expert" : "Add a expert";
+  const title =
+    props.action === "edit"
+      ? t("form.edit_expert", "Chỉnh sửa chuyên gia")
+      : t("form.add_expert", "Thêm chuyên gia");
 
   const statusOptions = [
-    { label: "Active", value: "Active" },
-    { label: "Inactivate", value: "Inactive" },
+    { label: "Hoạt động", value: "Active" },
+    { label: "Không hoạt động", value: "Inactive" },
   ];
 
   return (
@@ -185,29 +195,29 @@ export const ExpertDrawerForm = (props: Props) => {
                   }}
                   disabled={uploading}
                 >
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading ? "Đang tải ảnh lên..." : "Tải ảnh lên"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
           <Flex vertical>
             <Form.Item
-              label="Name"
+              label={t("expert.expert_name", "Tên chuyên gia")}
               name="name"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your name!" },
+                { required: true, message: "Vui lòng nhập tên" },
                 {
                   min: 6,
                   max: 50,
-                  message: "Name must be between 6 and 50 characters!",
+                  message: "Tên phải từ 6 đến 50 ký tự",
                 },
               ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              label="Phone"
+              label={t("expert.phone", "Điện thoại")}
               name="phone"
               className={styles.formItem}
               rules={[
@@ -222,7 +232,7 @@ export const ExpertDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Email"
+              label={t("expert.email", "Email")}
               name="email"
               className={styles.formItem}
               rules={[
@@ -239,17 +249,28 @@ export const ExpertDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              label="Status"
+              label={t("expert.status", "Trạng thái")}
               name="status"
               className={styles.formItem}
               rules={[{ required: true }]}
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
-              <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
-                Save
+            <Flex
+              align="center"
+              justify="space-between"
+              style={{ padding: "16px 16px 0px 16px" }}
+            >
+              <Button onClick={onDrawerClose}>
+                {t("form.cancel", "Hủy bỏ")}
+              </Button>
+              <SaveButton
+                {...saveButtonProps}
+                htmlType="submit"
+                type="primary"
+                icon={null}
+              >
+                {t("form.save", "Lưu")}
               </SaveButton>
             </Flex>
           </Flex>

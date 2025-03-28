@@ -1,7 +1,7 @@
 import { FarmerListTable } from "@/components/farmer";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
-import { useGo, useNavigation } from "@refinedev/core";
+import { useGo, useNavigation, useTranslate } from "@refinedev/core";
 import { Segmented } from "antd";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation } from "react-router";
@@ -14,7 +14,9 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("farmers-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("farmers-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view
@@ -24,7 +26,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
     localStorage.setItem("farmers-view", value);
   };
 
-  // const t = useTranslate();
+  const t = useTranslate();
 
   return (
     <List
@@ -66,7 +68,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Fertilizer
+          {t("buttons.add_farmer", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

@@ -14,7 +14,17 @@ import {
   useTable,
 } from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Table,
+  Tag,
+  Typography,
+  theme,
+} from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -70,7 +80,9 @@ export const ExpertListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="experts" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="experts" />
+        ),
       }}
     >
       <Table.Column
@@ -88,24 +100,32 @@ export const ExpertListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder="Search ID"
+            />
           </FilterDropdown>
         )}
         render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+          <Typography.Text style={{ fontWeight: "bold" }}>
+            #{value}
+          </Typography.Text>
         )}
       />
 
       <Table.Column
         width={"auto"}
-        title="Avatar"
+        title={t("expert.avatar", "Ảnh đại diện")}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(image: string) => <Avatar shape="square" src={image} alt="Expert" />}
+        render={(image: string) => (
+          <Avatar shape="square" src={image} alt="Expert" />
+        )}
       />
 
       <Table.Column
-        title="Name"
+        title={t("exper.expert_name", "Tên chuyên gia")}
         width={"auto"}
         dataIndex="name"
         key="name"
@@ -125,19 +145,22 @@ export const ExpertListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Phone"
+        title={t("expert.phone", "Số điện thoại")}
         width={"auto"}
         dataIndex="phone"
         key="phone"
         render={(value) => (
-          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+          <Typography.Paragraph
+            ellipsis={{ rows: 2, tooltip: true }}
+            style={{ marginBottom: 0 }}
+          >
             {value}
           </Typography.Paragraph>
         )}
       />
 
       <Table.Column
-        title="Email"
+        title={t("expert.email", "Email")}
         dataIndex="email"
         key="email"
         width={"auto"}
@@ -157,7 +180,7 @@ export const ExpertListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Status"
+        title={t("expert.status", "Trạng thái")}
         dataIndex="status"
         key="status"
         width={"auto"}
@@ -178,14 +201,14 @@ export const ExpertListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Ngày tạo"
+        title={t("expert.created_at", "Ngày tạo")}
         width={"auto"}
         dataIndex="created_at"
         key="created_at"
         render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
       />
       <Table.Column
-        title="Ngày cập nhập"
+        title={t("expert.updated_at", "Ngày cập nhập")}
         dataIndex="updated_at"
         key="updated_at"
         width={"auto"}
@@ -198,7 +221,7 @@ export const ExpertListTable: React.FC = () => {
         }
       />
       <Table.Column
-        title="Actions"
+        title={t("expert.actions", "Hành động")}
         key="actions"
         fixed="right"
         align="center"

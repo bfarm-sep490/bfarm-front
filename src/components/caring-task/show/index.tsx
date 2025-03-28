@@ -1,4 +1,10 @@
-import { DateField, TagField, TextField, Title, useModalForm } from "@refinedev/antd";
+import {
+  DateField,
+  TagField,
+  TextField,
+  Title,
+  useModalForm,
+} from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {
   Drawer,
@@ -39,7 +45,11 @@ export const AssignedTaskStatus = ({ status }: { status: string }) => {
   );
 };
 
-export const HistoryAssignedModal = ({ visible, onClose, data }: HistoryAssignedModalProps) => {
+export const HistoryAssignedModal = ({
+  visible,
+  onClose,
+  data,
+}: HistoryAssignedModalProps) => {
   const columns = [
     { title: "ID", dataIndex: "farmer_id", key: "farmer_id" },
     { title: "Tên", dataIndex: "farmer_name", key: "farmer_name" },
@@ -110,28 +120,29 @@ export const ChangeAssignedTasksModal: React.FC<ChangeAssignedTasksModalProps> =
     >
       <Form>
         <div>
-          <Typography.Text style={{ fontWeight: "bold" }}>Người làm hiện tại</Typography.Text>
-          {assignedFarmers ? (
-            <>
-              <Flex dir="column" style={{ marginBottom: 16 }}>
-                <div>
-                  <strong>Id:</strong>
-                  <TextField value={assignedFarmers?.id} />
-                </div>
-                <div>
-                  <strong>Name:</strong> <TextField value={assignedFarmers?.name} />
-                </div>
-              </Flex>
-            </>
-          ) : (
-            <p>Không có người làm hiện tại</p>
+          {assignedFarmers && (
+            <Form.Item
+              name="reason"
+              label="Reason for the change"
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              style={{ marginTop: 20 }}
+            >
+              <Input.TextArea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Enter the reason for the change"
+                rows={4}
+              />
+            </Form.Item>
           )}
-
-          <Divider />
-
-          <Typography.Text style={{ fontWeight: "bold" }}>Người làm mới</Typography.Text>
-
-          <Form.Item name="new_assigned_farmer_id" label="Chọn người làm mới">
+          <Form.Item
+            name="new_assigned_farmer_id"
+            vertical={true}
+            label="Chọn người làm mới"
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }} // Cột input chiếm 100% chiều rộng
+          >
             <Select
               style={{ width: "100%", marginBottom: 16 }}
               placeholder="Select a new farmer"
@@ -147,17 +158,6 @@ export const ChangeAssignedTasksModal: React.FC<ChangeAssignedTasksModalProps> =
               ))}
             </Select>
           </Form.Item>
-
-          {assignedFarmers && (
-            <Form.Item name="reason" label="Reason for the change" style={{ marginTop: 20 }}>
-              <Input.TextArea
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Enter the reason for the change"
-                rows={4}
-              />
-            </Form.Item>
-          )}
         </div>
       </Form>
     </Modal>
@@ -217,7 +217,9 @@ export const ProductiveTaskShow = () => {
   const historyAssignedFarmers = historyAssignedData?.data || [];
   const navigate = useNavigate();
   const [dataVattu, setDataVattu] = useState<any>([]);
-  const [modeVattu, setModeVattu] = useState<"fertilizer" | "pesticide" | "item">("fertilizer");
+  const [modeVattu, setModeVattu] = useState<
+    "fertilizer" | "pesticide" | "item"
+  >("fertilizer");
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -271,7 +273,9 @@ export const ProductiveTaskShow = () => {
         {task?.status === "Complete" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
-              <Image.PreviewGroup items={task?.care_images?.map((x: any) => x.url) || []}>
+              <Image.PreviewGroup
+                items={task?.care_images?.map((x: any) => x.url) || []}
+              >
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
@@ -297,7 +301,8 @@ export const ProductiveTaskShow = () => {
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                  {item.value}
                 </List.Item>
               )}
             />
@@ -308,7 +313,11 @@ export const ProductiveTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+          <Button
+            color="primary"
+            variant="solid"
+            onClick={() => navigate("edit")}
+          >
             Thay đổi
           </Button>
         </Flex>
@@ -339,12 +348,15 @@ export const ProductiveTaskShow = () => {
             },
             {
               label: "Mô tả công việc",
-              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+              value: (
+                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
@@ -353,7 +365,12 @@ export const ProductiveTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.created_at}
+                />
+              ),
             },
             {
               label: "Người tạo",
@@ -362,7 +379,10 @@ export const ProductiveTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.updated_at}
+                />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -374,7 +394,8 @@ export const ProductiveTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
@@ -386,7 +407,11 @@ export const ProductiveTaskShow = () => {
             <Button type="dashed" onClick={() => setVisible(true)}>
               Lịch sử giao việc
             </Button>
-            <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+            <Button
+              type="primary"
+              color="cyan"
+              onClick={() => setAssignedModal(true)}
+            >
               Thay đổi
             </Button>
           </Space>
@@ -397,23 +422,39 @@ export const ProductiveTaskShow = () => {
             {
               label: "Id",
               value: (
-                <TextField value={task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"} />
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
+                  }
+                />
               ),
             },
             {
               label: "Tên nông dân",
-              value: <TextField value={task?.farmer_information?.[0]?.name || "Chưa giao việc"} />,
+              value: (
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
+                  }
+                />
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
         <Divider />
-        <Typography.Title level={4}>Phân bón / Thuốc trừ sâu / Vật tư</Typography.Title>
-        <Radio.Group value={modeVattu} onChange={(e) => handleModeChange(e.target.value)}>
+        <Typography.Title level={4}>
+          Phân bón / Thuốc trừ sâu / Vật tư
+        </Typography.Title>
+        <Radio.Group
+          value={modeVattu}
+          onChange={(e) => handleModeChange(e.target.value)}
+        >
           <Radio.Button value="fertilizer">Phân bón</Radio.Button>
           <Radio.Button value="pesticide">Thuốc trừ sâu</Radio.Button>
           <Radio.Button value="item">Vật tư</Radio.Button>

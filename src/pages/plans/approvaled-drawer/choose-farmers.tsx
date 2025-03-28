@@ -1,6 +1,18 @@
-import { Avatar, Button, Card, Checkbox, Modal, Table } from "antd";
+import { ShowButton } from "@refinedev/antd";
+import {
+  Avatar,
+  Button,
+  Calendar,
+  Card,
+  Checkbox,
+  Flex,
+  Input,
+  Modal,
+  Space,
+  Table,
+} from "antd";
 import { FormProps } from "antd/lib";
-import React from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   formProps: FormProps;
@@ -31,10 +43,11 @@ export const ChooseFarmers = ({
   setPackagingTasks,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
-
+  const [search, setSearch] = React.useState<string>("");
   const showModal = () => {
     setIsModalOpen(true);
   };
+  const [filteredFarmers, setFilteredFarmers] = React.useState<any[]>([]);
 
   const handleOk = () => {
     setIsModalOpen(false);
@@ -54,7 +67,9 @@ export const ChooseFarmers = ({
       title: "Ảnh nông dân",
       dataIndex: "avatar",
       key: "avatar",
-      render: (text: any, record: any) => <Avatar src={record?.avatar}></Avatar>,
+      render: (text: any, record: any) => (
+        <Avatar src={record?.avatar}></Avatar>
+      ),
     },
     {
       title: "Tên nông dân",
@@ -72,7 +87,9 @@ export const ChooseFarmers = ({
       title: "Ảnh nông dân",
       dataIndex: "avatar",
       key: "avatar",
-      render: (text: any, record: any) => <Avatar src={record?.avatar}></Avatar>,
+      render: (text: any, record: any) => (
+        <Avatar src={record?.avatar}></Avatar>
+      ),
     },
     {
       title: "Tên nông dân",
@@ -83,50 +100,65 @@ export const ChooseFarmers = ({
       title: "Chọn",
       key: "action",
       render: (text: any, record: any) => (
-        <Checkbox
-          checked={chosenFarmers?.find((farmer: any) => farmer.id === record.id) || false}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setChosenFarmers([...chosenFarmers, { ...record }]);
-            } else {
-              setChosenFarmers(chosenFarmers.filter((farmer: any) => farmer.id !== record.id));
-              const newProductiveTask = productiveTasks.map((task: any) => {
-                if (task?.farmer_id && task?.farmer_id === record?.id) {
-                  return {
-                    ...task,
-                    farmer_id: null,
-                  };
-                }
-                return task;
-              });
-              setProductiveTasks(newProductiveTask);
-              const newHarvestingTask = harvestingTasks.map((task: any) => {
-                if (task?.farmer_id && task?.farmer_id === record?.id) {
-                  return {
-                    ...task,
-                    farmer_id: null,
-                  };
-                }
-                return task;
-              });
-              setHarvestingTasks(newHarvestingTask);
-
-              const newPackagingTask = packagingTasks.map((task: any) => {
-                if (task?.farmer_id && task?.farmer_id === record?.id) {
-                  return {
-                    ...task,
-                    farmer_id: null,
-                  };
-                }
-                return task;
-              });
-              setPackagingTasks(newPackagingTask);
+        <Flex vertical={true}>
+          <Checkbox
+            checked={
+              chosenFarmers?.find((farmer: any) => farmer.id === record.id) ||
+              false
             }
-          }}
-        ></Checkbox>
+            onChange={(e) => {
+              if (e.target.checked) {
+                setChosenFarmers([...chosenFarmers, { ...record }]);
+              } else {
+                setChosenFarmers(
+                  chosenFarmers.filter((farmer: any) => farmer.id !== record.id)
+                );
+                const newProductiveTask = productiveTasks.map((task: any) => {
+                  if (task?.farmer_id && task?.farmer_id === record?.id) {
+                    return {
+                      ...task,
+                      farmer_id: null,
+                    };
+                  }
+                  return task;
+                });
+                setProductiveTasks(newProductiveTask);
+                const newHarvestingTask = harvestingTasks.map((task: any) => {
+                  if (task?.farmer_id && task?.farmer_id === record?.id) {
+                    return {
+                      ...task,
+                      farmer_id: null,
+                    };
+                  }
+                  return task;
+                });
+                setHarvestingTasks(newHarvestingTask);
+
+                const newPackagingTask = packagingTasks.map((task: any) => {
+                  if (task?.farmer_id && task?.farmer_id === record?.id) {
+                    return {
+                      ...task,
+                      farmer_id: null,
+                    };
+                  }
+                  return task;
+                });
+                setPackagingTasks(newPackagingTask);
+              }
+            }}
+          ></Checkbox>
+          <Space>
+            <ShowButton hideText size="small" onClick={() => {}} />
+          </Space>
+        </Flex>
       ),
     },
   ];
+  useEffect(() => {
+    setFilteredFarmers(
+      farmers.filter((farmer) => farmer.name.includes(search))
+    );
+  }, [search, farmers]);
   return (
     <>
       <Card
@@ -140,9 +172,36 @@ export const ChooseFarmers = ({
           </>
         }
       >
-        <Table columns={farm_columns} dataSource={chosenFarmers} rowKey="id"></Table>
-        <Modal title="Chọn nông dân" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          <Table dataSource={farmers} columns={farm_modals_columns}></Table>
+        <Table
+          columns={farm_columns}
+          dataSource={chosenFarmers}
+          rowKey="id"
+        ></Table>
+        <Modal
+          width={1000}
+          height={600}
+          title="Chọn nông dân"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Flex vertical={true} gap={10}>
+            <Input
+              type="text"
+              placeholder="Tìm kiếm tên nông dân"
+              onChange={(e) => {
+                e.preventDefault();
+                setSearch(e.target.value);
+              }}
+            ></Input>
+            <Table
+              pagination={{
+                pageSize: 5,
+              }}
+              dataSource={filteredFarmers}
+              columns={farm_modals_columns}
+            ></Table>
+          </Flex>
         </Modal>
       </Card>
     </>

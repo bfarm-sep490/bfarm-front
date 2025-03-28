@@ -7,7 +7,17 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+  Tag,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
@@ -57,7 +67,7 @@ export const FarmerDrawerShow = (props: Props) => {
       type: "replace",
     });
   };
-
+  const translate = useTranslate();
   return (
     <Drawer
       open={true}
@@ -99,24 +109,50 @@ export const FarmerDrawerShow = (props: Props) => {
         <List
           dataSource={[
             {
-              label: <Typography.Text type="secondary">Phone</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {translate("farmer.phone", "Điện thoại")}
+                </Typography.Text>
+              ),
               value: farmer?.phone,
             },
             {
-              label: <Typography.Text type="secondary">Email</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {translate("farmer.email", "Email")}
+                </Typography.Text>
+              ),
               value: farmer?.email,
             },
 
             {
-              label: <Typography.Text type="secondary">Status</Typography.Text>,
-              value: farmer?.status && <FarmerStatusTag status={farmer.status} />,
+              label: (
+                <Typography.Text type="secondary">
+                  {" "}
+                  {translate("farmer.status", "Trạng thái")}
+                </Typography.Text>
+              ),
+              value: farmer?.status && (
+                <FarmerStatusTag status={farmer.status} />
+              ),
             },
             {
-              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
-              value: farmer?.created_at && <DateField value={farmer?.created_at} />,
+              label: (
+                <Typography.Text type="secondary">
+                  {" "}
+                  {translate("farmer.created_at", "Ngày tạo")}
+                </Typography.Text>
+              ),
+              value: farmer?.created_at && (
+                <DateField value={farmer?.created_at} />
+              ),
             },
             {
-              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {translate("farmer.updated_at", "Ngày cập nhập")}
+                </Typography.Text>
+              ),
               value: farmer?.updated_at ? (
                 <FarmerStatusTag status={farmer?.updated_at} />
               ) : (
@@ -165,7 +201,7 @@ export const FarmerDrawerShow = (props: Props) => {
             });
           }}
         >
-          {t("actions.edit")}
+          {t("actions.edit", "Cập nhập")}
         </Button>
       </Flex>
     </Drawer>

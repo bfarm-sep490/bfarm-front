@@ -5,9 +5,23 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd";
+import {
+  DateField,
+  FilterDropdown,
+  TextField,
+  useTable,
+} from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Table,
+  Typography,
+  theme,
+} from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -54,6 +68,7 @@ export const FarmerListTable: React.FC = () => {
       ],
     },
   });
+  const translate = useTranslate();
 
   return (
     <Table
@@ -62,7 +77,9 @@ export const FarmerListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="farmers" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="farmers" />
+        ),
       }}
     >
       <Table.Column
@@ -71,7 +88,9 @@ export const FarmerListTable: React.FC = () => {
         key="id"
         width={"auto"}
         render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+          <Typography.Text style={{ fontWeight: "bold" }}>
+            #{value}
+          </Typography.Text>
         )}
         filterIcon={(filtered) => (
           <SearchOutlined
@@ -83,21 +102,27 @@ export const FarmerListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder="Search ID"
+            />
           </FilterDropdown>
         )}
       />
 
       <Table.Column
-        title="Avatar"
+        title={translate("farmer.avatar", "Ảnh đại diện")}
         width={"auto"}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(image: string) => <Avatar shape="square" src={image} alt="Farmer" />}
+        render={(image: string) => (
+          <Avatar shape="square" src={image} alt="Farmer" />
+        )}
       />
 
       <Table.Column
-        title="Name"
+        title={translate("farmer_name", "Tên nông dân")}
         dataIndex="name"
         key="name"
         width={"auto"}
@@ -117,19 +142,22 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Phone"
+        title={translate("farmer.phone", "Số điện thoại")}
         dataIndex="phone"
         key="phone"
         width={"auto"}
         render={(value) => (
-          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+          <Typography.Paragraph
+            ellipsis={{ rows: 2, tooltip: true }}
+            style={{ marginBottom: 0 }}
+          >
             {value}
           </Typography.Paragraph>
         )}
       />
 
       <Table.Column
-        title="Email"
+        title={translate("farmer.email", "Email")}
         dataIndex="email"
         key="email"
         width={"auto"}
@@ -149,7 +177,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Status"
+        title={translate("farmer.status", "Trạng thái")}
         dataIndex="status"
         key="status"
         width={"auto"}
@@ -161,8 +189,8 @@ export const FarmerListTable: React.FC = () => {
               placeholder="Filter by status"
               allowClear
             >
-              <Select.Option value="Actived">Actived</Select.Option>
-              <Select.Option value="UnActived">UnActived</Select.Option>
+              <Select.Option value="Actived">Hoạt động</Select.Option>
+              <Select.Option value="UnActived">Không hoạt động</Select.Option>
             </Select>
           </FilterDropdown>
         )}
@@ -190,7 +218,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Actions"
+        title={translate("tables.Actions", "Hành động")}
         key="actions"
         fixed="right"
         align="center"

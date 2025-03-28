@@ -14,7 +14,9 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("experts-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("experts-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view
@@ -66,7 +68,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Fertilizer
+          {t("buttons.add_expert", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

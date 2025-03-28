@@ -1,5 +1,11 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import {
+  type BaseKey,
+  useApiUrl,
+  useGetToPath,
+  useGo,
+  useTranslate,
+} from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -39,34 +45,34 @@ export const FarmerDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-  const t = useTranslate();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
-
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<{
-    avatar_image: string;
-    name: string;
-    phone: string;
-    email: string;
-    status: string;
-  }>({
-    resource: "farmers",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data: any) => {
-        if (data?.data?.[0]?.avatar_image) {
-          setPreviewImage(data?.data?.[0]?.avatar_image);
-        }
-        formProps.form.setFieldsValue(data?.data?.[0]);
+  const translate = useTranslate();
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<{
+      avatar_image: string;
+      name: string;
+      phone: string;
+      email: string;
+      status: string;
+    }>({
+      resource: "farmers",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data: any) => {
+          if (data?.data?.[0]?.avatar_image) {
+            setPreviewImage(data?.data?.[0]?.avatar_image);
+          }
+          formProps.form.setFieldsValue(data?.data?.[0]);
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
     close();
@@ -84,7 +90,9 @@ export const FarmerDrawerForm = (props: Props) => {
   };
   useEffect(() => {
     if (props.action === "edit" && formProps.form) {
-      const currentAvatar = formProps.form.getFieldValue("avatar_image") as string;
+      const currentAvatar = formProps.form.getFieldValue(
+        "avatar_image"
+      ) as string;
       console.log("currentAvatar: " + currentAvatar);
       if (currentAvatar) {
         setPreviewImage(currentAvatar);
@@ -104,7 +112,7 @@ export const FarmerDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -113,16 +121,19 @@ export const FarmerDrawerForm = (props: Props) => {
         onSuccess(uploadedImageUrl);
         formProps.form?.setFieldsValue({ avatar_image: uploadedImageUrl });
       } else {
-        throw new Error(response.data.message || "Upload failed.");
+        throw new Error(response.data.message || "Tải ảnh lỗi.");
       }
     } catch (error) {
-      console.error("Upload error:", error);
+      console.error("Tải ảnh lỗi:", error);
       onError(error);
     } finally {
       setUploading(false);
     }
   };
-  const title = props.action === "edit" ? "Edit this farmer" : "Add a farmer";
+  const title =
+    props.action === "edit"
+      ? translate("form.edit_farmer", "Chỉnh sửa nông dân")
+      : translate("form.edit_farmer", "Tạo nông dân");
 
   const statusOptions = [
     { label: "Active", value: "Hoạt động" },
@@ -188,7 +199,9 @@ export const FarmerDrawerForm = (props: Props) => {
                   }}
                   disabled={uploading}
                 >
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading
+                    ? translate("images.uploading", "Đang tải ảnh lên...")
+                    : translate("images.upload", "Tải ảnh lên")}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -196,15 +209,15 @@ export const FarmerDrawerForm = (props: Props) => {
           <Flex vertical>
             <Form.Item
               key={"name"}
-              label="Name"
+              label={translate("farmer_name", "Tên nông dân")}
               name="name"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your name!" },
+                { required: true, message: "Vui lòng nhập tên!" },
                 {
                   min: 6,
                   max: 50,
-                  message: "Name must be between 6 and 50 characters!",
+                  message: "Tên có độ dài 6 đến 50 kí tự!",
                 },
               ]}
             >
@@ -212,13 +225,13 @@ export const FarmerDrawerForm = (props: Props) => {
             </Form.Item>
             <Form.Item
               key={"phone"}
-              label="Phone"
+              label={translate("farmer.phone", "Số điện thoại")}
               name="phone"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your phone!" },
+                { required: true, message: "Vui lòng nhập số điện thoại" },
                 {
-                  message: "The input is not valid phone number!",
+                  message: "Không phải định dạng số điện thoại",
                   min: 10,
                   max: 11,
                 },
@@ -228,7 +241,7 @@ export const FarmerDrawerForm = (props: Props) => {
             </Form.Item>
             <Form.Item
               key={"email"}
-              label="Email"
+              label={translate("farmer.email", "Email")}
               name="email"
               className={styles.formItem}
               rules={[
@@ -247,17 +260,28 @@ export const FarmerDrawerForm = (props: Props) => {
 
             <Form.Item
               key={"status"}
-              label="Status"
+              label={translate("farmer.status", "Trạng thái")}
               name="status"
               className={styles.formItem}
               rules={[{ required: true }]}
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
-              <Button onClick={onDrawerClose}>Cancel</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
-                Save
+            <Flex
+              align="center"
+              justify="space-between"
+              style={{ padding: "16px 16px 0px 16px" }}
+            >
+              <Button onClick={onDrawerClose}>
+                {translate("form.cancel", "Hủy bỏ")}
+              </Button>
+              <SaveButton
+                {...saveButtonProps}
+                htmlType="submit"
+                type="primary"
+                icon={null}
+              >
+                {translate("form.save", "Lưu")}
               </SaveButton>
             </Flex>
           </Flex>

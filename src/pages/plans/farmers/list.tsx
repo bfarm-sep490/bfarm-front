@@ -12,14 +12,29 @@ import { CreateButton, List, useForm } from "@refinedev/antd";
 import {
   HttpError,
   useBack,
+  useCustom,
   useDelete,
   useGo,
   useList,
   useModal,
   useNavigation,
+  useOne,
   useTable,
+  useTranslate,
 } from "@refinedev/core";
-import { Button, Form, Modal, Segmented, Select, Table, theme, Typography } from "antd";
+import {
+  Alert,
+  Button,
+  Calendar,
+  Form,
+  Modal,
+  Segmented,
+  Select,
+  Table,
+  theme,
+  Typography,
+} from "antd";
+import dayjs from "dayjs";
 import { filter } from "lodash";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -34,6 +49,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     data: farmerData,
     isLoading,
@@ -44,27 +60,43 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   });
   const farmers = farmerData?.data;
   const { token } = theme.useToken();
+  const translate = useTranslate();
   return (
     <>
-      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
+      <Button
+        type="text"
+        style={{ width: "40px", height: "40px" }}
+        onClick={() => navigate(`/plans/${id}`)}
+      >
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <List
         breadcrumb={false}
         headerButtons={(props) => [
-          <Button type="primary" variant="filled" onClick={() => setOpen(true)}>
-            Thêm nông dân vào kế hoạch
+          <Button
+            type="primary"
+            variant="filled"
+            onClick={() => navigate(`/plans/${id}/farmers/create`)}
+          >
+            Thêm nông dân
           </Button>,
         ]}
       >
-        <Table dataSource={farmers} loading={isLoading} rowKey="id" scroll={{ x: true }}>
+        <Table
+          dataSource={farmers}
+          loading={isLoading}
+          rowKey="id"
+          scroll={{ x: true }}
+        >
           <Table.Column
             title="ID"
             dataIndex="id"
             key="id"
             width={"auto"}
             render={(value) => (
-              <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+              <Typography.Text style={{ fontWeight: "bold" }}>
+                #{value}
+              </Typography.Text>
             )}
             filterIcon={(filtered) => (
               <SearchOutlined
@@ -76,7 +108,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           />
 
           <Table.Column
-            title="Name"
+            title={translate("farmer_name", "Tên nông dân")}
             dataIndex="name"
             key="name"
             width={"auto"}
@@ -89,10 +121,15 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
             )}
           />
 
-          <Table.Column title="Status" dataIndex="status" key="status" width={"auto"} />
+          <Table.Column
+            title={translate("Status", "Trạng thái")}
+            dataIndex="status"
+            key="status"
+            width={"auto"}
+          />
 
           <Table.Column
-            title="Actions"
+            title={translate("Actions", "Hành động")}
             key="actions"
             fixed="right"
             align="center"
@@ -101,8 +138,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
                 shape="circle"
                 danger
                 onClick={() => {
-                  setDeletedId(record.id);
-                  setDeletedOpen(true);
+                  navigate(`/plans/${id}/farmers/${record.id}/delete`);
                 }}
               >
                 <DeleteOutlined />
@@ -112,41 +148,43 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
         </Table>
         {children}
       </List>
-      <AddFarmerIntoPlanModal open={open} setOpen={setOpen} chosenFarmers={farmers} />
-      <DeleteFarmerInPlanModal
-        open={deletedOpen}
-        setOpen={setDeletedOpen}
-        famer_id={deletedId}
-      ></DeleteFarmerInPlanModal>
     </>
   );
 };
-type DeleteFarmerInPlanProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  famer_id: number;
-};
 
-export const DeleteFarmerInPlanModal = ({ open, setOpen, famer_id }: DeleteFarmerInPlanProps) => {
+export const DeleteFarmerInPlanModal = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-
-  const { mutate } = useDelete();
-
+  const { id, farmer_id } = useParams();
+  const [error, setError] = useState<string | undefined>();
+  const { mutate } = useDelete({});
+  const back = useBack();
   const handleDelete = async () => {
-    mutate({
-      resource: `plans`,
-      id: `${id}/farmers/${famer_id}`,
-    });
+    mutate(
+      {
+        resource: `plans`,
+        id: `${id}/farmers/${farmer_id}`,
+      },
+      {
+        onError: (error, variables, context) => {
+          setError(error.message);
+        },
+        onSuccess: (data: any, variables, context) => {
+          back();
+        },
+      }
+    );
   };
   return (
     <Modal
       title="Xóa nông dân trong kế hoạch"
-      open={open}
-      onCancel={() => setOpen(false)}
+      open={true}
+      onCancel={() => navigate(`/plans/${id}/farmers`)}
       footer={
         <>
-          <Button type="default" onClick={() => setOpen(false)}>
+          <Button
+            type="default"
+            onClick={() => navigate(`/plans/${id}/farmers`)}
+          >
             Hủy
           </Button>
           <Button type="primary" variant="filled" onClick={handleDelete}>
@@ -155,23 +193,25 @@ export const DeleteFarmerInPlanModal = ({ open, setOpen, famer_id }: DeleteFarme
         </>
       }
     >
-      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
-        * Bạn có chắc chắn muốn xóa nông dân này khỏi kế hoạch?
+      {error && <Alert message={error} type="error" />}
+      <Typography.Text
+        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
+      >
+        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn
+        xóa không?
       </Typography.Text>
     </Modal>
   );
 };
-type AddFarmerIntoPlanProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  chosenFarmers: any;
-};
 
-export const AddFarmerIntoPlanModal = ({
-  open,
-  setOpen,
-  chosenFarmers = [],
-}: AddFarmerIntoPlanProps) => {
+export const AddFarmerIntoPlanModal = () => {
+  const { id } = useParams();
+  const [selectFarmer, setSelectFarmer] = useState();
+  const { data: planData } = useOne({
+    resource: `plans`,
+    id: `${id}/general`,
+  });
+  const plan = planData?.data;
   const { data: farmerData } = useList({
     resource: "farmers",
     filters: [
@@ -182,29 +222,37 @@ export const AddFarmerIntoPlanModal = ({
       },
     ],
   });
+  const { data: chosenFarmrtData } = useList({
+    resource: `plans/${id}/farmers`,
+  });
   const navigate = useNavigate();
   const farmers = farmerData?.data as IFarmer[];
-  const filterFarmers = farmers?.filter((x) => !chosenFarmers.some((y: any) => y.id === x.id));
-
-  const { id } = useParams();
-
+  const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
+  const filterFarmers = farmers?.filter(
+    (x) => !chosenFarmers.some((y: any) => y.id === x.id)
+  );
+  const back = useBack();
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/farmers`,
     action: "create",
     onMutationSuccess() {
-      navigate(`/plans/${id}/farmers`);
+      back();
     },
   });
 
   return (
     <Form {...formProps}>
       <Modal
+        width={1000}
         title="Thêm nông dân vào kế hoạch"
-        open={open}
-        onCancel={() => setOpen(false)}
+        open={true}
+        onCancel={() => navigate(`/plans/${id}/farmers`)}
         footer={
           <>
-            <Button type="default" onClick={() => setOpen(false)}>
+            <Button
+              type="default"
+              onClick={() => navigate(`/plans/${id}/farmers`)}
+            >
               Hủy
             </Button>
             <Button type="primary" variant="filled" {...saveButtonProps}>
@@ -218,7 +266,7 @@ export const AddFarmerIntoPlanModal = ({
           label="Chọn nông dân"
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
-          <Select>
+          <Select onChange={setSelectFarmer}>
             {filterFarmers?.map((farmer) => (
               <Select.Option key={farmer.id} value={farmer.id}>
                 {farmer.name}

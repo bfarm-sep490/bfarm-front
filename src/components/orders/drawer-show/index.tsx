@@ -58,7 +58,7 @@ export const OrderDrawerShow = () => {
           )}
           {
             <Flex justify="end" gap={10}>
-              <Button color="danger" onClick={() => navigate("complete")}>
+              <Button color="danger" onClick={() => navigate("cancel")}>
                 Hủy bỏ
               </Button>
               <Button type="primary" onClick={() => navigate("complete")}>

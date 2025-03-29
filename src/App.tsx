@@ -107,7 +107,7 @@ import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
-import { CompleteOrderModal } from "./components/orders/complete-modal";
+import { CancelOrderModal, CompleteOrderModal } from "./components/orders/complete-modal";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -424,7 +424,11 @@ const App: React.FC = () => {
                             </OrderShow>
                           }
                         >
-                          <Route path="complete" element={<CompleteOrderModal />} />
+                          <Route
+                            path="complete"
+                            element={<CompleteOrderModal />}
+                          />
+                          <Route path="cancel" element={<CancelOrderModal />} />
                         </Route>
                       </Route>
                       <Route
@@ -514,6 +518,7 @@ const App: React.FC = () => {
                       }
                     >
                       <Route path="complete" element={<CompleteOrderModal />} />
+                      <Route path="cancel" element={<CancelOrderModal />} />
                     </Route>
                   </Route>
                   <Route

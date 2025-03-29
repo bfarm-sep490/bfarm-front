@@ -1,4 +1,4 @@
-import { TextField } from "@refinedev/antd";
+import { TextField, useForm } from "@refinedev/antd";
 import { useBack, useList, useOne } from "@refinedev/core";
 import {
   Button,
@@ -14,8 +14,11 @@ import {
   Tooltip,
   Row,
   Col,
+  Alert,
+  Form,
 } from "antd";
 import dayjs from "dayjs";
+import { init } from "i18next";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
@@ -496,7 +499,6 @@ export const CompleteOrderModal = () => {
                 },
               ]}
               rowKey="id"
-              pagination={false}
             />
             <Divider />
             <Typography.Title level={5}>
@@ -550,5 +552,61 @@ export const CompleteOrderModal = () => {
         </>
       )}
     </Modal>
+  );
+};
+
+export const CancelOrderModal = () => {
+  const { orderId } = useParams();
+  const back = useBack();
+  const [error, setError] = useState<string | null>(null);
+  const { formProps, saveButtonProps } = useForm({
+    resource: "orders",
+    id: orderId,
+    action: "edit",
+    queryOptions: {
+      enabled: false,
+    },
+    onMutationSuccess: () => {
+      back();
+    },
+    onMutationError: (error) => {
+      setError(error.message);
+    },
+  });
+  return (
+    <Form {...formProps}>
+      <Modal
+        open={true}
+        onCancel={back}
+        onClose={back}
+        title={"Hủy đơn hàng"}
+        onOk={formProps?.onFinish}
+        footer={
+          <>
+            <Flex justify="end" gap={8}>
+              <Button onClick={back}>Quay lại</Button>
+              <Button type="primary" {...saveButtonProps}>
+                Xác nhận hủy đơn hàng
+              </Button>
+            </Flex>
+          </>
+        }
+      >
+        {error && (
+          <Alert message={error} type="error" style={{ marginBottom: 16 }} />
+        )}
+        <Typography.Title level={5}>
+          Bạn có chắc chắn muốn hủy đơn hàng này không?
+        </Typography.Title>
+
+        <Typography.Title
+          level={5}
+          type="danger"
+          style={{ fontStyle: "italic" }}
+        >
+          * Lưu ý: Đơn hàng đã hủy sẽ không thể khôi phục lại được.
+        </Typography.Title>
+      </Modal>
+    </Form>
   );
 };

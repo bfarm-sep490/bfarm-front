@@ -230,7 +230,7 @@ export const AddFarmerIntoPlanModal = () => {
   const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
   const filterFarmers = farmers?.filter(
     (x) => !chosenFarmers.some((y: any) => y.id === x.id)
-  );
+  ) ?? [];
   const back = useBack();
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/farmers`,

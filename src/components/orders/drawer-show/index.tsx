@@ -39,7 +39,6 @@ export const OrderDrawerShow = () => {
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
-
   return (
     <Drawer
       open={open}
@@ -57,6 +56,16 @@ export const OrderDrawerShow = () => {
               </Space>
             </Flex>
           )}
+          {
+            <Flex justify="end" gap={10}>
+              <Button color="danger" onClick={() => navigate("complete")}>
+                Hủy bỏ
+              </Button>
+              <Button type="primary" onClick={() => navigate("complete")}>
+                Hoàn thành
+              </Button>
+            </Flex>
+          }
         </>
       }
     >
@@ -87,28 +96,16 @@ export const OrderDrawerShow = () => {
             },
             {
               label: "Ngày ước tính lấy hàng",
-              value: (
-                <DateField
-                  value={order?.estimate_pick_up_date}
-                  format="DD/MM/YYYY"
-                />
-              ),
+              value: <DateField value={order?.estimate_pick_up_date} format="DD/MM/YYYY" />,
             },
             {
               label: "Ngày tạo đơn",
-              value: (
-                <DateField
-                  value={order?.created_at}
-                  format="hh:mm DD/MM/YYYY"
-                />
-              ),
+              value: <DateField value={order?.created_at} format="hh:mm DD/MM/YYYY" />,
             },
             { label: "Mức giá đặt cọc", value: order?.deposit_price + " vnd" },
             {
               label: "Giá tổng",
-              value: order?.total_price
-                ? order?.total_price + " vnd"
-                : "Chưa có",
+              value: order?.total_price ? order?.total_price + " vnd" : "Chưa có",
             },
           ]}
           renderItem={(item) => (
@@ -131,9 +128,7 @@ export const OrderDrawerShow = () => {
             },
             {
               label: "Kế hoạch",
-              value: order?.plan_name
-                ? order?.plan_name
-                : "Chưa có kế hoạch nào",
+              value: order?.plan_name ? order?.plan_name : "Chưa có kế hoạch nào",
             },
           ]}
           renderItem={(item) => (

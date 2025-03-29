@@ -107,6 +107,7 @@ import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
+import { CompleteOrderModal } from "./components/orders/complete-modal";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -378,7 +379,10 @@ const App: React.FC = () => {
                           path="create"
                           element={<AddFarmerIntoPlanModal />}
                         />
-                        <Route path=":farmer_id/delete" element={<DeleteFarmerInPlanModal />} />
+                        <Route
+                          path=":farmer_id/delete"
+                          element={<DeleteFarmerInPlanModal />}
+                        />
                       </Route>
                       <Route
                         path="harvesting-products"
@@ -492,7 +496,16 @@ const App: React.FC = () => {
                       </OrdersList>
                     }
                   >
-                    <Route path=":orderId" element={<OrderShow />} />
+                    <Route
+                      path=":orderId"
+                      element={
+                        <OrderShow>
+                          <Outlet />
+                        </OrderShow>
+                      }
+                    >
+                      <Route path="complete" element={<CompleteOrderModal />} />
+                    </Route>
                   </Route>
                   <Route
                     path="/yield"

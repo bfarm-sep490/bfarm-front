@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import { useTable } from "@refinedev/antd";
 import { getDefaultFilter, type HttpError, useGo } from "@refinedev/core";
@@ -26,7 +27,7 @@ export const InspectionListTable: React.FC = () => {
   const handleView = (id?: number) => {
     if (id) {
       go({
-        to: `/inspections/${id}`,
+        to: `/inspection-forms/${id}`,
         type: "push",
       });
     }

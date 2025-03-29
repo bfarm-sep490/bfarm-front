@@ -89,7 +89,6 @@ import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspect
 import { FarmerListInPlan } from "./pages/plans/farmers/list";
 import { ShowProductList } from "./pages/plans/production";
 
-
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -162,16 +161,16 @@ const App: React.FC = () => {
                     icon: <HddOutlined />,
                   },
                 },
-                {
-                  name: "inspections",
-                  list: "/inspections",
-                  edit: "/inspections/edit/:id",
-                  show: "/inspections/show/:id",
-                  meta: {
-                    label: "Inspecting Forms",
-                    icon: <ScheduleOutlined />,
-                  },
-                },
+                // {
+                //   name: "inspections",
+                //   list: "/inspections",
+                //   edit: "/inspections/edit/:id",
+                //   show: "/inspections/show/:id",
+                //   meta: {
+                //     label: "Inspecting Forms",
+                //     icon: <ScheduleOutlined />,
+                //   },
+                // },
                 {
                   name: "inspection-forms",
                   list: "/inspection-forms",
@@ -456,10 +455,18 @@ const App: React.FC = () => {
                     <Route path=":id" element={<CustomerShow />} />
                   </Route>
 
-                  <Route path="/inspections" element={<InspectionsList />} />
-                  <Route path="/inspections/:id" element={<InspectionShow />} />
-                  <Route path="/inspections/edit/:id" element={<InspectionEdit />} />
-
+                  <Route
+                    path="/inspection-forms"
+                    element={
+                      <InspectionsList>
+                        <Outlet></Outlet>
+                      </InspectionsList>
+                    }
+                  >
+                    <Route path=":id" element={<InspectionShow />} />
+                  </Route>
+                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
+                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
 
                   <Route
                     path="/plants"

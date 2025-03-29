@@ -283,7 +283,11 @@ export const CompleteOrderModal = () => {
     0,
     quantity - (order?.preorder_quantity || 0)
   );
+  const [selectedMethod, setSelectedMethod] = useState("");
 
+  const handleSelectMethod = (method) => {
+    setSelectedMethod(method);
+  };
   return (
     <Modal
       width={1000}
@@ -307,9 +311,11 @@ export const CompleteOrderModal = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  const newOrderProducts = orderProducts.filter((item) => item.quantity > 0);
+                  const newOrderProducts = orderProducts.filter(
+                    (item) => item.quantity > 0
+                  );
                   const newIds = selectedIds.filter((item) =>
-                    newOrderProducts.some((op) => op.id === item),
+                    newOrderProducts.some((op) => op.id === item)
                   );
                   setSelectedIds(newIds);
                   setOrderProducts(newOrderProducts);
@@ -461,6 +467,7 @@ export const CompleteOrderModal = () => {
             <Divider />
             <Typography.Title level={5}>Các sản phẩm đã chọn</Typography.Title>
             <Table
+              pagination={{ pageSize: 5 }}
               dataSource={packagedProducts
                 .filter((item) => selectedIds.includes(Number(item.id)))
                 .map((item) => {
@@ -492,8 +499,49 @@ export const CompleteOrderModal = () => {
               pagination={false}
             />
             <Divider />
-
-            <Flex justify="center">
+            <Typography.Title level={5}>
+              Phương thức thanh toán
+            </Typography.Title>
+            <Row gutter={16} style={{ marginTop: 16 }}>
+              <Col span={12}>
+                <Card
+                  hoverable
+                  title="Thanh toán tiền mặt"
+                  style={{
+                    width: "100%",
+                    border:
+                      selectedMethod === "creditCard"
+                        ? "2px solid #1890ff"
+                        : "1px solid #d9d9d9",
+                  }}
+                  onClick={() => handleSelectMethod("creditCard")}
+                >
+                  {/* Nội dung hoặc hình ảnh liên quan đến thẻ tín dụng */}
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card
+                  hoverable
+                  title="Thanh toán qua QR"
+                  style={{
+                    width: "100%",
+                    border:
+                      selectedMethod === "eWallet"
+                        ? "2px solid #1890ff"
+                        : "1px solid #d9d9d9",
+                  }}
+                  onClick={() => handleSelectMethod("eWallet")}
+                >
+                  {/* Nội dung hoặc hình ảnh liên quan đến ví điện tử */}
+                </Card>
+              </Col>
+            </Row>
+            <Flex
+              justify="center"
+              align="middle"
+              gap={8}
+              style={{ marginTop: 16 }}
+            >
               <Button type="primary" size="large">
                 Xác nhận và hoàn thành đơn hàng
               </Button>

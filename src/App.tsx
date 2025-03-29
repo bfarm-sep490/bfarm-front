@@ -427,7 +427,16 @@ const App: React.FC = () => {
                       >
                         <Route path="create" element={<AssignedOrder />} />
 
-                        <Route path=":orderId" element={<OrderShow />} />
+                        <Route
+                          path=":orderId"
+                          element={
+                            <OrderShow>
+                              <Outlet />
+                            </OrderShow>
+                          }
+                        >
+                          <Route path="complete" element={<CompleteOrderModal />} />
+                        </Route>
                       </Route>
                       <Route
                         path="inspecting-tasks"

@@ -46,14 +46,11 @@ export const ProblemListTable = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => (
-              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-            )}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
-          <Table.Column
-            dataIndex="problem_name"
-            title={translate("problem_name", "Tên vấn đề")}
-          />
+          <Table.Column dataIndex="problem_name" title={translate("problem_name", "Tên vấn đề")} />
+          <Table.Column dataIndex="farmer_name" title={translate("farmer_name", "Tên nông dân")} />
+          <Table.Column dataIndex="plan_name" title={translate("plan_name", "Tên kế hoạch")} />
           <Table.Column
             dataIndex="created_date"
             title={translate("problem.created_date", "Ngày phát sinh")}
@@ -76,7 +73,9 @@ export const ProblemListTable = ({
                   size="small"
                   onClick={() =>
                     navigate(
-                      showNavigation ? showNavigation + `/${record.id}` : `/problems/${record.id}`,
+                      showNavigation
+                        ? showNavigation + `/${record.id}`
+                        : `/problems/${record.id}`
                     )
                   }
                 />

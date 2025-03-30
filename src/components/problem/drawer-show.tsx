@@ -12,16 +12,13 @@ import {
   Radio,
   Space,
   Button,
-  Modal,
-  Form,
-  Input,
+
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ReportProblemModal } from "./report-modals";
 import { ProblemStatusTag } from "./status-tag";
-import { ProblemTypeTag } from "./type-tag";
-import { TableProps } from "antd/lib";
+
 
 export const ProblemShowInProblem = () => {
   const { id } = useParams();
@@ -34,7 +31,6 @@ export const ProblemShowInProblem = () => {
   const breakpoint = { sm: window.innerWidth > 576 };
   const { data } = queryResult;
   const task = data?.data;
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultReportStatus, setDefaultReportStatus] = useState("Resovled");
   return (
@@ -120,6 +116,14 @@ export const ProblemShowInProblem = () => {
             bordered
             dataSource={[
               {
+                label: "Nông dân",
+                value: <TextField value={task?.farmer_name} />,
+              },
+              {
+                label: "Kế hoạch",
+                value: <TextField value={task?.plan_name} />,
+              },
+              {
                 label: "Ngày phát hiện",
                 value: <DateField value={task?.created_date} />,
               },
@@ -130,12 +134,17 @@ export const ProblemShowInProblem = () => {
               },
               {
                 label: "Mô tả vấn đề",
-                value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+                value: (
+                  <Typography.Paragraph>
+                    {task?.description}
+                  </Typography.Paragraph>
+                ),
               },
             ]}
             renderItem={(item) => (
               <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                {item.value}
               </List.Item>
             )}
           />

@@ -1,5 +1,6 @@
 import { FarmerListTable } from "@/components/farmer";
 import { FarmerListTableInPlan } from "@/components/plan/farmers/list";
+import { FarmerScheduleComponent } from "@/components/scheduler/farmer-task-scheduler";
 import { IFarmer } from "@/interfaces";
 import {
   AppstoreOutlined,
@@ -8,11 +9,12 @@ import {
   SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { CreateButton, List, useForm } from "@refinedev/antd";
+import { CreateButton, List, ShowButton, useForm } from "@refinedev/antd";
 import {
   HttpError,
   useBack,
   useCustom,
+  useCustomMutation,
   useDelete,
   useGo,
   useList,
@@ -25,11 +27,12 @@ import {
 import {
   Alert,
   Button,
-  Calendar,
   Form,
   Modal,
   Segmented,
   Select,
+  Space,
+  Spin,
   Table,
   theme,
   Typography,
@@ -37,6 +40,7 @@ import {
 import dayjs from "dayjs";
 import { filter } from "lodash";
 import { type PropsWithChildren, useState } from "react";
+import { Calendar } from "react-big-calendar";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
@@ -159,7 +163,7 @@ export const DeleteFarmerInPlanModal = () => {
   const { mutate } = useDelete({});
   const back = useBack();
   const handleDelete = async () => {
-    mutate(
+    await mutate(
       {
         resource: `plans`,
         id: `${id}/farmers/${farmer_id}`,
@@ -178,13 +182,11 @@ export const DeleteFarmerInPlanModal = () => {
     <Modal
       title="Xóa nông dân trong kế hoạch"
       open={true}
-      onCancel={() => navigate(`/plans/${id}/farmers`)}
+      onCancel={() => back()}
+      onClose={() => back()}
       footer={
         <>
-          <Button
-            type="default"
-            onClick={() => navigate(`/plans/${id}/farmers`)}
-          >
+          <Button type="default" onClick={() => back()}>
             Hủy
           </Button>
           <Button type="primary" variant="filled" onClick={handleDelete}>
@@ -206,12 +208,25 @@ export const DeleteFarmerInPlanModal = () => {
 
 export const AddFarmerIntoPlanModal = () => {
   const { id } = useParams();
-  const [selectFarmer, setSelectFarmer] = useState();
+  const [selectFarmer, setSelectFarmer] = useState<number | undefined>();
+  const [events, setEvents] = useState<
+    {
+      id: number;
+      title: string;
+      start: Date;
+      end: Date;
+      type: "Chăm sóc" | "Thu hoạch" | "Đóng gói" | "Kiểm định";
+      status: "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete";
+    }[]
+  >([]);
+
   const { data: planData } = useOne({
     resource: `plans`,
     id: `${id}/general`,
   });
+
   const plan = planData?.data;
+
   const { data: farmerData } = useList({
     resource: "farmers",
     filters: [
@@ -222,16 +237,20 @@ export const AddFarmerIntoPlanModal = () => {
       },
     ],
   });
+
   const { data: chosenFarmrtData } = useList({
     resource: `plans/${id}/farmers`,
   });
+
   const navigate = useNavigate();
   const farmers = farmerData?.data as IFarmer[];
   const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
-  const filterFarmers = farmers?.filter(
-    (x) => !chosenFarmers.some((y: any) => y.id === x.id)
-  ) ?? [];
+  const filterFarmers =
+    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ??
+    [];
+
   const back = useBack();
+
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/farmers`,
     action: "create",
@@ -240,41 +259,92 @@ export const AddFarmerIntoPlanModal = () => {
     },
   });
 
+  const { refetch, isLoading } = useCustom({
+    url: `https://api.outfit4rent.online/api/farmers/${selectFarmer}/calendar`,
+    method: "get",
+    queryOptions: {
+      enabled: false,
+      onSuccess: (data) => {
+        setEvents(
+          data?.data?.map((x: any) => {
+            return {
+              title: x.task_type,
+              start: x.start_date,
+              end: x.end_date,
+              status: x.status,
+            };
+          }) || []
+        );
+      },
+    },
+  });
+
+  const handleSelect = async (value: number) => {
+    setSelectFarmer(value);
+    formProps?.form?.setFieldValue("farmer_id", value);
+  };
+
+  const handleShowDetail = async () => {
+    if (!selectFarmer) return;
+    refetch();
+  };
+
   return (
-    <Form {...formProps}>
-      <Modal
-        width={1000}
-        title="Thêm nông dân vào kế hoạch"
-        open={true}
-        onCancel={() => navigate(`/plans/${id}/farmers`)}
-        footer={
-          <>
-            <Button
-              type="default"
-              onClick={() => navigate(`/plans/${id}/farmers`)}
-            >
-              Hủy
-            </Button>
-            <Button type="primary" variant="filled" {...saveButtonProps}>
-              Lưu
-            </Button>
-          </>
-        }
+    <Modal
+      width={1000}
+      title="Thêm nông dân vào kế hoạch"
+      open={true}
+      onCancel={() => navigate(`/plans/${id}/farmers`)}
+      footer={
+        <>
+          <Button
+            type="default"
+            onClick={() => navigate(`/plans/${id}/farmers`)}
+          >
+            Hủy
+          </Button>
+          <Button type="primary" variant="filled" {...saveButtonProps}>
+            Lưu
+          </Button>
+        </>
+      }
+    >
+      <Form
+        {...formProps}
+        layout="vertical" // Thay đổi layout thành vertical
       >
         <Form.Item
+          vertical={false}
           name="farmer_id"
           label="Chọn nông dân"
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
-          <Select onChange={setSelectFarmer}>
-            {filterFarmers?.map((farmer) => (
-              <Select.Option key={farmer.id} value={farmer.id}>
-                {farmer.name}
-              </Select.Option>
-            ))}
-          </Select>
+          <Space
+            direction="vertical"
+            style={{ width: "100%", marginBottom: 20 }}
+          >
+            <Select value={selectFarmer} onChange={handleSelect}>
+              {filterFarmers?.map((farmer) => (
+                <Select.Option key={farmer.id} value={farmer.id}>
+                  {farmer.name}
+                </Select.Option>
+              ))}
+            </Select>
+            <Space>
+              <ShowButton hideText size="small" onClick={handleShowDetail} />
+            </Space>
+          </Space>
         </Form.Item>
-      </Modal>
-    </Form>
+      </Form>
+      {isLoading && selectFarmer && <Spin></Spin>}
+      {events.length > 0 && (
+        <FarmerScheduleComponent
+          events={events}
+          isLoading={false}
+          start_date={plan?.start_date}
+          end_date={plan?.end_date}
+        />
+      )}
+    </Modal>
   );
 };

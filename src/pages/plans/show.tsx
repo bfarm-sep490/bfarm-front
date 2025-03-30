@@ -50,6 +50,7 @@ import { ProblemsDashBoard } from "@/components/plan/dashboard-problems";
 import { IProblem } from "@/interfaces";
 import { MaterialDashboard } from "@/components/plan/dashboard-fertilizer-pesticide-item";
 import { CaringTaskDashboard } from "@/components/plan/dashboard-caring-tasks";
+import { ScheduleComponent } from "@/components/scheduler";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -102,7 +103,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
       cacheTime: 1000 * 60,
     },
   });
-  const { data: problemsData, isLoading: problemsLoading } = useOne<IProblem[], HttpError>({
+  const { data: problemsData, isLoading: problemsLoading } = useOne<
+    IProblem[],
+    HttpError
+  >({
     resource: "plans",
     id: `${id}/problems`,
   });
@@ -133,64 +137,17 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     ],
   });
   const harvesting_products = harvestingProductsData?.data as any[];
-
-  const [state5, setState5] = React.useState({
-    series: [
+  const { data: orderData, isLoading: orderLoading } = useList<any, HttpError>({
+    resource: `orders`,
+    filters: [
       {
-        name: "Độ ẩm %",
-        type: "column",
-        data: [40, 50, 41, 67, 22, 41, 20, 35, 75, 32, 25, 16],
-      },
-      {
-        name: "Nhiệt độ °C",
-        type: "line",
-        data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16],
+        field: "plan_id",
+        operator: "eq",
+        value: id,
       },
     ],
-    options: {
-      chart: {
-        height: 350,
-        type: "line",
-      },
-      stroke: {
-        width: [0, 4],
-      },
-      labels: [
-        "01 Jan 2001",
-        "02 Jan 2001",
-        "03 Jan 2001",
-        "04 Jan 2001",
-        "05 Jan 2001",
-        "06 Jan 2001",
-        "07 Jan 2001",
-        "08 Jan 2001",
-        "09 Jan 2001",
-        "10 Jan 2001",
-        "11 Jan 2001",
-        "12 Jan 2001",
-      ],
-      yaxis: [
-        {
-          opposite: true,
-          title: {
-            text: "Nhiệt độ °C",
-            style: {
-              fontWeight: "bold",
-            },
-          },
-        },
-        {
-          title: {
-            text: "Độ ẩm %",
-            style: {
-              fontWeight: "bold",
-            },
-          },
-        },
-      ],
-    },
   });
-
+  const orders = orderData?.data as any[];
   const breakpoint = Grid.useBreakpoint();
   return (
     <div>
@@ -287,7 +244,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <UserOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Cây trồng:</Typography.Text>
                     <Typography.Text>
-                      {general_info?.plant_information?.plant_name || "Chưa xác định"}
+                      {general_info?.plant_information?.plant_name ||
+                        "Chưa xác định"}
                     </Typography.Text>
                   </Space>
 
@@ -295,7 +253,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <GoldOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Khu đất</Typography.Text>
                     <Typography.Text>
-                      <Tag>{general_info?.yield_information?.yield_name || "Chưa xác định"}</Tag>
+                      <Tag>
+                        {general_info?.yield_information?.yield_name ||
+                          "Chưa xác định"}
+                      </Tag>
                     </Typography.Text>
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
@@ -317,9 +278,14 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <Typography.Text strong>Ngày tạo:</Typography.Text>
                     <Typography.Text type="secondary">
                       {general_info?.created_at ? (
-                        <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
+                        <DateField
+                          value={general_info?.created_at}
+                          format="hh:mm DD/MM/YYYY"
+                        />
                       ) : (
-                        <Typography.Text type="danger">Chưa xác định</Typography.Text>
+                        <Typography.Text type="danger">
+                          Chưa xác định
+                        </Typography.Text>
                       )}
                     </Typography.Text>
                   </Space>
@@ -349,6 +315,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "30px" }}>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
+                loading={generalLoading}
                 title="Sản lượng thu hoạch còn lại (kg)"
                 completedTasks={
                   harvesting_products
@@ -365,15 +332,16 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
-                loading={generalLoading}
+                loading={orderLoading}
                 title={`🌍 Số lượng đơn hàng`}
-                completedTasks={2}
+                completedTasks={orders?.length || 0}
                 navigate={`/plans/${id}/orders`}
               />
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
                 title="⚠️ Vấn đề mới"
+                loading={problemsLoading}
                 navigate={`/plans/${id}/problems`}
                 completedTasks={
                   problemsData?.data?.filter((x) => x.status === "Pending").length || 0
@@ -402,7 +370,11 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         <Divider />
 
         <DropDownSection title="Công việc">
-          <Row gutter={[16, 16]} justify="center" style={{ marginTop: "10px" }}>
+          <Row
+            gutter={[16, 16]}
+            justify="center"
+            style={{ marginTop: "10px", marginBottom: "10px" }}
+          >
             <Col xs={24} md={12} lg={12} xl={12}>
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -412,7 +384,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   >
                     <ActivityCard
                       icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
-                      completedTasks={caring_task_dashboard?.complete_quantity || 0}
+                      completedTasks={
+                        caring_task_dashboard?.complete_quantity || 0
+                      }
                       title="Chăm sóc"
                       loading={isTaskDashboardLoading}
                       totalActivity={
@@ -424,7 +398,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       }
                       lastActivityDate={
                         "Lần cuối: " +
-                        new Date(caring_task_dashboard?.last_create_date).toLocaleDateString()
+                        new Date(
+                          caring_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
                       }
                       navigate={`/plans/${id}/caring-tasks`}
                     />
@@ -449,7 +425,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   >
                     <ActivityCard
                       icon={<GiftOutlined style={{ color: "#52c41a" }} />}
-                      completedTasks={havesting_task_dashboard?.complete_quantity || 0}
+                      completedTasks={
+                        havesting_task_dashboard?.complete_quantity || 0
+                      }
                       loading={isTaskDashboardLoading}
                       title="Thu hoạch"
                       totalActivity={
@@ -461,7 +439,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       }
                       lastActivityDate={
                         "Lần cuối: " +
-                        new Date(havesting_task_dashboard?.last_create_date).toLocaleDateString()
+                        new Date(
+                          havesting_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
                       }
                       navigate={`/plans/${id}/harvesting-tasks`}
                     />
@@ -475,7 +455,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     children={
                       <ActivityCard
                         icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                        completedTasks={packaging_task_dashboard?.complete_quantity || 0}
+                        completedTasks={
+                          packaging_task_dashboard?.complete_quantity || 0
+                        }
                         loading={isTaskDashboardLoading}
                         totalActivity={
                           packaging_task_dashboard?.cancel_quantity +
@@ -487,7 +469,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         title="Đóng gói"
                         lastActivityDate={
                           "Lần cuối: " +
-                          new Date(packaging_task_dashboard?.last_create_date).toLocaleDateString()
+                          new Date(
+                            packaging_task_dashboard?.last_create_date
+                          ).toLocaleDateString()
                         }
                         navigate={`/plans/${id}/packaging-tasks`}
                       />
@@ -501,8 +485,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               <CaringTaskDashboard />
             </Col>
           </Row>
+          <ScheduleComponent />
         </DropDownSection>
-        <Divider />
 
         {/* <DropDownSection title="Quan sát">
           <Row gutter={[16, 16]} justify={"start"} style={{ marginTop: "10px" }}>

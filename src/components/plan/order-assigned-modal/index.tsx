@@ -20,21 +20,18 @@ export const OrderAssignedModal = () => {
   const { id } = useParams();
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  // Lấy thông tin kế hoạch
   const { data: plantData } = useOne({
     resource: `plans`,
     id: `${id}/general`,
   });
   const plan = plantData?.data;
 
-  // Lấy danh sách các đơn hàng chưa được gán kế hoạch
   const { data: orderData } = useList({
     resource: `orders/no-plan`,
   });
 
   const noPlanOrders = orderData?.data;
 
-  // Lọc các đơn hàng theo plant_id
   const orders = noPlanOrders?.filter(
     (order) => order.plant_id === plan?.plant_information?.plant_id
   );
@@ -48,14 +45,12 @@ export const OrderAssignedModal = () => {
       setError("Đã có lỗi xảy ra, vui lòng thử lại sau!"); // Set error message
     },
   });
-  // Cập nhật danh sách đơn hàng
   useEffect(() => {
     if (orders && JSON.stringify(orders) !== JSON.stringify(needOrder)) {
       setNeedOrder(orders);
     }
   }, [orders]);
   const back = useBack();
-  // Cập nhật đơn hàng đã chọn
   const handleOrderSelect = (orderId: any) => {
     const order = orders?.find((o) => o.id === orderId);
     setSelectedOrder(order);

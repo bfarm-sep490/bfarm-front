@@ -176,9 +176,11 @@ export const ChangeAssignedTasksModal: React.FC<
       }
       width={600}
     >
-      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
-        * Bạn có thể thay đổi người làm cho công việc này. Vui lòng chọn những người đang rảnh việc
-        dưới đây.
+      <Typography.Text
+        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
+      >
+        * Bạn có thể thay đổi người làm cho công việc này. Vui lòng chọn những
+        người đang rảnh việc dưới đây.
       </Typography.Text>
       <Form
         form={formProps.form}
@@ -336,7 +338,7 @@ export const ProductiveTaskShow = () => {
                 <Button color="danger" variant="solid">
                   Không chấp nhận
                 </Button>
-                <Button>Chấp nhận</Button>
+                <Button type="primary">Chấp nhận</Button>
               </Space>
             </Flex>
           )}
@@ -392,15 +394,16 @@ export const ProductiveTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button
-            color="primary"
-            variant="solid"
-            onClick={() => navigate("edit")}
-          >
-            Thay đổi
-          </Button>
+          {(task?.status === "Ongoing" || task?.status === "Pending") && (
+            <Button
+              color="primary"
+              variant="solid"
+              onClick={() => navigate("edit")}
+            >
+              Thay đổi
+            </Button>
+          )}
         </Flex>
-        ;
         <List
           bordered
           dataSource={[
@@ -484,15 +487,17 @@ export const ProductiveTaskShow = () => {
           <Space>
             {" "}
             <Button type="dashed" onClick={() => setVisible(true)}>
-              Lịch sử giao việc
+              Lịch sử
             </Button>
-            <Button
-              type="primary"
-              color="cyan"
-              onClick={() => setAssignedModal(true)}
-            >
-              Thay đổi
-            </Button>
+            {(task?.status === "Ongoing" || task?.status === "Pending") && (
+              <Button
+                type="primary"
+                color="cyan"
+                onClick={() => setAssignedModal(true)}
+              >
+                Thay đổi
+              </Button>
+            )}
           </Space>
         </Flex>
         <List

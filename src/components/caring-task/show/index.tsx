@@ -3,6 +3,7 @@ import {
   TagField,
   TextField,
   Title,
+  useForm,
   useModalForm,
 } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
@@ -25,7 +26,7 @@ import {
   Input,
   Form,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { CaringTypeTag } from "../type-tag";
 import { StatusTag } from "../status-tag";
@@ -65,21 +66,34 @@ export const HistoryAssignedModal = ({
       dataIndex: "expire_at",
       key: "expire_at",
       render: (value: any) =>
-        value ? <DateField format="hh:mm DD/MM/YYYY" value={value} /> : "Chưa hết hạn",
+        value ? (
+          <DateField format="hh:mm DD/MM/YYYY" value={value} />
+        ) : (
+          "Chưa hết hạn"
+        ),
     },
     {
       title: "Ngày giao việc",
       dataIndex: "create_at",
       key: "create_at",
-      render: (value: any) => <DateField format="hh:mm DD/MM/YYYY" value={value} />,
+      render: (value: any) => (
+        <DateField format="hh:mm DD/MM/YYYY" value={value} />
+      ),
     },
   ];
   return (
-    <Modal title={"Lịch sử giao việc"} visible={visible} onCancel={onClose} footer={null}>
+    <Modal
+      title={"Lịch sử giao việc"}
+      visible={visible}
+      onCancel={onClose}
+      footer={null}
+    >
       <Table
         scroll={{ x: 1200 }}
         columns={columns}
-        dataSource={data.sort((a: any, b: any) => (a.status !== "Active" ? 1 : -1))}
+        dataSource={data.sort((a: any, b: any) =>
+          a.status !== "Active" ? 1 : -1
+        )}
         pagination={{ pageSize: 5 }}
       ></Table>
     </Modal>
@@ -90,48 +104,102 @@ interface ChangeAssignedTasksModalProps {
   visible: boolean;
   onClose: () => void;
   assignedFarmers: any;
-  chosenFarmers: any[];
+  start_date?: Date;
+  end_date?: Date;
+  type?: string;
 }
 
-export const ChangeAssignedTasksModal: React.FC<ChangeAssignedTasksModalProps> = ({
-  visible,
-  onClose,
-  assignedFarmers,
-  chosenFarmers,
-}) => {
+export const ChangeAssignedTasksModal: React.FC<
+  ChangeAssignedTasksModalProps
+> = ({ visible, onClose, assignedFarmers, start_date, end_date, type }) => {
   const [newFarmer, setNewFarmer] = useState<any>(null);
   const [reason, setReason] = useState<string>("");
-  const { taskId } = useParams();
-  const { modalProps, onFinish, open, close } = useModalForm({
-    resource: "caring-tasks",
+  const { taskId, id } = useParams();
+  const navigate = useNavigate();
+  const { formProps, saveButtonProps } = useForm({
+    resource:
+      type === "caring-tasks"
+        ? "caring-tasks"
+        : type === "harvesting-tasks"
+          ? "harvesting-tasks"
+          : "packing-tasks",
     id: `${taskId}/assigned-farmers`,
     action: "create",
+    onMutationSuccess() {
+      notification.success({
+        message: "Thay đổi người làm thành công",
+      });
+      navigate("/../..", { replace: true });
+      setNewFarmer(null);
+      setReason("");
+      onClose();
+    },
   });
-
+  const { data: freeFarmersData, isLoading } = useList<{
+    id: string;
+    name: string;
+  }>({
+    resource: `plans/${id}/free-farmers`,
+    filters: [
+      {
+        field: "start",
+        operator: "eq",
+        value: start_date,
+      },
+      {
+        field: "end",
+        operator: "eq",
+        value: end_date,
+      },
+    ],
+  });
+  const freeFarmers = freeFarmersData?.data || [];
+  useEffect(() => {
+    if (!visible) {
+      setNewFarmer(null);
+      setReason("");
+    }
+  }, [visible]);
   return (
     <Modal
-      {...modalProps}
       title="Thay đổi người làm"
-      onOk={onFinish}
-      onClose={onClose}
       open={visible}
-      onCancel={onClose}
+      footer={
+        <>
+          <Flex justify="end" gap={8}>
+            <Button onClick={onClose}>Hủy</Button>
+            <Button {...saveButtonProps} disabled={!newFarmer} type="primary">
+              Thay đổi
+            </Button>
+          </Flex>
+        </>
+      }
       width={600}
     >
-      <Form>
+      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
+        * Bạn có thể thay đổi người làm cho công việc này. Vui lòng chọn những người đang rảnh việc
+        dưới đây.
+      </Typography.Text>
+      <Form
+        form={formProps.form}
+        layout="vertical"
+        onFinish={formProps.onFinish}
+        onChange={formProps.onChange}
+      >
         <div>
           {assignedFarmers && (
             <Form.Item
               name="reason"
-              label="Reason for the change"
+              label="Lý do thay đổi"
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
               style={{ marginTop: 20 }}
+              rules={[{ required: true, message: "Vui lòng nhập lý do!" }]}
             >
               <Input.TextArea
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="Enter the reason for the change"
+                placeholder="Nhập lí do"
                 rows={4}
               />
             </Form.Item>
@@ -141,17 +209,28 @@ export const ChangeAssignedTasksModal: React.FC<ChangeAssignedTasksModalProps> =
             vertical={true}
             label="Chọn người làm mới"
             labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }} // Cột input chiếm 100% chiều rộng
+            wrapperCol={{ span: 24 }}
+            rules={[
+              { required: true, message: "Vui lòng chọn người làm mới!" },
+            ]}
           >
             <Select
               style={{ width: "100%", marginBottom: 16 }}
               placeholder="Select a new farmer"
               value={newFarmer?.id}
               onChange={(value) => {
-                setNewFarmer(chosenFarmers.find((farmer: { id: any }) => farmer.id === value));
+                setNewFarmer(
+                  freeFarmers.find(
+                    (farmer: { id: string; name: string }) =>
+                      farmer.id === value
+                  ) || null
+                );
               }}
             >
-              {chosenFarmers.map((farmer: any) => (
+              {isLoading && (
+                <Select.Option value={undefined}>Loading...</Select.Option>
+              )}
+              {freeFarmers.map((farmer: any) => (
                 <Select.Option key={farmer.id} value={farmer.id}>
                   {farmer.name}
                 </Select.Option>
@@ -472,10 +551,12 @@ export const ProductiveTaskShow = () => {
         data={historyAssignedFarmers}
       />
       <ChangeAssignedTasksModal
-        chosenFarmers={chosenFarmers}
+        start_date={task?.start_date}
+        end_date={task?.end_date}
         onClose={() => setAssignedModal(false)}
         visible={assignedModal}
         assignedFarmers={chosenFarmers.find((x) => x.id === task.farmer_id)}
+        type={"caring-tasks"}
       />
     </Drawer>
   );

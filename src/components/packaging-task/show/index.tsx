@@ -94,7 +94,7 @@ export const PackagingTaskShow = () => {
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
-                  src={task?.harvesting_images?.[0]}
+                  src={task?.packaging_images?.[0]}
                 />
               </Image.PreviewGroup>
             )}
@@ -113,18 +113,12 @@ export const PackagingTaskShow = () => {
                 {
                   label: "Số lượng đóng gói",
                   value: (
-                    <Typography.Text>
-                      {task?.packaged_quantity} {" " + task?.packaged_unit}
-                    </Typography.Text>
+                    <Typography.Text>{task?.packed_quantity}</Typography.Text>
                   ),
                 },
                 {
                   label: "Nội dung",
-                  value: (
-                    <Typography.Paragraph>
-                      {task?.result_content}
-                    </Typography.Paragraph>
-                  ),
+                  value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
                 },
               ]}
               renderItem={(item) => (
@@ -142,13 +136,11 @@ export const PackagingTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button
-            color="primary"
-            variant="solid"
-            onClick={() => navigate("edit")}
-          >
-            Thay đổi
-          </Button>
+          {(task?.status === "Ongoing" || task?.status === "Pending") && (
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+              Thay đổi
+            </Button>
+          )}
         </Flex>
         <List
           bordered
@@ -256,15 +248,17 @@ export const PackagingTaskShow = () => {
           <Space>
             {" "}
             <Button type="dashed" onClick={() => setVisible(true)}>
-              Lịch sử giao việc
+              Lịch sử
             </Button>
-            <Button
-              type="primary"
-              color="cyan"
-              onClick={() => setAssignedModal(true)}
-            >
-              Thay đổi
-            </Button>
+            {(task?.status === "Ongoing" || task?.status === "Pending") && (
+              <Button
+                type="primary"
+                color="cyan"
+                onClick={() => setAssignedModal(true)}
+              >
+                Thay đổi
+              </Button>
+            )}
           </Space>
         </Flex>
         <List

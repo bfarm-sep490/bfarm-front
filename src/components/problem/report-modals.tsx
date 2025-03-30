@@ -4,6 +4,7 @@ import {
   TagField,
   Title,
   useDrawerForm,
+  useForm,
   useModalForm,
 } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useUpdate } from "@refinedev/core";
@@ -34,10 +35,16 @@ type ReportProblemProps = {
 };
 export const ReportProblemModal = (props: ReportProblemProps) => {
   const { id } = useParams();
-  const { modalProps, formProps, close, onFinish, formLoading } = useModalForm<any>({
+  const { formProps, formLoading, saveButtonProps } = useForm<any>({
     resource: "problems",
-    id,
+    id: `${id}/result-content`,
     action: "edit",
+    queryOptions: {
+      enabled: false,
+    },
+    onMutationSuccess: () => {
+      navigate("../" + id, { replace: true });
+    },
     redirect: false,
   });
   const navigate = useNavigate();
@@ -50,27 +57,35 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
   return (
     <>
       <Modal
-        {...modalProps}
         open={props.open}
         title={"Kết quả vấn đề"}
         width={breakpoint.sm ? "378px" : "100%"}
         zIndex={1001}
-        onClose={props?.close}
-        onCancel={props?.close}
-        onOk={onFinish}
+        onClose={close}
+        onCancel={close}
+        footer={
+          <Flex vertical gap={8} justify="end" style={{ width: "100%" }}>
+            <Button onClick={close}>Đóng</Button>
+            <Button {...saveButtonProps} type="primary" />
+          </Flex>
+        }
       >
         <Spin spinning={formLoading}>
           <Form {...formProps} layout="vertical">
             <Form.Item
               label="Kết quả"
-              name="result"
+              name="result_content"
               rules={[{ required: true, message: "Vui lòng nhập kết quả" }]}
             >
               <Input.TextArea name="result" />
             </Form.Item>
 
-            <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-              <Select defaultValue={props.status} options={statusOptions} />
+            <Form.Item
+              label="Status"
+              name="status"
+              rules={[{ required: true }]}
+            >
+              <Select options={statusOptions} />
             </Form.Item>
           </Form>
         </Spin>

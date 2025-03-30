@@ -142,31 +142,22 @@ export const HarvestingTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button
-            color="primary"
-            variant="solid"
-            onClick={() => navigate("edit")}
-          >
-            Thay đổi
-          </Button>
+          {(task?.status === "Ongoing" || task?.status === "Pending") && (
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+              Thay đổi
+            </Button>
+          )}
         </Flex>
         <List
           bordered
           dataSource={[
             {
               label: "Ngày bắt đầu",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.start_date}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.start_date} />,
             },
             {
               label: "Ngày kết thúc",
-              value: (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />,
             },
             {
               label: "Trạng thái",
@@ -179,15 +170,12 @@ export const HarvestingTaskShow = () => {
             { label: "Kế hoạch", value: task?.plan_name },
             {
               label: "Mô tả công việc",
-              value: (
-                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
-              ),
+              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -196,12 +184,7 @@ export const HarvestingTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.created_at}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
             {
               label: "Người tạo",
@@ -210,10 +193,7 @@ export const HarvestingTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.updated_at}
-                />
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -225,8 +205,7 @@ export const HarvestingTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -236,15 +215,13 @@ export const HarvestingTaskShow = () => {
           <Space>
             {" "}
             <Button type="dashed" onClick={() => setVisible(true)}>
-              Lịch sử giao việc
+              Lịch sử
             </Button>
-            <Button
-              type="primary"
-              color="cyan"
-              onClick={() => setAssignedModal(true)}
-            >
-              Thay đổi
-            </Button>
+            {(task?.status === "Ongoing" || task?.status === "Pending") && (
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+                Thay đổi
+              </Button>
+            )}
           </Space>
         </Flex>
         <List

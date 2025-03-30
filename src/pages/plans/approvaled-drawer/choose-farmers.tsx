@@ -1,15 +1,20 @@
+import { FarmerScheduleComponent } from "@/components/scheduler/farmer-task-scheduler";
 import { ShowButton } from "@refinedev/antd";
+import { useCustom } from "@refinedev/core";
 import {
   Avatar,
   Button,
   Calendar,
   Card,
   Checkbox,
+  Divider,
   Flex,
   Input,
   Modal,
   Space,
+  Spin,
   Table,
+  Typography,
 } from "antd";
 import { FormProps } from "antd/lib";
 import React, { useEffect } from "react";
@@ -43,6 +48,8 @@ export const ChooseFarmers = ({
   setPackagingTasks,
 }: Props) => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
+  const [events, setEvents] = React.useState<any[]>([]);
+  const [selectFarmer, setSelectFarmer] = React.useState<number>(0);
   const [search, setSearch] = React.useState<string>("");
   const showModal = () => {
     setIsModalOpen(true);
@@ -56,7 +63,29 @@ export const ChooseFarmers = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
+  const handleSelect = async (value: number) => {
+    setSelectFarmer(value);
+    refetch();
+  };
+  const { refetch, isLoading } = useCustom({
+    url: `https://api.outfit4rent.online/api/farmers/${selectFarmer}/calendar`,
+    method: "get",
+    queryOptions: {
+      enabled: false,
+      onSuccess: (data) => {
+        setEvents(
+          data?.data?.map((x: any) => {
+            return {
+              title: x.task_type,
+              start: x.start_date,
+              end: x.end_date,
+              status: x.status,
+            };
+          }) || []
+        );
+      },
+    },
+  });
   const farm_columns = [
     {
       title: "ID",
@@ -148,17 +177,18 @@ export const ChooseFarmers = ({
             }}
           ></Checkbox>
           <Space>
-            <ShowButton hideText size="small" onClick={() => {}} />
+            <Button size="small" onClick={() => handleSelect(record.id)}>
+              Xem lịch
+            </Button>
           </Space>
         </Flex>
       ),
     },
   ];
   useEffect(() => {
-    setFilteredFarmers(
-      farmers.filter((farmer) => farmer.name.includes(search))
-    );
+    setFilteredFarmers(farmers.filter((farmer) => farmer.name.includes(search)));
   }, [search, farmers]);
+
   return (
     <>
       <Card
@@ -172,11 +202,7 @@ export const ChooseFarmers = ({
           </>
         }
       >
-        <Table
-          columns={farm_columns}
-          dataSource={chosenFarmers}
-          rowKey="id"
-        ></Table>
+        <Table columns={farm_columns} dataSource={chosenFarmers} rowKey="id"></Table>
         <Modal
           width={1000}
           height={600}
@@ -202,6 +228,21 @@ export const ChooseFarmers = ({
               columns={farm_modals_columns}
             ></Table>
           </Flex>
+          <Divider></Divider>
+          {isLoading && !selectFarmer && <Spin></Spin>}
+          {selectFarmer && (
+            <>
+              <Typography.Title level={4}>
+                Lịch sử công việc của nông dân #{selectFarmer}
+              </Typography.Title>
+              <FarmerScheduleComponent
+                events={events}
+                isLoading={isLoading}
+                start_date={formProps?.form?.getFieldValue("start_date")}
+                end_date={formProps?.form?.getFieldValue("end_date")}
+              />
+            </>
+          )}
         </Modal>
       </Card>
     </>

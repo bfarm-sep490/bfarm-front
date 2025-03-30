@@ -1,10 +1,4 @@
-import {
-  DateField,
-  TagField,
-  TextField,
-  Title,
-  useModalForm,
-} from "@refinedev/antd";
+import { DateField, TagField, TextField, Title, useModalForm } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {
   Drawer,
@@ -56,7 +50,7 @@ export const OrderDrawerShow = () => {
               </Space>
             </Flex>
           )}
-          {
+          {order?.status === "Deposit" && (
             <Flex justify="end" gap={10}>
               <Button color="danger" onClick={() => navigate("cancel")}>
                 Hủy bỏ
@@ -65,7 +59,7 @@ export const OrderDrawerShow = () => {
                 Hoàn thành
               </Button>
             </Flex>
-          }
+          )}
         </>
       }
     >
@@ -133,8 +127,7 @@ export const OrderDrawerShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />

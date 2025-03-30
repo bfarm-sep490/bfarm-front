@@ -11,7 +11,15 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
+import {
+  Table,
+  Space,
+  Radio,
+  Button,
+  Breadcrumb,
+  Flex,
+  Typography,
+} from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { ProblemListTable } from "../../../components/problem/list-table";
@@ -20,7 +28,16 @@ export const ShowProblemList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { tableProps } = useTable({
-    resource: `plans/${id}/problems`,
+    resource: `problems`,
+    filters: {
+      initial: [
+        {
+          field: "plan_id",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
   return (
     <>
@@ -33,11 +50,16 @@ export const ShowProblemList = ({ children }: PropsWithChildren) => {
       </Button>
       <div>
         <Flex justify="end" align="center">
-          <Button onClick={() => navigate(`/plans`)} icon={<ArrowLeftOutlined />}>
+          <Button
+            onClick={() => navigate(`/plans`)}
+            icon={<ArrowLeftOutlined />}
+          >
             Plans
           </Button>
         </Flex>
-        <Typography.Title level={3}>Danh sách vấn đề của kế hoạch #{id}</Typography.Title>
+        <Typography.Title level={3}>
+          Danh sách vấn đề của kế hoạch #{id}
+        </Typography.Title>
         <ProblemListTable
           tableProps={tableProps}
           showNavigation={`/plans/${id}/problems`}

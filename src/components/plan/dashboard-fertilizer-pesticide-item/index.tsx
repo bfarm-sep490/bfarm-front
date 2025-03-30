@@ -7,19 +7,17 @@ import { useParams } from "react-router";
 
 export const MaterialDashboard = () => {
   const { id } = useParams();
+  const { data: materialFertilizerData, isLoading: fertilizerLoading } =
+    useList({
+      resource: `plans/${id}/fertilizers`,
+      queryOptions: { cacheTime: 60000 },
+    });
 
-  // Fetch data for fertilizers and pesticides
-  const { data: materialFertilizerData } = useList({
-    resource: `plans/${id}/fertilizers`,
-    queryOptions: { cacheTime: 60000 },
-  });
-
-  const { data: materialPesticideData } = useList({
+  const { data: materialPesticideData, isLoading: pesticideLoading } = useList({
     resource: `plans/${id}/pesticides`,
     queryOptions: { cacheTime: 60000 },
   });
 
-  // State to manage chart data
   const [chartData, setChartData] = useState<{
     series: { name: string; data: number[] }[];
     options: ApexOptions;
@@ -50,36 +48,48 @@ export const MaterialDashboard = () => {
     },
   });
 
-  // useEffect to update state when data is available
   useEffect(() => {
-    if (materialFertilizerData && materialPesticideData) {
+    if (
+      materialFertilizerData &&
+      materialPesticideData &&
+      !fertilizerLoading &&
+      !pesticideLoading
+    ) {
       const fertilizers = materialFertilizerData?.data || [];
       const pesticides = materialPesticideData?.data || [];
 
       const estimate_quantity = fertilizers
         .map((item) => item.estimate_quantity)
         .concat(pesticides.map((item) => item.estimate_quantity));
-
+      console.log("estimate_quantity", estimate_quantity);
       const used_quantity = fertilizers
         .map((item) => item.used_quantity)
         .concat(pesticides.map((item) => item.used_quantity));
-
+      console.log("used_quantity", used_quantity);
       const categories_label = fertilizers
         .map((item) => item.name)
         .concat(pesticides.map((item) => item.name));
-
-      setChartData({
+      console.log("categories_label", categories_label);
+      setChartData((prevData) => ({
         series: [
           { name: "Dự kiến (kg/lít)", data: estimate_quantity },
           { name: "Đã sử dụng (kg/lít)", data: used_quantity },
         ],
         options: {
-          ...chartData.options,
+          ...prevData.options,
           xaxis: { categories: categories_label },
         },
-      });
+      }));
+      console.log("fertilizers", fertilizers);
+      console.log("pesticides", pesticides);
+      console.log(chartData);
     }
-  }, [materialFertilizerData, materialPesticideData]); // Chạy khi dữ liệu thay đổi
+  }, [
+    materialFertilizerData,
+    materialPesticideData,
+    fertilizerLoading,
+    pesticideLoading,
+  ]);
 
   return (
     <Card title="📊 Phân bón & Thuốc trừ sâu">

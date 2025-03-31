@@ -1,36 +1,38 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useMemo } from "react";
-import { type BaseKey, type HttpError, useShow, useTranslate } from "@refinedev/core";
+import { type HttpError, useShow, useTranslate } from "@refinedev/core";
 import {
   Button,
-  Divider,
-  Grid,
   List,
   Typography,
-  theme,
   Spin,
-  Card,
   Table,
-  Tag,
   Alert,
+  Drawer,
+  Modal,
 } from "antd";
-import { EditOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { IInspectingForm, IInspectingResult } from "@/interfaces";
 import { InspectionDrawerForm } from "../drawer-form";
 import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
 import { useNavigate, useParams } from "react-router";
-import { PageHeader } from "@refinedev/antd";
 import dayjs from "dayjs";
+import {
+  chemicalGroups,
+  columns,
+  getChemicalData,
+} from "../chemical/ChemicalConstants";
 
 export const InspectionsShow: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
   const t = useTranslate();
 
-  // Fetch inspecting form
   const { queryResult: formQueryResult } = useShow<{ data: IInspectingForm[] }, HttpError>({
     resource: "inspecting-forms",
     id,
@@ -46,17 +48,20 @@ export const InspectionsShow: React.FC = () => {
   const isLoading = formQueryResult.isLoading || resultQueryResult.isLoading;
 
   const inspection = useMemo(
-    () => (formQueryResult.data as { data: IInspectingForm[] } | undefined)?.data?.[0],
-    [formQueryResult.data],
+    () =>
+      (formQueryResult.data as { data: IInspectingForm[] } | undefined)?.data?.[0],
+    [formQueryResult.data]
   );
 
   const inspectionResult = useMemo(
-    () => (resultQueryResult.data as { data: IInspectingResult[] } | undefined)?.data?.[0],
-    [resultQueryResult.data],
+    () =>
+      (resultQueryResult.data as { data: IInspectingResult[] } | undefined)?.data?.[0],
+    [resultQueryResult.data]
   );
-  const handleBack = () => {
-    navigate(-1);
-  };
+
+  const chemicalData = getChemicalData(inspectionResult);
+
+  const handleBack = () => navigate(-1);
 
   const handleEdit = () => {
     if (inspection) {
@@ -65,9 +70,6 @@ export const InspectionsShow: React.FC = () => {
         start_date: inspection.start_date ? dayjs(inspection.start_date).toISOString() : "",
         end_date: inspection.end_date ? dayjs(inspection.end_date).toISOString() : "",
       };
-
-      console.log("Opening Edit Form with Data:", formattedInspection);
-
       setSelectedResult(formattedInspection);
       setIsEditing(true);
     }
@@ -78,146 +80,175 @@ export const InspectionsShow: React.FC = () => {
     setSelectedResult(null);
   };
 
+  const handleOpenModal = () => setIsModalVisible(true);
+  const handleCloseModal = () => setIsModalVisible(false);
+
   if (!id) return <Alert type="error" message="No inspection ID provided" />;
   if (isLoading) return <Spin size="large" />;
   if (formQueryResult.error || resultQueryResult.error)
     return <Alert type="error" message="Failed to load inspection data" />;
-  if (!inspection) return <Card>No inspection data available.</Card>;
-  const chemicalData = inspectionResult
-    ? [
-        { key: "arsen", label: "Arsenic", value: inspectionResult.arsen },
-        { key: "plumbum", label: "Plumbum", value: inspectionResult.plumbum },
-        { key: "cadmi", label: "Cadmium", value: inspectionResult.cadmi },
-        { key: "hydragyrum", label: "Mercury", value: inspectionResult.hydrargyrum },
-        { key: "salmonella", label: "Salmonella", value: inspectionResult.salmonella },
-        { key: "coliforms", label: "Coliforms", value: inspectionResult.coliforms },
-        { key: "ecoli", label: "E. Coli", value: inspectionResult.ecoli },
-        {
-          key: "glyphosate_glufosinate",
-          label: "Glyphosate/Glufosinate",
-          value: inspectionResult.glyphosate_glufosinate,
-        },
-        { key: "sulfur_dioxide", label: "Sulfur Dioxide", value: inspectionResult.sulfur_dioxide },
-        { key: "methyl_bromide", label: "Methyl Bromide", value: inspectionResult.methyl_bromide },
-        {
-          key: "hydrogen_phosphide",
-          label: "Hydrogen Phosphide",
-          value: inspectionResult.hydrogen_phosphide,
-        },
-        {
-          key: "dithiocarbamate",
-          label: "Dithiocarbamate",
-          value: inspectionResult.dithiocarbamate,
-        },
-        { key: "nitrat", label: "Nitrate", value: inspectionResult.nitrat },
-        { key: "nano3_kno3", label: "Nano3/KNO3", value: inspectionResult.nano3_kno3 },
-        { key: "chlorate", label: "Chlorate", value: inspectionResult.chlorate },
-        { key: "perchlorate", label: "Perchlorate", value: inspectionResult.perchlorate },
-      ]
-    : [];
-  return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "24px" }}>
-      <PageHeader
-        onBack={handleBack}
-        title={`Inspection Details - ${inspection.task_name}`}
-        extra={[
-          inspectionResult && (
-            <Button key="edit" icon={<EditOutlined />} onClick={handleEdit}>
-              {t("actions.edit")}
-            </Button>
-          ),
-        ]}
-      />
+  if (!inspection) return <Typography.Text>Không có dữ liệu.</Typography.Text>;
 
-      <Card>
+  return (
+    <Drawer
+      open={true}
+      width={800}
+      onClose={handleBack}
+      bodyStyle={{ padding: "24px 32px" }}
+      title={
+        <Typography.Title level={1} style={{ margin: 0 }}>
+          #{inspection.id} - {inspection.task_name}
+        </Typography.Title>
+      }
+    >
+      <div style={{ marginBottom: 40 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <Typography.Title level={3} style={{ margin: 0 }}>
+            Kết quả
+          </Typography.Title>
+          <Button type="primary" icon={<EyeOutlined />} onClick={handleOpenModal}>
+            Xem chi tiết
+          </Button>
+        </div>
+        {inspectionResult ? (
+
+          <>
+            <List
+              dataSource={[
+                {
+                  label: "Đánh giá",
+                  value: (
+                    <InspectionResultTag
+                      value={inspectionResult.evaluated_result}
+                    />
+                  ),
+                },
+                {
+                  label: "Nội dung",
+                  value: inspectionResult.result_content || "N/A",
+                },
+                {
+                  label: "Ảnh kết quả",
+                  value:
+                    Array.isArray(inspectionResult.inspect_images) &&
+                      inspectionResult.inspect_images.length > 0
+                      ? "Có"
+                      : "Không có",
+                },
+              ]}
+
+              renderItem={(data) => (
+                <List.Item>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <Typography.Text strong>{data.label}</Typography.Text>
+                    <Typography.Text>{data.value}</Typography.Text>
+                  </div>
+                </List.Item>
+              )}
+            />
+          </>
+        ) : (
+          <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
+        )}
+      </div>
+
+      <div style={{ marginBottom: 40 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography.Title level={3} style={{ marginBottom: 8 }}>
+            Chi tiết công việc
+          </Typography.Title>
+          <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
+            Thay đổi
+          </Button>
+        </div>
+
         <List
           dataSource={[
-            { label: "Inspection ID", value: inspection.id },
-            { label: "Plan ID", value: inspection.plan_id },
-            { label: "Plan Name", value: inspection.plan_name },
-            { label: "Inspector ID", value: inspection.inspector_id },
-            { label: "Inspector Name", value: inspection.inspector_name },
-            { label: "Task Name", value: inspection.task_name },
-            { label: "Description", value: inspection.description || "N/A" },
-            { label: "Task Type", value: inspection.task_type },
-            { label: "Start Date", value: new Date(inspection.start_date).toLocaleDateString() },
-            { label: "End Date", value: new Date(inspection.end_date).toLocaleDateString() },
+            { label: "Tên kế hoạch", value: inspection.plan_name || "N/A" },
+            { label: "Trung tâm kiểm định", value: inspection.inspector_name || "N/A" },
+            { label: "Mô tả", value: inspection.description || "N/A" },
+            { label: "Ngày bắt đầu", value: new Date(inspection.start_date).toLocaleDateString() },
+            { label: "Ngày kết thúc", value: new Date(inspection.end_date).toLocaleDateString() },
+            { label: "Trạng thái", value: <InspectionStatusTag value={inspection?.status} /> },
+            { label: "Cho thu hoạch", value: inspection.can_harvest ? "Có" : "Không" },
+          ]}
+          renderItem={(data) => (
+            <List.Item>
+              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                <Typography.Text strong>{data.label}</Typography.Text>
+                <Typography.Text>{data.value}</Typography.Text>
+              </div>
+            </List.Item>
+          )}
+        />
+      </div>
+
+      <div style={{ marginBottom: 40 }}>
+        <Typography.Title level={3}>Thời gian</Typography.Title>
+        <List
+          dataSource={[
             {
-              label: "Completed Date",
+              label: "Hoàn thành",
               value: inspection.complete_date
                 ? new Date(inspection.complete_date).toLocaleDateString()
                 : "N/A",
             },
-            { label: "Can Harvest", value: inspection.can_harvest ? "Yes" : "No" },
-            { label: "Status", value: <InspectionStatusTag value={inspection?.status} /> },
-            { label: "Result Content", value: inspection.result_content || "N/A" },
-            { label: "Number of Samples", value: inspection.number_of_sample ?? "N/A" },
-            { label: "Sample Weight", value: inspection.sample_weight ?? "N/A" },
-            { label: "Created At", value: new Date(inspection.created_at).toLocaleDateString() },
-            { label: "Created By", value: inspection.created_by || "N/A" },
+            { label: "Tạo lúc", value: new Date(inspection.created_at).toLocaleDateString() },
+            { label: "Tạo bởi", value: inspection.created_by || "N/A" },
             {
-              label: "Updated At",
+              label: "Cập nhật",
               value: inspection.updated_at
                 ? new Date(inspection.updated_at).toLocaleDateString()
                 : "N/A",
             },
-            { label: "Updated By", value: inspection.updated_by || "N/A" },
-            {
-              label: "Inspection Result ID",
-              value: inspection.inspecting_results?.result_id || "N/A",
-            },
-            {
-              label: "Evaluated Result",
-              value: (
-                <InspectionResultTag value={inspection.inspecting_results?.evaluated_result} />
-              ),
-            },
-
-            {
-              label: "Result Images",
-              value:
-                inspection.inspecting_results?.result_images.length > 0 ? "Available" : "No Images",
-            },
+            { label: "Cập nhật bởi", value: inspection.updated_by || "N/A" },
           ]}
           renderItem={(data) => (
             <List.Item>
-              <List.Item.Meta
-                avatar={<Typography.Text type="secondary">{data.label}</Typography.Text>}
-                title={<Typography.Text strong>{data.value}</Typography.Text>}
-              />
+              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                <Typography.Text strong>{data.label}</Typography.Text>
+                <Typography.Text>{data.value}</Typography.Text>
+              </div>
             </List.Item>
           )}
         />
-      </Card>
+      </div>
 
-      <Divider />
-      {inspectionResult ? (
-        <Card title="Inspection Results">
-          <Table
-            dataSource={chemicalData}
-            columns={[
-              {
-                title: "Indicator",
-                dataIndex: "label",
-                key: "label",
-                render: (text) => <Typography.Text strong>{text}</Typography.Text>,
-              },
-              {
-                title: "Value",
-                dataIndex: "value",
-                key: "value",
-                render: (value) => <Tag color={value > 0.1 ? "red" : "green"}>{value}</Tag>,
-              },
-            ]}
-            pagination={false}
-            bordered
-          />
-        </Card>
-      ) : (
-        <Card>
-          <Typography.Text>No inspecting result data available.</Typography.Text>
-        </Card>
-      )}
+      <Modal
+
+        open={isModalVisible}
+        onCancel={handleCloseModal}
+        footer={null}
+        width={900}
+      >
+        <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
+        {chemicalGroups.map((group) => {
+          const groupData = chemicalData.filter((item) =>
+            group.keys.includes(item.key)
+          );
+          if (groupData.length === 0) return null;
+
+          return (
+            <div key={group.title} style={{ marginBottom: 24 }}>
+              <Typography.Text strong>{group.title}</Typography.Text>
+              <Table
+                rowKey="key"
+                dataSource={groupData}
+                columns={columns}
+                pagination={false}
+                bordered
+                style={{ marginTop: 8 }}
+              />
+            </div>
+          );
+        })}
+      </Modal>
 
       {isEditing && selectedResult && (
         <InspectionDrawerForm
@@ -226,11 +257,9 @@ export const InspectionsShow: React.FC = () => {
           open={isEditing}
           initialValues={selectedResult}
           onClose={handleCloseDrawer}
-          onMutationSuccess={() => {
-            handleCloseDrawer();
-          }}
+          onMutationSuccess={handleCloseDrawer}
         />
       )}
-    </div>
+    </Drawer>
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import { useTable } from "@refinedev/antd";
 import { getDefaultFilter, type HttpError, useGo } from "@refinedev/core";
@@ -6,18 +7,19 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { InspectionStatusTag } from "../status";
-import { useParams } from "react-router";
+
 export const InspectionListTable: React.FC = () => {
   const { token } = theme.useToken();
   const go = useGo();
-  const { id } = useParams();
+
+
   const { tableProps, filters, setFilters } = useTable<IInspectingForm, HttpError>({
     resource: "inspecting-forms",
     filters: {
       initial: [
         { field: "id", operator: "eq", value: "" },
         { field: "task_type", operator: "contains", value: "" },
-        { field: "plan_id", operator: "eq", value: id ?? "" },
+
       ],
     },
   });
@@ -25,7 +27,7 @@ export const InspectionListTable: React.FC = () => {
   const handleView = (id?: number) => {
     if (id) {
       go({
-        to: `/inspections/${id}`,
+        to: `/inspection-forms/${id}`,
         type: "push",
       });
     }
@@ -74,13 +76,9 @@ export const InspectionListTable: React.FC = () => {
             style={{ width: "100%" }}
             placeholder="Search Task Type"
             onChange={(e) =>
-              setFilters([
-                {
-                  field: "task_type",
-                  operator: "contains",
-                  value: e.target.value,
-                },
-              ])
+
+              setFilters([{ field: "task_type", operator: "contains", value: e.target.value }])
+
             }
           />
         )}

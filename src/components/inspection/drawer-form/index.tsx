@@ -95,18 +95,6 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="Task Type"
-            name="task_type"
-            rules={[{ required: true, message: "Please select task type!" }]}
-          >
-            <Select placeholder="Select task type">
-              <Select.Option value="Routine">Routine Inspection</Select.Option>
-              <Select.Option value="Follow-up">Follow-up Inspection</Select.Option>
-              <Select.Option value="Special">Special Inspection</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
             label="Description"
             name="description"
             rules={[{ required: true, message: "Please enter description!" }]}

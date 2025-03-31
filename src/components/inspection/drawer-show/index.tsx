@@ -110,55 +110,54 @@ export const InspectionsShow: React.FC = () => {
             Xem chi tiết
           </Button>
         </div>
+        {inspectionResult ? (
 
-        {inspection.inspecting_results ? (
           <>
             <List
               dataSource={[
                 {
-                  label: "Nội dung",
-                  value: inspection.result_content || "N/A",
-                },
-                {
                   label: "Đánh giá",
                   value: (
                     <InspectionResultTag
-                      value={inspection.inspecting_results?.evaluated_result}
+                      value={inspectionResult.evaluated_result}
                     />
                   ),
                 },
                 {
+                  label: "Nội dung",
+                  value: inspectionResult.result_content || "N/A",
+                },
+                {
                   label: "Ảnh kết quả",
                   value:
-                    inspection.inspecting_results?.result_images?.length > 0
+                    Array.isArray(inspectionResult.inspect_images) &&
+                      inspectionResult.inspect_images.length > 0
                       ? "Có"
                       : "Không có",
                 },
-                {
-                  label: "Số mẫu",
-                  value: inspection.number_of_sample ?? "N/A",
-                },
-                {
-                  label: "Khối lượng mẫu",
-                  value: inspection.sample_weight ?? "N/A",
-                },
               ]}
+
               renderItem={(data) => (
                 <List.Item>
-                  <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
                     <Typography.Text strong>{data.label}</Typography.Text>
                     <Typography.Text>{data.value}</Typography.Text>
                   </div>
                 </List.Item>
               )}
             />
-
-
           </>
         ) : (
           <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
         )}
       </div>
+
       <div style={{ marginBottom: 40 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Typography.Title level={3} style={{ marginBottom: 8 }}>
@@ -171,7 +170,7 @@ export const InspectionsShow: React.FC = () => {
 
         <List
           dataSource={[
-            { label: "Loại công việc", value: inspection.task_type || "Không xác định" },
+            { label: "Loại công việc", value: inspection.task_name|| "Không xác định" },
             { label: "Ngày bắt đầu", value: new Date(inspection.start_date).toLocaleDateString() },
             { label: "Ngày kết thúc", value: new Date(inspection.end_date).toLocaleDateString() },
             { label: "Trạng thái", value: <InspectionStatusTag value={inspection?.status} /> },
@@ -220,13 +219,13 @@ export const InspectionsShow: React.FC = () => {
       </div>
 
       <Modal
-      
+
         open={isModalVisible}
         onCancel={handleCloseModal}
         footer={null}
         width={900}
       >
-          <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
+        <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
         {chemicalGroups.map((group) => {
           const groupData = chemicalData.filter((item) =>
             group.keys.includes(item.key)

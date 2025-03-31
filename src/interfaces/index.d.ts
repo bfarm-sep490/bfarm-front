@@ -264,7 +264,7 @@ export interface IInspectingForm {
   created_by: string;
   updated_at?: string | null;
   updated_by?: string | null;
-  evaluated_result: "Pass" | "Fail";
+  evaluated_result: "Grade 1" | "Grade 2" | "Grade 3";
   inspecting_results: InspectingResult;
 }
 export interface IInspectingResult {
@@ -285,7 +285,8 @@ export interface IInspectingResult {
   nano3_kno3: number;
   chlorate: number;
   perchlorate: number;
-  evaluated_result: "Pass" | "Fail";
+  evaluated_result: "Grade 1" | "Grade 2" | "Grade 3";
+  result_content: string;
   inspect_images: string[];
 }
 

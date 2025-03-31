@@ -170,7 +170,9 @@ export const InspectionsShow: React.FC = () => {
 
         <List
           dataSource={[
-            { label: "Loại công việc", value: inspection.task_name|| "Không xác định" },
+            { label: "Tên kế hoạch", value: inspection.plan_name || "N/A" },
+            { label: "Trung tâm kiểm định", value: inspection.inspector_name || "N/A" },
+            { label: "Mô tả", value: inspection.description || "N/A" },
             { label: "Ngày bắt đầu", value: new Date(inspection.start_date).toLocaleDateString() },
             { label: "Ngày kết thúc", value: new Date(inspection.end_date).toLocaleDateString() },
             { label: "Trạng thái", value: <InspectionStatusTag value={inspection?.status} /> },

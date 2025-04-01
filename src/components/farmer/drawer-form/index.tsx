@@ -1,11 +1,5 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -48,31 +42,30 @@ export const FarmerDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
   const translate = useTranslate();
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<{
-      avatar_image: string;
-      name: string;
-      phone: string;
-      email: string;
-      status: string;
-    }>({
-      resource: "farmers",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data: any) => {
-          if (data?.data?.[0]?.avatar_image) {
-            setPreviewImage(data?.data?.[0]?.avatar_image);
-          }
-          formProps.form.setFieldsValue(data?.data?.[0]);
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<{
+    avatar_image: string;
+    name: string;
+    phone: string;
+    email: string;
+    status: string;
+  }>({
+    resource: "farmers",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data: any) => {
+        if (data?.data?.[0]?.avatar_image) {
+          setPreviewImage(data?.data?.[0]?.avatar_image);
+        }
+        formProps.form.setFieldsValue(data?.data?.[0]);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -90,9 +83,7 @@ export const FarmerDrawerForm = (props: Props) => {
   };
   useEffect(() => {
     if (props.action === "edit" && formProps.form) {
-      const currentAvatar = formProps.form.getFieldValue(
-        "avatar_image"
-      ) as string;
+      const currentAvatar = formProps.form.getFieldValue("avatar_image") as string;
       console.log("currentAvatar: " + currentAvatar);
       if (currentAvatar) {
         setPreviewImage(currentAvatar);
@@ -112,7 +103,7 @@ export const FarmerDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -267,20 +258,9 @@ export const FarmerDrawerForm = (props: Props) => {
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
-              <Button onClick={onDrawerClose}>
-                {translate("form.cancel", "Hủy bỏ")}
-              </Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+              <Button onClick={onDrawerClose}>{translate("form.cancel", "Hủy bỏ")}</Button>
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 {translate("form.save", "Lưu")}
               </SaveButton>
             </Flex>

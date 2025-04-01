@@ -7,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
@@ -118,9 +108,7 @@ export const ExpertDrawerShow = (props: Props) => {
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("expert.email", "Email")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("expert.email", "Email")}</Typography.Text>
               ),
               value: expert?.email,
             },
@@ -131,9 +119,7 @@ export const ExpertDrawerShow = (props: Props) => {
                   {t("expert.status", "Trạng thái")}
                 </Typography.Text>
               ),
-              value: expert?.status && (
-                <ExpertStatusTag status={expert.status} />
-              ),
+              value: expert?.status && <ExpertStatusTag status={expert.status} />,
             },
             {
               label: (
@@ -141,9 +127,7 @@ export const ExpertDrawerShow = (props: Props) => {
                   {t("expert.created_at", "Ngày tạo")}
                 </Typography.Text>
               ),
-              value: (
-                <DateField format="DD/MM/YYYY" value={expert?.created_at} />
-              ),
+              value: <DateField format="DD/MM/YYYY" value={expert?.created_at} />,
             },
             {
               label: (

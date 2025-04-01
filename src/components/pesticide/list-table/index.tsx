@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Table,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Table, Typography, theme } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { IPesticide } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
@@ -32,9 +24,7 @@ export const PesticidesListTable: React.FC = () => {
     },
   });
 
-  const [selectedPesticideId, setSelectedPesticideId] = useState<
-    string | undefined
-  >(undefined);
+  const [selectedPesticideId, setSelectedPesticideId] = useState<string | undefined>(undefined);
 
   return (
     <>
@@ -44,9 +34,7 @@ export const PesticidesListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="pesticides" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="pesticides" />,
         }}
       >
         <Table.Column
@@ -55,22 +43,14 @@ export const PesticidesListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber
-              addonBefore="#"
-              style={{ width: "100%" }}
-              placeholder="Search ID"
-            />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
           )}
           render={(value) => (
-            <Typography.Text style={{ fontWeight: "bold" }}>
-              #{value}
-            </Typography.Text>
+            <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
           )}
         />
 
@@ -79,9 +59,7 @@ export const PesticidesListTable: React.FC = () => {
           title="Ảnh"
           dataIndex="image"
           key="image"
-          render={(image: string) => (
-            <Avatar shape="square" src={image} alt="Pesticide" />
-          )}
+          render={(image: string) => <Avatar shape="square" src={image} alt="Pesticide" />}
         />
 
         <Table.Column
@@ -90,9 +68,7 @@ export const PesticidesListTable: React.FC = () => {
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterDropdown={(props) => <Input placeholder="Search name" />}
@@ -104,10 +80,7 @@ export const PesticidesListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -119,16 +92,11 @@ export const PesticidesListTable: React.FC = () => {
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber
-              placeholder="Search total quantity"
-              style={{ width: "100%" }}
-            />
+            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />

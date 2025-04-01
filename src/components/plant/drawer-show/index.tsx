@@ -1,24 +1,6 @@
 import React, { useState } from "react";
-import {
-  type BaseKey,
-  useGetToPath,
-  useGo,
-  useList,
-  useShow,
-  useTranslate,
-} from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { type BaseKey, useGetToPath, useGo, useList, useShow, useTranslate } from "@refinedev/core";
+import { Avatar, Button, Card, Divider, Flex, Grid, List, Tag, Typography, theme } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -98,25 +80,16 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   alt={plant.plant_name}
                 />
               </Flex>
-              <Flex
-                vertical
-                style={{ backgroundColor: token.colorBgContainer }}
-              >
+              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>
-                    {plant.plant_name}
-                  </Typography.Title>
-                  <Typography.Text type="secondary">
-                    {plant.type}
-                  </Typography.Text>
+                  <Typography.Title level={5}>{plant.plant_name}</Typography.Title>
+                  <Typography.Text type="secondary">{plant.type}</Typography.Text>
                 </Flex>
               </Flex>
 
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
-                <Typography.Title level={5}>
-                  Chi tiết giống cây trồng
-                </Typography.Title>
+                <Typography.Title level={5}>Chi tiết giống cây trồng</Typography.Title>
                 <Flex align="center" justify="end">
                   <DeleteButton
                     type="text"
@@ -124,10 +97,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                     resource="plants"
                     onSuccess={handleDrawerClose}
                   />
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setIsEditing(true)}
-                  >
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                     {t("actions.edit")}
                   </Button>
                 </Flex>
@@ -157,21 +127,15 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
-                    <Typography.Text strong>{itemData.label}:</Typography.Text>{" "}
-                    {itemData.value}
+                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
                   </List.Item>
                 )}
               />
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
-                <Typography.Title level={5}>
-                  Tỉ lệ giá cây trồng
-                </Typography.Title>
+                <Typography.Title level={5}>Tỉ lệ giá cây trồng</Typography.Title>
                 <Flex align="center" justify="end">
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setIsEditing(true)}
-                  >
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                     {t("actions.edit")}
                   </Button>
                 </Flex>
@@ -186,8 +150,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
-                    <Typography.Text strong>{itemData.label}:</Typography.Text>{" "}
-                    {itemData.value}
+                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
                   </List.Item>
                 )}
               />
@@ -209,24 +172,17 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   renderItem={(yieldItem) => (
                     <List.Item>
                       <List.Item.Meta
-                        title={
-                          <Typography.Text strong>
-                            {yieldItem.yield_name}
-                          </Typography.Text>
-                        }
+                        title={<Typography.Text strong>{yieldItem.yield_name}</Typography.Text>}
                         description={
                           <>
                             <Typography.Text>
                               Diện tích: {yieldItem.area} {yieldItem.area_unit}
                             </Typography.Text>
                             <br />
-                            <Typography.Text>
-                              Loại đất: {yieldItem.type}
-                            </Typography.Text>
+                            <Typography.Text>Loại đất: {yieldItem.type}</Typography.Text>
                             <br />
                             <Typography.Text>
-                              Trạng thái:{" "}
-                              <YieldStatusTag value={yieldItem?.status} />
+                              Trạng thái: <YieldStatusTag value={yieldItem?.status} />
                             </Typography.Text>
                           </>
                         }

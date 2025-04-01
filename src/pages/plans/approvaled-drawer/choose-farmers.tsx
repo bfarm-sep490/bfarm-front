@@ -81,7 +81,7 @@ export const ChooseFarmers = ({
               end: x.end_date,
               status: x.status,
             };
-          }) || []
+          }) || [],
         );
       },
     },
@@ -96,9 +96,7 @@ export const ChooseFarmers = ({
       title: "Ảnh nông dân",
       dataIndex: "avatar",
       key: "avatar",
-      render: (text: any, record: any) => (
-        <Avatar src={record?.avatar}></Avatar>
-      ),
+      render: (text: any, record: any) => <Avatar src={record?.avatar}></Avatar>,
     },
     {
       title: "Tên nông dân",
@@ -116,9 +114,7 @@ export const ChooseFarmers = ({
       title: "Ảnh nông dân",
       dataIndex: "avatar",
       key: "avatar",
-      render: (text: any, record: any) => (
-        <Avatar src={record?.avatar}></Avatar>
-      ),
+      render: (text: any, record: any) => <Avatar src={record?.avatar}></Avatar>,
     },
     {
       title: "Tên nông dân",
@@ -131,17 +127,12 @@ export const ChooseFarmers = ({
       render: (text: any, record: any) => (
         <Flex vertical={true}>
           <Checkbox
-            checked={
-              chosenFarmers?.find((farmer: any) => farmer.id === record.id) ||
-              false
-            }
+            checked={chosenFarmers?.find((farmer: any) => farmer.id === record.id) || false}
             onChange={(e) => {
               if (e.target.checked) {
                 setChosenFarmers([...chosenFarmers, { ...record }]);
               } else {
-                setChosenFarmers(
-                  chosenFarmers.filter((farmer: any) => farmer.id !== record.id)
-                );
+                setChosenFarmers(chosenFarmers.filter((farmer: any) => farmer.id !== record.id));
                 const newProductiveTask = productiveTasks.map((task: any) => {
                   if (task?.farmer_id && task?.farmer_id === record?.id) {
                     return {

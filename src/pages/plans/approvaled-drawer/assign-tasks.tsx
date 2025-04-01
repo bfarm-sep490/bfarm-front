@@ -1,14 +1,5 @@
 import { DateField } from "@refinedev/antd";
-import {
-  Button,
-  Card,
-  Flex,
-  FormProps,
-  Select,
-  Table,
-  Tabs,
-  Typography,
-} from "antd";
+import { Button, Card, Flex, FormProps, Select, Table, Tabs, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 import React, { useEffect } from "react";
@@ -342,17 +333,13 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (_, record) => (
-        <DateField value={record.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => (
-        <DateField value={record.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nhà kiểm định",
@@ -414,20 +401,12 @@ export const AssignTasks = ({
         }
         style={{ minHeight: "600px", marginTop: 20 }}
       >
-        <Flex
-          justify="end"
-          align="center"
-          style={{ marginBottom: 20, marginTop: 20 }}
-        >
+        <Flex justify="end" align="center" style={{ marginBottom: 20, marginTop: 20 }}>
           <Button type="primary" onClick={() => setViewChart(!viewChart)}>
             {viewChart ? "Ẩn biểu đồ" : "Hiện biểu đồ"}
           </Button>
         </Flex>
-        <Tabs
-          defaultActiveKey={"1"}
-          tabPosition={"left"}
-          style={{ minHeight: 220 }}
-        >
+        <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
           <Tabs.TabPane key="1" tab="Chăm sóc">
             <Table
               pagination={{

@@ -1,14 +1,6 @@
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Table,
-  theme,
-  Typography,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerStatusTag } from "../status";
@@ -32,9 +24,7 @@ export const FertilizersListTable: React.FC = () => {
     },
   });
 
-  const [selectedFertilizerId, setSelectedFertilizerId] = useState<
-    string | undefined
-  >(undefined);
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
 
   return (
     <>
@@ -44,9 +34,7 @@ export const FertilizersListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="fertilizers" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
         }}
       >
         <Table.Column
@@ -55,14 +43,10 @@ export const FertilizersListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => (
-            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
-          )}
+          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
         />
 
         <Table.Column
@@ -83,9 +67,7 @@ export const FertilizersListTable: React.FC = () => {
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterDropdown={() => <Input placeholder="Search name" />}
@@ -97,10 +79,7 @@ export const FertilizersListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -112,16 +91,11 @@ export const FertilizersListTable: React.FC = () => {
           key="quantity"
           width={120}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={() => (
-            <InputNumber
-              placeholder="Search total quantity"
-              style={{ width: "100%" }}
-            />
+            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />

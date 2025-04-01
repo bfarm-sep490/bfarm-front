@@ -1,16 +1,6 @@
-import {
-  MoneyCollectOutlined,
-  QrcodeOutlined,
-  TruckOutlined,
-} from "@ant-design/icons";
+import { MoneyCollectOutlined, QrcodeOutlined, TruckOutlined } from "@ant-design/icons";
 import { TextField, useForm, useModalForm } from "@refinedev/antd";
-import {
-  useBack,
-  useCustomMutation,
-  useGo,
-  useList,
-  useOne,
-} from "@refinedev/core";
+import { useBack, useCustomMutation, useGo, useList, useOne } from "@refinedev/core";
 import {
   Button,
   Card,
@@ -169,7 +159,7 @@ export const CompleteOrderModal = (props: Props) => {
   useEffect(() => {
     const totalQuantity = orderProducts.reduce(
       (acc, item) => acc + item.quantity * item.per_package,
-      0
+      0,
     );
     setQuantity(totalQuantity);
   }, [orderProducts]);
@@ -189,10 +179,8 @@ export const CompleteOrderModal = (props: Props) => {
               ? plant.delta_two
               : plant.delta_three;
 
-        return (
-          acc + item.quantity * item.per_package * price * plant.base_price
-        );
-      }, 0)
+        return acc + item.quantity * item.per_package * price * plant.base_price;
+      }, 0),
     );
   }, [orderProducts, packagedProducts, plant]);
 
@@ -201,9 +189,7 @@ export const CompleteOrderModal = (props: Props) => {
 
   const handleCheckboxChange = (checked: boolean, id: number) => {
     setSelectedIds((prevSelectedIds) =>
-      checked
-        ? [...prevSelectedIds, id]
-        : prevSelectedIds.filter((itemId) => itemId !== id)
+      checked ? [...prevSelectedIds, id] : prevSelectedIds.filter((itemId) => itemId !== id),
     );
 
     setOrderProducts((prevOrderProducts) => {
@@ -228,8 +214,8 @@ export const CompleteOrderModal = (props: Props) => {
 
     setOrderProducts((prevOrderProducts) =>
       prevOrderProducts.map((item) =>
-        item.id === id ? { ...item, quantity: numericValue } : item
-      )
+        item.id === id ? { ...item, quantity: numericValue } : item,
+      ),
     );
   };
 
@@ -248,7 +234,7 @@ export const CompleteOrderModal = (props: Props) => {
       }))
       .sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
 
-    let newOrderProducts = selectedProducts.map((product) => ({
+    const newOrderProducts = selectedProducts.map((product) => ({
       id: product.id,
       quantity: 0,
       per_package: product.perPackage,
@@ -260,14 +246,9 @@ export const CompleteOrderModal = (props: Props) => {
       if (remainingTarget <= 0) break;
 
       const exactPackages = remainingTarget / product.perPackage;
-      const packagesToUse = Math.min(
-        Math.floor(exactPackages),
-        product.maxPackages
-      );
+      const packagesToUse = Math.min(Math.floor(exactPackages), product.maxPackages);
 
-      const productIndex = newOrderProducts.findIndex(
-        (p) => p.id === product.id
-      );
+      const productIndex = newOrderProducts.findIndex((p) => p.id === product.id);
       if (productIndex !== -1) {
         newOrderProducts[productIndex].quantity = packagesToUse;
         const allocated = packagesToUse * product.perPackage;
@@ -285,7 +266,7 @@ export const CompleteOrderModal = (props: Props) => {
         .sort((a, b) => a.perPackage - b.perPackage);
 
       let smallestSuitablePackage = remainingOptions.find(
-        (product) => product.perPackage >= remainingTarget
+        (product) => product.perPackage >= remainingTarget,
       );
 
       if (!smallestSuitablePackage && remainingOptions.length > 0) {
@@ -293,9 +274,7 @@ export const CompleteOrderModal = (props: Props) => {
       }
 
       if (smallestSuitablePackage) {
-        const productIndex = newOrderProducts.findIndex(
-          (p) => p.id === smallestSuitablePackage.id
-        );
+        const productIndex = newOrderProducts.findIndex((p) => p.id === smallestSuitablePackage.id);
         if (productIndex !== -1) {
           newOrderProducts[productIndex].quantity += 1;
         }
@@ -309,10 +288,7 @@ export const CompleteOrderModal = (props: Props) => {
   const percentageFulfilled = order?.preorder_quantity
     ? Math.floor((quantity / order.preorder_quantity) * 100)
     : 0;
-  const excessQuantity = Math.max(
-    0,
-    quantity - (order?.preorder_quantity || 0)
-  );
+  const excessQuantity = Math.max(0, quantity - (order?.preorder_quantity || 0));
 
   const { modalProps, formProps, onFinish } = useModalForm({
     resource: `payments/remaining-payment/${selectedMethod === "cashPayment" ? "cash" : "payos"}`,
@@ -356,10 +332,7 @@ export const CompleteOrderModal = (props: Props) => {
     formProps.form.setFieldsValue({
       amount: amount - order?.deposit_price,
       orderId,
-      description:
-        selectedMethod === "cashPayment"
-          ? "Thanh toán tiền mặt"
-          : "Thanh toán qua QR",
+      description: selectedMethod === "cashPayment" ? "Thanh toán tiền mặt" : "Thanh toán qua QR",
       product: orderProducts.map((item) => ({
         productId: item.id,
         quantityOfPacks: item.quantity,
@@ -394,13 +367,7 @@ export const CompleteOrderModal = (props: Props) => {
       dataIndex: "evaluated_result",
       render: (value: string) => (
         <TextField
-          value={
-            value === "Grade 1"
-              ? "Loại 1"
-              : value === "Grade 2"
-                ? "Loại 2"
-                : "Loại 3"
-          }
+          value={value === "Grade 1" ? "Loại 1" : value === "Grade 2" ? "Loại 2" : "Loại 3"}
         />
       ),
     },
@@ -477,13 +444,7 @@ export const CompleteOrderModal = (props: Props) => {
         dataIndex: "evaluated_result",
         render: (value: string) => (
           <TextField
-            value={
-              value === "Grade 1"
-                ? "Loại 1"
-                : value === "Grade 2"
-                  ? "Loại 2"
-                  : "Loại 3"
-            }
+            value={value === "Grade 1" ? "Loại 1" : value === "Grade 2" ? "Loại 2" : "Loại 3"}
           />
         ),
       },
@@ -515,17 +476,13 @@ export const CompleteOrderModal = (props: Props) => {
 
           return (
             <TextField
-              value={(
-                deltaValue *
-                record.total_weight *
-                plant?.base_price
-              ).toLocaleString()}
+              value={(deltaValue * record.total_weight * plant?.base_price).toLocaleString()}
             />
           );
         },
       },
     ],
-    [plant]
+    [plant],
   );
 
   const confirmationData = useMemo(() => {
@@ -536,8 +493,7 @@ export const CompleteOrderModal = (props: Props) => {
         return {
           ...item,
           selected_quantity: orderProduct?.quantity || 0,
-          total_weight:
-            (orderProduct?.quantity || 0) * (item.quantity_per_pack || 0),
+          total_weight: (orderProduct?.quantity || 0) * (item.quantity_per_pack || 0),
         };
       });
   }, [packagedProducts, selectedIds, orderProducts]);
@@ -564,9 +520,7 @@ export const CompleteOrderModal = (props: Props) => {
             <Card style={{ marginBottom: 16 }}>
               <Flex vertical={true} justify="space-between" gap={8}>
                 <Typography.Text>
-                  <Typography.Text strong>
-                    Sản lượng dự kiến của đơn hàng:
-                  </Typography.Text>
+                  <Typography.Text strong>Sản lượng dự kiến của đơn hàng:</Typography.Text>
                   {" " + order?.preorder_quantity} kg
                 </Typography.Text>
                 <Typography.Text>
@@ -574,43 +528,28 @@ export const CompleteOrderModal = (props: Props) => {
                   {" " + quantity} kg ({percentageFulfilled}%)
                 </Typography.Text>
                 {excessQuantity > 0 && (
-                  <Typography.Text type="warning">
-                    Dư thừa: {excessQuantity} kg
-                  </Typography.Text>
+                  <Typography.Text type="warning">Dư thừa: {excessQuantity} kg</Typography.Text>
                 )}
                 {!isQuantitySufficient && (
-                  <Typography.Text
-                    type="danger"
-                    style={{ fontSize: 12, fontStyle: "italic" }}
-                  >
+                  <Typography.Text type="danger" style={{ fontSize: 12, fontStyle: "italic" }}>
                     * Lưu ý chưa đủ sản lượng yêu cầu
                   </Typography.Text>
                 )}
               </Flex>
             </Card>
-            <Flex
-              justify="space-between"
-              align="middle"
-              style={{ marginBottom: 16 }}
-            >
+            <Flex justify="space-between" align="middle" style={{ marginBottom: 16 }}>
               <Typography.Title level={5} style={{ margin: 0 }}>
                 Chọn số lượng cho từng sản phẩm
               </Typography.Title>
               <Tooltip title="Tự động phân bổ vừa đủ sản lượng thu hoạch theo yêu cầu">
-                <Button
-                  type="primary"
-                  onClick={autoFill}
-                  disabled={selectedIds.length === 0}
-                >
+                <Button type="primary" onClick={autoFill} disabled={selectedIds.length === 0}>
                   Tự động phân bổ
                 </Button>
               </Tooltip>
             </Flex>
             <Divider />
             <Table
-              dataSource={packagedProducts.filter((item) =>
-                selectedIds.includes(Number(item.id))
-              )}
+              dataSource={packagedProducts.filter((item) => selectedIds.includes(Number(item.id)))}
               columns={quantityColumns}
               rowKey="id"
               pagination={false}
@@ -621,9 +560,7 @@ export const CompleteOrderModal = (props: Props) => {
       case 2:
         return (
           <>
-            <Typography.Title level={5}>
-              Xác nhận và thanh toán
-            </Typography.Title>
+            <Typography.Title level={5}>Xác nhận và thanh toán</Typography.Title>
             <Divider />
             <Card>
               <Flex vertical={false} justify="start" gap={100}>
@@ -682,23 +619,15 @@ export const CompleteOrderModal = (props: Props) => {
                   </Typography.Text>
 
                   <Typography.Text>
-                    <Typography.Text strong>
-                      Tiền phải thanh toán còn lại
-                    </Typography.Text>
-                    {" " +
-                      (
-                        amount - (order?.deposit_price || 0)
-                      ).toLocaleString()}{" "}
-                    VND
+                    <Typography.Text strong>Tiền phải thanh toán còn lại</Typography.Text>
+                    {" " + (amount - (order?.deposit_price || 0)).toLocaleString()} VND
                   </Typography.Text>
                 </Flex>
               </Flex>
 
               <Divider />
 
-              <Typography.Title level={5}>
-                Các sản phẩm đã chọn
-              </Typography.Title>
+              <Typography.Title level={5}>Các sản phẩm đã chọn</Typography.Title>
               <Table
                 pagination={{ pageSize: 5 }}
                 dataSource={confirmationData}
@@ -708,9 +637,7 @@ export const CompleteOrderModal = (props: Props) => {
 
               <Divider />
 
-              <Typography.Title level={5}>
-                Phương thức thanh toán
-              </Typography.Title>
+              <Typography.Title level={5}>Phương thức thanh toán</Typography.Title>
               <Row gutter={16} style={{ marginTop: 16 }}>
                 <Col span={12}>
                   <Card
@@ -728,20 +655,14 @@ export const CompleteOrderModal = (props: Props) => {
                       <Typography.Title
                         level={5}
                         style={{
-                          color:
-                            selectedMethod === "cashPayment"
-                              ? " #33CC33"
-                              : "black",
+                          color: selectedMethod === "cashPayment" ? " #33CC33" : "black",
                         }}
                       >
                         Thanh toán bằng tiền mặt
                       </Typography.Title>
                       <MoneyCollectOutlined
                         style={{
-                          color:
-                            selectedMethod === "cashPayment"
-                              ? "#33CC33"
-                              : "black",
+                          color: selectedMethod === "cashPayment" ? "#33CC33" : "black",
                           fontSize: "50px",
                         }}
                       />
@@ -754,9 +675,7 @@ export const CompleteOrderModal = (props: Props) => {
                     style={{
                       width: "100%",
                       border:
-                        selectedMethod === "qrPayment"
-                          ? "2px solid #33CC33"
-                          : "1px solid #d9d9d9",
+                        selectedMethod === "qrPayment" ? "2px solid #33CC33" : "1px solid #d9d9d9",
                     }}
                     onClick={() => setSelectedMethod("qrPayment")}
                   >
@@ -764,20 +683,14 @@ export const CompleteOrderModal = (props: Props) => {
                       <Typography.Title
                         level={5}
                         style={{
-                          color:
-                            selectedMethod === "qrPayment"
-                              ? " #33CC33"
-                              : "black",
+                          color: selectedMethod === "qrPayment" ? " #33CC33" : "black",
                         }}
                       >
                         Thanh toán bằng QR Code
                       </Typography.Title>
                       <QrcodeOutlined
                         style={{
-                          color:
-                            selectedMethod === "qrPayment"
-                              ? " #33CC33"
-                              : "black",
+                          color: selectedMethod === "qrPayment" ? " #33CC33" : "black",
                           fontSize: "50px",
                         }}
                       />{" "}
@@ -785,12 +698,7 @@ export const CompleteOrderModal = (props: Props) => {
                   </Card>
                 </Col>
               </Row>
-              <Flex
-                justify="center"
-                align="middle"
-                gap={8}
-                style={{ marginTop: 16 }}
-              >
+              <Flex justify="center" align="middle" gap={8} style={{ marginTop: 16 }}>
                 <Button
                   loading={isLoading}
                   type="primary"
@@ -832,11 +740,9 @@ export const CompleteOrderModal = (props: Props) => {
               type="primary"
               onClick={() => {
                 // Filter out products with zero quantity
-                const newOrderProducts = orderProducts.filter(
-                  (item) => item.quantity > 0
-                );
+                const newOrderProducts = orderProducts.filter((item) => item.quantity > 0);
                 const newIds = selectedIds.filter((item) =>
-                  newOrderProducts.some((op) => op.id === item)
+                  newOrderProducts.some((op) => op.id === item),
                 );
 
                 setSelectedIds(newIds);
@@ -877,16 +783,10 @@ export const CompleteOrderModal = (props: Props) => {
       )}
       {isCheckoutLoading && (
         <>
-          <Flex
-            justify="center"
-            align="middle"
-            style={{ height: "100%", width: "100%" }}
-          >
+          <Flex justify="center" align="middle" style={{ height: "100%", width: "100%" }}>
             <Space>
               <Spin></Spin>
-              <Typography.Text type="secondary">
-                Đang xử lý thanh toán...
-              </Typography.Text>
+              <Typography.Text type="secondary">Đang xử lý thanh toán...</Typography.Text>
             </Space>
           </Flex>
         </>
@@ -895,8 +795,8 @@ export const CompleteOrderModal = (props: Props) => {
       {payOSOpen && (
         <>
           <div style={{ maxWidth: "400px", padding: "2px" }}>
-            Sau khi thực hiện thanh toán thành công, vui lòng đợi từ 5 - 10s để
-            hệ thống tự động cập nhật.
+            Sau khi thực hiện thanh toán thành công, vui lòng đợi từ 5 - 10s để hệ thống tự động cập
+            nhật.
           </div>
           <div
             id="embedded-payment-container"
@@ -917,9 +817,7 @@ export const CompleteOrderModal = (props: Props) => {
               height: "300px",
             }}
           />
-          <Typography.Title level={5}>
-            Đơn hàng đã được hoàn thành thành công!
-          </Typography.Title>
+          <Typography.Title level={5}>Đơn hàng đã được hoàn thành thành công!</Typography.Title>
         </Flex>
       )}
     </Modal>
@@ -963,15 +861,9 @@ export const CancelOrderModal = () => {
         }
       >
         {error && <Alert message={error} type="error" style={{ marginBottom: 16 }} />}
-        <Typography.Title level={5}>
-          Bạn có chắc chắn muốn hủy đơn hàng này không?
-        </Typography.Title>
+        <Typography.Title level={5}>Bạn có chắc chắn muốn hủy đơn hàng này không?</Typography.Title>
 
-        <Typography.Title
-          level={5}
-          type="danger"
-          style={{ fontStyle: "italic" }}
-        >
+        <Typography.Title level={5} type="danger" style={{ fontStyle: "italic" }}>
           * Lưu ý: Đơn hàng đã hủy sẽ không thể khôi phục lại được.
         </Typography.Title>
       </Modal>

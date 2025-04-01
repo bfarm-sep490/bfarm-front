@@ -1,10 +1,4 @@
-import {
-  DateField,
-  TagField,
-  TextField,
-  Title,
-  useModalForm,
-} from "@refinedev/antd";
+import { DateField, TagField, TextField, Title, useModalForm } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {
   Drawer,
@@ -89,9 +83,7 @@ export const OrderDrawerShow = () => {
                       marginBottom: 10,
                       justifyContent: "end",
                     }}
-                    value={
-                      "* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"
-                    }
+                    value={"* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"}
                   ></TextField>
                 )}
               </>
@@ -127,21 +119,11 @@ export const OrderDrawerShow = () => {
               },
               {
                 label: "Ngày ước tính lấy hàng",
-                value: (
-                  <DateField
-                    value={order?.estimate_pick_up_date}
-                    format="DD/MM/YYYY"
-                  />
-                ),
+                value: <DateField value={order?.estimate_pick_up_date} format="DD/MM/YYYY" />,
               },
               {
                 label: "Ngày tạo đơn",
-                value: (
-                  <DateField
-                    value={order?.created_at}
-                    format="hh:mm DD/MM/YYYY"
-                  />
-                ),
+                value: <DateField value={order?.created_at} format="hh:mm DD/MM/YYYY" />,
               },
               {
                 label: "Mức giá đặt cọc",
@@ -149,15 +131,12 @@ export const OrderDrawerShow = () => {
               },
               {
                 label: "Giá tổng",
-                value: order?.total_price
-                  ? order?.total_price + " vnd"
-                  : "Chưa có",
+                value: order?.total_price ? order?.total_price + " vnd" : "Chưa có",
               },
             ]}
             renderItem={(item) => (
               <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                {item.value}
+                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
               </List.Item>
             )}
           />
@@ -175,15 +154,12 @@ export const OrderDrawerShow = () => {
               },
               {
                 label: "Kế hoạch",
-                value: order?.plan_name
-                  ? order?.plan_name
-                  : "Chưa có kế hoạch nào",
+                value: order?.plan_name ? order?.plan_name : "Chưa có kế hoạch nào",
               },
             ]}
             renderItem={(item) => (
               <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                {item.value}
+                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
               </List.Item>
             )}
           />

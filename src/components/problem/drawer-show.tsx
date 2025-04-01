@@ -1,10 +1,4 @@
-import {
-  DateField,
-  TagField,
-  TextField,
-  Title,
-  useModalForm,
-} from "@refinedev/antd";
+import { DateField, TagField, TextField, Title, useModalForm } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useUpdate } from "@refinedev/core";
 import {
   Drawer,
@@ -142,17 +136,12 @@ export const ProblemShowInProblem = () => {
               },
               {
                 label: "Mô tả vấn đề",
-                value: (
-                  <Typography.Paragraph>
-                    {task?.description}
-                  </Typography.Paragraph>
-                ),
+                value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
               },
             ]}
             renderItem={(item) => (
               <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                {item.value}
+                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
               </List.Item>
             )}
           />

@@ -67,31 +67,21 @@ export const OrderListTable: React.FC = () => {
         title={translate("deposit_price", "Tiền đặt cọc")}
         dataIndex="deposit_price"
         key="deposit_price"
-        render={(value) => (
-          <TextField value={value ? value + " vnd" : "Chưa đặt cọc"} />
-        )}
+        render={(value) => <TextField value={value ? value + " vnd" : "Chưa đặt cọc"} />}
       />
       <Table.Column
         title={translate("total_price", "Tổng tiền")}
         dataIndex="total_price"
         key="total_price"
-        render={(value) => (
-          <TextField value={value ? value + " vnd" : "Chưa xác định tổng"} />
-        )}
+        render={(value) => <TextField value={value ? value + " vnd" : "Chưa xác định tổng"} />}
       />
-      <Table.Column
-        title={translate("phone", "Điện thoại")}
-        dataIndex="phone"
-        key="phone"
-      />
+      <Table.Column title={translate("phone", "Điện thoại")} dataIndex="phone" key="phone" />
       <Table.Column
         title={translate("preorder_quantity", "Số lượng đặt trước")}
         dataIndex="preorder_quantity"
         key="preorder_quantity"
         render={(value) => (
-          <TextField
-            value={value ? value + " kg" : "Chưa xác định số lượng đặt trước"}
-          />
+          <TextField value={value ? value + " kg" : "Chưa xác định số lượng đặt trước"} />
         )}
       />
       <Table.Column

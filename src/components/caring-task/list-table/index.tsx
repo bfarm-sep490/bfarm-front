@@ -52,9 +52,7 @@ export const CaringListTable = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => (
-              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-            )}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
           <Table.Column
             dataIndex="task_name"
@@ -85,11 +83,7 @@ export const CaringListTable = ({
             dataIndex="farmer_id"
             render={(value) => {
               const farmer = farmers.find((x) => x.id === value);
-              return (
-                <TextField
-                  value={farmer ? farmer.name : "Không xác định được nông dân"}
-                />
-              );
+              return <TextField value={farmer ? farmer.name : "Không xác định được nông dân"} />;
             }}
           />
           <Table.Column
@@ -97,11 +91,7 @@ export const CaringListTable = ({
             dataIndex="plan_id"
             render={(value) => {
               const plan = plans.find((x) => x.id === value);
-              return (
-                <TextField
-                  value={plan ? plan.plan_name : "Không xác định được kế hoạch"}
-                />
-              );
+              return <TextField value={plan ? plan.plan_name : "Không xác định được kế hoạch"} />;
             }}
           />
           <Table.Column
@@ -132,7 +122,7 @@ export const CaringListTable = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `caring-tasks/${record.id}`
+                        : `caring-tasks/${record.id}`,
                     )
                   }
                 />

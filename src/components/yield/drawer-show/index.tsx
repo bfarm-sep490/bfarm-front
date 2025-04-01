@@ -1,23 +1,6 @@
 import React, { useState } from "react";
-import {
-  type BaseKey,
-  useGetToPath,
-  useGo,
-  useShow,
-  useList,
-  useTranslate,
-} from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-} from "antd";
+import { type BaseKey, useGetToPath, useGo, useShow, useList, useTranslate } from "@refinedev/core";
+import { Avatar, Button, Card, Divider, Flex, Grid, List, Typography, theme } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { EditOutlined } from "@ant-design/icons";
@@ -88,9 +71,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 }}
                 justify="space-between"
               >
-                <Typography.Title level={4}>
-                  {yieldData.yield_name}
-                </Typography.Title>
+                <Typography.Title level={4}>{yieldData.yield_name}</Typography.Title>
                 <Flex align="center" justify="end">
                   <DeleteButton
                     type="text"
@@ -98,10 +79,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                     resource="yields"
                     onSuccess={handleDrawerClose}
                   />
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setIsEditing(true)}
-                  >
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                     {t("actions.edit")}
                   </Button>
                 </Flex>
@@ -129,11 +107,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 renderItem={(itemData) => (
                   <List.Item>
                     <List.Item.Meta
-                      avatar={
-                        <Typography.Text type="secondary">
-                          {itemData.label}
-                        </Typography.Text>
-                      }
+                      avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
                       title={itemData.value}
                     />
                   </List.Item>
@@ -158,11 +132,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                     <List.Item>
                       <List.Item.Meta
                         avatar={
-                          <Avatar
-                            src={plant.image_url}
-                            size={200}
-                            style={{ borderRadius: 8 }}
-                          />
+                          <Avatar src={plant.image_url} size={200} style={{ borderRadius: 8 }} />
                         }
                         title={
                           <Typography.Text strong style={{ fontSize: "30px" }}>
@@ -187,9 +157,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                                   gap: "8px",
                                 }}
                               >
-                                <Typography.Text>
-                                  Trạng thái: {plant.status}
-                                </Typography.Text>
+                                <Typography.Text>Trạng thái: {plant.status}</Typography.Text>
                               </div>
                               <div
                                 style={{
@@ -198,9 +166,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                                   gap: "8px",
                                 }}
                               >
-                                <Typography.Text>
-                                  Loại cây: {plant.type}
-                                </Typography.Text>
+                                <Typography.Text>Loại cây: {plant.type}</Typography.Text>
                               </div>
                             </div>
                           </>

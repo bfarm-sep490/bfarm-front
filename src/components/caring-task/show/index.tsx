@@ -1,11 +1,4 @@
-import {
-  DateField,
-  TagField,
-  TextField,
-  Title,
-  useForm,
-  useModalForm,
-} from "@refinedev/antd";
+import { DateField, TagField, TextField, Title, useForm, useModalForm } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {
   Drawer,
@@ -47,11 +40,7 @@ export const AssignedTaskStatus = ({ status }: { status: string }) => {
   );
 };
 
-export const HistoryAssignedModal = ({
-  visible,
-  onClose,
-  data,
-}: HistoryAssignedModalProps) => {
+export const HistoryAssignedModal = ({ visible, onClose, data }: HistoryAssignedModalProps) => {
   const columns = [
     { title: "ID", dataIndex: "farmer_id", key: "farmer_id" },
     { title: "Tên", dataIndex: "farmer_name", key: "farmer_name" },
@@ -67,34 +56,21 @@ export const HistoryAssignedModal = ({
       dataIndex: "expire_at",
       key: "expire_at",
       render: (value: any) =>
-        value ? (
-          <DateField format="hh:mm DD/MM/YYYY" value={value} />
-        ) : (
-          "Chưa hết hạn"
-        ),
+        value ? <DateField format="hh:mm DD/MM/YYYY" value={value} /> : "Chưa hết hạn",
     },
     {
       title: "Ngày giao việc",
       dataIndex: "create_at",
       key: "create_at",
-      render: (value: any) => (
-        <DateField format="hh:mm DD/MM/YYYY" value={value} />
-      ),
+      render: (value: any) => <DateField format="hh:mm DD/MM/YYYY" value={value} />,
     },
   ];
   return (
-    <Modal
-      title={"Lịch sử giao việc"}
-      visible={visible}
-      onCancel={onClose}
-      footer={null}
-    >
+    <Modal title={"Lịch sử giao việc"} visible={visible} onCancel={onClose} footer={null}>
       <Table
         scroll={{ x: 1200 }}
         columns={columns}
-        dataSource={data.sort((a: any, b: any) =>
-          a.status !== "Active" ? 1 : -1
-        )}
+        dataSource={data.sort((a: any, b: any) => (a.status !== "Active" ? 1 : -1))}
         pagination={{ pageSize: 5 }}
       ></Table>
     </Modal>
@@ -110,9 +86,14 @@ interface ChangeAssignedTasksModalProps {
   type?: string;
 }
 
-export const ChangeAssignedTasksModal: React.FC<
-  ChangeAssignedTasksModalProps
-> = ({ visible, onClose, assignedFarmers, start_date, end_date, type }) => {
+export const ChangeAssignedTasksModal: React.FC<ChangeAssignedTasksModalProps> = ({
+  visible,
+  onClose,
+  assignedFarmers,
+  start_date,
+  end_date,
+  type,
+}) => {
   const [newFarmer, setNewFarmer] = useState<any>(null);
   const [reason, setReason] = useState<string>("");
   const { taskId, id } = useParams();
@@ -177,11 +158,9 @@ export const ChangeAssignedTasksModal: React.FC<
       }
       width={600}
     >
-      <Typography.Text
-        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
-      >
-        * Bạn có thể thay đổi người làm cho công việc này. Vui lòng chọn những
-        người đang rảnh việc dưới đây.
+      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
+        * Bạn có thể thay đổi người làm cho công việc này. Vui lòng chọn những người đang rảnh việc
+        dưới đây.
       </Typography.Text>
       <Form
         form={formProps.form}
@@ -213,9 +192,7 @@ export const ChangeAssignedTasksModal: React.FC<
             label="Chọn người làm mới"
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
-            rules={[
-              { required: true, message: "Vui lòng chọn người làm mới!" },
-            ]}
+            rules={[{ required: true, message: "Vui lòng chọn người làm mới!" }]}
           >
             <Select
               style={{ width: "100%", marginBottom: 16 }}
@@ -223,16 +200,12 @@ export const ChangeAssignedTasksModal: React.FC<
               value={newFarmer?.id}
               onChange={(value) => {
                 setNewFarmer(
-                  freeFarmers.find(
-                    (farmer: { id: string; name: string }) =>
-                      farmer.id === value
-                  ) || null
+                  freeFarmers.find((farmer: { id: string; name: string }) => farmer.id === value) ||
+                    null,
                 );
               }}
             >
-              {isLoading && (
-                <Select.Option value={undefined}>Loading...</Select.Option>
-              )}
+              {isLoading && <Select.Option value={undefined}>Loading...</Select.Option>}
               {freeFarmers.map((farmer: any) => (
                 <Select.Option key={farmer.id} value={farmer.id}>
                   {farmer.name}
@@ -300,9 +273,7 @@ export const ProductiveTaskShow = () => {
   const historyAssignedFarmers = historyAssignedData?.data || [];
   const navigate = useNavigate();
   const [dataVattu, setDataVattu] = useState<any>([]);
-  const [modeVattu, setModeVattu] = useState<
-    "fertilizer" | "pesticide" | "item"
-  >("fertilizer");
+  const [modeVattu, setModeVattu] = useState<"fertilizer" | "pesticide" | "item">("fertilizer");
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -356,9 +327,7 @@ export const ProductiveTaskShow = () => {
         {task?.status === "Complete" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
-              <Image.PreviewGroup
-                items={task?.care_images?.map((x: any) => x.url) || []}
-              >
+              <Image.PreviewGroup items={task?.care_images?.map((x: any) => x.url) || []}>
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
@@ -385,8 +354,7 @@ export const ProductiveTaskShow = () => {
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                  {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
                 </List.Item>
               )}
             />
@@ -398,11 +366,7 @@ export const ProductiveTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button
-              color="primary"
-              variant="solid"
-              onClick={() => navigate("edit")}
-            >
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
               Thay đổi
             </Button>
           )}
@@ -434,15 +398,12 @@ export const ProductiveTaskShow = () => {
             },
             {
               label: "Mô tả công việc",
-              value: (
-                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
-              ),
+              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -452,12 +413,7 @@ export const ProductiveTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.created_at}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
             {
               label: "Người tạo",
@@ -466,10 +422,7 @@ export const ProductiveTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.updated_at}
-                />
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -481,8 +434,7 @@ export const ProductiveTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -495,11 +447,7 @@ export const ProductiveTaskShow = () => {
               Lịch sử
             </Button>
             {(task?.status === "Ongoing" || task?.status === "Pending") && (
-              <Button
-                type="primary"
-                color="cyan"
-                onClick={() => setAssignedModal(true)}
-              >
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
                 Thay đổi
               </Button>
             )}
@@ -512,39 +460,23 @@ export const ProductiveTaskShow = () => {
             {
               label: "Id",
               value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
-                  }
-                />
+                <TextField value={task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"} />
               ),
             },
             {
               label: "Tên nông dân",
-              value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
-                  }
-                />
-              ),
+              value: <TextField value={task?.farmer_information?.[0]?.name || "Chưa giao việc"} />,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
         <Divider />
-        <Typography.Title level={4}>
-          Phân bón / Thuốc trừ sâu / Vật tư
-        </Typography.Title>
-        <Radio.Group
-          value={modeVattu}
-          onChange={(e) => handleModeChange(e.target.value)}
-        >
+        <Typography.Title level={4}>Phân bón / Thuốc trừ sâu / Vật tư</Typography.Title>
+        <Radio.Group value={modeVattu} onChange={(e) => handleModeChange(e.target.value)}>
           <Radio.Button value="fertilizer">Phân bón</Radio.Button>
           <Radio.Button value="pesticide">Thuốc trừ sâu</Radio.Button>
           <Radio.Button value="item">Vật tư</Radio.Button>

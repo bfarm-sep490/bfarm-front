@@ -17,9 +17,7 @@ import {
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { StatusTag } from "../../caring-task/status-tag";
-import ChangeAssignedTasksModal, {
-  HistoryAssignedModal,
-} from "@/components/caring-task/show";
+import ChangeAssignedTasksModal, { HistoryAssignedModal } from "@/components/caring-task/show";
 import useToken from "antd/es/theme/useToken";
 
 export const PackagingTaskShow = () => {
@@ -107,32 +105,20 @@ export const PackagingTaskShow = () => {
               dataSource={[
                 {
                   label: "Ngày hoàn thành",
-                  value: (
-                    <DateField
-                      format={"hh:mm DD/MM/YYYY"}
-                      value={task?.complete_date}
-                    />
-                  ),
+                  value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.complete_date} />,
                 },
                 {
                   label: "Số lượng đóng gói",
-                  value: (
-                    <Typography.Text>{task?.packed_quantity}</Typography.Text>
-                  ),
+                  value: <Typography.Text>{task?.packed_quantity}</Typography.Text>,
                 },
                 {
                   label: "Nội dung",
-                  value: (
-                    <Typography.Paragraph>
-                      {task?.result_content}
-                    </Typography.Paragraph>
-                  ),
+                  value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
                 },
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                  {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
                 </List.Item>
               )}
             />
@@ -145,11 +131,7 @@ export const PackagingTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button
-              color="primary"
-              variant="solid"
-              onClick={() => navigate("edit")}
-            >
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
               Thay đổi
             </Button>
           )}
@@ -160,18 +142,11 @@ export const PackagingTaskShow = () => {
           dataSource={[
             {
               label: "Ngày bắt đầu",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.start_date}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.start_date} />,
             },
             {
               label: "Ngày kết thúc",
-              value: (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />,
             },
             {
               label: "Trạng thái",
@@ -184,26 +159,16 @@ export const PackagingTaskShow = () => {
             { label: "Kế hoạch", value: task?.plan_name },
             {
               label: "Mô tả công việc",
-              value: (
-                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
-              ),
+              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
             },
             {
               label: "Ngày tạo",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.created_at}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.updated_at}
-                />
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -211,8 +176,7 @@ export const PackagingTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -222,12 +186,7 @@ export const PackagingTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.created_at}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
             {
               label: "Người tạo",
@@ -236,10 +195,7 @@ export const PackagingTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.updated_at}
-                />
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -251,8 +207,7 @@ export const PackagingTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -265,11 +220,7 @@ export const PackagingTaskShow = () => {
               Lịch sử
             </Button>
             {(task?.status === "Ongoing" || task?.status === "Pending") && (
-              <Button
-                type="primary"
-                color="cyan"
-                onClick={() => setAssignedModal(true)}
-              >
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
                 Thay đổi
               </Button>
             )}
@@ -282,28 +233,17 @@ export const PackagingTaskShow = () => {
             {
               label: "Id",
               value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
-                  }
-                />
+                <TextField value={task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"} />
               ),
             },
             {
               label: "Tên nông dân",
-              value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
-                  }
-                />
-              ),
+              value: <TextField value={task?.farmer_information?.[0]?.name || "Chưa giao việc"} />,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />

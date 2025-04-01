@@ -43,8 +43,7 @@ export const ProblemsDashBoard = ({ data }: ProblemsDashBoardProps) => {
       },
       yaxis: {
         labels: {
-          formatter: (value: any) =>
-            `${value} ${translate("problems", "vấn đề")}`,
+          formatter: (value: any) => `${value} ${translate("problems", "vấn đề")}`,
         },
       },
     },

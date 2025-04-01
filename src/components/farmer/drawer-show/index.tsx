@@ -7,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
@@ -132,9 +122,7 @@ export const FarmerDrawerShow = (props: Props) => {
                   {translate("farmer.status", "Trạng thái")}
                 </Typography.Text>
               ),
-              value: farmer?.status && (
-                <FarmerStatusTag status={farmer.status} />
-              ),
+              value: farmer?.status && <FarmerStatusTag status={farmer.status} />,
             },
             {
               label: (
@@ -143,9 +131,7 @@ export const FarmerDrawerShow = (props: Props) => {
                   {translate("farmer.created_at", "Ngày tạo")}
                 </Typography.Text>
               ),
-              value: farmer?.created_at && (
-                <DateField value={farmer?.created_at} />
-              ),
+              value: farmer?.created_at && <DateField value={farmer?.created_at} />,
             },
             {
               label: (

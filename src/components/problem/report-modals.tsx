@@ -100,11 +100,7 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
               <Input.TextArea name="result" />
             </Form.Item>
 
-            <Form.Item
-              label="Status"
-              name="status"
-              rules={[{ required: true }]}
-            >
+            <Form.Item label="Status" name="status" rules={[{ required: true }]}>
               <Select options={statusOptions} />
             </Form.Item>
           </Form>

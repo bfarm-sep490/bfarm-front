@@ -1,16 +1,6 @@
 import { DateField, useForm } from "@refinedev/antd";
 import { useBack, useList, useOne } from "@refinedev/core";
-import {
-  Alert,
-  Button,
-  Divider,
-  Flex,
-  Form,
-  List,
-  Modal,
-  Select,
-  Typography,
-} from "antd";
+import { Alert, Button, Divider, Flex, Form, List, Modal, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -33,7 +23,7 @@ export const OrderAssignedModal = () => {
   const noPlanOrders = orderData?.data;
 
   const orders = noPlanOrders?.filter(
-    (order) => order.plant_id === plan?.plant_information?.plant_id
+    (order) => order.plant_id === plan?.plant_information?.plant_id,
   );
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/orders`,
@@ -121,20 +111,12 @@ export const OrderAssignedModal = () => {
                 {
                   label: "Ngày ước tính lấy hàng",
                   value: (
-                    <DateField
-                      value={selectedOrder.estimate_pick_up_date}
-                      format="DD/MM/YYYY"
-                    />
+                    <DateField value={selectedOrder.estimate_pick_up_date} format="DD/MM/YYYY" />
                   ),
                 },
                 {
                   label: "Ngày tạo đơn",
-                  value: (
-                    <DateField
-                      value={selectedOrder.created_at}
-                      format="hh:mm DD/MM/YYYY"
-                    />
-                  ),
+                  value: <DateField value={selectedOrder.created_at} format="hh:mm DD/MM/YYYY" />,
                 },
                 {
                   label: "Mức giá đặt cọc",
@@ -142,15 +124,12 @@ export const OrderAssignedModal = () => {
                 },
                 {
                   label: "Giá tổng",
-                  value: selectedOrder.total_price
-                    ? selectedOrder.total_price + " vnd"
-                    : "Chưa có",
+                  value: selectedOrder.total_price ? selectedOrder.total_price + " vnd" : "Chưa có",
                 },
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                  {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
                 </List.Item>
               )}
             />

@@ -49,11 +49,7 @@ export const PlantsListTable: React.FC = () => {
           )}
         />
 
-        <Table.Column
-          title="Tên giống"
-          dataIndex="plant_name"
-          key="plant_name"
-        />
+        <Table.Column title="Tên giống" dataIndex="plant_name" key="plant_name" />
 
         <Table.Column
           title="Mô tả"
@@ -61,10 +57,7 @@ export const PlantsListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -120,10 +113,7 @@ export const PlantsListTable: React.FC = () => {
       </Table>
 
       {selectedPlantId && (
-        <PlantDrawerShow
-          id={selectedPlantId}
-          onClose={() => setSelectedPlantId(undefined)}
-        />
+        <PlantDrawerShow id={selectedPlantId} onClose={() => setSelectedPlantId(undefined)} />
       )}
     </>
   );

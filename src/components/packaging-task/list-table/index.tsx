@@ -11,15 +11,7 @@ import {
   DateField,
   TextField,
 } from "@refinedev/antd";
-import {
-  Table,
-  Space,
-  Radio,
-  Button,
-  Breadcrumb,
-  Typography,
-  TableProps,
-} from "antd";
+import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
@@ -55,9 +47,7 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="id"
             title={translate("ID")}
-            render={(value) => (
-              <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-            )}
+            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
           <Table.Column
             dataIndex="task_name"
@@ -66,33 +56,22 @@ export const PackagingTaskList = ({
           <Table.Column
             dataIndex="start_date"
             title={translate("packaging_task.start_date", "Thời gian bắt đầu")}
-            render={(value) => (
-              <DateField format="hh:mm DD/MM/YYYY" value={value} />
-            )}
+            render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
           />
           <Table.Column
             dataIndex="end_date"
             title={translate("packaging_task.end_date", "Thời gian kết thúc")}
-            render={(value) => (
-              <DateField format="hh:mm DD/MM/YYYY" value={value} />
-            )}
+            render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
           />
           <Table.Column
             dataIndex="packed_quantity"
-            title={translate(
-              "packaging_task.packed_quantity",
-              "Số lượng đóng gói"
-            )}
-            render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
-            )}
+            title={translate("packaging_task.packed_quantity", "Số lượng đóng gói")}
+            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="packed_unit"
             title={translate("packaging_task.packed_unit", "Đơn vị đóng gói")}
-            render={(value) => (
-              <TextField value={value ? value : "Chưa thu hoạch"} />
-            )}
+            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="status"
@@ -104,11 +83,7 @@ export const PackagingTaskList = ({
             dataIndex="farmer_id"
             render={(value) => {
               const farmer = farmers.find((x) => x.id === value);
-              return (
-                <TextField
-                  value={farmer ? farmer.name : "Không xác định được nông dân"}
-                />
-              );
+              return <TextField value={farmer ? farmer.name : "Không xác định được nông dân"} />;
             }}
           />
           <Table.Column
@@ -116,11 +91,7 @@ export const PackagingTaskList = ({
             dataIndex="plan_id"
             render={(value) => {
               const plan = plans.find((x) => x.id === value);
-              return (
-                <TextField
-                  value={plan ? plan.plan_name : "Không xác định được kế hoạch"}
-                />
-              );
+              return <TextField value={plan ? plan.plan_name : "Không xác định được kế hoạch"} />;
             }}
           />
           <Table.Column
@@ -152,7 +123,7 @@ export const PackagingTaskList = ({
                     navigate(
                       showNavigation
                         ? showNavigation + `/${record.id}`
-                        : `/packaging-tasks/${record.id}`
+                        : `/packaging-tasks/${record.id}`,
                     )
                   }
                 />

@@ -86,21 +86,14 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           </Button>,
         ]}
       >
-        <Table
-          dataSource={farmers}
-          loading={isLoading}
-          rowKey="id"
-          scroll={{ x: true }}
-        >
+        <Table dataSource={farmers} loading={isLoading} rowKey="id" scroll={{ x: true }}>
           <Table.Column
             title="ID"
             dataIndex="id"
             key="id"
             width={"auto"}
             render={(value) => (
-              <Typography.Text style={{ fontWeight: "bold" }}>
-                #{value}
-              </Typography.Text>
+              <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
             )}
             filterIcon={(filtered) => (
               <SearchOutlined
@@ -175,7 +168,7 @@ export const DeleteFarmerInPlanModal = () => {
         onSuccess: (data: any, variables, context) => {
           back();
         },
-      }
+      },
     );
   };
   return (
@@ -196,11 +189,8 @@ export const DeleteFarmerInPlanModal = () => {
       }
     >
       {error && <Alert message={error} type="error" />}
-      <Typography.Text
-        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
-      >
-        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn
-        xóa không?
+      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
+        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn xóa không?
       </Typography.Text>
     </Modal>
   );
@@ -246,8 +236,7 @@ export const AddFarmerIntoPlanModal = () => {
   const farmers = farmerData?.data as IFarmer[];
   const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
   const filterFarmers =
-    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ??
-    [];
+    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ?? [];
 
   const back = useBack();
 
@@ -273,7 +262,7 @@ export const AddFarmerIntoPlanModal = () => {
               end: x.end_date,
               status: x.status,
             };
-          }) || []
+          }) || [],
         );
       },
     },
@@ -297,10 +286,7 @@ export const AddFarmerIntoPlanModal = () => {
       onCancel={() => navigate(`/plans/${id}/farmers`)}
       footer={
         <>
-          <Button
-            type="default"
-            onClick={() => navigate(`/plans/${id}/farmers`)}
-          >
+          <Button type="default" onClick={() => navigate(`/plans/${id}/farmers`)}>
             Hủy
           </Button>
           <Button type="primary" variant="filled" {...saveButtonProps}>
@@ -319,10 +305,7 @@ export const AddFarmerIntoPlanModal = () => {
           label="Chọn nông dân"
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
-          <Space
-            direction="vertical"
-            style={{ width: "100%", marginBottom: 20 }}
-          >
+          <Space direction="vertical" style={{ width: "100%", marginBottom: 20 }}>
             <Select value={selectFarmer} onChange={handleSelect}>
               {filterFarmers?.map((farmer) => (
                 <Select.Option key={farmer.id} value={farmer.id}>

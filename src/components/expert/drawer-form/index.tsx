@@ -1,11 +1,5 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -50,25 +44,24 @@ export const ExpertDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "experts",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.[0]?.avatar_image) {
-            setPreviewImage(data?.data?.[0]?.avatar_image);
-          }
-          formProps.form.setFieldsValue(data?.data?.[0]);
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "experts",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.[0]?.avatar_image) {
+          setPreviewImage(data?.data?.[0]?.avatar_image);
+        }
+        formProps.form.setFieldsValue(data?.data?.[0]);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -106,7 +99,7 @@ export const ExpertDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -256,20 +249,9 @@ export const ExpertDrawerForm = (props: Props) => {
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
-              <Button onClick={onDrawerClose}>
-                {t("form.cancel", "Hủy bỏ")}
-              </Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+              <Button onClick={onDrawerClose}>{t("form.cancel", "Hủy bỏ")}</Button>
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 {t("form.save", "Lưu")}
               </SaveButton>
             </Flex>

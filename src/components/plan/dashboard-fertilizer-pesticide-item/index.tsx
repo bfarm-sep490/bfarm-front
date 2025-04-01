@@ -7,11 +7,10 @@ import { useParams } from "react-router";
 
 export const MaterialDashboard = () => {
   const { id } = useParams();
-  const { data: materialFertilizerData, isLoading: fertilizerLoading } =
-    useList({
-      resource: `plans/${id}/fertilizers`,
-      queryOptions: { cacheTime: 60000 },
-    });
+  const { data: materialFertilizerData, isLoading: fertilizerLoading } = useList({
+    resource: `plans/${id}/fertilizers`,
+    queryOptions: { cacheTime: 60000 },
+  });
 
   const { data: materialPesticideData, isLoading: pesticideLoading } = useList({
     resource: `plans/${id}/pesticides`,
@@ -84,12 +83,7 @@ export const MaterialDashboard = () => {
       console.log("pesticides", pesticides);
       console.log(chartData);
     }
-  }, [
-    materialFertilizerData,
-    materialPesticideData,
-    fertilizerLoading,
-    pesticideLoading,
-  ]);
+  }, [materialFertilizerData, materialPesticideData, fertilizerLoading, pesticideLoading]);
 
   return (
     <Card title="📊 Phân bón & Thuốc trừ sâu">

@@ -23,7 +23,6 @@ import {
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { set, values } from "lodash";
-import { o } from "node_modules/react-router/dist/development/fog-of-war-BALYJxf_.mjs";
 import { CompleteOrderModal } from "../complete-modal";
 export const OrderDrawerShow = () => {
   const [open, setOpen] = useState(false);

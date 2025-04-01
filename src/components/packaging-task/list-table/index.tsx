@@ -49,34 +49,37 @@ export const PackagingTaskList = ({
             title={translate("ID")}
             render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
           />
-          <Table.Column dataIndex="task_name" title={translate("name")} />
+          <Table.Column
+            dataIndex="task_name"
+            title={translate("packaging_task.task_name", "Tên công việc")}
+          />
           <Table.Column
             dataIndex="start_date"
-            title={translate("start_date")}
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+            title={translate("packaging_task.start_date", "Thời gian bắt đầu")}
+            render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
           />
           <Table.Column
             dataIndex="end_date"
-            title={translate("end_date")}
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
+            title={translate("packaging_task.end_date", "Thời gian kết thúc")}
+            render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
           />
           <Table.Column
             dataIndex="packed_quantity"
-            title={"packed_quantity"}
+            title={translate("packaging_task.packed_quantity", "Số lượng đóng gói")}
             render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="packed_unit"
-            title={"packed_unit"}
+            title={translate("packaging_task.packed_unit", "Đơn vị đóng gói")}
             render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
           />
           <Table.Column
             dataIndex="status"
-            title={"status"}
+            title={translate("packaging_task.status", "Trạng thái")}
             render={(value) => <StatusTag status={value} />}
           />
           <Table.Column
-            title={translate("farmer_id")}
+            title={translate("packaging_task.farmer_name", "Tên nông dân")}
             dataIndex="farmer_id"
             render={(value) => {
               const farmer = farmers.find((x) => x.id === value);
@@ -84,7 +87,7 @@ export const PackagingTaskList = ({
             }}
           />
           <Table.Column
-            title={translate("plan_id")}
+            title={translate("packaging_task.plan_name", "Tên kế hoạch")}
             dataIndex="plan_id"
             render={(value) => {
               const plan = plans.find((x) => x.id === value);
@@ -92,12 +95,12 @@ export const PackagingTaskList = ({
             }}
           />
           <Table.Column
-            title={translate("created_at")}
+            title={translate("packaging_task.created_at", "Ngày tạo")}
             dataIndex="created_at"
             render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
           />
           <Table.Column
-            title={translate("updated_at")}
+            title={translate("packaging_task.updated_at", "Ngày cập nhập")}
             dataIndex="updated_at"
             render={(value) =>
               value ? (
@@ -109,7 +112,7 @@ export const PackagingTaskList = ({
           />
 
           <Table.Column
-            title={translate("table.actions")}
+            title={translate("table.actions", "Hành động")}
             dataIndex="actions"
             render={(_, record: BaseRecord) => (
               <Space>

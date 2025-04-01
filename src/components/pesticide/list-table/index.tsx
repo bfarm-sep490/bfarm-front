@@ -56,14 +56,14 @@ export const PesticidesListTable: React.FC = () => {
 
         <Table.Column
           width={"auto"}
-          title="Image"
+          title="Ảnh"
           dataIndex="image"
           key="image"
           render={(image: string) => <Avatar shape="square" src={image} alt="Pesticide" />}
         />
 
         <Table.Column
-          title="Name"
+          title="Tên thuốc"
           width={"auto"}
           dataIndex="name"
           key="name"
@@ -75,7 +75,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tảtả"
           dataIndex="description"
           key="description"
           width={300}
@@ -87,7 +87,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Quantity"
+          title="Số lượng"
           dataIndex="quantity"
           key="quantity"
           width={"auto"}
@@ -102,7 +102,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Type"
+          title="Loại thuốc"
           dataIndex="type"
           key="type"
           width={120}
@@ -110,7 +110,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -118,7 +118,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"

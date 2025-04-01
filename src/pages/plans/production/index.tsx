@@ -14,8 +14,8 @@ import {
 import { Table, Space, Radio, Button, Breadcrumb, Flex, Typography } from "antd";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined, PlusSquareOutlined } from "@ant-design/icons";
-import { PackagedProductListInPlan } from "./harvesting/list";
-import { HarvestingProductionListInPlan } from "./packaging/list";
+import { PackagedProductListInPlan } from "./packaging/list";
+import { HarvestingProductionListInPlan } from "./harvesting/list";
 
 export const ShowProductList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();

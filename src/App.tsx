@@ -16,6 +16,7 @@ import {
   GoldOutlined,
   HddOutlined,
   ScheduleOutlined,
+  UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import { authProvider } from "./authProvider";
@@ -85,9 +86,17 @@ import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 
 import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
-
-import { FarmerListInPlan } from "./pages/plans/farmers/list";
+import {
+  AddFarmerIntoPlanModal,
+  DeleteFarmerInPlanModal,
+  FarmerListInPlan,
+} from "./pages/plans/farmers/list";
 import { ShowProductList } from "./pages/plans/production";
+import { OrdersList } from "./pages/orders/list";
+import { OrderShow } from "./pages/orders/show";
+import { AssignedOrder } from "./pages/plans/assigned-order";
+import { CancelOrderModal, CompleteOrderModal } from "./components/orders/complete-modal";
+import { OrderComplete } from "./pages/orders/complete";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -151,134 +160,14 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "device",
-                  list: "/device",
-                  create: "/device/create",
-                  edit: "/device/edit/:id",
-                  show: "/device/show/:id",
+                  name: "orders",
+                  list: "/orders",
+                  create: "/orders/create",
+                  edit: "/orders/edit/:id",
+                  show: "/orders/:orderId",
                   meta: {
-                    label: "Device",
-                    icon: <HddOutlined />,
+                    label: "Đơn hàng",
                   },
-                },
-                // {
-                //   name: "inspections",
-                //   list: "/inspections",
-                //   edit: "/inspections/edit/:id",
-                //   show: "/inspections/show/:id",
-                //   meta: {
-                //     label: "Inspecting Forms",
-                //     icon: <ScheduleOutlined />,
-                //   },
-                // },
-                {
-                  name: "inspection-forms",
-                  list: "/inspection-forms",
-                  edit: "/inspection-forms/edit/:id",
-                  show: "/inspection-forms/show/:id",
-                  meta: {
-                    parent: "inspections",
-                    label: "Inspecting Forms",
-                  },
-                },
-                {
-                  name: "inspector",
-                  list: "/inspectors",
-                  create: "/inspectors/create",
-                  edit: "/inspectors/edit/:id",
-                  show: "/inspectors/:id",
-                  meta: {
-                    parent: "inspections",
-                    label: "Inspector",
-                  },
-                },
-
-                {
-                  name: "inspections",
-                  list: "/inspections",
-                  edit: "/inspections/edit/:id",
-                  show: "/inspections/show/:id",
-                  meta: {
-                    label: "Inspecting Forms",
-                    icon: <ScheduleOutlined />,
-                  },
-                },
-
-                {
-                  name: "yield",
-                  list: "/yield",
-                  create: "/yield/create",
-                  edit: "/yield/edit/:id",
-                  show: "/yield/show/:id",
-                  meta: {
-                    label: "Yields",
-                    icon: <EnvironmentOutlined />,
-                  },
-                },
-                {
-                  name: "plants",
-                  list: "/plants",
-                  create: "/plants/create",
-                  edit: "/plants/edit/:id",
-                  show: "/plants/:id",
-                  meta: {
-                    label: "Plants",
-                    icon: <EnvironmentOutlined />,
-                  },
-                },
-                {
-                  name: "material",
-                  meta: {
-                    label: "Material",
-                    icon: <GoldOutlined />,
-                  },
-                },
-                {
-                  name: "fertilizers",
-                  list: "/fertilizers",
-                  create: "/fertilizers/create",
-                  edit: "/fertilizers/edit/:id",
-                  show: "/fertilizers/:id",
-                  meta: { parent: "material", canDelete: true },
-                },
-                {
-                  name: "items",
-                  list: "/items",
-                  create: "/items/create",
-                  edit: "/items/edit/:id",
-                  show: "/items/:id",
-                  meta: { parent: "material", canDelete: true },
-                },
-                {
-                  name: "pesticides",
-                  list: "/pesticides",
-                  create: "/pesticides/create",
-                  edit: "/pesticides/edit/:id",
-                  show: "/pesticides/:id",
-                  meta: { parent: "material", canDelete: true },
-                },
-                {
-                  name: "employees",
-                  meta: {
-                    label: "Employees",
-                    icon: <GoldOutlined />,
-                  },
-                },
-                {
-                  name: "farmers",
-                  list: "/farmers",
-                  create: "/farmers/create",
-                  edit: "/farmers/edit/:id",
-                  show: "/farmers/:id",
-                  meta: { parent: "employees", canDelete: true },
-                },
-                {
-                  name: "experts",
-                  list: "/experts",
-                  create: "/experts/create",
-                  edit: "/experts/edit/:id",
-                  show: "/experts/:id",
-                  meta: { parent: "employees", canDelete: true },
                 },
                 {
                   name: "plans",
@@ -286,7 +175,7 @@ const App: React.FC = () => {
                   create: "/plans/create",
                   show: "/plans/:id",
                   meta: {
-                    label: "Plans",
+                    label: "Kế hoạch",
                     icon: <CalendarOutlined />,
                     route: "/plans",
                   },
@@ -302,11 +191,130 @@ const App: React.FC = () => {
                   },
                 },
                 {
-                  name: "new-task",
-                  list: "/",
+                  name: "inspections",
+                  list: "/inspections", // Added missing route
                   meta: {
-                    label: "New Task",
+                    label: "Kiểm định",
                     icon: <ScheduleOutlined />,
+                  },
+                },
+                {
+                  name: "inspection-forms",
+                  list: "/inspection-forms",
+                  edit: "/inspection-forms/edit/:id",
+                  show: "/inspection-forms/show/:id",
+                  meta: {
+                    parent: "inspections",
+                    label: "Đơn kiểm định",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "inspectors",
+                  list: "/inspectors",
+                  create: "/inspectors/create",
+                  edit: "/inspectors/edit/:id",
+                  show: "/inspectors/:id",
+                  meta: {
+                    parent: "inspections",
+                    label: "Nhà kiểm định",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "material",
+                  meta: {
+                    label: "Nguyên liệu",
+                    icon: <GoldOutlined />,
+                  },
+                },
+                {
+                  name: "fertilizers",
+                  list: "/fertilizers",
+                  create: "/fertilizers/create",
+                  edit: "/fertilizers/edit/:id",
+                  show: "/fertilizers/:id",
+                  meta: {
+                    label: "Phân bón",
+                    parent: "material",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "pesticides",
+                  list: "/pesticides",
+                  create: "/pesticides/create",
+                  edit: "/pesticides/edit/:id",
+                  show: "/pesticides/:id",
+                  meta: {
+                    label: "Thuốc trừ sâu",
+                    parent: "material",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "items",
+                  list: "/items",
+                  create: "/items/create",
+                  edit: "/items/edit/:id",
+                  show: "/items/:id",
+                  meta: {
+                    label: "Vật tư",
+                    parent: "material",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "plants",
+                  list: "/plants",
+                  create: "/plants/create",
+                  edit: "/plants/edit/:id",
+                  show: "/plants/:id",
+                  meta: {
+                    label: "Cây trồng",
+                    icon: <EnvironmentOutlined />,
+                  },
+                },
+                {
+                  name: "yield",
+                  list: "/yield",
+                  create: "/yield/create",
+                  edit: "/yield/edit/:id",
+                  show: "/yield/show/:id",
+                  meta: {
+                    label: "Khu đất",
+                    icon: <GoldOutlined />,
+                  },
+                },
+                {
+                  name: "employees",
+                  meta: {
+                    label: "Nhân sự",
+                    icon: <UserOutlined />,
+                  },
+                },
+                {
+                  name: "farmers",
+                  list: "/farmers",
+                  create: "/farmers/create",
+                  edit: "/farmers/edit/:id",
+                  show: "/farmers/:id",
+                  meta: {
+                    label: "Nông dân",
+                    parent: "employees",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "experts",
+                  list: "/experts",
+                  create: "/experts/create",
+                  edit: "/experts/edit/:id",
+                  show: "/experts/:id",
+                  meta: {
+                    label: "Chuyên gia",
+                    parent: "employees",
+                    canDelete: true,
                   },
                 },
               ]}
@@ -338,6 +346,7 @@ const App: React.FC = () => {
                   <Route index element={<DashboardPage />} />
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
+                    <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
                     <Route path=":id">
                       <Route
                         index
@@ -347,7 +356,20 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="farmers"
+                        element={
+                          <FarmerListInPlan>
+                            <Outlet />
+                          </FarmerListInPlan>
+                        }
+                      >
+                        <Route path="create" element={<AddFarmerIntoPlanModal />} />
+                        <Route path=":farmer_id/delete" element={<DeleteFarmerInPlanModal />} />
+                      </Route>
+                      <Route path="harvesting-products" element={<ShowProductList />}></Route>
+                      <Route path="packaged-products" element={<ShowProductList />}></Route>
+
                       <Route
                         path="problems"
                         element={
@@ -357,6 +379,27 @@ const App: React.FC = () => {
                         }
                       >
                         <Route path=":id" element={<ProblemShowV2 />}></Route>
+                      </Route>
+                      <Route
+                        path="orders"
+                        element={
+                          <OrdersList>
+                            <Outlet />
+                          </OrdersList>
+                        }
+                      >
+                        <Route path="create" element={<AssignedOrder />} />
+
+                        <Route
+                          path=":orderId"
+                          element={
+                            <OrderShow>
+                              <Outlet />
+                            </OrderShow>
+                          }
+                        >
+                          <Route path="cancel" element={<CancelOrderModal />} />
+                        </Route>
                       </Route>
                       <Route
                         path="inspecting-tasks"
@@ -411,6 +454,25 @@ const App: React.FC = () => {
                     </Route>
                   </Route>
                   <Route
+                    path="/orders"
+                    element={
+                      <OrdersList>
+                        <Outlet />
+                      </OrdersList>
+                    }
+                  >
+                    <Route
+                      path=":orderId"
+                      element={
+                        <OrderShow>
+                          <Outlet />
+                        </OrderShow>
+                      }
+                    >
+                      <Route path="cancel" element={<CancelOrderModal />} />
+                    </Route>
+                  </Route>
+                  <Route
                     path="/yield"
                     element={
                       <YieldsList>
@@ -455,16 +517,7 @@ const App: React.FC = () => {
                     <Route path=":id" element={<CustomerShow />} />
                   </Route>
 
-                  <Route
-                    path="/inspection-forms"
-                    element={
-                      <InspectionsList>
-                        <Outlet></Outlet>
-                      </InspectionsList>
-                    }
-                  >
-                    <Route path=":id" element={<InspectionShow />} />
-                  </Route>
+                  <Route path="/inspection-forms" element={<InspectionsList />} />
                   <Route path="/inspection-forms/:id" element={<InspectionShow />} />
                   <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
 
@@ -492,12 +545,6 @@ const App: React.FC = () => {
                     <Route path="create" element={<ItemCreate />} />
                     <Route path=":id" element={<ItemsShow />} />
                     <Route path="edit/:id" element={<ItemEdit />} />
-                  </Route>
-
-                  <Route path="/device" element={<DeviceList />}>
-                    <Route path=":id" element={<FarmerManagementShow />} />
-                    <Route path="new" element={<FarmerManagementCreate />} />
-                    <Route path=":id/edit" element={<FarmerManagementEdit />} />
                   </Route>
 
                   <Route

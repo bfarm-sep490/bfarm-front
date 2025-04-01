@@ -88,17 +88,17 @@ export const FertilizerDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Description", value: fertilizer.description },
+                  { label: "Mô tả", value: fertilizer.description },
                   {
-                    label: "Quantity",
+                    label: "Số lượng",
                     value: `${fertilizer.quantity} ${fertilizer.unit || ""}`,
                   },
                   {
-                    label: "Type",
+                    label: "Loại phân bón",
                     value: <FertilizerTypeTag value={fertilizer.type} />,
                   },
                   {
-                    label: "Status",
+                    label: "Trạng thái",
                     value: <FertilizerStatusTag value={fertilizer.status} />,
                   },
                 ]}

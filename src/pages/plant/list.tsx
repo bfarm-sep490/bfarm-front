@@ -67,7 +67,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Plant
+          Thêm giống cây
         </CreateButton>,
       ]}
     >

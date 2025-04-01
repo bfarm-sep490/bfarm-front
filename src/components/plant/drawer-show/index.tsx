@@ -8,6 +8,7 @@ import { EditOutlined } from "@ant-design/icons";
 import { PlantDrawerForm } from "../drawer-form";
 import { IYield } from "@/interfaces";
 import { PlantStatusTag } from "../status";
+import { YieldStatusTag } from "@/components/yield/status";
 
 type Props = {
   id?: BaseKey;
@@ -58,7 +59,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
       {!isEditing && (
         <Drawer
           open={!!id}
-          width={breakpoint.sm ? "40%" : "100%"}
+          width={breakpoint.sm ? "736px" : "100%"}
           zIndex={1001}
           onClose={handleDrawerClose}
         >
@@ -87,81 +88,109 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               </Flex>
 
               <Divider />
-
+              <Flex style={{ margin: 10 }} justify="space-between">
+                <Typography.Title level={5}>Chi tiết giống cây trồng</Typography.Title>
+                <Flex align="center" justify="end">
+                  <DeleteButton
+                    type="text"
+                    recordItemId={plant.id}
+                    resource="plants"
+                    onSuccess={handleDrawerClose}
+                  />
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                    {t("actions.edit")}
+                  </Button>
+                </Flex>
+              </Flex>
               <List
+                style={{ margin: 10, backgroundColor: token.colorBgContainer }}
+                bordered
                 dataSource={[
-                  { label: "Description", value: plant.description },
-                  { label: "Quantity", value: plant.quantity },
-                  { label: "Base Price", value: `${plant.base_price.toLocaleString()} VND` },
-                  { label: "Preservation Days", value: `${plant.preservation_day} days` },
-                  { label: "Estimated Per One", value: `${plant.estimated_per_one} kg` },
-                  { label: "Delta One", value: plant.delta_one },
-                  { label: "Delta Two", value: plant.delta_two },
-                  { label: "Delta Three", value: plant.delta_three },
+                  { label: "Số lượng giống (đơn vị)", value: plant.quantity },
                   {
-                    label: "Status",
+                    label: "Giá cơ bản",
+                    value: `${plant.base_price.toLocaleString()} VND`,
+                  },
+                  {
+                    label: "Số ngày được phép bảo quản",
+                    value: `${plant.preservation_day} ngày`,
+                  },
+                  {
+                    label: "Sản lượng dự kiến trên 1 đơn vị giống",
+                    value: `${plant.estimated_per_one} kg`,
+                  },
+                  {
+                    label: "Trạng thái",
                     value: <PlantStatusTag value={plant.status} />,
                   },
+                  { label: "Mô tả", value: plant.description },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
-                    <List.Item.Meta
-                      style={{ padding: "0 16px" }}
-                      avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
-                      title={itemData.value}
-                    />
+                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
                   </List.Item>
                 )}
               />
-
+              <Divider />
+              <Flex style={{ margin: 10 }} justify="space-between">
+                <Typography.Title level={5}>Tỉ lệ giá cây trồng</Typography.Title>
+                <Flex align="center" justify="end">
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                    {t("actions.edit")}
+                  </Button>
+                </Flex>
+              </Flex>
+              <List
+                style={{ margin: 10, backgroundColor: token.colorBgContainer }}
+                bordered
+                dataSource={[
+                  { label: "Loại 1", value: plant.delta_one * 100 + " %" },
+                  { label: "Loại 2", value: plant.delta_two * 100 + " %" },
+                  { label: "Loại 3", value: plant.delta_three * 100 + " %" },
+                ]}
+                renderItem={(itemData) => (
+                  <List.Item>
+                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
+                  </List.Item>
+                )}
+              />
               <Divider />
 
-              <Card bordered style={{ padding: 16, margin: 16 }}>
-                <Typography.Title level={4} style={{ paddingBottom: 8 }}>
-                  List Suggest Yields
-                </Typography.Title>
-                {isYieldsLoading ? (
-                  <Typography.Text>Loading...</Typography.Text>
-                ) : (
-                  <List
-                    dataSource={yields}
-                    renderItem={(yieldItem) => (
-                      <List.Item>
-                        <List.Item.Meta
-                          title={<Typography.Text strong>{yieldItem.yield_name}</Typography.Text>}
-                          description={
-                            <>
-                              <Typography.Text type="secondary">
-                                {yieldItem.description}
-                              </Typography.Text>
-                              <br />
-                              <Typography.Text>
-                                Area: {yieldItem.area} {yieldItem.area_unit}
-                              </Typography.Text>
-                              <br />
-                              <Typography.Text>Type: {yieldItem.type}</Typography.Text>
-                              <br />
-                              <Typography.Text>Status: {yieldItem.status}</Typography.Text>
-                            </>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                )}
-              </Card>
-
-              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
-                <DeleteButton
-                  type="text"
-                  recordItemId={plant.id}
-                  resource="plants"
-                  onSuccess={handleDrawerClose}
+              <Typography.Title level={4} style={{ margin: 10 }}>
+                Danh sách đất trồng phù hợp
+              </Typography.Title>
+              {isYieldsLoading ? (
+                <Typography.Text>Loading...</Typography.Text>
+              ) : (
+                <List
+                  style={{
+                    margin: 10,
+                    backgroundColor: token.colorBgContainer,
+                  }}
+                  bordered
+                  dataSource={yields}
+                  renderItem={(yieldItem) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        title={<Typography.Text strong>{yieldItem.yield_name}</Typography.Text>}
+                        description={
+                          <>
+                            <Typography.Text>
+                              Diện tích: {yieldItem.area} {yieldItem.area_unit}
+                            </Typography.Text>
+                            <br />
+                            <Typography.Text>Loại đất: {yieldItem.type}</Typography.Text>
+                            <br />
+                            <Typography.Text>
+                              Trạng thái: <YieldStatusTag value={yieldItem?.status} />
+                            </Typography.Text>
+                          </>
+                        }
+                      />
+                    </List.Item>
+                  )}
                 />
-                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                  {t("actions.edit")}
-                </Button>
-              </Flex>
+              )}
             </>
           )}
         </Drawer>

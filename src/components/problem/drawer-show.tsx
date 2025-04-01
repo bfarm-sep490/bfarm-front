@@ -12,16 +12,12 @@ import {
   Radio,
   Space,
   Button,
-  Modal,
-  Form,
-  Input,
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ReportProblemModal } from "./report-modals";
 import { ProblemStatusTag } from "./status-tag";
-import { ProblemTypeTag } from "./type-tag";
-import { TableProps } from "antd/lib";
 
 export const ProblemShowInProblem = () => {
   const { id } = useParams();
@@ -29,12 +25,12 @@ export const ProblemShowInProblem = () => {
     resource: "problems",
     id,
   });
+  const { token } = theme.useToken();
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
   const { data } = queryResult;
   const task = data?.data;
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultReportStatus, setDefaultReportStatus] = useState("Resovled");
   return (
@@ -97,6 +93,7 @@ export const ProblemShowInProblem = () => {
           {task?.result_content && task?.status === "Resolved" ? (
             <Flex vertical gap={16}>
               <List
+                style={{ backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
                   {
@@ -117,8 +114,17 @@ export const ProblemShowInProblem = () => {
           <Divider />
           <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
           <List
+            style={{ backgroundColor: token.colorBgContainer }}
             bordered
             dataSource={[
+              {
+                label: "Nông dân",
+                value: <TextField value={task?.farmer_name} />,
+              },
+              {
+                label: "Kế hoạch",
+                value: <TextField value={task?.plan_name} />,
+              },
               {
                 label: "Ngày phát hiện",
                 value: <DateField value={task?.created_date} />,

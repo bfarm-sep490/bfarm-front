@@ -99,24 +99,42 @@ export const ExpertDrawerShow = (props: Props) => {
         <List
           dataSource={[
             {
-              label: <Typography.Text type="secondary">Phone</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {t("expert.phone", "Điện thoại")}
+                </Typography.Text>
+              ),
               value: expert?.phone,
             },
             {
-              label: <Typography.Text type="secondary">Email</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">{t("expert.email", "Email")}</Typography.Text>
+              ),
               value: expert?.email,
             },
 
             {
-              label: <Typography.Text type="secondary">Status</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {t("expert.status", "Trạng thái")}
+                </Typography.Text>
+              ),
               value: expert?.status && <ExpertStatusTag status={expert.status} />,
             },
             {
-              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {t("expert.created_at", "Ngày tạo")}
+                </Typography.Text>
+              ),
               value: <DateField format="DD/MM/YYYY" value={expert?.created_at} />,
             },
             {
-              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">
+                  {t("expert.updated_at", "Ngày cập nhập")}{" "}
+                </Typography.Text>
+              ),
               value: expert?.updated_at ? (
                 <DateField value={expert?.created_date} />
               ) : (

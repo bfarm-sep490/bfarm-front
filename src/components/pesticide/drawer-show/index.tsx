@@ -90,17 +90,17 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Description", value: pesticide.description },
+                  { label: "Mô tả", value: pesticide.description },
                   {
-                    label: "Quantity",
+                    label: "Số lượng",
                     value: `${pesticide.quantity} ${pesticide.unit}`,
                   },
                   {
-                    label: "Type",
+                    label: "Loại thuốc",
                     value: <PesticideTypeTag value={pesticide.type} />,
                   },
                   {
-                    label: "Status",
+                    label: "Trạng thái",
                     value: <PesticideStatusTag value={pesticide.status} />,
                   },
                 ]}

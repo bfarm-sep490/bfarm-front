@@ -377,7 +377,7 @@ export interface IPlant {
   delta_three: number;
   preservation_day: number;
   estimated_per_one: number;
-  status: "Available" | "Maintenance" | "In-Use";
+  status: "Active" | "Inactive";
 }
 
 export interface IYield {
@@ -387,7 +387,7 @@ export interface IYield {
   area: number;
   type: YieldType;
   description: string;
-  status: "Available" | "Maintenance" | "In-Use";
+  status: "Available" | "Unavailable" | "In-Use";
   is_available: YieldAvailability;
   size: YieldSize;
 }

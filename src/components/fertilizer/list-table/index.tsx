@@ -1,6 +1,14 @@
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Table,
+  theme,
+  Typography,
+} from "antd";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerStatusTag } from "../status";
@@ -24,7 +32,9 @@ export const FertilizersListTable: React.FC = () => {
     },
   });
 
-  const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<
+    string | undefined
+  >(undefined);
 
   return (
     <>
@@ -34,7 +44,9 @@ export const FertilizersListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="fertilizers" />
+          ),
         }}
       >
         <Table.Column
@@ -43,14 +55,18 @@ export const FertilizersListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
+          filterDropdown={() => (
+            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
+          )}
         />
 
         <Table.Column
-          title="Image"
+          title="Ảnh"
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -63,45 +79,55 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Name"
+          title="Tên phân bón"
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterDropdown={() => <Input placeholder="Search name" />}
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
 
         <Table.Column
-          title="Quantity"
+          title="Số lượng"
           dataIndex="quantity"
           key="quantity"
           width={120}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={() => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+            <InputNumber
+              placeholder="Search total quantity"
+              style={{ width: "100%" }}
+            />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
 
         <Table.Column
-          title="Type"
+          title="Loại"
           dataIndex="type"
           key="type"
           width={120}
@@ -109,7 +135,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -117,7 +143,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"

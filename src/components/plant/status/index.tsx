@@ -7,13 +7,11 @@ interface Props {
 
 export const PlantStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Available":
-      return <Tag color="red">Available</Tag>;
-    case "Maintenance":
-      return <Tag color="green">Maintenance</Tag>;
-    case "In-Use":
-      return <Tag color="default">In-Use</Tag>;
-    default:
+    case "Active":
+      return <Tag color="green">Hoạt động</Tag>;
+    case "Inactive":
+      return <Tag color="red">Không hoạt động</Tag>;
+
       return null;
   }
 };

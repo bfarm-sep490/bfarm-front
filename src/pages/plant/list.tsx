@@ -69,7 +69,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("buttons.add_plan")}
+          Thêm giống cây
         </CreateButton>,
       ]}
     >

@@ -12,6 +12,7 @@ import {
   Radio,
   Space,
   Button,
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -19,6 +20,7 @@ import { StatusTag } from "../../caring-task/status-tag";
 import ChangeAssignedTasksModal, {
   HistoryAssignedModal,
 } from "@/components/caring-task/show";
+import useToken from "antd/es/theme/useToken";
 
 export const PackagingTaskShow = () => {
   const { taskId } = useParams();
@@ -48,6 +50,7 @@ export const PackagingTaskShow = () => {
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   return (
     <Drawer
@@ -99,6 +102,7 @@ export const PackagingTaskShow = () => {
               </Image.PreviewGroup>
             )}
             <List
+              style={{ backgroundColor: token.colorBgContainer }}
               bordered
               dataSource={[
                 {
@@ -118,7 +122,11 @@ export const PackagingTaskShow = () => {
                 },
                 {
                   label: "Nội dung",
-                  value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
+                  value: (
+                    <Typography.Paragraph>
+                      {task?.result_content}
+                    </Typography.Paragraph>
+                  ),
                 },
               ]}
               renderItem={(item) => (
@@ -137,12 +145,17 @@ export const PackagingTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+            <Button
+              color="primary"
+              variant="solid"
+              onClick={() => navigate("edit")}
+            >
               Thay đổi
             </Button>
           )}
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -204,6 +217,7 @@ export const PackagingTaskShow = () => {
           )}
         />
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -262,6 +276,7 @@ export const PackagingTaskShow = () => {
           </Space>
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -295,6 +310,7 @@ export const PackagingTaskShow = () => {
         <Divider />
         <Typography.Title level={4}>Vật tư</Typography.Title>
         <Table
+          style={{ backgroundColor: token.colorBgContainer }}
           pagination={{ pageSize: 5 }}
           bordered
           columns={columns}

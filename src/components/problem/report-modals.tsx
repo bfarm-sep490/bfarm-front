@@ -25,8 +25,9 @@ import {
   Input,
   Spin,
   Select,
+  notification,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 type ReportProblemProps = {
   status?: string;
@@ -35,6 +36,8 @@ type ReportProblemProps = {
 };
 export const ReportProblemModal = (props: ReportProblemProps) => {
   const { id } = useParams();
+  const back = useBack();
+  const [api, context] = notification.useNotification();
   const { formProps, formLoading, saveButtonProps } = useForm<any>({
     resource: "problems",
     id: `${id}/result-content`,
@@ -42,10 +45,19 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
     queryOptions: {
       enabled: false,
     },
-    onMutationSuccess: () => {
-      navigate("../" + id, { replace: true });
+    updateMutationOptions: {
+      onSuccess: () => {
+        navigate("../../" + id);
+      },
+      onError: (error) => {
+        api.error({
+          message: "Có lỗi xảy ra",
+          description: error?.message || "Vui lòng thử lại sau",
+          placement: "top",
+        });
+        props.close();
+      },
     },
-    redirect: false,
   });
   const navigate = useNavigate();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -54,6 +66,11 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
     { label: "Cancelled", value: "Cancelled" },
     { label: "Resovled", value: "Resolved" },
   ];
+  useEffect(() => {
+    if (!props.open) {
+      formProps?.form?.resetFields();
+    }
+  }, [props.open]);
   return (
     <>
       <Modal
@@ -61,15 +78,18 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
         title={"Kết quả vấn đề"}
         width={breakpoint.sm ? "378px" : "100%"}
         zIndex={1001}
-        onClose={close}
-        onCancel={close}
+        onClose={props?.close}
+        onCancel={props?.close}
         footer={
-          <Flex vertical gap={8} justify="end" style={{ width: "100%" }}>
+          <Flex vertical={false} gap={8} justify="end" style={{ width: "100%" }}>
             <Button onClick={close}>Đóng</Button>
-            <Button {...saveButtonProps} type="primary" />
+            <Button {...saveButtonProps} type="primary">
+              Lưu
+            </Button>
           </Flex>
         }
       >
+        {context}
         <Spin spinning={formLoading}>
           <Form {...formProps} layout="vertical">
             <Form.Item

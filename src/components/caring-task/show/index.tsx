@@ -25,6 +25,7 @@ import {
   notification,
   Input,
   Form,
+  theme,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -252,6 +253,7 @@ export const ProductiveTaskShow = () => {
     resource: "caring-tasks",
     id: taskId,
   });
+  const { token } = theme.useToken();
   const [assignedModal, setAssignedModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const getItemsFertilizerPesticide = (mode: string) => {
@@ -365,6 +367,7 @@ export const ProductiveTaskShow = () => {
               </Image.PreviewGroup>
             )}
             <List
+              style={{ backgroundColor: token.colorBgContainer }}
               bordered
               dataSource={[
                 {
@@ -405,6 +408,7 @@ export const ProductiveTaskShow = () => {
           )}
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -443,6 +447,7 @@ export const ProductiveTaskShow = () => {
           )}
         />
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -501,6 +506,7 @@ export const ProductiveTaskShow = () => {
           </Space>
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -544,6 +550,7 @@ export const ProductiveTaskShow = () => {
           <Radio.Button value="item">Vật tư</Radio.Button>
         </Radio.Group>
         <Table
+          style={{ backgroundColor: token.colorBgContainer }}
           pagination={{ pageSize: 5 }}
           bordered
           columns={columns}

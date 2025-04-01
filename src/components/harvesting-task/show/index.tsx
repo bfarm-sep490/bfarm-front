@@ -12,6 +12,7 @@ import {
   Radio,
   Space,
   Button,
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -49,6 +50,7 @@ export const HarvestingTaskShow = () => {
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];
+  const { token } = theme.useToken();
   return (
     <Drawer
       open={open}
@@ -99,6 +101,7 @@ export const HarvestingTaskShow = () => {
               </Image.PreviewGroup>
             )}
             <List
+              style={{ backgroundColor: token.colorBgContainer }}
               bordered
               dataSource={[
                 {
@@ -143,21 +146,33 @@ export const HarvestingTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+            <Button
+              color="primary"
+              variant="solid"
+              onClick={() => navigate("edit")}
+            >
               Thay đổi
             </Button>
           )}
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
               label: "Ngày bắt đầu",
-              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.start_date} />,
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.start_date}
+                />
+              ),
             },
             {
               label: "Ngày kết thúc",
-              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />,
+              value: (
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />
+              ),
             },
             {
               label: "Trạng thái",
@@ -170,21 +185,30 @@ export const HarvestingTaskShow = () => {
             { label: "Kế hoạch", value: task?.plan_name },
             {
               label: "Mô tả công việc",
-              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+              value: (
+                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
               label: "Ngày tạo",
-              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.created_at}
+                />
+              ),
             },
             {
               label: "Người tạo",
@@ -193,7 +217,10 @@ export const HarvestingTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.updated_at}
+                />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -205,7 +232,8 @@ export const HarvestingTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
@@ -218,13 +246,18 @@ export const HarvestingTaskShow = () => {
               Lịch sử
             </Button>
             {(task?.status === "Ongoing" || task?.status === "Pending") && (
-              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+              <Button
+                type="primary"
+                color="cyan"
+                onClick={() => setAssignedModal(true)}
+              >
                 Thay đổi
               </Button>
             )}
           </Space>
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -258,6 +291,7 @@ export const HarvestingTaskShow = () => {
         <Divider />
         <Typography.Title level={4}>Vật tư</Typography.Title>
         <Table
+          style={{ backgroundColor: token.colorBgContainer }}
           pagination={{ pageSize: 5 }}
           bordered
           columns={columns}

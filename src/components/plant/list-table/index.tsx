@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTable } from "@refinedev/antd";
+import { TextField, useTable } from "@refinedev/antd";
 import { type HttpError } from "@refinedev/core";
 import { Table, Avatar, Button, Typography, Tag, theme } from "antd";
 import { EyeOutlined } from "@ant-design/icons";
@@ -37,7 +37,7 @@ export const PlantsListTable: React.FC = () => {
       >
         <Table.Column title="ID" dataIndex="id" key="id" width={80} />
         <Table.Column
-          title="Image"
+          title="Ảnh"
           dataIndex="image_url"
           key="image_url"
           render={(image) => (
@@ -49,15 +49,22 @@ export const PlantsListTable: React.FC = () => {
           )}
         />
 
-        <Table.Column title="Plant Name" dataIndex="plant_name" key="plant_name" />
+        <Table.Column
+          title="Tên giống"
+          dataIndex="plant_name"
+          key="plant_name"
+        />
 
         <Table.Column
-          title="Description"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
@@ -66,34 +73,30 @@ export const PlantsListTable: React.FC = () => {
         <Table.Column title="Quantity" dataIndex="quantity" key="quantity" />
 
         <Table.Column
-          title="Base Price"
+          title="Giá cơ bản"
           dataIndex="base_price"
           key="base_price"
-          render={(value) => `$${value.toFixed(2)}`}
+          render={(value) => `${value.toFixed(2)} VND`}
         />
 
-        <Table.Column title="Type" dataIndex="type" key="type" />
-
-        <Table.Column title="Delta One" dataIndex="delta_one" key="delta_one" />
-
-        <Table.Column title="Delta Two" dataIndex="delta_two" key="delta_two" />
-
-        <Table.Column title="Delta Three" dataIndex="delta_three" key="delta_three" />
+        <Table.Column title="Loại cây" dataIndex="type" key="type" />
 
         <Table.Column
-          title="Preservation Days"
+          title="Số ngày bảo quản"
           dataIndex="preservation_day"
           key="preservation_day"
+          render={(value) => <TextField value={value + " ngày"} />}
         />
 
         <Table.Column
-          title="Estimated Per One"
+          title="Sản lượng dự kiến"
           dataIndex="estimated_per_one"
           key="estimated_per_one"
+          render={(value) => <TextField value={value + " kg"} />}
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -101,7 +104,7 @@ export const PlantsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"
@@ -117,7 +120,10 @@ export const PlantsListTable: React.FC = () => {
       </Table>
 
       {selectedPlantId && (
-        <PlantDrawerShow id={selectedPlantId} onClose={() => setSelectedPlantId(undefined)} />
+        <PlantDrawerShow
+          id={selectedPlantId}
+          onClose={() => setSelectedPlantId(undefined)}
+        />
       )}
     </>
   );

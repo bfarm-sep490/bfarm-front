@@ -1,5 +1,14 @@
 import { DateField } from "@refinedev/antd";
-import { Card, FormProps, Select, Table, Tabs } from "antd";
+import {
+  Button,
+  Card,
+  Flex,
+  FormProps,
+  Select,
+  Table,
+  Tabs,
+  Typography,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 import React, { useEffect } from "react";
@@ -69,12 +78,12 @@ export const AssignTasks = ({
   setProductiveTasks,
   inspectors,
 }: Props) => {
+  const [viewChart, setViewChart] = React.useState(false);
   const calculateTaskCountForFarmer = (farmerId: number) => {
     return (
       (productiveTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
       (harvestingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
-      (packagingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
-      (inspectingTasks?.filter((task) => task.inspector_id === farmerId)?.length ?? 0)
+      (packagingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0)
     );
   };
 
@@ -128,7 +137,7 @@ export const AssignTasks = ({
 
   useEffect(() => {
     updateChart();
-  }, [chosenFarmers, productiveTasks, harvestingTasks, packagingTasks, inspectingTasks]);
+  }, [chosenFarmers, productiveTasks, harvestingTasks, packagingTasks]);
 
   const column_productive: ColumnsType<ProductiveTask> = [
     {
@@ -333,13 +342,17 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (_, record) => <DateField value={record.start_date} format="DD/MM/YYYY" />,
+      render: (_, record) => (
+        <DateField value={record.start_date} format="DD/MM/YYYY" />
+      ),
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => <DateField value={record.end_date} format="DD/MM/YYYY" />,
+      render: (_, record) => (
+        <DateField value={record.end_date} format="DD/MM/YYYY" />
+      ),
     },
     {
       title: "Lựa chọn nhà kiểm định",
@@ -376,16 +389,45 @@ export const AssignTasks = ({
 
   return (
     <>
-      <Card title={"Biểu đồ công việc"}>
-        <ReactApexChart
-          options={chartState.options}
-          series={chartState.series}
-          type="bar"
-          height={350}
-        />
-      </Card>
-      <Card title="Phân bổ công việc" style={{ minHeight: "600px", marginTop: 20 }}>
-        <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
+      {viewChart && (
+        <Card title={"Biểu đồ công việc"}>
+          <ReactApexChart
+            options={chartState.options}
+            series={chartState.series}
+            type="bar"
+            height={350}
+          />
+        </Card>
+      )}
+
+      <Card
+        title={
+          <>
+            <Flex justify="space-between" align="center">
+              <Typography.Title level={5}>Phân bổ công việc</Typography.Title>
+              <Flex gap={10} style={{ marginLeft: 20 }}>
+                <Button>Lưu</Button>
+                <Button type="primary">Tự động</Button>
+              </Flex>
+            </Flex>
+          </>
+        }
+        style={{ minHeight: "600px", marginTop: 20 }}
+      >
+        <Flex
+          justify="end"
+          align="center"
+          style={{ marginBottom: 20, marginTop: 20 }}
+        >
+          <Button type="primary" onClick={() => setViewChart(!viewChart)}>
+            {viewChart ? "Ẩn biểu đồ" : "Hiện biểu đồ"}
+          </Button>
+        </Flex>
+        <Tabs
+          defaultActiveKey={"1"}
+          tabPosition={"left"}
+          style={{ minHeight: 220 }}
+        >
           <Tabs.TabPane key="1" tab="Chăm sóc">
             <Table
               pagination={{

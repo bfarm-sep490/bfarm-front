@@ -7,7 +7,16 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -80,9 +89,14 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               </Flex>
 
               {/* Name */}
-              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
+              <Flex
+                vertical
+                style={{ backgroundColor: token.colorBgContainer }}
+              >
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>{pesticide.name}</Typography.Title>
+                  <Typography.Title level={5}>
+                    {pesticide.name}
+                  </Typography.Title>
                 </Flex>
               </Flex>
 
@@ -90,17 +104,17 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Description", value: pesticide.description },
+                  { label: "Mô tả", value: pesticide.description },
                   {
-                    label: "Quantity",
+                    label: "Số lượng",
                     value: `${pesticide.quantity} ${pesticide.unit}`,
                   },
                   {
-                    label: "Type",
+                    label: "Loại thuốc",
                     value: <PesticideTypeTag value={pesticide.type} />,
                   },
                   {
-                    label: "Status",
+                    label: "Trạng thái",
                     value: <PesticideStatusTag value={pesticide.status} />,
                   },
                 ]}
@@ -110,7 +124,11 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                       style={{
                         padding: "0 16px",
                       }}
-                      avatar={<Typography.Text type="secondary">{item.label}</Typography.Text>}
+                      avatar={
+                        <Typography.Text type="secondary">
+                          {item.label}
+                        </Typography.Text>
+                      }
                       title={item.value}
                     />
                   </List.Item>

@@ -38,6 +38,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@googlemaps/react-wrapper": "^1.1.42",
+    "@payos/payos-checkout": "^1.0.8",
     "@refinedev/ably": "^4.1.10",
     "@refinedev/antd": "^5.45.3",
     "@refinedev/cli": "^2.16.44",

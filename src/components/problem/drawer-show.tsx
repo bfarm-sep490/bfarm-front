@@ -1,4 +1,10 @@
-import { DateField, TagField, TextField, Title, useModalForm } from "@refinedev/antd";
+import {
+  DateField,
+  TagField,
+  TextField,
+  Title,
+  useModalForm,
+} from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useUpdate } from "@refinedev/core";
 import {
   Drawer,
@@ -12,13 +18,12 @@ import {
   Radio,
   Space,
   Button,
-
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ReportProblemModal } from "./report-modals";
 import { ProblemStatusTag } from "./status-tag";
-
 
 export const ProblemShowInProblem = () => {
   const { id } = useParams();
@@ -26,6 +31,7 @@ export const ProblemShowInProblem = () => {
     resource: "problems",
     id,
   });
+  const { token } = theme.useToken();
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -93,6 +99,7 @@ export const ProblemShowInProblem = () => {
           {task?.result_content && task?.status === "Resolved" ? (
             <Flex vertical gap={16}>
               <List
+                style={{ backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
                   {
@@ -113,6 +120,7 @@ export const ProblemShowInProblem = () => {
           <Divider />
           <Typography.Title level={4}>Chi tiết vấn đề</Typography.Title>
           <List
+            style={{ backgroundColor: token.colorBgContainer }}
             bordered
             dataSource={[
               {

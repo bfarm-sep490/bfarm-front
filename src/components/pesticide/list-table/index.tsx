@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Table, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Table,
+  Typography,
+  theme,
+} from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { IPesticide } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
@@ -24,7 +32,9 @@ export const PesticidesListTable: React.FC = () => {
     },
   });
 
-  const [selectedPesticideId, setSelectedPesticideId] = useState<string | undefined>(undefined);
+  const [selectedPesticideId, setSelectedPesticideId] = useState<
+    string | undefined
+  >(undefined);
 
   return (
     <>
@@ -34,7 +44,9 @@ export const PesticidesListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="pesticides" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="pesticides" />
+          ),
         }}
       >
         <Table.Column
@@ -43,66 +55,86 @@ export const PesticidesListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder="Search ID"
+            />
           )}
           render={(value) => (
-            <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+            <Typography.Text style={{ fontWeight: "bold" }}>
+              #{value}
+            </Typography.Text>
           )}
         />
 
         <Table.Column
           width={"auto"}
-          title="Image"
+          title="Ảnh"
           dataIndex="image"
           key="image"
-          render={(image: string) => <Avatar shape="square" src={image} alt="Pesticide" />}
+          render={(image: string) => (
+            <Avatar shape="square" src={image} alt="Pesticide" />
+          )}
         />
 
         <Table.Column
-          title="Name"
+          title="Tên thuốc"
           width={"auto"}
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
           filterDropdown={(props) => <Input placeholder="Search name" />}
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tảtả"
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
 
         <Table.Column
-          title="Quantity"
+          title="Số lượng"
           dataIndex="quantity"
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+            <InputNumber
+              placeholder="Search total quantity"
+              style={{ width: "100%" }}
+            />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
 
         <Table.Column
-          title="Type"
+          title="Loại thuốc"
           dataIndex="type"
           key="type"
           width={120}
@@ -110,7 +142,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -118,7 +150,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"

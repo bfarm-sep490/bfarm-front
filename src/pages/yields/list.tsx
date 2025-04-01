@@ -14,7 +14,9 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("yield-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("yield-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
     // remove query params (pagination, filters, etc.) when changing view
@@ -67,7 +69,7 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Yield
+          Thêm khu đất
         </CreateButton>,
       ]}
     >

@@ -135,8 +135,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
                 shape="circle"
                 danger
                 onClick={() => {
-                  setDeletedId(record.id);
-                  setDeletedOpen(true);
+                  navigate(`/plans/${id}/farmers/${record.id}/delete`);
                 }}
               >
                 <DeleteOutlined />

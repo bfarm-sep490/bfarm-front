@@ -185,6 +185,11 @@ export const ApprovingPlanDrawer = () => {
         operator: "eq",
         value: id,
       },
+      {
+        field: "status",
+        operator: "eq",
+        value: "Pending",
+      },
     ],
     queryOptions: {
       onSuccess(data: any) {
@@ -199,6 +204,11 @@ export const ApprovingPlanDrawer = () => {
         field: "plan_id",
         operator: "eq",
         value: id,
+      },
+      {
+        field: "status",
+        operator: "eq",
+        value: "Pending",
       },
     ],
     queryOptions: {
@@ -215,6 +225,11 @@ export const ApprovingPlanDrawer = () => {
         operator: "eq",
         value: id,
       },
+      {
+        field: "status",
+        operator: "eq",
+        value: "Pending",
+      },
     ],
     queryOptions: {
       onSuccess(data: any) {
@@ -230,6 +245,11 @@ export const ApprovingPlanDrawer = () => {
         operator: "eq",
         value: id,
       },
+      {
+        field: "status",
+        operator: "eq",
+        value: "Pending",
+      },
     ],
     queryOptions: {
       onSuccess(data: any) {
@@ -238,75 +258,6 @@ export const ApprovingPlanDrawer = () => {
     },
   });
 
-  const steps = [
-    {
-      title: "1",
-      content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
-      ),
-    },
-    {
-      title: "2",
-      content: (
-        <>
-          <ChooseFarmers
-            farmers={farmers}
-            productiveTasks={productiveTasks}
-            setProductiveTasks={setProductiveTasks}
-            harvestingTasks={harvestingTasks}
-            setHarvestingTasks={setHarvestingTasks}
-            inspectingTasks={inspectingTasks}
-            setInspectingTasks={setInspectingTasks}
-            formProps={formProps}
-            chosenFarmers={chosenFarmers}
-            setChosenFarmers={setChosenFarmers}
-            packagingTasks={packagingTasks}
-            setPackagingTasks={setPackagingTasks}
-          />
-        </>
-      ),
-    },
-    {
-      title: "3",
-      content: (
-        <>
-          <AssignTasks
-            chosenFarmers={chosenFarmers}
-            productiveTasks={productiveTasks}
-            harvestingTasks={harvestingTasks}
-            inspectingTasks={inspectingTasks}
-            setChosenFarmers={setChosenFarmers}
-            setProductiveTasks={setProductiveTasks}
-            setHarvestingTasks={setHarvestingTasks}
-            inspectors={inspectors}
-            setInspectingTasks={setInspectingTasks}
-            formProps={formProps}
-            packagingTasks={packagingTasks}
-            setPackagingTasks={setPackagingTasks}
-          />
-        </>
-      ),
-    },
-    {
-      title: "4",
-      content: (
-        <>
-          <VerifyPlanInformation
-            plants={plants}
-            yields={yields}
-            formProps={formProps}
-            experts={experts}
-            productiveTasks={productiveTasks}
-            harvestingTasks={harvestingTasks}
-            inspectingTasks={inspectingTasks}
-            inspectors={inspectors}
-            farmers={farmers}
-            packagingTasks={packagingTasks}
-          />
-        </>
-      ),
-    },
-  ];
   const back = useBack();
   const next = () => {
     setCurrent(current + 1);
@@ -322,37 +273,35 @@ export const ApprovingPlanDrawer = () => {
     marginTop: 16,
   };
   const [loading, setLoading] = useState(false);
-  const handleDone = async () => {
+  const handleDone = async (type: string) => {
     try {
       setLoading(true);
-
       const caring_tasks = productiveTasks.map((task) => ({
         task_id: task.id,
         farmer_id: task.farmer_id,
-        status: "Ongoing",
+        status: type,
       }));
       const harvesting_tasks = harvestingTasks.map((task) => ({
         task_id: task.id,
         farmer_id: task.farmer_id,
-        status: "Ongoing",
+        status: type,
       }));
       const inspecting_forms = inspectingTasks.map((task) => ({
         task_id: task.id,
         inspector_id: task.inspector_id,
-        status: "Ongoing",
+        status: type,
       }));
       const packaging_tasks = packagingTasks.map((task) => ({
         task_id: task.id,
         farmer_id: task.farmer_id,
-        status: "Ongoing",
+        status: type,
       }));
       formProps.form?.setFieldValue("caring_tasks", caring_tasks);
       formProps.form?.setFieldValue("harvesting_tasks", harvesting_tasks);
       formProps.form?.setFieldValue("inspecting_forms", inspecting_forms);
       formProps.form?.setFieldValue("packaging_tasks", packaging_tasks);
-      formProps.form?.setFieldValue("status", "Ongoing");
+      formProps.form?.setFieldValue("status", type);
       await onFinish();
-      back();
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -427,6 +376,78 @@ export const ApprovingPlanDrawer = () => {
     inspectorLoading,
     formLoading,
   ]);
+
+  const steps = [
+    {
+      title: "1",
+      content: (
+        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
+      ),
+    },
+    {
+      title: "2",
+      content: (
+        <>
+          <ChooseFarmers
+            farmers={farmers}
+            productiveTasks={productiveTasks}
+            setProductiveTasks={setProductiveTasks}
+            harvestingTasks={harvestingTasks}
+            setHarvestingTasks={setHarvestingTasks}
+            inspectingTasks={inspectingTasks}
+            setInspectingTasks={setInspectingTasks}
+            formProps={formProps}
+            chosenFarmers={chosenFarmers}
+            setChosenFarmers={setChosenFarmers}
+            packagingTasks={packagingTasks}
+            setPackagingTasks={setPackagingTasks}
+          />
+        </>
+      ),
+    },
+    {
+      title: "3",
+      content: (
+        <>
+          <AssignTasks
+            loading={loading}
+            saveHandle={handleDone}
+            chosenFarmers={chosenFarmers}
+            productiveTasks={productiveTasks}
+            harvestingTasks={harvestingTasks}
+            inspectingTasks={inspectingTasks}
+            setChosenFarmers={setChosenFarmers}
+            setProductiveTasks={setProductiveTasks}
+            setHarvestingTasks={setHarvestingTasks}
+            inspectors={inspectors}
+            setInspectingTasks={setInspectingTasks}
+            formProps={formProps}
+            packagingTasks={packagingTasks}
+            setPackagingTasks={setPackagingTasks}
+          />
+        </>
+      ),
+    },
+    {
+      title: "4",
+      content: (
+        <>
+          <VerifyPlanInformation
+            plants={plants}
+            yields={yields}
+            formProps={formProps}
+            experts={experts}
+            productiveTasks={productiveTasks}
+            harvestingTasks={harvestingTasks}
+            inspectingTasks={inspectingTasks}
+            inspectors={inspectors}
+            farmers={farmers}
+            packagingTasks={packagingTasks}
+          />
+        </>
+      ),
+    },
+  ];
   return (
     <Drawer
       loading={loadingForm}
@@ -470,7 +491,7 @@ export const ApprovingPlanDrawer = () => {
               </Button>
             )}
             {current === 3 && (
-              <Button type="primary" onClick={handleDone} loading={loading}>
+              <Button type="primary" onClick={() => handleDone("Ongoing")} loading={loading}>
                 Done
               </Button>
             )}

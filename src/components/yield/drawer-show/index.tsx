@@ -64,20 +64,49 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
         >
           {yieldData && (
             <>
-              <Typography.Title level={4}>{yieldData.yield_name}</Typography.Title>
+              <Flex
+                style={{
+                  padding: 10,
+                  backgroundColor: token.colorBgContainer,
+                }}
+                justify="space-between"
+              >
+                <Typography.Title level={4}>{yieldData.yield_name}</Typography.Title>
+                <Flex align="center" justify="end">
+                  <DeleteButton
+                    type="text"
+                    recordItemId={yieldData.id}
+                    resource="yields"
+                    onSuccess={handleDrawerClose}
+                  />
+                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                    {t("actions.edit")}
+                  </Button>
+                </Flex>
+              </Flex>
               <Divider />
 
               <List
+                style={{ margin: 10, backgroundColor: token.colorBgContainer }}
+                bordered
                 dataSource={[
                   { label: "Description ", value: yieldData.description },
-                  { label: "Area ", value: `${yieldData.area} ${yieldData.area_unit}` },
-                  { label: "Type ", value: <YieldTypeTag value={yieldData.type} /> },
-                  { label: "Status ", value: <YieldStatusTag value={yieldData.status} /> },
+                  {
+                    label: "Area ",
+                    value: `${yieldData.area} ${yieldData.area_unit}`,
+                  },
+                  {
+                    label: "Type ",
+                    value: <YieldTypeTag value={yieldData.type} />,
+                  },
+                  {
+                    label: "Status ",
+                    value: <YieldStatusTag value={yieldData.status} />,
+                  },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
                     <List.Item.Meta
-                      style={{ padding: "0 16px" }}
                       avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
                       title={itemData.value}
                     />
@@ -85,80 +114,68 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 )}
               />
               <Divider />
-              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
-                <DeleteButton
-                  type="text"
-                  recordItemId={yieldData.id}
-                  resource="yields"
-                  onSuccess={handleDrawerClose}
-                />
-                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                  {t("actions.edit")}
-                </Button>
-              </Flex>
-              <Card bordered style={{ padding: 16, margin: 16 }}>
-                <Typography.Title level={5}>Suggested Plants</Typography.Title>
-                {isPlantsLoading ? (
-                  <Typography.Text>Loading...</Typography.Text>
-                ) : (
-                  <List
-                    dataSource={suggestedPlants}
-                    renderItem={(plant) => (
-                      <List.Item>
-                        <List.Item.Meta
-                          avatar={
-                            <Avatar src={plant.image_url} size={200} style={{ borderRadius: 8 }} />
-                          }
-                          title={
-                            <Typography.Text strong style={{ fontSize: "30px" }}>
-                              {plant.plant_name}
-                            </Typography.Text>
-                          }
-                          description={
-                            <>
-                              <Typography.Text> Description: {plant.description}</Typography.Text>
-                              <br />
+
+              <Typography.Title level={5} style={{ margin: 10 }}>
+                Cây trồng phù hợp
+              </Typography.Title>
+              {isPlantsLoading ? (
+                <Typography.Text>Loading...</Typography.Text>
+              ) : (
+                <List
+                  style={{
+                    margin: 10,
+                    backgroundColor: token.colorBgContainer,
+                  }}
+                  bordered
+                  dataSource={suggestedPlants}
+                  renderItem={(plant) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar src={plant.image_url} size={200} style={{ borderRadius: 8 }} />
+                        }
+                        title={
+                          <Typography.Text strong style={{ fontSize: "30px" }}>
+                            {plant.plant_name}
+                          </Typography.Text>
+                        }
+                        description={
+                          <>
+                            <div
+                              style={{
+                                display: "grid",
+                                gridTemplateColumns: "1fr 1fr",
+                                gap: "12px",
+                                marginTop: 4,
+                                alignItems: "start",
+                              }}
+                            >
                               <div
                                 style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "1fr 1fr",
-                                  gap: "12px",
-                                  marginTop: 4,
-                                  alignItems: "start",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: "8px",
                                 }}
                               >
-                                <div
-                                  style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-                                >
-                                  <Typography.Text>
-                                    Preservation (days): {plant.preservation_day}
-                                  </Typography.Text>
-                                  <Typography.Text>Status: {plant.status}</Typography.Text>
-                                  <Typography.Text>Price: {plant.base_price} VND</Typography.Text>
-                                </div>
-                                <div
-                                  style={{ display: "flex", flexDirection: "column", gap: "8px" }}
-                                >
-                                  <Typography.Text>
-                                    Estimated per unit: {plant.estimated_per_one}
-                                  </Typography.Text>
-                                  <Typography.Text>Type: {plant.type}</Typography.Text>
-                                  <Typography.Text>Quantity: {plant.quantity}</Typography.Text>
-                                </div>
+                                <Typography.Text>Trạng thái: {plant.status}</Typography.Text>
                               </div>
-                              <div style={{ display: "flex", gap: "50px" }}>
-                                <Typography.Text>Delta One: {plant.delta_one}</Typography.Text>
-                                <Typography.Text>Delta Two: {plant.delta_two}</Typography.Text>
-                                <Typography.Text>Delta Three: {plant.delta_three}</Typography.Text>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: "8px",
+                                }}
+                              >
+                                <Typography.Text>Loại cây: {plant.type}</Typography.Text>
                               </div>
-                            </>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                )}
-              </Card>
+                            </div>
+                          </>
+                        }
+                      />
+                    </List.Item>
+                  )}
+                />
+              )}
             </>
           )}
         </Drawer>

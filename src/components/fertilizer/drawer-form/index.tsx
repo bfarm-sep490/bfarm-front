@@ -152,42 +152,54 @@ export const FertilizerDrawerForm = (props: Props) => {
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
+          <Form.Item
+            label="Tên phân bón"
+            name="name"
+            rules={[{ required: true, message: "Enter name!" }]}
+          >
             <Input placeholder="Enter fertilizer name" />
           </Form.Item>
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
             rules={[{ required: true, message: "Enter description!" }]}
           >
             <Input.TextArea rows={3} placeholder="Enter fertilizer description" />
           </Form.Item>
           <Form.Item
-            label="Quantity"
+            label="Số lượng "
             name="quantity"
             rules={[{ required: true, message: "Enter quantity!" }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
           </Form.Item>
-          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
+          <Form.Item
+            label="Đơn vị"
+            name="unit"
+            rules={[{ required: true, message: "Enter unit!" }]}
+          >
             <Input placeholder="kg, liters, bags, etc." />
           </Form.Item>
           <Form.Item
-            label="Status"
+            label="Trạng thái"
             name="status"
             rules={[{ required: true, message: "Select status!" }]}
           >
             <Select placeholder="Select status">
-              <Select.Option value="Available">Available</Select.Option>
-              <Select.Option value="Out of Stock">Out of Stock</Select.Option>
-              <Select.Option value="Limited Stock">Limited Stock</Select.Option>
+              <Select.Option value="Available">Hoạt động</Select.Option>
+              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
+              <Select.Option value="Limited Stock">Hàng giới hạn</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Select type!" }]}>
+          <Form.Item
+            label="Loại phân bón"
+            name="type"
+            rules={[{ required: true, message: "Select type!" }]}
+          >
             <Select placeholder="Select type">
-              <Select.Option value="Organic">Organic</Select.Option>
-              <Select.Option value="Chemical">Chemical</Select.Option>
-              <Select.Option value="Mineral">Mineral</Select.Option>
+              <Select.Option value="Organic">Hữu cơ</Select.Option>
+              <Select.Option value="Chemical">Hóa học</Select.Option>
+              <Select.Option value="Mineral">Trộn</Select.Option>
             </Select>
           </Form.Item>
 

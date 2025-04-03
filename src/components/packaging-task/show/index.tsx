@@ -12,11 +12,13 @@ import {
   Radio,
   Space,
   Button,
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { StatusTag } from "../../caring-task/status-tag";
 import ChangeAssignedTasksModal, { HistoryAssignedModal } from "@/components/caring-task/show";
+import useToken from "antd/es/theme/useToken";
 
 export const PackagingTaskShow = () => {
   const { taskId } = useParams();
@@ -24,7 +26,10 @@ export const PackagingTaskShow = () => {
     resource: "packaging-tasks",
     id: taskId,
   });
-
+  const { data: packagingTypeData, isLoading: packagingTypeLoading } = useList({
+    resource: "packaging-types",
+  });
+  const packagingTypes = packagingTypeData?.data || [];
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -46,6 +51,7 @@ export const PackagingTaskShow = () => {
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];
+  const { token } = theme.useToken();
   const navigate = useNavigate();
   return (
     <Drawer
@@ -92,11 +98,12 @@ export const PackagingTaskShow = () => {
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
-                  src={task?.harvesting_images?.[0]}
+                  src={task?.packaging_images?.[0]}
                 />
               </Image.PreviewGroup>
             )}
             <List
+              style={{ backgroundColor: token.colorBgContainer }}
               bordered
               dataSource={[
                 {
@@ -105,11 +112,7 @@ export const PackagingTaskShow = () => {
                 },
                 {
                   label: "Số lượng đóng gói",
-                  value: (
-                    <Typography.Text>
-                      {task?.packaged_quantity} {" " + task?.packaged_unit}
-                    </Typography.Text>
-                  ),
+                  value: <Typography.Text>{task?.packed_quantity}</Typography.Text>,
                 },
                 {
                   label: "Nội dung",
@@ -130,11 +133,14 @@ export const PackagingTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
-            Thay đổi
-          </Button>
+          {(task?.status === "Ongoing" || task?.status === "Pending") && (
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+              Thay đổi
+            </Button>
+          )}
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -159,6 +165,12 @@ export const PackagingTaskShow = () => {
               value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
             },
             {
+              label: "Loại đóng gói",
+              value: task?.packaging_type_id
+                ? packagingTypes?.find((x) => x.id === task?.packaging_type_id)?.name
+                : "Chưa xác định",
+            },
+            {
               label: "Ngày tạo",
               value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
@@ -178,6 +190,7 @@ export const PackagingTaskShow = () => {
           )}
         />
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -213,14 +226,17 @@ export const PackagingTaskShow = () => {
           <Space>
             {" "}
             <Button type="dashed" onClick={() => setVisible(true)}>
-              Lịch sử giao việc
+              Lịch sử
             </Button>
-            <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
-              Thay đổi
-            </Button>
+            {(task?.status === "Ongoing" || task?.status === "Pending") && (
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+                Thay đổi
+              </Button>
+            )}
           </Space>
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -243,6 +259,7 @@ export const PackagingTaskShow = () => {
         <Divider />
         <Typography.Title level={4}>Vật tư</Typography.Title>
         <Table
+          style={{ backgroundColor: token.colorBgContainer }}
           pagination={{ pageSize: 5 }}
           bordered
           columns={columns}
@@ -255,7 +272,9 @@ export const PackagingTaskShow = () => {
         data={historyAssignedFarmers}
       />
       <ChangeAssignedTasksModal
-        chosenFarmers={chosenFarmers}
+        end_date={task?.end_date}
+        start_date={task?.start_date}
+        type="packaging-tasks"
         onClose={() => setAssignedModal(false)}
         visible={assignedModal}
         assignedFarmers={chosenFarmers.find((x) => x.id === task.farmer_id)}

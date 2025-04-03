@@ -12,6 +12,7 @@ import {
   Radio,
   Space,
   Button,
+  theme,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -47,6 +48,7 @@ export const HarvestingTaskShow = () => {
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     { title: "Đơn vị", dataIndex: "unit", key: "unit" },
   ];
+  const { token } = theme.useToken();
   return (
     <Drawer
       open={open}
@@ -97,6 +99,7 @@ export const HarvestingTaskShow = () => {
               </Image.PreviewGroup>
             )}
             <List
+              style={{ backgroundColor: token.colorBgContainer }}
               bordered
               dataSource={[
                 {
@@ -130,11 +133,14 @@ export const HarvestingTaskShow = () => {
         <Divider />
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
-          <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
-            Thay đổi
-          </Button>
+          {(task?.status === "Ongoing" || task?.status === "Pending") && (
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+              Thay đổi
+            </Button>
+          )}
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -166,6 +172,7 @@ export const HarvestingTaskShow = () => {
           )}
         />
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -201,14 +208,17 @@ export const HarvestingTaskShow = () => {
           <Space>
             {" "}
             <Button type="dashed" onClick={() => setVisible(true)}>
-              Lịch sử giao việc
+              Lịch sử
             </Button>
-            <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
-              Thay đổi
-            </Button>
+            {(task?.status === "Ongoing" || task?.status === "Pending") && (
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+                Thay đổi
+              </Button>
+            )}
           </Space>
         </Flex>
         <List
+          style={{ backgroundColor: token.colorBgContainer }}
           bordered
           dataSource={[
             {
@@ -231,6 +241,7 @@ export const HarvestingTaskShow = () => {
         <Divider />
         <Typography.Title level={4}>Vật tư</Typography.Title>
         <Table
+          style={{ backgroundColor: token.colorBgContainer }}
           pagination={{ pageSize: 5 }}
           bordered
           columns={columns}
@@ -242,7 +253,9 @@ export const HarvestingTaskShow = () => {
           data={historyAssignedFarmers}
         />
         <ChangeAssignedTasksModal
-          chosenFarmers={chosenFarmers}
+          end_date={task?.end_date}
+          start_date={task?.start_date}
+          type="harvesting-tasks"
           onClose={() => setAssignedModal(false)}
           visible={assignedModal}
           assignedFarmers={chosenFarmers.find((x) => x.id === task.farmer_id)}

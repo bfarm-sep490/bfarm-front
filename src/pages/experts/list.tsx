@@ -66,7 +66,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Fertilizer
+          {t("buttons.add_expert", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

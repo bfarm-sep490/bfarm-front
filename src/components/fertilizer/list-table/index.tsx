@@ -50,7 +50,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Image"
+          title="Ảnh"
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -63,7 +63,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Name"
+          title="Tên phân bón"
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
@@ -74,7 +74,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
@@ -86,7 +86,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Quantity"
+          title="Số lượng"
           dataIndex="quantity"
           key="quantity"
           width={120}
@@ -101,7 +101,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Type"
+          title="Loại"
           dataIndex="type"
           key="type"
           width={120}
@@ -109,7 +109,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -117,7 +117,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"

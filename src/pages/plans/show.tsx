@@ -50,6 +50,7 @@ import { ProblemsDashBoard } from "@/components/plan/dashboard-problems";
 import { IProblem } from "@/interfaces";
 import { MaterialDashboard } from "@/components/plan/dashboard-fertilizer-pesticide-item";
 import { CaringTaskDashboard } from "@/components/plan/dashboard-caring-tasks";
+import { ScheduleComponent } from "@/components/scheduler";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -133,64 +134,17 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     ],
   });
   const harvesting_products = harvestingProductsData?.data as any[];
-
-  const [state5, setState5] = React.useState({
-    series: [
+  const { data: orderData, isLoading: orderLoading } = useList<any, HttpError>({
+    resource: `orders`,
+    filters: [
       {
-        name: "Độ ẩm %",
-        type: "column",
-        data: [40, 50, 41, 67, 22, 41, 20, 35, 75, 32, 25, 16],
-      },
-      {
-        name: "Nhiệt độ °C",
-        type: "line",
-        data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16],
+        field: "plan_id",
+        operator: "eq",
+        value: id,
       },
     ],
-    options: {
-      chart: {
-        height: 350,
-        type: "line",
-      },
-      stroke: {
-        width: [0, 4],
-      },
-      labels: [
-        "01 Jan 2001",
-        "02 Jan 2001",
-        "03 Jan 2001",
-        "04 Jan 2001",
-        "05 Jan 2001",
-        "06 Jan 2001",
-        "07 Jan 2001",
-        "08 Jan 2001",
-        "09 Jan 2001",
-        "10 Jan 2001",
-        "11 Jan 2001",
-        "12 Jan 2001",
-      ],
-      yaxis: [
-        {
-          opposite: true,
-          title: {
-            text: "Nhiệt độ °C",
-            style: {
-              fontWeight: "bold",
-            },
-          },
-        },
-        {
-          title: {
-            text: "Độ ẩm %",
-            style: {
-              fontWeight: "bold",
-            },
-          },
-        },
-      ],
-    },
   });
-
+  const orders = orderData?.data as any[];
   const breakpoint = Grid.useBreakpoint();
   return (
     <div>
@@ -214,7 +168,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="danger"
                     variant="solid"
                     onClick={() => {
-                      setValueModal("cancel");
+                      setValueModal("Cancel");
                       setCompletedModal(true);
                     }}
                     icon={<CloseCircleOutlined />}
@@ -239,7 +193,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="primary"
                     variant="solid"
                     onClick={() => {
-                      setValueModal("complete");
+                      setValueModal("Complete");
                       setCompletedModal(true);
                     }}
                     icon={<CheckCircleOutlined />}
@@ -349,6 +303,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           <Row gutter={[16, 16]} justify="center" style={{ marginTop: "30px" }}>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
+                loading={generalLoading}
                 title="Sản lượng thu hoạch còn lại (kg)"
                 completedTasks={
                   harvesting_products
@@ -365,15 +320,16 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
-                loading={generalLoading}
+                loading={orderLoading}
                 title={`🌍 Số lượng đơn hàng`}
-                completedTasks={2}
+                completedTasks={orders?.length || 0}
                 navigate={`/plans/${id}/orders`}
               />
             </Col>
             <Col xs={24} sm={12} md={6}>
               <ActivityCard
                 title="⚠️ Vấn đề mới"
+                loading={problemsLoading}
                 navigate={`/plans/${id}/problems`}
                 completedTasks={
                   problemsData?.data?.filter((x) => x.status === "Pending").length || 0
@@ -402,7 +358,11 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         <Divider />
 
         <DropDownSection title="Công việc">
-          <Row gutter={[16, 16]} justify="center" style={{ marginTop: "10px" }}>
+          <Row
+            gutter={[16, 16]}
+            justify="center"
+            style={{ marginTop: "10px", marginBottom: "10px" }}
+          >
             <Col xs={24} md={12} lg={12} xl={12}>
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -501,8 +461,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               <CaringTaskDashboard />
             </Col>
           </Row>
+          <ScheduleComponent />
         </DropDownSection>
-        <Divider />
 
         {/* <DropDownSection title="Quan sát">
           <Row gutter={[16, 16]} justify={"start"} style={{ marginTop: "10px" }}>

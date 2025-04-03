@@ -15,6 +15,7 @@ import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps } from 
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
+import { ProductionStatus } from "../packaging/list";
 
 export const HarvestingProductList = ({ children }: PropsWithChildren) => {
   const back = useBack();
@@ -38,60 +39,47 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <List>
-        <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
-          <Table.Column
-            dataIndex="harvesting_task_id"
-            title={translate("ID")}
-            render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
-          />
-          <Table.Column dataIndex="plan_name" title={translate("name")} />
-          <Table.Column dataIndex="plant_name" title={translate("plant_name")} />
-          <Table.Column
-            dataIndex="harvesting_date"
-            title={translate("start_date")}
-            render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
-          />
-          <Table.Column
-            dataIndex="harvesting_quantity"
-            title={"harvesting_quantity"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
-          />
-          <Table.Column
-            dataIndex="available_harvesting_quantity"
-            title={"available_harvesting_quantity"}
-            render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
-          />
-          <Table.Column
-            dataIndex="harvesting_unit"
-            title={"harvesting_unit"}
-            render={(value) => <TextField value={value} />}
-          />
-          <Table.Column
-            dataIndex="expired_date"
-            title={"expired_date"}
-            render={(value) => (
-              <DateField format="hh:mm DD/MM/YYYY" value={value ? value : "Chưa tính toán"} />
-            )}
-          />
-          <Table.Column
-            dataIndex="status"
-            title={"status"}
-            render={(value) => <StatusTag status={value} />}
-          />
+      <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
+        <Table.Column
+          dataIndex="harvesting_task_id"
+          title={translate("ID")}
+          render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+        />
+        <Table.Column dataIndex="plan_name" title={translate("plan_name", "Tên kế hoạch")} />
+        <Table.Column dataIndex="plant_name" title={translate("plant_name", "Cây trồng")} />
+        <Table.Column
+          dataIndex="harvesting_date"
+          title={translate("harvesting_date", "Ngày thu hoạch")}
+          render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
+        />
+        <Table.Column
+          dataIndex="available_harvesting_quantity"
+          title={translate("available_harvesting_quantity", "Sản lượng còn lại")}
+          render={(value) => <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />}
+        />
+        <Table.Column
+          dataIndex="expired_date"
+          title={translate("expired_date", "Ngày hết hạn")}
+          render={(value) => (
+            <DateField format="hh:mm DD/MM/YYYY" value={value ? value : "Chưa tính toán"} />
+          )}
+        />
+        <Table.Column
+          dataIndex="status"
+          title={translate("harvesting_product.status", "Trạng thái")}
+          render={(value) => <ProductionStatus status={value} />}
+        />
 
-          <Table.Column
-            title={translate("table.actions")}
-            dataIndex="actions"
-            render={(_, record: BaseRecord) => (
-              <Space>
-                <ShowButton hideText size="small" onClick={() => {}} />
-              </Space>
-            )}
-          />
-        </Table>
-      </List>
-
+        <Table.Column
+          title={translate("table.actions")}
+          dataIndex="actions"
+          render={(_, record: BaseRecord) => (
+            <Space>
+              <ShowButton hideText size="small" onClick={() => {}} />
+            </Space>
+          )}
+        />
+      </Table>
       {children}
     </>
   );

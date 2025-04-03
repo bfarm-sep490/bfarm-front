@@ -20,7 +20,16 @@ export const ShowProblemList = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { tableProps } = useTable({
-    resource: `plans/${id}/problems`,
+    resource: `problems`,
+    filters: {
+      initial: [
+        {
+          field: "plan_id",
+          operator: "eq",
+          value: id,
+        },
+      ],
+    },
   });
   return (
     <>

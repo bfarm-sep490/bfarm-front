@@ -67,7 +67,7 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Yield
+          Thêm khu đất
         </CreateButton>,
       ]}
     >

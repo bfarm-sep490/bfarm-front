@@ -54,6 +54,7 @@ export const FarmerListTable: React.FC = () => {
       ],
     },
   });
+  const translate = useTranslate();
 
   return (
     <Table
@@ -89,7 +90,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Avatar"
+        title={translate("farmer.avatar", "Ảnh đại diện")}
         width={"auto"}
         dataIndex="avatar_image"
         key="avatar_image"
@@ -97,7 +98,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Name"
+        title={translate("farmer_name", "Tên nông dân")}
         dataIndex="name"
         key="name"
         width={"auto"}
@@ -117,7 +118,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Phone"
+        title={translate("farmer.phone", "Số điện thoại")}
         dataIndex="phone"
         key="phone"
         width={"auto"}
@@ -129,7 +130,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Email"
+        title={translate("farmer.email", "Email")}
         dataIndex="email"
         key="email"
         width={"auto"}
@@ -149,7 +150,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Status"
+        title={translate("farmer.status", "Trạng thái")}
         dataIndex="status"
         key="status"
         width={"auto"}
@@ -161,8 +162,8 @@ export const FarmerListTable: React.FC = () => {
               placeholder="Filter by status"
               allowClear
             >
-              <Select.Option value="Actived">Actived</Select.Option>
-              <Select.Option value="UnActived">UnActived</Select.Option>
+              <Select.Option value="Actived">Hoạt động</Select.Option>
+              <Select.Option value="UnActived">Không hoạt động</Select.Option>
             </Select>
           </FilterDropdown>
         )}
@@ -190,7 +191,7 @@ export const FarmerListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Actions"
+        title={translate("tables.Actions", "Hành động")}
         key="actions"
         fixed="right"
         align="center"

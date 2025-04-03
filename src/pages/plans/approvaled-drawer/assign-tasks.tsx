@@ -1,23 +1,66 @@
 import { DateField } from "@refinedev/antd";
-import { Card, FormProps, Select, Table, Tabs } from "antd";
+import { Button, Card, Flex, FormProps, notification, Select, Table, Tabs, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { inspect } from "util";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
+import React, { use, useEffect } from "react";
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
+import { filter } from "lodash";
+import { useParams } from "react-router";
+import { useCustom, useCustomMutation, useOne, useUpdate } from "@refinedev/core";
+
+interface Task {
+  id: number;
+  task_name: string;
+  start_date: string;
+  end_date: string;
+  task_type?: string;
+}
+
+interface ProductiveTask extends Task {
+  farmer_id?: number;
+  task_type: string;
+}
+
+interface HarvestingTask extends Task {
+  farmer_id?: number;
+}
+
+interface PackagingTask extends Task {
+  farmer_id?: number;
+}
+
+interface InspectingTask extends Task {
+  inspector_id?: number;
+}
+
+interface Farmer {
+  id: number;
+  name: string;
+}
+
+interface Inspector {
+  id: number;
+  name: string;
+}
 
 type Props = {
   formProps: FormProps;
-  chosenFarmers: any[];
-  productiveTasks: any[];
-  harvestingTasks: any[];
-  inspectingTasks: any[];
-  setChosenFarmers(value: any[]): void;
-  setProductiveTasks(value: any[]): void;
-  setHarvestingTasks(value: any[]): void;
-  inspectors: any[];
-  setInspectingTasks(value: any): void;
-  packagingTasks: any[];
-  setPackagingTasks(value: any): void;
+  chosenFarmers: Farmer[];
+  productiveTasks: ProductiveTask[];
+  harvestingTasks: HarvestingTask[];
+  inspectingTasks: InspectingTask[];
+  setChosenFarmers(value: Farmer[]): void;
+  setProductiveTasks(value: ProductiveTask[]): void;
+  setHarvestingTasks(value: HarvestingTask[]): void;
+  inspectors: Inspector[];
+  setInspectingTasks(value: InspectingTask[]): void;
+  packagingTasks: PackagingTask[];
+  setPackagingTasks(value: PackagingTask[]): void;
+  saveHandle(value: string): void;
+  loading: boolean;
 };
+
 export const AssignTasks = ({
   chosenFarmers,
   formProps,
@@ -30,8 +73,136 @@ export const AssignTasks = ({
   setPackagingTasks,
   setProductiveTasks,
   inspectors,
+  saveHandle,
+  loading,
 }: Props) => {
-  const column_productive = [
+  const { id } = useParams();
+  const [viewChart, setViewChart] = React.useState(false);
+  const calculateTaskCountForFarmer = (farmerId: number) => {
+    return (
+      (productiveTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
+      (harvestingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
+      (packagingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0)
+    );
+  };
+  const {
+    data: autoTaskData,
+    isLoading: autoTaskLoading,
+    refetch: autoTaskRefetch,
+    isFetching: autoTaskFetching,
+  } = useOne({
+    resource: `plans`,
+    id: `${id}/genarated-tasks?farmer_ids=${chosenFarmers?.map((x) => x.id).join("&farmer_ids=")}`,
+
+    queryOptions: {
+      enabled: false,
+    },
+  });
+  const [api, context] = notification.useNotification();
+
+  useEffect(() => {
+    if ((autoTaskData as any)?.status === 500) {
+      api.error({
+        message: "Có lỗi xảy ra",
+        description: (autoTaskData as any)?.message,
+      });
+    }
+    const {
+      caringTasks,
+      havestingTasks: harvestingAuto,
+      packingTasks: packagingAuto,
+    } = autoTaskData?.data || {};
+    console.log("autoTaskData", autoTaskData);
+    setProductiveTasks(
+      productiveTasks.map((task) => {
+        const newTask = caringTasks?.find((x: any) => x?.caringTaskId === task.id);
+        if (newTask) {
+          return {
+            ...task,
+            farmer_id: newTask?.farmerId,
+          };
+        }
+        return task;
+      }),
+    );
+    setHarvestingTasks(
+      harvestingTasks.map((task) => {
+        const newTask = harvestingAuto?.find((x: any) => x?.harvestingTaskId === task.id);
+        if (newTask) {
+          return {
+            ...task,
+            farmer_id: newTask?.farmerId,
+          };
+        }
+        return task;
+      }),
+    );
+    setPackagingTasks(
+      packagingTasks.map((task) => {
+        const newTask = packagingAuto?.find((x: any) => x?.packagingTaskId === task.id);
+        if (newTask) {
+          return {
+            ...task,
+            farmer_id: newTask?.farmerId,
+          };
+        }
+        return task;
+      }),
+    );
+  }, [autoTaskData]);
+  const [chartState, setChartState] = React.useState<{
+    series: { name: string; data: number[] }[];
+    options: ApexOptions;
+  }>({
+    series: [
+      {
+        name: "Số lượng công việc",
+        data: chosenFarmers?.map((farmer) => calculateTaskCountForFarmer(farmer.id)),
+      },
+    ],
+    options: {
+      chart: {
+        type: "bar",
+        height: 350,
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          borderRadiusApplication: "end",
+          horizontal: true,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        categories: chosenFarmers?.map((farmer) => farmer.name),
+      },
+    },
+  });
+
+  const updateChart = () => {
+    setChartState({
+      series: [
+        {
+          name: "Số lượng công việc",
+          data: chosenFarmers?.map((farmer) => calculateTaskCountForFarmer(farmer.id)),
+        },
+      ],
+      options: {
+        ...chartState.options,
+        xaxis: {
+          categories: chosenFarmers?.map((farmer) => farmer.name),
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    updateChart();
+  }, [chosenFarmers, productiveTasks, harvestingTasks, packagingTasks]);
+
+  const column_productive: ColumnsType<ProductiveTask> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -46,35 +217,45 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Loại chăm sóc",
       dataIndex: "task_type",
       key: "type",
-      render: (text: any, record: any) => <CaringTypeTag status={record?.task_type} />,
+      render: (_, record) => (
+        <CaringTypeTag
+          status={
+            record.task_type as
+              | "Planting"
+              | "Nurturing"
+              | "Watering"
+              | "Fertilizing"
+              | "Setup"
+              | "Pesticide"
+              | "Weeding"
+              | "Pruning"
+          }
+        />
+      ),
     },
     {
       title: "Lựa chọn nông dân",
       key: "farmer_id",
       dataIndex: "farmer_id",
       fixed: "left",
-      render: (text: any, record: any) => (
+      render: (_, record) => (
         <Select
-          key={record.farmer_id}
-          value={record?.farmer_id || ""}
-          onChange={(value: any) => {
-            const newProductiveTasks = productiveTasks.map((task: any) => {
+          key={record.id}
+          value={record.farmer_id || undefined}
+          onChange={(value: number) => {
+            const newProductiveTasks = productiveTasks.map((task) => {
               if (record.id === task.id) {
                 return {
                   ...task,
@@ -87,7 +268,7 @@ export const AssignTasks = ({
           }}
           style={{ width: "150px" }}
         >
-          {chosenFarmers.map((farmer: any) => (
+          {chosenFarmers.map((farmer) => (
             <Select.Option key={farmer.id} value={farmer.id}>
               {farmer.name}
             </Select.Option>
@@ -96,7 +277,8 @@ export const AssignTasks = ({
       ),
     },
   ];
-  const column_packaging = [
+
+  const column_packaging: ColumnsType<PackagingTask> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -111,29 +293,25 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nông dân",
       key: "farmer_id",
       dataIndex: "farmer_id",
       fixed: "left",
-      render: (text: any, record: any) => (
+      render: (_, record) => (
         <Select
-          key={record.farmer_id}
-          value={record?.farmer_id || ""}
-          onChange={(value: any) => {
-            const newPackagingTasks = packagingTasks.map((task: any) => {
+          key={record.id}
+          value={record.farmer_id || undefined}
+          onChange={(value: number) => {
+            const newPackagingTasks = packagingTasks.map((task) => {
               if (record.id === task.id) {
                 return {
                   ...task,
@@ -146,7 +324,7 @@ export const AssignTasks = ({
           }}
           style={{ width: "150px" }}
         >
-          {chosenFarmers.map((farmer: any) => (
+          {chosenFarmers.map((farmer) => (
             <Select.Option key={farmer.id} value={farmer.id}>
               {farmer.name}
             </Select.Option>
@@ -155,7 +333,8 @@ export const AssignTasks = ({
       ),
     },
   ];
-  const column_harvesting = [
+
+  const column_harvesting: ColumnsType<HarvestingTask> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -170,29 +349,25 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "startDate",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nông dân",
       fixed: "left",
       key: "farmer_id",
       dataIndex: "farmer_id",
-      render: (text: any, record: any) => (
+      render: (_, record) => (
         <Select
           key={record.id}
-          value={record?.farmer_id || ""}
-          onChange={(value) => {
-            const newHarvestingTask = harvestingTasks.map((task: any) => {
+          value={record.farmer_id || undefined}
+          onChange={(value: number) => {
+            const newHarvestingTask = harvestingTasks.map((task) => {
               if (record.id === task.id) {
                 return {
                   ...task,
@@ -202,11 +377,10 @@ export const AssignTasks = ({
               return task;
             });
             setHarvestingTasks(newHarvestingTask);
-            console.log(productiveTasks);
           }}
           style={{ width: "150px" }}
         >
-          {chosenFarmers.map((chosenFarmer: any) => (
+          {chosenFarmers.map((chosenFarmer) => (
             <Select.Option key={chosenFarmer.id} value={chosenFarmer.id}>
               {chosenFarmer.name}
             </Select.Option>
@@ -215,7 +389,8 @@ export const AssignTasks = ({
       ),
     },
   ];
-  const column_inspecting = [
+
+  const column_inspecting: ColumnsType<InspectingTask> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -230,30 +405,26 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (text: any, record: any) => (
-        <DateField value={record?.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nhà kiểm định",
       fixed: "left",
       key: "inspector_id",
       dataIndex: "inspector_id",
-      render: (text: any, record: any) => (
+      render: (_, record) => (
         <Select
           key={record.id}
-          value={record?.inspector_id || ""}
-          onChange={(value) => {
-            const newInspectingTasks = inspectingTasks.map((task: any) => {
-              if (task?.id === record?.id) {
+          value={record.inspector_id || undefined}
+          onChange={(value: number) => {
+            const newInspectingTasks = inspectingTasks.map((task) => {
+              if (task.id === record.id) {
                 return {
                   ...task,
                   inspector_id: value,
@@ -265,7 +436,7 @@ export const AssignTasks = ({
           }}
           style={{ width: "150px" }}
         >
-          {inspectors.map((inspector: any) => (
+          {inspectors.map((inspector) => (
             <Select.Option key={inspector.id} value={inspector.id}>
               {inspector.name}
             </Select.Option>
@@ -274,55 +445,168 @@ export const AssignTasks = ({
       ),
     },
   ];
+  const { mutate, isLoading } = useUpdate();
+
+  const handleUpdate = () => {
+    const values = formProps?.form?.getFieldsValue?.();
+    mutate(
+      {
+        resource: "plans",
+        id: `${id}/tasks-assign`,
+        values: {
+          description: formProps?.form?.getFieldValue("description"),
+          end_date: formProps?.form?.getFieldValue("end_date"),
+          plant_id: formProps?.form?.getFieldValue("plant_id"),
+          yield_id: formProps?.form?.getFieldValue("yield_id"),
+          estimated_product: formProps?.form?.getFieldValue("estimated_product"),
+          plan_name: formProps?.form?.getFieldValue("plan_name"),
+          expert_id: formProps?.form?.getFieldValue("expert_id"),
+          start_date: formProps?.form?.getFieldValue("start_date"),
+          estimated_unit: formProps?.form?.getFieldValue("estimated_unit"),
+          status: "Pending",
+          farmers: chosenFarmers.map((x) => x.id),
+          caring_tasks: productiveTasks
+            ?.filter((x) => x.farmer_id !== null)
+            ?.map((x) => {
+              return {
+                task_id: x.id,
+                farmer_id: x.farmer_id,
+                status: "Pending",
+              };
+            }),
+          harvesting_tasks: harvestingTasks
+            ?.filter((x) => x.farmer_id !== null)
+            ?.map((x) => {
+              return {
+                task_id: x.id,
+                farmer_id: x.farmer_id,
+                status: "Pending",
+              };
+            }),
+          packaging_tasks: packagingTasks
+            ?.filter((x) => x.farmer_id !== null)
+            ?.map((x) => {
+              return {
+                task_id: x.id,
+                farmer_id: x.farmer_id,
+                status: "Pending",
+              };
+            }),
+          inspecting_forms: inspectingTasks
+            ?.filter((x) => x.inspector_id !== null)
+            ?.map((x) => {
+              return {
+                task_id: x.id,
+                inspector_id: x.inspector_id,
+                status: "Pending",
+              };
+            }),
+        },
+      },
+      {
+        onSuccess: (data) => {
+          if (data?.data !== null)
+            api.error({
+              message: data?.data as unknown as string,
+              duration: 2,
+            });
+          else
+            api.success({
+              message: "Lưu thành công",
+              duration: 2,
+            });
+        },
+      },
+    );
+  };
 
   return (
-    <Card title="Phân bổ công việc" style={{ minHeight: "600px" }}>
-      <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
-        <Tabs.TabPane key="1" tab="Chăm sóc">
-          <Table
-            pagination={{
-              pageSize: 10,
-            }}
-            columns={column_productive as ColumnsType<any>}
-            dataSource={productiveTasks}
-            rowKey="id"
-            scroll={{ x: "max-content" }}
-          ></Table>
-        </Tabs.TabPane>
-        <Tabs.TabPane key="2" tab="Thu hoạch">
-          <Table
-            pagination={{
-              pageSize: 10,
-            }}
-            columns={column_harvesting as ColumnsType<any>}
-            dataSource={harvestingTasks}
-            rowKey="id"
-            scroll={{ x: "max-content" }}
-          ></Table>
-        </Tabs.TabPane>
-        <Tabs.TabPane key="3" tab="Kiểm định">
-          <Table
-            pagination={{
-              pageSize: 10,
-            }}
-            columns={column_inspecting as ColumnsType<any>}
-            dataSource={inspectingTasks}
-            rowKey="id"
-            scroll={{ x: "max-content" }}
-          ></Table>
-        </Tabs.TabPane>
-        <Tabs.TabPane key="4" tab="Đóng gói">
-          <Table
-            pagination={{
-              pageSize: 10,
-            }}
-            columns={column_packaging as ColumnsType<any>}
-            dataSource={packagingTasks}
-            rowKey="id"
-            scroll={{ x: "max-content" }}
-          ></Table>
-        </Tabs.TabPane>
-      </Tabs>
-    </Card>
+    <>
+      {viewChart && (
+        <Card title={"Biểu đồ công việc"}>
+          <ReactApexChart
+            options={chartState.options}
+            series={chartState.series}
+            type="bar"
+            height={350}
+          />
+        </Card>
+      )}
+
+      <Card
+        title={
+          <>
+            <Flex justify="space-between" align="center">
+              <Typography.Title level={5}>Phân bổ công việc</Typography.Title>
+              <Flex gap={10} style={{ marginLeft: 20 }}>
+                <Button loading={isLoading} onClick={handleUpdate}>
+                  Lưu
+                </Button>
+                <Button
+                  loading={autoTaskFetching && autoTaskLoading}
+                  type="primary"
+                  onClick={() => autoTaskRefetch()}
+                >
+                  Tự động
+                </Button>
+              </Flex>
+            </Flex>
+          </>
+        }
+        style={{ minHeight: "600px", marginTop: 20 }}
+      >
+        <Flex justify="end" align="center" style={{ marginBottom: 20, marginTop: 20 }}>
+          <Button type="primary" onClick={() => setViewChart(!viewChart)}>
+            {viewChart ? "Ẩn biểu đồ" : "Hiện biểu đồ"}
+          </Button>
+        </Flex>
+        <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
+          <Tabs.TabPane key="1" tab="Chăm sóc">
+            <Table
+              pagination={{
+                pageSize: 10,
+              }}
+              columns={column_productive}
+              dataSource={productiveTasks}
+              rowKey="id"
+              scroll={{ x: "max-content" }}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="2" tab="Thu hoạch">
+            <Table
+              pagination={{
+                pageSize: 10,
+              }}
+              columns={column_harvesting}
+              dataSource={harvestingTasks}
+              rowKey="id"
+              scroll={{ x: "max-content" }}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="3" tab="Kiểm định">
+            <Table
+              pagination={{
+                pageSize: 10,
+              }}
+              columns={column_inspecting}
+              dataSource={inspectingTasks}
+              rowKey="id"
+              scroll={{ x: "max-content" }}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="4" tab="Đóng gói">
+            <Table
+              pagination={{
+                pageSize: 10,
+              }}
+              columns={column_packaging}
+              dataSource={packagingTasks}
+              rowKey="id"
+              scroll={{ x: "max-content" }}
+            />
+          </Tabs.TabPane>
+        </Tabs>
+      </Card>
+    </>
   );
 };

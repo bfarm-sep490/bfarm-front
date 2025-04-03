@@ -1,5 +1,6 @@
 import { FarmerListTable } from "@/components/farmer";
 import { FarmerListTableInPlan } from "@/components/plan/farmers/list";
+import { FarmerScheduleComponent } from "@/components/scheduler/farmer-task-scheduler";
 import { IFarmer } from "@/interfaces";
 import {
   AppstoreOutlined,
@@ -8,25 +9,47 @@ import {
   SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { CreateButton, List, useForm } from "@refinedev/antd";
+import { CreateButton, List, ShowButton, useForm } from "@refinedev/antd";
 import {
   HttpError,
   useBack,
+  useCustom,
+  useCustomMutation,
   useDelete,
   useGo,
   useList,
   useModal,
   useNavigation,
+  useOne,
   useTable,
+  useTranslate,
 } from "@refinedev/core";
-import { Button, Form, Modal, Segmented, Select, Table, theme, Typography } from "antd";
-import { filter } from "lodash";
-import { type PropsWithChildren, useState } from "react";
+import {
+  Alert,
+  Button,
+  Flex,
+  Form,
+  Modal,
+  notification,
+  Segmented,
+  Select,
+  Space,
+  Spin,
+  Table,
+  theme,
+  Typography,
+} from "antd";
+import dayjs from "dayjs";
+import { on } from "events";
+import { filter, replace } from "lodash";
+import { type PropsWithChildren, useEffect, useState } from "react";
+import { Calendar } from "react-big-calendar";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   const [deletedId, setDeletedId] = useState<number>(0);
   const [deletedOpen, setDeletedOpen] = useState<boolean>(false);
+  const [addOpen, setAddOpen] = useState<boolean>(false);
   const { id } = useParams();
   const go = useGo();
   const back = useBack();
@@ -34,6 +57,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     data: farmerData,
     isLoading,
@@ -44,16 +68,21 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   });
   const farmers = farmerData?.data;
   const { token } = theme.useToken();
+  const translate = useTranslate();
   return (
     <>
-      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
+      <Button
+        type="text"
+        style={{ width: "40px", height: "40px" }}
+        onClick={() => navigate(`/plans/${id}`)}
+      >
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <List
         breadcrumb={false}
         headerButtons={(props) => [
-          <Button type="primary" variant="filled" onClick={() => setOpen(true)}>
-            Thêm nông dân vào kế hoạch
+          <Button type="primary" variant="filled" onClick={() => setAddOpen(true)}>
+            Thêm nông dân
           </Button>,
         ]}
       >
@@ -76,7 +105,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           />
 
           <Table.Column
-            title="Name"
+            title={translate("farmer_name", "Tên nông dân")}
             dataIndex="name"
             key="name"
             width={"auto"}
@@ -89,10 +118,15 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
             )}
           />
 
-          <Table.Column title="Status" dataIndex="status" key="status" width={"auto"} />
+          <Table.Column
+            title={translate("Status", "Trạng thái")}
+            dataIndex="status"
+            key="status"
+            width={"auto"}
+          />
 
           <Table.Column
-            title="Actions"
+            title={translate("Actions", "Hành động")}
             key="actions"
             fixed="right"
             align="center"
@@ -101,8 +135,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
                 shape="circle"
                 danger
                 onClick={() => {
-                  setDeletedId(record.id);
-                  setDeletedOpen(true);
+                  navigate(`/plans/${id}/farmers/${record.id}/delete`);
                 }}
               >
                 <DeleteOutlined />
@@ -111,42 +144,57 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           />
         </Table>
         {children}
+        <AddFarmerIntoPlanModal visible={addOpen} onClose={() => setAddOpen(false)} />
+        <DeleteFarmerInPlanModal
+          visible={deletedOpen}
+          onClose={() => setDeletedOpen(false)}
+          farmer_id={deletedId}
+        />
       </List>
-      <AddFarmerIntoPlanModal open={open} setOpen={setOpen} chosenFarmers={farmers} />
-      <DeleteFarmerInPlanModal
-        open={deletedOpen}
-        setOpen={setDeletedOpen}
-        famer_id={deletedId}
-      ></DeleteFarmerInPlanModal>
     </>
   );
 };
-type DeleteFarmerInPlanProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  famer_id: number;
+type DeleteFarmerInPlanModalProps = {
+  visible?: boolean;
+  onClose?: () => void;
+  farmer_id?: number;
 };
 
-export const DeleteFarmerInPlanModal = ({ open, setOpen, famer_id }: DeleteFarmerInPlanProps) => {
-  const navigate = useNavigate();
+export const DeleteFarmerInPlanModal = ({
+  visible,
+  onClose,
+  farmer_id,
+}: DeleteFarmerInPlanModalProps) => {
   const { id } = useParams();
-
-  const { mutate } = useDelete();
-
+  const [error, setError] = useState<string | undefined>();
+  const { mutate } = useDelete({});
+  const navigate = useNavigate();
   const handleDelete = async () => {
-    mutate({
-      resource: `plans`,
-      id: `${id}/farmers/${famer_id}`,
-    });
+    await mutate(
+      {
+        resource: `plans`,
+        id: `${id}/farmers/${farmer_id}`,
+      },
+      {
+        onError: (error, variables, context) => {
+          setError(error.message);
+        },
+        onSuccess: (data: any, variables, context) => {
+          navigate("/plans/" + id + "/farmers", { replace: true });
+          onClose?.();
+        },
+      },
+    );
   };
   return (
     <Modal
       title="Xóa nông dân trong kế hoạch"
-      open={open}
-      onCancel={() => setOpen(false)}
+      open={visible}
+      onCancel={onClose}
+      onClose={onClose}
       footer={
         <>
-          <Button type="default" onClick={() => setOpen(false)}>
+          <Button type="default" onClick={onClose}>
             Hủy
           </Button>
           <Button type="primary" variant="filled" onClick={handleDelete}>
@@ -155,24 +203,50 @@ export const DeleteFarmerInPlanModal = ({ open, setOpen, famer_id }: DeleteFarme
         </>
       }
     >
+      {error && <Alert message={error} type="error" />}
       <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
-        * Bạn có chắc chắn muốn xóa nông dân này khỏi kế hoạch?
+        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn xóa không?
       </Typography.Text>
     </Modal>
   );
 };
-type AddFarmerIntoPlanProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  chosenFarmers: any;
+type AddFarmerIntoPlanModalProps = {
+  visible?: boolean;
+  onClose?: () => void;
 };
+export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
+  const { id } = useParams();
+  const [selectFarmer, setSelectFarmer] = useState<number | undefined>();
+  const [events, setEvents] = useState<
+    {
+      id: number;
+      title: string;
+      start: Date;
+      end: Date;
+      type: "Chăm sóc" | "Thu hoạch" | "Đóng gói" | "Kiểm định";
+      status: "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete";
+    }[]
+  >([]);
 
-export const AddFarmerIntoPlanModal = ({
-  open,
-  setOpen,
-  chosenFarmers = [],
-}: AddFarmerIntoPlanProps) => {
-  const { data: farmerData } = useList({
+  const {
+    data: planData,
+    isLoading: planLoading,
+    refetch: planRefetch,
+  } = useOne({
+    resource: `plans`,
+    id: `${id}/general`,
+    queryOptions: {
+      enabled: false,
+    },
+  });
+
+  const plan = planData?.data;
+
+  const {
+    data: farmerData,
+    isLoading: farmersLoading,
+    refetch: farmerRefetch,
+  } = useList({
     resource: "farmers",
     filters: [
       {
@@ -181,52 +255,137 @@ export const AddFarmerIntoPlanModal = ({
         value: "Active",
       },
     ],
+    queryOptions: {
+      enabled: false,
+    },
   });
-  const navigate = useNavigate();
+
+  const {
+    data: chosenFarmrtData,
+    isLoading: chosenFarmersLoading,
+    refetch: chosenFarmersRefetch,
+  } = useList({
+    resource: `plans/${id}/farmers`,
+    queryOptions: {
+      enabled: false,
+    },
+  });
+  const [viewCalendar, setViewCalendar] = useState(false);
   const farmers = farmerData?.data as IFarmer[];
-  const filterFarmers = farmers?.filter((x) => !chosenFarmers.some((y: any) => y.id === x.id));
+  const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
+  const filterFarmers =
+    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ?? [];
 
-  const { id } = useParams();
-
+  const navigate = useNavigate();
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/farmers`,
     action: "create",
     onMutationSuccess() {
-      navigate(`/plans/${id}/farmers`);
+      props?.onClose?.();
+      navigate("/plans/" + id + "/farmers", { replace: true });
+    },
+  });
+  useEffect(() => {
+    if (props?.visible === true) {
+      planRefetch();
+      farmerRefetch();
+      chosenFarmersRefetch();
+    } else {
+      setSelectFarmer(undefined);
+      setEvents([]);
+    }
+  }, [props?.visible]);
+  const { refetch, isLoading } = useCustom({
+    url: `https://api.outfit4rent.online/api/farmers/${selectFarmer}/calendar`,
+    method: "get",
+    queryOptions: {
+      enabled: false,
+      onSuccess: (data) => {
+        setEvents(
+          data?.data?.map((x: any) => {
+            return {
+              title: x.task_type,
+              start: x.start_date,
+              end: x.end_date,
+              status: x.status,
+            };
+          }) || [],
+        );
+      },
     },
   });
 
+  const handleSelect = async (value: number) => {
+    setSelectFarmer(value);
+    formProps?.form?.setFieldValue("farmer_id", value);
+  };
+
+  const handleShowDetail = async () => {
+    if (!selectFarmer) return;
+    refetch();
+    setViewCalendar(true);
+  };
+
   return (
-    <Form {...formProps}>
-      <Modal
-        title="Thêm nông dân vào kế hoạch"
-        open={open}
-        onCancel={() => setOpen(false)}
-        footer={
-          <>
-            <Button type="default" onClick={() => setOpen(false)}>
-              Hủy
-            </Button>
-            <Button type="primary" variant="filled" {...saveButtonProps}>
-              Lưu
-            </Button>
-          </>
-        }
+    <Modal
+      width={1000}
+      title="Thêm nông dân vào kế hoạch"
+      open={props?.visible}
+      onCancel={() => props.onClose?.()}
+      footer={
+        <>
+          <Button type="default" onClick={() => props.onClose?.()}>
+            Hủy
+          </Button>
+          <Button type="primary" variant="filled" {...saveButtonProps}>
+            Lưu
+          </Button>
+        </>
+      }
+    >
+      <Form
+        {...formProps}
+        layout="vertical" // Thay đổi layout thành vertical
       >
         <Form.Item
+          vertical={false}
           name="farmer_id"
           label="Chọn nông dân"
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
-          <Select>
-            {filterFarmers?.map((farmer) => (
-              <Select.Option key={farmer.id} value={farmer.id}>
-                {farmer.name}
-              </Select.Option>
-            ))}
-          </Select>
+          <Space direction="vertical" style={{ width: "100%", marginBottom: 20 }}>
+            <Flex>
+              <Select value={selectFarmer} onChange={handleSelect}>
+                {filterFarmers?.map((farmer) => (
+                  <Select.Option key={farmer.id} value={farmer.id}>
+                    {farmer.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Flex>
+            <Space>
+              <Space>
+                <Button type="primary" onClick={() => handleShowDetail()}>
+                  Xem lịch
+                </Button>
+
+                <Button onClick={() => setViewCalendar(false)} disabled={!viewCalendar}>
+                  Ẩn lịch
+                </Button>
+              </Space>{" "}
+            </Space>
+          </Space>
         </Form.Item>
-      </Modal>
-    </Form>
+      </Form>
+      {viewCalendar && (
+        <FarmerScheduleComponent
+          farmer={farmers?.find((x) => x.id === selectFarmer)}
+          events={events}
+          isLoading={false}
+          start_date={plan?.start_date}
+          end_date={plan?.end_date}
+        />
+      )}
+    </Modal>
   );
 };

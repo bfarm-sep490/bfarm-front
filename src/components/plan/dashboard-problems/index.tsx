@@ -1,5 +1,6 @@
 import { IProblem } from "@/interfaces";
 import { DashboardOutlined } from "@ant-design/icons";
+import { useTranslate } from "@refinedev/core";
 import { Card, Flex } from "antd";
 import { ApexOptions } from "apexcharts";
 import React from "react";
@@ -10,10 +11,11 @@ type ProblemsDashBoardProps = {
 };
 
 export const ProblemsDashBoard = ({ data }: ProblemsDashBoardProps) => {
+  const translate = useTranslate();
   const [state3, setState3] = React.useState({
     series: [
       {
-        name: "Problems",
+        name: "Vấn đề",
         data: [] as { x: number; y: number }[], // to store problems per day
       },
     ],
@@ -41,13 +43,13 @@ export const ProblemsDashBoard = ({ data }: ProblemsDashBoardProps) => {
       },
       yaxis: {
         labels: {
-          formatter: (value: any) => `${value} problems`,
+          formatter: (value: any) => `${value} ${translate("problems", "vấn đề")}`,
         },
       },
     },
     seriesLine: [
       {
-        name: "Problems",
+        name: "Vấn đề",
         data: [] as { x: number; y: number }[],
       },
     ],
@@ -109,13 +111,13 @@ export const ProblemsDashBoard = ({ data }: ProblemsDashBoardProps) => {
       ...prevState,
       series: [
         {
-          name: "Problems",
+          name: "Vấn đề",
           data: seriesData,
         },
       ],
       seriesLine: [
         {
-          name: "Problems",
+          name: "Vấn đề",
           data: seriesData,
         },
       ],

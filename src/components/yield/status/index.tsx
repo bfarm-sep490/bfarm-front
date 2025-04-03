@@ -8,11 +8,11 @@ interface Props {
 export const YieldStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
     case "Available":
-      return <Tag color="green">Available</Tag>;
-    case "Maintenance":
-      return <Tag color="red">Maintenance</Tag>;
+      return <Tag color="green">Hoạt động</Tag>;
+    case "Unavailable":
+      return <Tag color="red">Không hoạt động</Tag>;
     case "In-Use":
-      return <Tag color="gray">In-Use</Tag>;
+      return <Tag color="blue">Đang sử dụng</Tag>;
     default:
       return null;
   }

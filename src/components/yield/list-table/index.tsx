@@ -49,7 +49,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Yield Name"
+          title="Tên khu đất"
           dataIndex="yield_name"
           key="yield_name"
           filterIcon={(filtered) => (
@@ -60,7 +60,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Area"
+          title="Diện tích"
           dataIndex="area"
           key="area"
           width={120}
@@ -68,7 +68,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
@@ -79,7 +79,7 @@ export const YieldListTable: React.FC = () => {
           )}
         />
         <Table.Column
-          title="Type"
+          title="Loại đất"
           dataIndex="type"
           key="type"
           width={120}
@@ -87,7 +87,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}
@@ -95,7 +95,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title="Hành động"
           key="actions"
           fixed="right"
           align="center"

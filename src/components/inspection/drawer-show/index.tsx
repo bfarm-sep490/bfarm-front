@@ -10,6 +10,8 @@ import {
   Alert,
   Drawer,
   Modal,
+  Divider,
+  theme,
 } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { IInspectingForm, IInspectingResult } from "@/interfaces";
@@ -28,7 +30,7 @@ export const InspectionsShow: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
-
+  const { token } = theme.useToken();
   const { id } = useParams();
   const navigate = useNavigate();
   const t = useTranslate();
@@ -89,6 +91,7 @@ export const InspectionsShow: React.FC = () => {
     return <Alert type="error" message="Failed to load inspection data" />;
   if (!inspection) return <Typography.Text>Không có dữ liệu.</Typography.Text>;
 
+
   return (
     <Drawer
       open={true}
@@ -96,101 +99,169 @@ export const InspectionsShow: React.FC = () => {
       onClose={handleBack}
       bodyStyle={{ padding: "24px 32px" }}
       title={
-        <Typography.Title level={1} style={{ margin: 0 }}>
+        <Typography.Title level={2} style={{ margin: 0 }}>
           #{inspection.id} - {inspection.task_name}
         </Typography.Title>
       }
     >
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Kết quả
-          </Typography.Title>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 8,
+        }}
+      >
+        <Typography.Title level={3} style={{ margin: 0 }}>
+          Thông tin kết quả
+        </Typography.Title>
+
+        {inspection.status !== "Cancel" && inspectionResult && (
           <Button type="primary" icon={<EyeOutlined />} onClick={handleOpenModal}>
             Xem chi tiết
           </Button>
-        </div>
-        {inspectionResult ? (
+        )}
+      </div>
 
-          <>
-            <List
-              dataSource={[
-                {
-                  label: "Đánh giá",
-                  value: (
-                    <InspectionResultTag
-                      value={inspectionResult.evaluated_result}
-                    />
-                  ),
-                },
-                {
-                  label: "Nội dung",
-                  value: inspectionResult.result_content || "N/A",
-                },
-                {
-                  label: "Ảnh kết quả",
-                  value:
-                    Array.isArray(inspectionResult.inspect_images) &&
-                      inspectionResult.inspect_images.length > 0
-                      ? "Có"
-                      : "Không có",
-                },
-              ]}
+      <Divider style={{ marginTop: 0 }} />
 
-              renderItem={(data) => (
-                <List.Item>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      width: "100%",
-                    }}
-                  >
-                    <Typography.Text strong>{data.label}</Typography.Text>
-                    <Typography.Text>{data.value}</Typography.Text>
-                  </div>
-                </List.Item>
-              )}
-            />
-          </>
+      <div
+        style={{
+          border: `1px solid ${token.colorBorder}`,
+          borderRadius: 8,
+          padding: 16,
+          marginBottom: 32,
+          background: token.colorBgContainer,
+        }}
+      >
+        {inspection.status === "Cancel" ? (
+          <Typography.Text type="danger">
+            Đợt kiểm nghiệm đã bị hủy. Không thể tạo kết quả.
+          </Typography.Text>
+        ) : inspectionResult ? (
+          <List
+            dataSource={[
+              {
+                label: "Đánh giá",
+                value: <InspectionResultTag value={inspectionResult.evaluated_result} />,
+              },
+              {
+                label: "Nội dung",
+                value: inspectionResult.result_content || "N/A",
+              },
+              {
+                label: "Ảnh kết quả",
+                value:
+                  Array.isArray(inspectionResult.inspect_images) &&
+                    inspectionResult.inspect_images.length > 0
+                    ? "Có"
+                    : "Không có",
+              },
+            ]}
+            renderItem={(data) => (
+              <List.Item>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Typography.Text strong>{data.label}</Typography.Text>
+                  <Typography.Text>{data.value}</Typography.Text>
+                </div>
+              </List.Item>
+            )}
+          />
         ) : (
           <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
         )}
       </div>
 
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Typography.Title level={3} style={{ marginBottom: 8 }}>
-            Chi tiết công việc
-          </Typography.Title>
-          <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
-            Thay đổi
-          </Button>
-        </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 8,
+        }}
+      >
+        <Typography.Title level={3} style={{ margin: 0 }}>
+          Thông tin công việc
+        </Typography.Title>
 
-        <List
-          dataSource={[
-            { label: "Tên kế hoạch", value: inspection.plan_name || "N/A" },
-            { label: "Trung tâm kiểm định", value: inspection.inspector_name || "N/A" },
-            { label: "Mô tả", value: inspection.description || "N/A" },
-            { label: "Ngày bắt đầu", value: new Date(inspection.start_date).toLocaleDateString() },
-            { label: "Ngày kết thúc", value: new Date(inspection.end_date).toLocaleDateString() },
-            { label: "Trạng thái", value: <InspectionStatusTag value={inspection?.status} /> },
-            { label: "Cho thu hoạch", value: inspection.can_harvest ? "Có" : "Không" },
-          ]}
-          renderItem={(data) => (
-            <List.Item>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <Typography.Text strong>{data.label}</Typography.Text>
-                <Typography.Text>{data.value}</Typography.Text>
-              </div>
-            </List.Item>
-          )}
-        />
+        <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
+          Thay đổi
+        </Button>
+      </div>
+      <Divider style={{ marginTop: 0 }} />
+
+
+      <div
+        style={{
+          border: `1px solid ${token.colorBorder}`,
+          borderRadius: 8,
+          padding: 16,
+          marginBottom: 32,
+          background: token.colorBgContainer,
+        }}
+      >
+        {inspection && (
+          <List
+            dataSource={[
+              { label: "Tên kế hoạch", value: inspection.plan_name || "N/A" },
+              { label: "Trung tâm kiểm định", value: inspection.inspector_name || "N/A" },
+              { label: "Mô tả", value: inspection.description || "N/A" },
+              {
+                label: "Ngày bắt đầu",
+                value: new Date(inspection.start_date).toLocaleDateString(),
+              },
+              {
+                label: "Ngày kết thúc",
+                value: new Date(inspection.end_date).toLocaleDateString(),
+              },
+              {
+                label: "Trạng thái",
+                value: <InspectionStatusTag value={inspection.status} />,
+              },
+              {
+                label: "Cho thu hoạch",
+                value: inspection.can_harvest ? "Có" : "Không",
+              },
+            ]}
+            renderItem={(item) => (
+              <List.Item>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Typography.Text strong>{item.label}</Typography.Text>
+                  <Typography.Text>{item.value}</Typography.Text>
+                </div>
+              </List.Item>
+            )}
+          />
+        )}
       </div>
 
-      <div style={{ marginBottom: 40 }}>
-        <Typography.Title level={3}>Thời gian</Typography.Title>
+
+      <Typography.Title level={3} style={{ marginBottom: 8 }}>
+        Thời gian
+      </Typography.Title>
+      <Divider style={{ marginTop: 0 }} />
+
+      <div
+        style={{
+          border: `1px solid ${token.colorBorder}`,
+          borderRadius: 8,
+          padding: 16,
+          marginBottom: 32,
+          background: token.colorBgContainer,
+        }}
+      >
         <List
           dataSource={[
             {
@@ -219,6 +290,7 @@ export const InspectionsShow: React.FC = () => {
           )}
         />
       </div>
+
 
       <Modal
 

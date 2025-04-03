@@ -109,7 +109,7 @@ export const ItemDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Edit Item" : "Add Item";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "TThêm Vật Tư";
 
   return (
     <Drawer
@@ -144,60 +144,75 @@ export const ItemDrawerForm = (props: Props) => {
                     height: previewImage ? "100%" : "80px",
                   }}
                   src={previewImage || "/images/item-default-img.png"}
-                  alt="Item Image"
+                  alt="Ảnh vật tư"
                 />
                 <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
-            <Input placeholder="Enter item name" />
-          </Form.Item>
           <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: "Enter description!" }]}
+            label="Tên vật tư"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
           >
-            <Input.TextArea rows={3} placeholder="Enter item description" />
-          </Form.Item>
-          <Form.Item
-            label="Quantity"
-            name="quantity"
-            rules={[{ required: true, message: "Enter quantity!" }]}
-          >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
+            <Input placeholder="Nhập tên vật phẩm" />
           </Form.Item>
 
-          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
+          <Form.Item
+            label="Mô tả"
+            name="description"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+          >
+            <Input.TextArea rows={3} placeholder="Nhập mô tả vật phẩm" />
+          </Form.Item>
+
+          <Form.Item
+            label="Số lượng"
+            name="quantity"
+            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+          >
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
+          </Form.Item>
+
+          <Form.Item
+            label="Đơn vị"
+            name="unit"
+            rules={[{ required: true, message: "Vui lòng nhập đơn vị!" }]}
+          >
             <Input placeholder="cái, hộp, máy, giỏ" />
           </Form.Item>
 
           <Form.Item
-            label="Status"
+            label="Trạng thái"
             name="status"
-            rules={[{ required: true, message: "Select status!" }]}
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
           >
-            <Select placeholder="Select status">
-              <Select.Option value="Active">Active</Select.Option>
-              <Select.Option value="In-stock">In-stock</Select.Option>
-              <Select.Option value="Out-stock">Out-stock</Select.Option>
+            <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Active">Đang hoạt động</Select.Option>
+              <Select.Option value="In-stock">Còn hàng</Select.Option>
+              <Select.Option value="Out-stock">Hết hàng</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Select type!" }]}>
-            <Select placeholder="Select type">
-              <Select.Option value="Packaging">Packaging</Select.Option>
-              <Select.Option value="Caring">Caring</Select.Option>
-              <Select.Option value="Harvesting">Harvesting</Select.Option>
+
+          <Form.Item
+            label="Loại"
+            name="type"
+            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+          >
+            <Select placeholder="Chọn loại">
+              <Select.Option value="Packaging">Đóng gói</Select.Option>
+              <Select.Option value="Caring">Chăm sóc</Select.Option>
+              <Select.Option value="Harvesting">Thu hoạch</Select.Option>
             </Select>
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Save
+              Lưu
             </SaveButton>
           </Flex>
         </Form>

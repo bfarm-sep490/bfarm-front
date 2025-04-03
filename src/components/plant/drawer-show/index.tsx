@@ -80,6 +80,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   alt={plant.plant_name}
                 />
               </Flex>
+
               <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
                 <Flex vertical style={{ padding: "16px" }}>
                   <Typography.Title level={5}>{plant.plant_name}</Typography.Title>
@@ -155,7 +156,6 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 )}
               />
               <Divider />
-
               <Typography.Title level={4} style={{ margin: 10 }}>
                 Danh sách đất trồng phù hợp
               </Typography.Title>
@@ -191,6 +191,20 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   )}
                 />
               )}
+
+              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
+                <DeleteButton
+                  type="text"
+                  recordItemId={plant.id}
+                  resource="plants"
+                  onSuccess={handleDrawerClose}
+                >
+                  Xoá
+                </DeleteButton>
+                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                  Chỉnh sửa
+                </Button>
+              </Flex>
             </>
           )}
         </Drawer>

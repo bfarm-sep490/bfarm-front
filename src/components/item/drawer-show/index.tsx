@@ -88,17 +88,17 @@ export const ItemDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Description", value: item.description },
+                  { label: "Mô tả", value: item.description },
                   {
-                    label: "Quantity",
+                    label: "Số lượng",
                     value: `${item.quantity}`,
                   },
                   {
-                    label: "Type",
+                    label: "Loại",
                     value: <ItemtypeTag value={item.type} />,
                   },
                   {
-                    label: "Status",
+                    label: "Trạng thái",
                     value: <ItemStatusTag value={item.status} />,
                   },
                 ]}
@@ -121,7 +121,9 @@ export const ItemDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   recordItemId={item.id}
                   resource="items"
                   onSuccess={handleDrawerClose}
-                />
+                >
+                  {t("actions.delete")}
+                </DeleteButton>
                 <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                   {t("actions.edit")}
                 </Button>

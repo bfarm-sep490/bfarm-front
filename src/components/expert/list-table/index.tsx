@@ -88,7 +88,7 @@ export const ExpertListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Tìm ID" />
           </FilterDropdown>
         )}
         render={(value) => (

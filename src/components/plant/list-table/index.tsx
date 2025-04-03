@@ -48,7 +48,6 @@ export const PlantsListTable: React.FC = () => {
             />
           )}
         />
-
         <Table.Column title="Tên giống" dataIndex="plant_name" key="plant_name" />
 
         <Table.Column
@@ -63,7 +62,12 @@ export const PlantsListTable: React.FC = () => {
           )}
         />
 
-        <Table.Column title="Quantity" dataIndex="quantity" key="quantity" />
+        <Table.Column
+          title={<div style={{ whiteSpace: "nowrap", textAlign: "center" }}>Số lượng</div>}
+          dataIndex="quantity"
+          key="quantity"
+          width={100}
+        />
 
         <Table.Column
           title="Giá cơ bản"

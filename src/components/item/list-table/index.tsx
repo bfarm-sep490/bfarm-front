@@ -44,13 +44,11 @@ export const ItemsListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
-          )}
+          filterDropdown={(props) => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
         />
 
         <Table.Column
-          title="Image"
+          title="Hình ảnh"
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -63,7 +61,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Name"
+          title="Tên vật tư"
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
@@ -74,7 +72,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Description"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
@@ -85,7 +83,7 @@ export const ItemsListTable: React.FC = () => {
           )}
         />
         <Table.Column
-          title="Quantity"
+          title="Số lượng"
           dataIndex="quantity"
           key="quantity"
           width={"auto"}
@@ -100,7 +98,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Type"
+          title="Loại vật tư"
           dataIndex="type"
           key="type"
           width={120}
@@ -108,7 +106,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Status"
+          title="Trạng thái"
           dataIndex="status"
           key="status"
           width={120}

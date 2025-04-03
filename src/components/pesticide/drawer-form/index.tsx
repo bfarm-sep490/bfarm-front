@@ -108,7 +108,7 @@ export const PesticideDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Mới";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Thuốc";
 
   return (
     <Drawer

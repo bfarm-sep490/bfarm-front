@@ -44,9 +44,7 @@ export const ItemsListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={(props) => (
-            <InputNumber style={{ width: "100%" }} placeholder="Search ID" />
-          )}
+          filterDropdown={(props) => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
         />
 
         <Table.Column

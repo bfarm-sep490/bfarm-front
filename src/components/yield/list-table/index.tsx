@@ -45,7 +45,7 @@ export const YieldListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
+          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
         />
 
         <Table.Column

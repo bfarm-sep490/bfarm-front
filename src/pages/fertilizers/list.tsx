@@ -69,7 +69,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Mới
+          Thêm Phân Bón
         </CreateButton>,
       ]}
     >

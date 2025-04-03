@@ -47,7 +47,7 @@ export const PesticidesListTable: React.FC = () => {
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="STìm ID" />
           )}
           render={(value) => (
             <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>

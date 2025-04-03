@@ -108,7 +108,7 @@ export const FertilizerDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Mới";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Phân Bón";
 
   return (
     <Drawer

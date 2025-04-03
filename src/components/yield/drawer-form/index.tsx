@@ -50,7 +50,7 @@ export const YieldDrawerForm = (props: Props) => {
     });
   };
 
-  const title = props.action === "edit" ? "Edit Yield" : "Add Yield";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Khu Đất";
 
   return (
     <Drawer {...drawerProps} open={true} title={title} width={400} onClose={onDrawerClose}>

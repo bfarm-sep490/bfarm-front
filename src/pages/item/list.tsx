@@ -67,7 +67,7 @@ export const ItemsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Mới
+          Thêm Vật Tư
         </CreateButton>,
       ]}
     >

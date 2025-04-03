@@ -68,7 +68,7 @@ export const PesticidesList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Mới
+          Thêm Thuốc
         </CreateButton>,
       ]}
     >

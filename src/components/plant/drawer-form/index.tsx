@@ -109,7 +109,7 @@ export const PlantDrawerForm = (props: Props) => {
     <Drawer
       {...drawerProps}
       open={true}
-      title={props.action === "edit" ? "Chỉnh Sửa" : "Thêm Mới"}
+      title={props.action === "edit" ? "Chỉnh Sửa" : "Thêm Cây Trồng"}
       width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >

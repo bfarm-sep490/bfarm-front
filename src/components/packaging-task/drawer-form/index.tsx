@@ -27,7 +27,7 @@ type Props = {
 };
 
 export const HarvestingTaskForm = (props: Props) => {
-  const { taskId } = useParams();
+  const { taskId, id } = useParams();
   const back = useBack();
   const t = useTranslate();
   const [idPlan, setIdPlan] = useState<number | null>(null);
@@ -52,6 +52,10 @@ export const HarvestingTaskForm = (props: Props) => {
   const { data: itemData } = useList({
     resource: "items",
   });
+  const { data: packagingTypesData, isLoading: packagingTypesLoading } = useList({
+    resource: "packaging-types",
+  });
+  const packagingTypes = packagingTypesData?.data || [];
   const { formProps, formLoading, onFinish, saveButtonProps } = useForm<{
     id?: number;
     task_name: string;
@@ -90,6 +94,7 @@ export const HarvestingTaskForm = (props: Props) => {
             status: caring_tasks.status,
             description: caring_tasks.description,
             plan_id: caring_tasks.plan_id,
+            packaging_type_id: caring_tasks.packaging_type_id,
           });
           setIdPlan(caring_tasks.plan_id);
         }
@@ -116,8 +121,8 @@ export const HarvestingTaskForm = (props: Props) => {
 
   const title =
     props?.action === "edit"
-      ? "Chỉnh sửa công việc thu hoạch #" + taskId
-      : "Thêm công việc thu hoạch";
+      ? "Chỉnh sửa công việc đóng gói #" + taskId
+      : "Thêm công việc đóng gói";
 
   const statusOptions = [
     { label: t("status.draft", "Nháp"), value: "Draft" },
@@ -161,6 +166,7 @@ export const HarvestingTaskForm = (props: Props) => {
     formProps.form?.setFieldValue("created_by", "Farm Owner");
     onFinish();
   };
+  console.log(id);
   return (
     <>
       <Button type="text" onClick={back} style={{ width: "40px", height: "40px" }}>
@@ -213,10 +219,18 @@ export const HarvestingTaskForm = (props: Props) => {
                 </Form.Item>
               </Col>
             </Row>
-
+            <Form.Item label="Loại bao bì" name="packaging_type_id" rules={[{ required: true }]}>
+              <Select>
+                {packagingTypes.map((x) => (
+                  <Select.Option key={x.id} value={x.id}>
+                    {x.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item label="Kế hoạch liên quan" name="plan_id" rules={[{ required: true }]}>
               <Select
-                value={idPlan}
+                value={Number(id ?? idPlan)}
                 onChange={(value) => {
                   setIdPlan(value);
                 }}

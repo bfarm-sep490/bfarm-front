@@ -27,8 +27,10 @@ import {
 import {
   Alert,
   Button,
+  Flex,
   Form,
   Modal,
+  notification,
   Segmented,
   Select,
   Space,
@@ -38,14 +40,16 @@ import {
   Typography,
 } from "antd";
 import dayjs from "dayjs";
-import { filter } from "lodash";
-import { type PropsWithChildren, useState } from "react";
+import { on } from "events";
+import { filter, replace } from "lodash";
+import { type PropsWithChildren, useEffect, useState } from "react";
 import { Calendar } from "react-big-calendar";
 import { useLocation, useNavigate, useParams } from "react-router";
 
 export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
   const [deletedId, setDeletedId] = useState<number>(0);
   const [deletedOpen, setDeletedOpen] = useState<boolean>(false);
+  const [addOpen, setAddOpen] = useState<boolean>(false);
   const { id } = useParams();
   const go = useGo();
   const back = useBack();
@@ -77,11 +81,7 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
       <List
         breadcrumb={false}
         headerButtons={(props) => [
-          <Button
-            type="primary"
-            variant="filled"
-            onClick={() => navigate(`/plans/${id}/farmers/create`)}
-          >
+          <Button type="primary" variant="filled" onClick={() => setAddOpen(true)}>
             Thêm nông dân
           </Button>,
         ]}
@@ -144,17 +144,31 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
           />
         </Table>
         {children}
+        <AddFarmerIntoPlanModal visible={addOpen} onClose={() => setAddOpen(false)} />
+        <DeleteFarmerInPlanModal
+          visible={deletedOpen}
+          onClose={() => setDeletedOpen(false)}
+          farmer_id={deletedId}
+        />
       </List>
     </>
   );
 };
+type DeleteFarmerInPlanModalProps = {
+  visible?: boolean;
+  onClose?: () => void;
+  farmer_id?: number;
+};
 
-export const DeleteFarmerInPlanModal = () => {
-  const navigate = useNavigate();
-  const { id, farmer_id } = useParams();
+export const DeleteFarmerInPlanModal = ({
+  visible,
+  onClose,
+  farmer_id,
+}: DeleteFarmerInPlanModalProps) => {
+  const { id } = useParams();
   const [error, setError] = useState<string | undefined>();
   const { mutate } = useDelete({});
-  const back = useBack();
+  const navigate = useNavigate();
   const handleDelete = async () => {
     await mutate(
       {
@@ -166,7 +180,8 @@ export const DeleteFarmerInPlanModal = () => {
           setError(error.message);
         },
         onSuccess: (data: any, variables, context) => {
-          back();
+          navigate("/plans/" + id + "/farmers", { replace: true });
+          onClose?.();
         },
       },
     );
@@ -174,12 +189,12 @@ export const DeleteFarmerInPlanModal = () => {
   return (
     <Modal
       title="Xóa nông dân trong kế hoạch"
-      open={true}
-      onCancel={() => back()}
-      onClose={() => back()}
+      open={visible}
+      onCancel={onClose}
+      onClose={onClose}
       footer={
         <>
-          <Button type="default" onClick={() => back()}>
+          <Button type="default" onClick={onClose}>
             Hủy
           </Button>
           <Button type="primary" variant="filled" onClick={handleDelete}>
@@ -195,8 +210,11 @@ export const DeleteFarmerInPlanModal = () => {
     </Modal>
   );
 };
-
-export const AddFarmerIntoPlanModal = () => {
+type AddFarmerIntoPlanModalProps = {
+  visible?: boolean;
+  onClose?: () => void;
+};
+export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
   const { id } = useParams();
   const [selectFarmer, setSelectFarmer] = useState<number | undefined>();
   const [events, setEvents] = useState<
@@ -210,14 +228,25 @@ export const AddFarmerIntoPlanModal = () => {
     }[]
   >([]);
 
-  const { data: planData } = useOne({
+  const {
+    data: planData,
+    isLoading: planLoading,
+    refetch: planRefetch,
+  } = useOne({
     resource: `plans`,
     id: `${id}/general`,
+    queryOptions: {
+      enabled: false,
+    },
   });
 
   const plan = planData?.data;
 
-  const { data: farmerData } = useList({
+  const {
+    data: farmerData,
+    isLoading: farmersLoading,
+    refetch: farmerRefetch,
+  } = useList({
     resource: "farmers",
     filters: [
       {
@@ -226,28 +255,46 @@ export const AddFarmerIntoPlanModal = () => {
         value: "Active",
       },
     ],
+    queryOptions: {
+      enabled: false,
+    },
   });
 
-  const { data: chosenFarmrtData } = useList({
+  const {
+    data: chosenFarmrtData,
+    isLoading: chosenFarmersLoading,
+    refetch: chosenFarmersRefetch,
+  } = useList({
     resource: `plans/${id}/farmers`,
+    queryOptions: {
+      enabled: false,
+    },
   });
-
-  const navigate = useNavigate();
+  const [viewCalendar, setViewCalendar] = useState(false);
   const farmers = farmerData?.data as IFarmer[];
   const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
   const filterFarmers =
     farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ?? [];
 
-  const back = useBack();
-
+  const navigate = useNavigate();
   const { formProps, saveButtonProps } = useForm({
     resource: `plans/${id}/farmers`,
     action: "create",
     onMutationSuccess() {
-      back();
+      props?.onClose?.();
+      navigate("/plans/" + id + "/farmers", { replace: true });
     },
   });
-
+  useEffect(() => {
+    if (props?.visible === true) {
+      planRefetch();
+      farmerRefetch();
+      chosenFarmersRefetch();
+    } else {
+      setSelectFarmer(undefined);
+      setEvents([]);
+    }
+  }, [props?.visible]);
   const { refetch, isLoading } = useCustom({
     url: `https://api.outfit4rent.online/api/farmers/${selectFarmer}/calendar`,
     method: "get",
@@ -276,17 +323,18 @@ export const AddFarmerIntoPlanModal = () => {
   const handleShowDetail = async () => {
     if (!selectFarmer) return;
     refetch();
+    setViewCalendar(true);
   };
 
   return (
     <Modal
       width={1000}
       title="Thêm nông dân vào kế hoạch"
-      open={true}
-      onCancel={() => navigate(`/plans/${id}/farmers`)}
+      open={props?.visible}
+      onCancel={() => props.onClose?.()}
       footer={
         <>
-          <Button type="default" onClick={() => navigate(`/plans/${id}/farmers`)}>
+          <Button type="default" onClick={() => props.onClose?.()}>
             Hủy
           </Button>
           <Button type="primary" variant="filled" {...saveButtonProps}>
@@ -306,22 +354,32 @@ export const AddFarmerIntoPlanModal = () => {
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
           <Space direction="vertical" style={{ width: "100%", marginBottom: 20 }}>
-            <Select value={selectFarmer} onChange={handleSelect}>
-              {filterFarmers?.map((farmer) => (
-                <Select.Option key={farmer.id} value={farmer.id}>
-                  {farmer.name}
-                </Select.Option>
-              ))}
-            </Select>
+            <Flex>
+              <Select value={selectFarmer} onChange={handleSelect}>
+                {filterFarmers?.map((farmer) => (
+                  <Select.Option key={farmer.id} value={farmer.id}>
+                    {farmer.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Flex>
             <Space>
-              <ShowButton hideText size="small" onClick={handleShowDetail} />
+              <Space>
+                <Button type="primary" onClick={() => handleShowDetail()}>
+                  Xem lịch
+                </Button>
+
+                <Button onClick={() => setViewCalendar(false)} disabled={!viewCalendar}>
+                  Ẩn lịch
+                </Button>
+              </Space>{" "}
             </Space>
           </Space>
         </Form.Item>
       </Form>
-      {isLoading && selectFarmer && <Spin></Spin>}
-      {events.length > 0 && (
+      {viewCalendar && (
         <FarmerScheduleComponent
+          farmer={farmers?.find((x) => x.id === selectFarmer)}
           events={events}
           isLoading={false}
           start_date={plan?.start_date}

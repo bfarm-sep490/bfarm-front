@@ -16,7 +16,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
 type HarvestingTableProps = {
-  tableProps: TableProps;
+  tableProps: TableProps<BaseRecord>;
   showNavigation?: string;
 };
 

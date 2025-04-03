@@ -18,7 +18,7 @@ import { ProblemTypeTag } from "./type-tag";
 import { ProblemStatusTag } from "./status-tag";
 
 type TableProblemProps = {
-  tableProps: TableProps;
+  tableProps: TableProps<BaseRecord>;
   showNavigation?: string;
 };
 export const ProblemListTable = ({

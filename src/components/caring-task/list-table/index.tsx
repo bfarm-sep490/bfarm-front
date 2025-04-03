@@ -20,7 +20,7 @@ import { CaringTypeTag } from "../type-tag";
 import { StatusTag } from "../status-tag";
 
 type CaringTableProps = {
-  tableProps: TableProps;
+  tableProps: TableProps<BaseRecord>;
   showNavigation?: string;
 };
 

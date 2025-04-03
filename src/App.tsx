@@ -15,6 +15,7 @@ import {
   EnvironmentOutlined,
   GoldOutlined,
   HddOutlined,
+  ProductOutlined,
   ScheduleOutlined,
   UserOutlined,
   WarningOutlined,
@@ -97,6 +98,8 @@ import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
 import { CancelOrderModal, CompleteOrderModal } from "./components/orders/complete-modal";
 import { OrderComplete } from "./pages/orders/complete";
+import { PackagedProductListPage } from "./pages/packaging-production/list";
+import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -167,6 +170,33 @@ const App: React.FC = () => {
                   show: "/orders/:orderId",
                   meta: {
                     label: "Đơn hàng",
+                  },
+                },
+                {
+                  name: "products",
+                  meta: {
+                    label: "Sản phẩm",
+                    icon: <ProductOutlined />,
+                  },
+                },
+                {
+                  name: "harvesting-products",
+                  list: "/harvesting-products",
+                  show: "/harvesting-products/:id",
+                  meta: {
+                    label: "Thu hoạch",
+                    parent: "products",
+                    canDelete: true,
+                  },
+                },
+                {
+                  name: "packaging-products",
+                  list: "/packaging-products",
+                  show: "/packaging-products/:id",
+                  meta: {
+                    label: "Đóng gói",
+                    parent: "products",
+                    canDelete: true,
                   },
                 },
                 {
@@ -344,6 +374,11 @@ const App: React.FC = () => {
                   }
                 >
                   <Route index element={<DashboardPage />} />
+                  <Route
+                    path="harvesting-products"
+                    element={<HarvestingProductionListPage />}
+                  ></Route>
+                  <Route path="packaging-products" element={<PackagedProductListPage />}></Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
                     <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>

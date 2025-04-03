@@ -19,8 +19,10 @@ type FarmerScheduleComponentProps = {
   isLoading: boolean;
   start_date: Date;
   end_date: Date;
+  farmer?: any;
 };
 export const FarmerScheduleComponent = ({
+  farmer,
   end_date,
   events,
   isLoading,
@@ -32,7 +34,7 @@ export const FarmerScheduleComponent = ({
   const [currentDate, setCurrentDate] = useState(start_date);
 
   return (
-    <Card title="📅 Lịch nông dân" loading={isLoading}>
+    <Card title={"📅 Lịch nông dân " + farmer?.name} loading={isLoading}>
       <div>
         <Calendar
           localizer={localizer}

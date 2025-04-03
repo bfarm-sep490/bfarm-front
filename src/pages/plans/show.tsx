@@ -168,7 +168,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="danger"
                     variant="solid"
                     onClick={() => {
-                      setValueModal("cancel");
+                      setValueModal("Cancel");
                       setCompletedModal(true);
                     }}
                     icon={<CloseCircleOutlined />}
@@ -193,7 +193,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="primary"
                     variant="solid"
                     onClick={() => {
-                      setValueModal("complete");
+                      setValueModal("Complete");
                       setCompletedModal(true);
                     }}
                     icon={<CheckCircleOutlined />}

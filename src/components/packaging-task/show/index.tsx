@@ -26,7 +26,10 @@ export const PackagingTaskShow = () => {
     resource: "packaging-tasks",
     id: taskId,
   });
-
+  const { data: packagingTypeData, isLoading: packagingTypeLoading } = useList({
+    resource: "packaging-types",
+  });
+  const packagingTypes = packagingTypeData?.data || [];
   const [open, setOpen] = useState(true);
   const back = useBack();
   const breakpoint = { sm: window.innerWidth > 576 };
@@ -160,6 +163,12 @@ export const PackagingTaskShow = () => {
             {
               label: "Mô tả công việc",
               value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+            },
+            {
+              label: "Loại đóng gói",
+              value: task?.packaging_type_id
+                ? packagingTypes?.find((x) => x.id === task?.packaging_type_id)?.name
+                : "Chưa xác định",
             },
             {
               label: "Ngày tạo",

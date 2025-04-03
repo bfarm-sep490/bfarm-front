@@ -115,7 +115,7 @@ export const AssignTasks = ({
     console.log("autoTaskData", autoTaskData);
     setProductiveTasks(
       productiveTasks.map((task) => {
-        const newTask = caringTasks?.find((x) => x?.caringTaskId === task.id);
+        const newTask = caringTasks?.find((x: any) => x?.caringTaskId === task.id);
         if (newTask) {
           return {
             ...task,
@@ -127,7 +127,7 @@ export const AssignTasks = ({
     );
     setHarvestingTasks(
       harvestingTasks.map((task) => {
-        const newTask = harvestingAuto?.find((x) => x?.harvestingTaskId === task.id);
+        const newTask = harvestingAuto?.find((x: any) => x?.harvestingTaskId === task.id);
         if (newTask) {
           return {
             ...task,
@@ -139,7 +139,7 @@ export const AssignTasks = ({
     );
     setPackagingTasks(
       packagingTasks.map((task) => {
-        const newTask = packagingAuto?.find((x) => x?.packagingTaskId === task.id);
+        const newTask = packagingAuto?.find((x: any) => x?.packagingTaskId === task.id);
         if (newTask) {
           return {
             ...task,

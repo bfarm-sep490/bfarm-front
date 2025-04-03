@@ -62,50 +62,51 @@ export const YieldDrawerForm = (props: Props) => {
           onValuesChange={formProps?.onValuesChange}
         >
           <Form.Item
-            label="Yield Name"
+            label="Tên khu đất"
             name="yield_name"
-            rules={[{ required: true, message: "Please enter yield name!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên khu đất!" }]}
           >
-            <Input placeholder="Enter yield name" />
+            <Input placeholder="Nhập tên khu đất" />
           </Form.Item>
 
           <Form.Item
-            label="Area"
+            label="Diện tích"
             name="area"
-            rules={[{ required: true, message: "Please enter area!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập diện tích!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter area" />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập diện tích" />
           </Form.Item>
 
           <Form.Item
-            label="Area Unit"
+            label="Đơn vị diện tích"
             name="area_unit"
-            rules={[{ required: true, message: "Please enter area unit!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập đơn vị diện tích!" }]}
           >
-            <Input placeholder="e.g., m², hectares" />
+            <Input placeholder="Ví dụ: m², hecta" />
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
-            rules={[{ required: true, message: "Please enter description!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
           >
-            <Input.TextArea rows={3} placeholder="Enter description" />
-          </Form.Item>
-          <Form.Item
-            label="Size"
-            name="size"
-            rules={[{ required: true, message: "Please enter size!" }]}
-          >
-            <Input placeholder="Enter size" />
+            <Input.TextArea rows={3} placeholder="Nhập mô tả" />
           </Form.Item>
 
           <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Please select type!" }]}
+            label="Kích thước"
+            name="size"
+            rules={[{ required: true, message: "Vui lòng nhập kích thước!" }]}
           >
-            <Select placeholder="Select type">
+            <Input placeholder="Nhập kích thước" />
+          </Form.Item>
+
+          <Form.Item
+            label="Loại đất"
+            name="type"
+            rules={[{ required: true, message: "Vui lòng chọn loại đất!" }]}
+          >
+            <Select placeholder="Chọn loại đất">
               <Select.Option value="Đất xám">Đất xám</Select.Option>
               <Select.Option value="Đất cát">Đất cát</Select.Option>
               <Select.Option value="Đất đỏ">Đất đỏ</Select.Option>
@@ -115,21 +116,23 @@ export const YieldDrawerForm = (props: Props) => {
               <Select.Option value="Đất hữu cơ">Đất hữu cơ</Select.Option>
             </Select>
           </Form.Item>
+
           <Form.Item
-            label="Status"
+            label="Trạng thái"
             name="status"
-            rules={[{ required: true, message: "Select status!" }]}
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
           >
-            <Select placeholder="Select status">
-              <Select.Option value="Available">Available</Select.Option>
-              <Select.Option value="Maintenance">Maintenance</Select.Option>
-              <Select.Option value="In-Use">In-Use</Select.Option>
+            <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Available">Sẵn sàng</Select.Option>
+              <Select.Option value="Maintenance">Bảo trì</Select.Option>
+              <Select.Option value="In-Use">Đang sử dụng</Select.Option>
             </Select>
           </Form.Item>
+
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Save
+              Lưu
             </SaveButton>
           </Flex>
         </Form>

@@ -67,7 +67,7 @@ export const ItemsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Item
+          Thêm Mới
         </CreateButton>,
       ]}
     >

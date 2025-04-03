@@ -56,7 +56,7 @@ export const YieldListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("yield_name", filters, "contains")}
-          filterDropdown={() => <Input placeholder="Search name" />}
+          filterDropdown={() => <Input placeholder="Tìm theo tên" />}
         />
 
         <Table.Column
@@ -78,6 +78,7 @@ export const YieldListTable: React.FC = () => {
             </Typography.Paragraph>
           )}
         />
+
         <Table.Column
           title="Loại đất"
           dataIndex="type"

@@ -26,6 +26,16 @@ type Props = {
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };
+export enum PlantType {
+  Cruciferous = "Rau họ thập tự",
+  Onion = "Hành",
+  Leafy = "Rau ăn lá",
+  FruitVeg = "Rau ăn quả",
+  RootVeg = "Rau ăn củ",
+  Mushroom = "Nấm",
+  MixedVeg = "Rau củ quả",
+  DriedVeg = "Rau khô",
+}
 
 export const PlantDrawerForm = (props: Props) => {
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -99,7 +109,7 @@ export const PlantDrawerForm = (props: Props) => {
     <Drawer
       {...drawerProps}
       open={true}
-      title={props.action === "edit" ? "Edit Plant" : "Add Plant"}
+      title={props.action === "edit" ? "Chỉnh Sửa" : "Thêm Mới"}
       width={breakpoint.sm ? "400px" : "100%"}
       onClose={onDrawerClose}
     >
@@ -117,76 +127,102 @@ export const PlantDrawerForm = (props: Props) => {
                 <Avatar
                   shape="square"
                   src={previewImage || "/images/plant-default-img.png"}
-                  alt="Plant Image"
+                  alt="Ảnh cây trồng"
                   style={{ width: "100%", height: "100%" }}
                 />
                 <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
+
           <Form.Item
-            label="Plant Name"
+            label="Tên cây trồng"
             name="plant_name"
-            rules={[{ required: true, message: "Enter plant name!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập tên cây trồng!" }]}
           >
-            <Input placeholder="Enter plant name" />
+            <Input placeholder="Nhập tên cây trồng" />
           </Form.Item>
+
           <Form.Item
-            label="Quantity"
+            label="Số lượng"
             name="quantity"
-            rules={[{ required: true, message: "Enter quantity!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter quantity" />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
           </Form.Item>
+
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
-            rules={[{ required: true, message: "Enter description!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
           >
-            <Input.TextArea rows={3} placeholder="Enter description" />
+            <Input.TextArea rows={3} placeholder="Nhập mô tả" />
           </Form.Item>
+
           <Form.Item
-            label="Base Price"
+            label="Giá cơ bản"
             name="base_price"
-            rules={[{ required: true, message: "Enter base price!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập giá cơ bản!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter base price" />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập giá cơ bản" />
           </Form.Item>
-          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Enter type!" }]}>
-            <Input placeholder="Enter type" />
-          </Form.Item>
-          <Form.Item label="Delta One" name="delta_one">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta one" />
-          </Form.Item>
-          <Form.Item label="Delta Two" name="delta_two">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta two" />
-          </Form.Item>
-          <Form.Item label="Delta Three" name="delta_three">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter delta three" />
-          </Form.Item>
-          <Form.Item label="Preservation Day" name="preservation_day">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter preservation day" />
-          </Form.Item>
-          <Form.Item label="Estimated Per One" name="estimated_per_one">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter estimated per one" />
-          </Form.Item>
+
           <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "Select status!" }]}
+            label="Loại"
+            name="type"
+            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
           >
-            <Select placeholder="Select status">
-              <Select.Option value="Available">Available</Select.Option>
-              <Select.Option value="Out of Stock">Out of Stock</Select.Option>
-              <Select.Option value="Limited Stock">Limited Stock</Select.Option>
+            <Select placeholder="Chọn loại cây">
+              {Object.values(PlantType).map((type) => (
+                <Select.Option key={type} value={type}>
+                  {type}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
+
+          <Form.Item label="Delta 1" name="delta_one">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 1" />
+          </Form.Item>
+
+          <Form.Item label="Delta 2" name="delta_two">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 2" />
+          </Form.Item>
+
+          <Form.Item label="Delta 3" name="delta_three">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 3" />
+          </Form.Item>
+
+          <Form.Item label="Số ngày bảo quản" name="preservation_day">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số ngày bảo quản" />
+          </Form.Item>
+
+          <Form.Item label="Ước lượng theo một đơn vị" name="estimated_per_one">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập lượng ước tính mỗi đơn vị"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Trạng thái"
+            name="status"
+            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+          >
+            <Select placeholder="Chọn trạng thái">
+              <Select.Option value="Available">Có sẵn</Select.Option>
+              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
+              <Select.Option value="Limited Stock">Còn ít</Select.Option>
+            </Select>
+          </Form.Item>
+
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Save
+              Lưu
             </SaveButton>
           </Flex>
         </Form>

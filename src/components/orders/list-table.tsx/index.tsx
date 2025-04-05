@@ -1,7 +1,20 @@
 import React from "react";
 import { DateField, TextField, useTable } from "@refinedev/antd";
-import { getDefaultFilter, type HttpError, useGo, useTranslate } from "@refinedev/core";
-import { Table, Button, Input, InputNumber, Typography, theme, Space } from "antd";
+import {
+  getDefaultFilter,
+  type HttpError,
+  useGo,
+  useTranslate,
+} from "@refinedev/core";
+import {
+  Table,
+  Button,
+  Input,
+  InputNumber,
+  Typography,
+  theme,
+  Space,
+} from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
@@ -22,10 +35,12 @@ export const OrderListTable: React.FC = () => {
     <Table
       {...tableProps}
       rowKey="id"
-      scroll={{ x: true }}
+      scroll={{ x: "max-content" }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="inspections" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="inspections" />
+        ),
       }}
     >
       <Table.Column
@@ -34,14 +49,18 @@ export const OrderListTable: React.FC = () => {
         key="id"
         width={80}
         filterIcon={(filtered) => (
-          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+          <SearchOutlined
+            style={{ color: filtered ? token.colorPrimary : undefined }}
+          />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <InputNumber
             style={{ width: "100%" }}
             placeholder="Search ID"
-            onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
+            onChange={(value) =>
+              setFilters([{ field: "id", operator: "eq", value }])
+            }
           />
         )}
       />
@@ -55,7 +74,9 @@ export const OrderListTable: React.FC = () => {
         title={translate("plan_name", "Tên kế hoạch")}
         dataIndex="plan_name"
         key="plan_name"
-        render={(value) => <TextField value={value ? value : "Chưa xác định kế hoạch"} />}
+        render={(value) => (
+          <TextField value={value ? value : "Chưa xác định kế hoạch"} />
+        )}
       />
       <Table.Column
         title={translate("packaging_type_name", "Loại bao bì")}
@@ -67,21 +88,31 @@ export const OrderListTable: React.FC = () => {
         title={translate("deposit_price", "Tiền đặt cọc")}
         dataIndex="deposit_price"
         key="deposit_price"
-        render={(value) => <TextField value={value ? value + " vnd" : "Chưa đặt cọc"} />}
+        render={(value) => (
+          <TextField value={value ? value + " vnd" : "Chưa đặt cọc"} />
+        )}
       />
       <Table.Column
         title={translate("total_price", "Tổng tiền")}
         dataIndex="total_price"
         key="total_price"
-        render={(value) => <TextField value={value ? value + " vnd" : "Chưa xác định tổng"} />}
+        render={(value) => (
+          <TextField value={value ? value + " vnd" : "Chưa xác định tổng"} />
+        )}
       />
-      <Table.Column title={translate("phone", "Điện thoại")} dataIndex="phone" key="phone" />
+      <Table.Column
+        title={translate("phone", "Điện thoại")}
+        dataIndex="phone"
+        key="phone"
+      />
       <Table.Column
         title={translate("preorder_quantity", "Số lượng đặt trước")}
         dataIndex="preorder_quantity"
         key="preorder_quantity"
         render={(value) => (
-          <TextField value={value ? value + " kg" : "Chưa xác định số lượng đặt trước"} />
+          <TextField
+            value={value ? value + " kg" : "Chưa xác định số lượng đặt trước"}
+          />
         )}
       />
       <Table.Column
@@ -97,7 +128,11 @@ export const OrderListTable: React.FC = () => {
         render={(value) => <DateField value={value} format="DD/MM/YYYY" />}
       />
 
-      <Table.Column title={translate("Status", "Trạng thái")} dataIndex="status" key="status" />
+      <Table.Column
+        title={translate("Status", "Trạng thái")}
+        dataIndex="status"
+        key="status"
+      />
 
       <Table.Column
         title={translate("Actions", "Hành động")}
@@ -110,7 +145,11 @@ export const OrderListTable: React.FC = () => {
               <Button
                 icon={<EyeOutlined />}
                 onClick={() =>
-                  navigate(id ? `/plans/${id}/orders/${record.id}` : `/orders/${record.id}`)
+                  navigate(
+                    id
+                      ? `/plans/${id}/orders/${record.id}`
+                      : `/orders/${record.id}`
+                  )
                 }
               />
             ) : (

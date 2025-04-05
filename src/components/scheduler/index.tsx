@@ -1,16 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer, View } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useList } from "@refinedev/core";
 import { useParams } from "react-router";
-import { Card } from "antd";
+import { format, parse, startOfWeek, getDay } from "date-fns";
 
-const localizer = momentLocalizer(moment);
+import { Avatar, Card, Flex, Typography } from "antd";
+import { vi } from "date-fns/locale/vi";
+import "./index.css";
+const locales = {
+  vi,
+};
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }), // Bắt đầu từ thứ 2
+  getDay,
+  locales,
+});
 
+var defaultMessages = {
+  date: "Ngày",
+  time: "Giờ",
+  event: "Hoạt động",
+  allDay: "Cả ngày",
+  week: "Tuần",
+  work_week: "Tuần làm việc",
+  day: "Ngày",
+  month: "Tháng",
+  previous: "Sau",
+  next: "Tiếp",
+  yesterday: "Hôm qua",
+  tomorrow: "Ngày mai",
+  today: "Hôm nay",
+  agenda: "Lịch trình",
+  noEventsInRange: "Không hoạt động nào trong khoảng này.",
+  showMore: function showMore(total: any) {
+    return "+" + total + " cái khác";
+  },
+};
 export const ScheduleComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [] = useState(null);
   const { id } = useParams();
   const [view, setView] = useState("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -22,9 +54,14 @@ export const ScheduleComponent = () => {
       end: Date;
       type: "Chăm sóc" | "Thu hoạch" | "Đóng gói" | "Kiểm định";
       status: "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete";
+      actor_id: number;
+      actor_name: string;
+      avatar: string;
     }[]
   >([]);
-
+  const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
+    resource: `farmers`,
+  });
   const { data: caringData, isLoading: caringLoading } = useList({
     resource: "caring-tasks",
     filters: [{ field: "plan_id", operator: "eq", value: id }],
@@ -41,11 +78,30 @@ export const ScheduleComponent = () => {
     resource: "inspecting-forms",
     filters: [{ field: "plan_id", operator: "eq", value: id }],
   });
-
+  const { data: inspectorData, isLoading: inspectorLoading } = useList({
+    resource: "inspectors",
+  });
+  const inspectors = inspectorData?.data;
+  const farmers = chosenFarmerData?.data;
   useEffect(() => {
-    if (caringLoading || harvestLoading || packingLoading || inspectionLoading) return;
+    if (
+      caringLoading ||
+      harvestLoading ||
+      packingLoading ||
+      inspectionLoading ||
+      inspectorLoading ||
+      chosenFarmerLoading
+    )
+      return;
 
-    if (caringData?.data && harvestData?.data && packingData?.data && inspectionData?.data) {
+    if (
+      caringData?.data &&
+      harvestData?.data &&
+      packingData?.data &&
+      inspectionData?.data &&
+      inspectorData?.data &&
+      chosenFarmerData?.data
+    ) {
       const allEvents = [
         ...caringData.data.map((task) => ({
           id: task.id as number,
@@ -53,7 +109,17 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Chăm sóc" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as
+            | "Pending"
+            | "Complete"
+            | "Ongoing"
+            | "Cancel"
+            | "Incomplete",
+          actor_id: task.farmer_id as number,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...harvestData.data.map((task) => ({
           id: task.id as number,
@@ -61,7 +127,17 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Thu hoạch" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as
+            | "Pending"
+            | "Complete"
+            | "Ongoing"
+            | "Cancel"
+            | "Incomplete",
+          actor_id: task.farmer_id as number,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...packingData.data.map((task) => ({
           id: task.id as number,
@@ -69,19 +145,49 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Đóng gói" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as
+            | "Pending"
+            | "Complete"
+            | "Ongoing"
+            | "Cancel"
+            | "Incomplete",
+          actor_id: task.farmer_id as number,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...inspectionData.data.map((form) => ({
           id: form.id as number,
-          title: form.name,
+          title: form.task_name,
           start: new Date(form.start_date),
           end: new Date(form.end_date),
           type: "Kiểm định" as const,
-          status: form.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: form.status as
+            | "Pending"
+            | "Complete"
+            | "Ongoing"
+            | "Cancel"
+            | "Incomplete",
+          actor_id: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.id as number,
+          actor_name: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.name,
+          avatar: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.image_url,
         })),
       ].filter((event) => event.id !== undefined);
-
-      setEvents(allEvents);
+      const sort = allEvents.sort((a, b) => {
+        return (
+          new Date(a.end).getDate() -
+          new Date(a.start).getDate() -
+          (new Date(b.end).getDate() - new Date(b.start).getDate())
+        );
+      });
+      setEvents(sort);
       setIsLoading(false);
     }
   }, [
@@ -97,38 +203,74 @@ export const ScheduleComponent = () => {
 
   return (
     <Card title="📅 Lịch chăm sóc cây trồng" loading={isLoading}>
-      <div>
+      <div className="calendar-container">
         <Calendar
+          popup
+          messages={defaultMessages}
           localizer={localizer}
-          events={events}
+          events={events.map((event) => {
+            const statusColorMap = {
+              Pending: { color: "#DC6B08", bg: "#FFF7E6" },
+              Complete: { color: "#389E0D", bg: "#F6FFED" },
+              Ongoing: { color: "#0973E4", bg: "#E6F4FF" },
+              Cancel: { color: "#D81322", bg: "#FFF1F0" },
+              Incomplete: { color: "#FAFAFA", bg: "#FAFAFA" },
+            };
+
+            const statusColor = statusColorMap[event.status];
+
+            return {
+              title: (
+                <Flex
+                  dir="row"
+                  justify="space-between"
+                  align="center"
+                  style={{
+                    width: "100%",
+                    padding: "0 4px",
+                  }}
+                >
+                  <Typography.Text strong style={{ color: statusColor.color }}>
+                    {event.title}
+                  </Typography.Text>
+                  <Flex align="center" gap={8}>
+                    {window.innerWidth > 768 && (
+                      <Typography.Text style={{ color: "gray", fontSize: 12 }}>
+                        {event?.actor_name}
+                      </Typography.Text>
+                    )}
+                    <Avatar src={event?.avatar} alt="" size={"small"} />
+                  </Flex>
+                </Flex>
+              ),
+              start: new Date(event.start),
+              end: new Date(event.end),
+              status: event.status,
+              id: event.id,
+              type: event.type,
+            };
+          })}
           view={view as View}
           date={currentDate}
-          onView={(newView) => {
-            setView(newView);
-            console.log("View đổi thành:", newView);
-          }}
-          onNavigate={(newDate) => {
-            setCurrentDate(newDate);
-          }}
-          startAccessor="start"
-          endAccessor="end"
+          onView={(newView) => setView(newView)}
+          onNavigate={(newDate) => setCurrentDate(newDate)}
           views={["month", "week", "day", "agenda"]}
           style={{ height: 800 }}
-          eventPropGetter={(event, start, end, isSelected) => {
+          eventPropGetter={(event) => {
+            const statusColorMap = {
+              Pending: { color: "#DC6B08", bg: "#FFF7E6" },
+              Complete: { color: "#389E0D", bg: "#F6FFED" },
+              Ongoing: { color: "#0973E4", bg: "#E6F4FF" },
+              Cancel: { color: "#D81322", bg: "#FFF1F0" },
+              Incomplete: { color: "#FAFAFA", bg: "#FAFAFA" },
+            };
+            const statusColor = statusColorMap[event.status];
+
             return {
               style: {
-                backgroundColor:
-                  event.status === "Pending"
-                    ? "orange"
-                    : event?.status === "Complete"
-                      ? "green"
-                      : event?.status === "Ongoing"
-                        ? "blue"
-                        : event?.status === "Cancel"
-                          ? "red"
-                          : "gray",
-                color: "white",
-                fontWeight: "bold",
+                border: `1px solid ${statusColor.color}`,
+                backgroundColor: statusColor.bg,
+                color: statusColor.color,
               },
             };
           }}

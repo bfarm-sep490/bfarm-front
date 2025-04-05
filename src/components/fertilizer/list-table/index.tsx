@@ -46,11 +46,11 @@ export const FertilizersListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Search ID" />}
+          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
         />
 
         <Table.Column
-          title="Ảnh"
+          title="Hình ảnh"
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -86,7 +86,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Số lượng"
+          title="Số lựong"
           dataIndex="quantity"
           key="quantity"
           width={120}
@@ -101,7 +101,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Loại"
+          title="Loại phân bón"
           dataIndex="type"
           key="type"
           width={120}
@@ -109,7 +109,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Trạng thái"
+          title="trạng thái"
           dataIndex="status"
           key="status"
           width={120}

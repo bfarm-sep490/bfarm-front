@@ -108,7 +108,7 @@ export const PesticideDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Edit Pesticide" : "Add Pesticide";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Thuốc";
 
   return (
     <Drawer
@@ -143,62 +143,75 @@ export const PesticideDrawerForm = (props: Props) => {
                     height: previewImage ? "100%" : "80px",
                   }}
                   src={previewImage || "/images/pesticide-default-img.png"}
-                  alt="Pesticide Image"
+                  alt="Ảnh thuốc trừ sâu"
                 />
                 <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
-          <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter name!" }]}>
-            <Input placeholder="Enter pesticide name" />
+          <Form.Item
+            label="Tên thuốc"
+            name="name"
+            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+          >
+            <Input placeholder="Nhập tên thuốc trừ sâu" />
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
-            rules={[{ required: true, message: "Enter description!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
           >
-            <Input.TextArea rows={3} placeholder="Enter pesticide description" />
+            <Input.TextArea rows={3} placeholder="Nhập mô tả thuốc trừ sâu" />
           </Form.Item>
 
           <Form.Item
-            label="Quantity"
+            label="Số lượng"
             name="quantity"
-            rules={[{ required: true, message: "Enter total quantity!" }]}
+            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Enter total quantity" />
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập tổng số lượng" />
           </Form.Item>
 
-          <Form.Item label="Unit" name="unit" rules={[{ required: true, message: "Enter unit!" }]}>
+          <Form.Item
+            label="Đơn vị"
+            name="unit"
+            rules={[{ required: true, message: "Vui lòng nhập đơn vị!" }]}
+          >
             <Input placeholder="ml, l, kg, g" />
           </Form.Item>
 
-          <Form.Item label="Type" name="type" rules={[{ required: true, message: "Enter type!" }]}>
-            <Select placeholder="Select type">
-              <Select.Option value="Organic">Organic</Select.Option>
-              <Select.Option value="Chemical">Chemical</Select.Option>
-              <Select.Option value="Mineral">Mineral</Select.Option>
+          <Form.Item
+            label="Loại"
+            name="type"
+            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+          >
+            <Select placeholder="Chọn loại">
+              <Select.Option value="Organic">Hữu cơ</Select.Option>
+              <Select.Option value="Chemical">Hóa học</Select.Option>
+              <Select.Option value="Mineral">Khoáng chất</Select.Option>
             </Select>
           </Form.Item>
+
           <Form.Item
             label="Trạng thái"
             name="status"
             rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
           >
             <Select placeholder="Chọn trạng thái">
-              <Select.Option value="Limited Stock">Limited Stock</Select.Option>
-              <Select.Option value="Out of Stock">Out of Stock</Select.Option>
-              <Select.Option value="Available">Available</Select.Option>
+              <Select.Option value="Limited Stock">Còn ít</Select.Option>
+              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
+              <Select.Option value="Available">Có sẵn</Select.Option>
             </Select>
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Save
+              Lưu
             </SaveButton>
           </Flex>
         </Form>

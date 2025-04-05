@@ -14,7 +14,6 @@ import {
   DashboardOutlined,
   EnvironmentOutlined,
   GoldOutlined,
-  HddOutlined,
   ProductOutlined,
   ScheduleOutlined,
   UserOutlined,
@@ -100,6 +99,8 @@ import { CancelOrderModal, CompleteOrderModal } from "./components/orders/comple
 import { OrderComplete } from "./pages/orders/complete";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
+import { PackagingProductShow } from "./components/production/packaging/drawer-show";
+import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -376,9 +377,30 @@ const App: React.FC = () => {
                   <Route index element={<DashboardPage />} />
                   <Route
                     path="harvesting-products"
-                    element={<HarvestingProductionListPage />}
-                  ></Route>
-                  <Route path="packaging-products" element={<PackagedProductListPage />}></Route>
+                    element={
+                      <HarvestingProductionListPage>
+                        <Outlet></Outlet>
+                      </HarvestingProductionListPage>
+                    }
+                  >
+                    <Route
+                      path=":productId"
+                      element={<HarvestingProductShow></HarvestingProductShow>}
+                    ></Route>
+                  </Route>
+                  <Route
+                    path="packaging-products"
+                    element={
+                      <PackagedProductListPage>
+                        <Outlet></Outlet>
+                      </PackagedProductListPage>
+                    }
+                  >
+                    <Route
+                      path=":productId"
+                      element={<PackagingProductShow></PackagingProductShow>}
+                    ></Route>
+                  </Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
                     <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
@@ -451,9 +473,8 @@ const App: React.FC = () => {
                             <Outlet />
                           </ShowTasksList>
                         }
-                      >
-                        <Route path=":taskId" element={<ProductiveTaskShow />} />
-                      </Route>
+                      ></Route>
+                      <Route path="caring-tasks/:taskId" element={<ProductiveTaskShow />}></Route>
                       <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
                       <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
                       <Route

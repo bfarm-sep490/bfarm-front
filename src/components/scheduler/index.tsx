@@ -3,12 +3,13 @@ import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useList } from "@refinedev/core";
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 
 import { Avatar, Card, Flex, Typography } from "antd";
 import { vi } from "date-fns/locale/vi";
 import "./index.css";
+import { ProductiveTaskShow } from "../caring-task/show";
 const locales = {
   vi,
 };
@@ -41,6 +42,7 @@ var defaultMessages = {
   },
 };
 export const ScheduleComponent = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [] = useState(null);
   const { id } = useParams();
@@ -109,17 +111,10 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Chăm sóc" as const,
-          status: task.status as
-            | "Pending"
-            | "Complete"
-            | "Ongoing"
-            | "Cancel"
-            | "Incomplete",
+          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...harvestData.data.map((task) => ({
           id: task.id as number,
@@ -127,17 +122,10 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Thu hoạch" as const,
-          status: task.status as
-            | "Pending"
-            | "Complete"
-            | "Ongoing"
-            | "Cancel"
-            | "Incomplete",
+          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...packingData.data.map((task) => ({
           id: task.id as number,
@@ -145,17 +133,10 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Đóng gói" as const,
-          status: task.status as
-            | "Pending"
-            | "Complete"
-            | "Ongoing"
-            | "Cancel"
-            | "Incomplete",
+          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...inspectionData.data.map((form) => ({
           id: form.id as number,
@@ -163,21 +144,11 @@ export const ScheduleComponent = () => {
           start: new Date(form.start_date),
           end: new Date(form.end_date),
           type: "Kiểm định" as const,
-          status: form.status as
-            | "Pending"
-            | "Complete"
-            | "Ongoing"
-            | "Cancel"
-            | "Incomplete",
-          actor_id: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.id as number,
-          actor_name: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.name,
-          avatar: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.image_url,
+          status: form.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          actor_id: inspectors?.find((inspector) => inspector.id === form.inspector_id)
+            ?.id as number,
+          actor_name: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.name,
+          avatar: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.image_url,
         })),
       ].filter((event) => event.id !== undefined);
       const sort = allEvents.sort((a, b) => {
@@ -202,12 +173,25 @@ export const ScheduleComponent = () => {
   ]);
 
   return (
-    <Card title="📅 Lịch chăm sóc cây trồng" loading={isLoading}>
+    <Card title="📅 Lịch kế hoạch" loading={isLoading}>
       <div className="calendar-container">
         <Calendar
           popup
           messages={defaultMessages}
           localizer={localizer}
+          onDoubleClickEvent={(event) => {
+            if (event.type === "Kiểm định") {
+              navigate(`inspecting-forms/${event.id}`);
+            } else if (event.type === "Đóng gói") {
+              navigate(`packaging-tasks/${event.id}`);
+            } else if (event.type === "Chăm sóc") {
+              navigate(`caring-tasks/${event.id}`);
+            } else if (event.type === "Thu hoạch") {
+              navigate(`harvesting-tasks/${event.id}`);
+            } else {
+              return;
+            }
+          }}
           events={events.map((event) => {
             const statusColorMap = {
               Pending: { color: "#DC6B08", bg: "#FFF7E6" },

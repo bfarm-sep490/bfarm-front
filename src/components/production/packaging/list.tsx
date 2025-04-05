@@ -42,52 +42,36 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
         <Table.Column
           dataIndex="id"
           title={translate("ID")}
-          render={(value) => (
-            <TextField value={"#" + value} style={{ fontWeight: "bold" }} />
-          )}
+          render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
         />
-        <Table.Column
-          dataIndex="plan_name"
-          title={translate("plan_name", "Tên kế hoạch")}
-        />
+        <Table.Column dataIndex="plan_name" title={translate("plan_name", "Tên kế hoạch")} />
 
         <Table.Column
           dataIndex="plant_name"
           title={translate("plant_name", "Tên cây trồng")}
-          render={(value) => (
-            <TextField value={value ? value : "Chưa thu hoạch"} />
-          )}
+          render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
         />
         <Table.Column
           dataIndex="packaging_date"
           title={translate("packaging_date", "Ngày đóng gói")}
-          render={(value) => (
-            <DateField format="hh:mm DD/MM/YYYY" value={value} />
-          )}
+          render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
         />
         <Table.Column
           dataIndex="quantity_per_pack"
           title={translate("quantity_per_pack", "Số lượng mỗi gói")}
-          render={(value) => (
-            <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />
-          )}
+          render={(value) => <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />}
         />
 
         <Table.Column
           dataIndex="pack_quantity"
           title={translate("pack_quantity", "Số lượng gói còn lại")}
-          render={(value) => (
-            <TextField value={value ? value : "Chưa thu hoạch"} />
-          )}
+          render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
         />
         <Table.Column
           dataIndex="expired_date"
           title={translate("expired_date", "Ngày hết hạn")}
           render={(value) => (
-            <DateField
-              format="hh:mm DD/MM/YYYY"
-              value={value ? value : "Chưa thu hoạch"}
-            />
+            <DateField format="hh:mm DD/MM/YYYY" value={value ? value : "Chưa thu hoạch"} />
           )}
         />
         <Table.Column
@@ -99,10 +83,16 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
         <Table.Column
           fixed="right"
           title={translate("table.actions")}
-          dataIndex="actions"
+          dataIndex="id"
           render={(_, record: BaseRecord) => (
             <Space>
-              <ShowButton hideText size="small" onClick={() => {}} />
+              <ShowButton
+                hideText
+                size="small"
+                onClick={() => {
+                  navigate(`${record.id}`);
+                }}
+              />
             </Space>
           )}
         />

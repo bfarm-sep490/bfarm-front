@@ -545,7 +545,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         onClose={() => setCompletedModal(false)}
         status={valueModal}
       />
-      {children}
+      {children}{" "}
     </div>
   );
 };

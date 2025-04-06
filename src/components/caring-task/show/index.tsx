@@ -291,6 +291,10 @@ export const ProductiveTaskShow = () => {
 
   return (
     <Drawer
+      style={{ background: token.colorBgLayout }}
+      headerStyle={{
+        background: token.colorBgContainer,
+      }}
       open={open}
       width={breakpoint.sm ? "736px" : "100%"}
       onClose={back}
@@ -327,7 +331,9 @@ export const ProductiveTaskShow = () => {
         {task?.status === "Complete" ? (
           <Flex vertical gap={16}>
             {task.images?.length > 0 && (
-              <Image.PreviewGroup items={task?.care_images?.map((x: any) => x.url) || []}>
+              <Image.PreviewGroup
+                items={task?.care_images?.map((x: any) => x.url) || []}
+              >
                 <Image
                   loading="lazy"
                   style={{ borderRadius: "10px" }}
@@ -354,7 +360,8 @@ export const ProductiveTaskShow = () => {
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                  {item.value}
                 </List.Item>
               )}
             />
@@ -366,7 +373,11 @@ export const ProductiveTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
+            <Button
+              color="primary"
+              variant="solid"
+              onClick={() => navigate("edit")}
+            >
               Thay đổi
             </Button>
           )}
@@ -398,12 +409,15 @@ export const ProductiveTaskShow = () => {
             },
             {
               label: "Mô tả công việc",
-              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
+              value: (
+                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
@@ -413,7 +427,12 @@ export const ProductiveTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
+              value: (
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.created_at}
+                />
+              ),
             },
             {
               label: "Người tạo",
@@ -422,7 +441,10 @@ export const ProductiveTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
+                <DateField
+                  format={"hh:mm DD/MM/YYYY"}
+                  value={task?.updated_at}
+                />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -434,7 +456,8 @@ export const ProductiveTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
@@ -447,7 +470,11 @@ export const ProductiveTaskShow = () => {
               Lịch sử
             </Button>
             {(task?.status === "Ongoing" || task?.status === "Pending") && (
-              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
+              <Button
+                type="primary"
+                color="cyan"
+                onClick={() => setAssignedModal(true)}
+              >
                 Thay đổi
               </Button>
             )}
@@ -460,23 +487,39 @@ export const ProductiveTaskShow = () => {
             {
               label: "Id",
               value: (
-                <TextField value={task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"} />
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
+                  }
+                />
               ),
             },
             {
               label: "Tên nông dân",
-              value: <TextField value={task?.farmer_information?.[0]?.name || "Chưa giao việc"} />,
+              value: (
+                <TextField
+                  value={
+                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
+                  }
+                />
+              ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+              {item.value}
             </List.Item>
           )}
         />
         <Divider />
-        <Typography.Title level={4}>Phân bón / Thuốc trừ sâu / Vật tư</Typography.Title>
-        <Radio.Group value={modeVattu} onChange={(e) => handleModeChange(e.target.value)}>
+        <Typography.Title level={4}>
+          Phân bón / Thuốc trừ sâu / Vật tư
+        </Typography.Title>
+        <Radio.Group
+          value={modeVattu}
+          onChange={(e) => handleModeChange(e.target.value)}
+        >
           <Radio.Button value="fertilizer">Phân bón</Radio.Button>
           <Radio.Button value="pesticide">Thuốc trừ sâu</Radio.Button>
           <Radio.Button value="item">Vật tư</Radio.Button>

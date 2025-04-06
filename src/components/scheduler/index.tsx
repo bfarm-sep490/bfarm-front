@@ -9,7 +9,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { Avatar, Card, Flex, Typography } from "antd";
 import { vi } from "date-fns/locale/vi";
 import "./index.css";
-import { ProductiveTaskShow } from "../caring-task/show";
+
 const locales = {
   vi,
 };
@@ -20,6 +20,16 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
+
+// Defined status color map outside to ensure it's always available
+const STATUS_COLOR_MAP = {
+  Pending: { color: "#DC6B08", bg: "#FFF7E6" },
+  Complete: { color: "#389E0D", bg: "#F6FFED" },
+  Ongoing: { color: "#0973E4", bg: "#E6F4FF" },
+  Cancel: { color: "#D81322", bg: "#FFF1F0" },
+  Incomplete: { color: "#FAFAFA", bg: "#FAFAFA" },
+  default: { color: "#000000", bg: "#FFFFFF" }, // Fallback colors
+};
 
 var defaultMessages = {
   date: "Ngày",
@@ -41,10 +51,10 @@ var defaultMessages = {
     return "+" + total + " cái khác";
   },
 };
+
 export const ScheduleComponent = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [] = useState(null);
   const { id } = useParams();
   const [view, setView] = useState("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -55,36 +65,67 @@ export const ScheduleComponent = () => {
       start: Date;
       end: Date;
       type: "Chăm sóc" | "Thu hoạch" | "Đóng gói" | "Kiểm định";
-      status: "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete";
+      status: keyof typeof STATUS_COLOR_MAP;
       actor_id: number;
       actor_name: string;
       avatar: string;
     }[]
   >([]);
+
   const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
     resource: `farmers`,
   });
   const { data: caringData, isLoading: caringLoading } = useList({
     resource: "caring-tasks",
-    filters: [{ field: "plan_id", operator: "eq", value: id }],
+    filters: [
+      { field: "plan_id", operator: "eq", value: id },
+      {
+        field: "status",
+        operator: "eq",
+        value: ["Ongoing", "Pending", "Cancel", "Incomplete", "Complete"],
+      },
+    ],
   });
   const { data: harvestData, isLoading: harvestLoading } = useList({
     resource: "harvesting-tasks",
-    filters: [{ field: "plan_id", operator: "eq", value: id }],
+    filters: [
+      { field: "plan_id", operator: "eq", value: id },
+      {
+        field: "status",
+        operator: "eq",
+        value: ["Ongoing", "Pending", "Cancel", "Incomplete", "Complete"],
+      },
+    ],
   });
   const { data: packingData, isLoading: packingLoading } = useList({
     resource: "packaging-tasks",
-    filters: [{ field: "plan_id", operator: "eq", value: id }],
+    filters: [
+      { field: "plan_id", operator: "eq", value: id },
+      {
+        field: "status",
+        operator: "eq",
+        value: ["Ongoing", "Pending", "Cancel", "Incomplete", "Complete"],
+      },
+    ],
   });
   const { data: inspectionData, isLoading: inspectionLoading } = useList({
     resource: "inspecting-forms",
-    filters: [{ field: "plan_id", operator: "eq", value: id }],
+    filters: [
+      { field: "plan_id", operator: "eq", value: id },
+      {
+        field: "status",
+        operator: "eq",
+        value: ["Ongoing", "Pending", "Cancel", "Incomplete", "Complete"],
+      },
+    ],
   });
   const { data: inspectorData, isLoading: inspectorLoading } = useList({
     resource: "inspectors",
   });
+
   const inspectors = inspectorData?.data;
   const farmers = chosenFarmerData?.data;
+
   useEffect(() => {
     if (
       caringLoading ||
@@ -111,10 +152,12 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Chăm sóc" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...harvestData.data.map((task) => ({
           id: task.id as number,
@@ -122,10 +165,12 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Thu hoạch" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...packingData.data.map((task) => ({
           id: task.id as number,
@@ -133,10 +178,12 @@ export const ScheduleComponent = () => {
           start: new Date(task.start_date),
           end: new Date(task.end_date),
           type: "Đóng gói" as const,
-          status: task.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
+          status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
+            ?.avatar_image,
         })),
         ...inspectionData.data.map((form) => ({
           id: form.id as number,
@@ -144,13 +191,19 @@ export const ScheduleComponent = () => {
           start: new Date(form.start_date),
           end: new Date(form.end_date),
           type: "Kiểm định" as const,
-          status: form.status as "Pending" | "Complete" | "Ongoing" | "Cancel" | "Incomplete",
-          actor_id: inspectors?.find((inspector) => inspector.id === form.inspector_id)
-            ?.id as number,
-          actor_name: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.name,
-          avatar: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.image_url,
+          status: form.status as keyof typeof STATUS_COLOR_MAP,
+          actor_id: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.id as number,
+          actor_name: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.name,
+          avatar: inspectors?.find(
+            (inspector) => inspector.id === form.inspector_id
+          )?.image_url,
         })),
       ].filter((event) => event.id !== undefined);
+
       const sort = allEvents.sort((a, b) => {
         return (
           new Date(a.end).getDate() -
@@ -170,6 +223,10 @@ export const ScheduleComponent = () => {
     harvestLoading,
     packingLoading,
     inspectionLoading,
+    inspectorLoading,
+    chosenFarmerLoading,
+    inspectors,
+    farmers,
   ]);
 
   return (
@@ -193,15 +250,8 @@ export const ScheduleComponent = () => {
             }
           }}
           events={events.map((event) => {
-            const statusColorMap = {
-              Pending: { color: "#DC6B08", bg: "#FFF7E6" },
-              Complete: { color: "#389E0D", bg: "#F6FFED" },
-              Ongoing: { color: "#0973E4", bg: "#E6F4FF" },
-              Cancel: { color: "#D81322", bg: "#FFF1F0" },
-              Incomplete: { color: "#FAFAFA", bg: "#FAFAFA" },
-            };
-
-            const statusColor = statusColorMap[event.status];
+            const statusColor =
+              STATUS_COLOR_MAP[event.status] || STATUS_COLOR_MAP.default;
 
             return {
               title: (
@@ -241,14 +291,9 @@ export const ScheduleComponent = () => {
           views={["month", "week", "day", "agenda"]}
           style={{ height: 800 }}
           eventPropGetter={(event) => {
-            const statusColorMap = {
-              Pending: { color: "#DC6B08", bg: "#FFF7E6" },
-              Complete: { color: "#389E0D", bg: "#F6FFED" },
-              Ongoing: { color: "#0973E4", bg: "#E6F4FF" },
-              Cancel: { color: "#D81322", bg: "#FFF1F0" },
-              Incomplete: { color: "#FAFAFA", bg: "#FAFAFA" },
-            };
-            const statusColor = statusColorMap[event.status];
+            const statusColor =
+              STATUS_COLOR_MAP[event.status as keyof typeof STATUS_COLOR_MAP] ||
+              STATUS_COLOR_MAP.default;
 
             return {
               style: {

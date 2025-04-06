@@ -12,6 +12,7 @@ import {
   Divider,
   Drawer,
   Flex,
+  Form,
   Input,
   Modal,
   Row,
@@ -31,10 +32,8 @@ import dayjs from "dayjs";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
-import { VerifyPlanInformation } from "./verify";
-import { InputGeneralPlan } from "./input-general";
-import { ChooseFarmers } from "./choose-farmers";
-import { AssignTasks } from "./assign-tasks";
+import { ChooseFarmers } from "@/pages/plans/approvaled-drawer/choose-farmers";
+import { AssignTasks } from "@/pages/plans/approvaled-drawer/assign-tasks";
 
 interface GainingPlan {
   plan_name: string;
@@ -57,15 +56,37 @@ interface GainingPlan {
     farmer_id: number;
     status: string;
   }[];
-
   inspecting_tasks: {
+    task_id: number;
+    inspector_id: number;
+    status: string;
+  }[];
+  packaging_tasks: {
+    task_id: number;
+    farmer_id: number;
+    status: string;
+  }[];
+  status: string;
+  inspecting_forms: {
     task_id: number;
     inspector_id: number;
     status: string;
   }[];
 }
 
-export const ApprovingPlanDrawer = () => {
+type AssignTaskModalProps = {
+  open?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
+  refetch?: () => void;
+  planId?: number;
+  type?: string;
+  problemId?: number;
+  isOnlyAddTaskSign?: boolean;
+  api?: any;
+};
+
+export const AssignTaskModal = (props: AssignTaskModalProps) => {
   const { id } = useParams();
   const [current, setCurrent] = React.useState<number>(0);
   const [productiveTasks, setProductiveTasks] = React.useState<any[]>([]);
@@ -78,18 +99,35 @@ export const ApprovingPlanDrawer = () => {
   const [experts, setExperts] = React.useState<any[]>([]);
   const [yields, setYields] = React.useState<any[]>([]);
   const [packagingTasks, setPackagingTasks] = React.useState<any[]>([]);
-
+  const back = useBack();
   const { formProps, formLoading, onFinish } = useForm<GainingPlan>({
     resource: "plans",
-    id: `${id}/tasks-assign`,
+    id: `${props?.planId}/tasks-assign`,
     action: "edit",
     queryOptions: {
       enabled: false,
     },
+    redirect: false,
+    updateMutationOptions: {
+      onSuccess: (data) => {
+        props?.api?.success({
+          message: "Cập nhật thành công",
+        });
+        props?.refetch?.();
+        props?.onClose?.();
+      },
+      onError: (error) => {
+        props?.api?.error({
+          message: "Cập nhật thất bại",
+          description: error.message,
+        });
+      },
+    },
   });
+
   const { data: generalData, isLoading: generalLoading } = useOne({
     resource: "plans",
-    id: `${id}/general`,
+    id: `${props?.planId}/general`,
     queryOptions: {
       onSuccess(data: any) {
         const plan = data?.data;
@@ -106,18 +144,28 @@ export const ApprovingPlanDrawer = () => {
           caring_tasks: [],
           inspecting_forms: [],
           harvesting_tasks: [],
+          packaging_tasks: [],
           farmers: [],
         });
       },
     },
   });
-  const { query: queryResult } = useShow({
+
+  const {
+    data: queryResult,
+    isLoading: planLoading,
+    refetch: planRefetch,
+  } = useOne({
     resource: "plans",
-    id: `${id}/general`,
+    id: `${props?.planId || id}/general`,
   });
 
-  const { data: chosenFarmerData, isLoading: chosenFarmerLoading } = useList({
-    resource: `plans/${id}/farmers`,
+  const {
+    data: chosenFarmerData,
+    isLoading: chosenFarmerLoading,
+    refetch: chosenFarmerRefetch,
+  } = useList({
+    resource: `plans/${props?.planId || id}/farmers`,
     queryOptions: {
       cacheTime: 60000,
       onSuccess(data: any) {
@@ -125,7 +173,12 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: farmerData, isLoading: farmerLoading } = useList({
+
+  const {
+    data: farmerData,
+    isLoading: farmerLoading,
+    refetch: farmersRefetch,
+  } = useList({
     resource: `farmers`,
     queryOptions: {
       cacheTime: 60000,
@@ -135,9 +188,12 @@ export const ApprovingPlanDrawer = () => {
     },
   });
 
-  const { data: expertsData, isLoading: expertLoading } = useList({
+  const {
+    data: expertsData,
+    isLoading: expertLoading,
+    refetch: expertRefetch,
+  } = useList({
     resource: `experts`,
-
     queryOptions: {
       cacheTime: 60000,
       onSuccess(data: any) {
@@ -146,9 +202,12 @@ export const ApprovingPlanDrawer = () => {
     },
   });
 
-  const { data: yieldsData, isLoading: yieldLoading } = useList({
+  const {
+    data: yieldsData,
+    isLoading: yieldLoading,
+    refetch: yieldRefetch,
+  } = useList({
     resource: "yields",
-
     queryOptions: {
       cacheTime: 60000,
       onSuccess(data: any) {
@@ -156,9 +215,13 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: plantData, isLoading: plantLoading } = useList({
-    resource: "plants",
 
+  const {
+    data: plantData,
+    isLoading: plantLoading,
+    refetch: plantRefetch,
+  } = useList({
+    resource: "plants",
     queryOptions: {
       cacheTime: 60000,
       onSuccess(data: any) {
@@ -166,9 +229,13 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: inspectorsData, isLoading: inspectorLoading } = useList({
-    resource: "inspectors",
 
+  const {
+    data: inspectorsData,
+    isLoading: inspectorLoading,
+    refetch: inspectorRefetch,
+  } = useList({
+    resource: "inspectors",
     queryOptions: {
       cacheTime: 60000,
       onSuccess(data: any) {
@@ -176,13 +243,18 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
-  const { data: CaringTaskData, isLoading: caringLoading } = useList({
+
+  const {
+    data: CaringTaskData,
+    isLoading: caringLoading,
+    refetch: caringRefetch,
+  } = useList({
     resource: "caring-tasks",
     filters: [
       {
         field: "plan_id",
         operator: "eq",
-        value: id,
+        value: props?.planId || id,
       },
       {
         field: "status",
@@ -192,17 +264,28 @@ export const ApprovingPlanDrawer = () => {
     ],
     queryOptions: {
       onSuccess(data: any) {
-        setProductiveTasks(data?.data || []);
+        if (props?.problemId)
+          setProductiveTasks(
+            data?.data.filter(
+              (task: any) => task?.problem_id === props?.problemId
+            ) || []
+          );
+        else setProductiveTasks(data?.data || []);
       },
     },
   });
-  const { data: PackagingTaskData, isLoading: packagingLoading } = useList({
+
+  const {
+    data: PackagingTaskData,
+    isLoading: packagingLoading,
+    refetch: packagingRefetch,
+  } = useList({
     resource: "packaging-tasks",
     filters: [
       {
         field: "plan_id",
         operator: "eq",
-        value: id,
+        value: props?.planId || id,
       },
       {
         field: "status",
@@ -212,17 +295,22 @@ export const ApprovingPlanDrawer = () => {
     ],
     queryOptions: {
       onSuccess(data: any) {
-        setPackagingTasks(data?.data || []);
+        if (!props?.problemId) setPackagingTasks(data?.data || []);
       },
     },
   });
-  const { data: HarvestingTaskData, isLoading: harvestingLoading } = useList({
+
+  const {
+    data: HarvestingTaskData,
+    isLoading: harvestingLoading,
+    refetch: harvestingRefetch,
+  } = useList({
     resource: "harvesting-tasks",
     filters: [
       {
         field: "plan_id",
         operator: "eq",
-        value: id,
+        value: props?.planId || id,
       },
       {
         field: "status",
@@ -232,17 +320,22 @@ export const ApprovingPlanDrawer = () => {
     ],
     queryOptions: {
       onSuccess(data: any) {
-        setHarvestingTasks(data?.data || []);
+        if (!props?.problemId) setHarvestingTasks(data?.data || []);
       },
     },
   });
-  const { data: InspectingTaskData, isLoading: inspectingLoading } = useList({
+
+  const {
+    data: InspectingTaskData,
+    isLoading: inspectingLoading,
+    refetch: inspectingFormRefetch,
+  } = useList({
     resource: "inspecting-forms",
     filters: [
       {
         field: "plan_id",
         operator: "eq",
-        value: id,
+        value: props?.planId || id,
       },
       {
         field: "status",
@@ -252,12 +345,11 @@ export const ApprovingPlanDrawer = () => {
     ],
     queryOptions: {
       onSuccess(data: any) {
-        setInspectingTasks(data?.data || []);
+        if (!props?.problemId) setInspectingTasks(data?.data || []);
       },
     },
   });
 
-  const back = useBack();
   const next = () => {
     setCurrent(current + 1);
   };
@@ -265,13 +357,16 @@ export const ApprovingPlanDrawer = () => {
   const prev = () => {
     setCurrent(current - 1);
   };
+
   const { token } = theme.useToken();
 
   const contentStyle: React.CSSProperties = {
     color: token.colorTextTertiary,
     marginTop: 16,
   };
+
   const [loading, setLoading] = useState(false);
+
   const handleDone = async (type: string) => {
     try {
       setLoading(true);
@@ -280,33 +375,41 @@ export const ApprovingPlanDrawer = () => {
         farmer_id: task.farmer_id,
         status: type,
       }));
+
       const harvesting_tasks = harvestingTasks.map((task) => ({
         task_id: task.id,
         farmer_id: task.farmer_id,
         status: type,
       }));
+
       const inspecting_forms = inspectingTasks.map((task) => ({
         task_id: task.id,
         inspector_id: task.inspector_id,
         status: type,
       }));
+
       const packaging_tasks = packagingTasks.map((task) => ({
         task_id: task.id,
         farmer_id: task.farmer_id,
         status: type,
       }));
+
       formProps.form?.setFieldValue("caring_tasks", caring_tasks);
       formProps.form?.setFieldValue("harvesting_tasks", harvesting_tasks);
       formProps.form?.setFieldValue("inspecting_forms", inspecting_forms);
       formProps.form?.setFieldValue("packaging_tasks", packaging_tasks);
-      formProps.form?.setFieldValue("status", type);
+      formProps.form?.setFieldValue("status", queryResult?.data?.status);
+
       await onFinish();
+      props?.refetch?.();
+      props?.onClose?.();
     } catch (error) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
     }
   };
+
   const validateAllTasks = () => {
     for (const task of productiveTasks) {
       if (!task.farmer_id) {
@@ -314,39 +417,56 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
     }
+
     for (const task of harvestingTasks) {
       if (!task.farmer_id) {
         alert(
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
     }
+
     for (const task of inspectingTasks) {
       if (!task.inspector_id) {
         alert(
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
     }
+
+    for (const task of packagingTasks) {
+      if (!task.farmer_id) {
+        alert(
+          "Chưa chọn nông dân cho công việc đóng gói cho công việc " +
+            task.name +
+            " #ID: " +
+            task.id
+        );
+        return false;
+      }
+    }
+
     return true;
   };
+
   const [loadingForm, setLoadingForm] = useState(true);
+
   useEffect(() => {
     if (
-      queryResult?.isLoading === false &&
+      planLoading === false &&
       plantLoading === false &&
       yieldLoading === false &&
       expertLoading === false &&
@@ -362,7 +482,7 @@ export const ApprovingPlanDrawer = () => {
       setLoadingForm(false);
     }
   }, [
-    queryResult?.isLoading,
+    planLoading,
     plantLoading,
     yieldLoading,
     expertLoading,
@@ -376,15 +496,38 @@ export const ApprovingPlanDrawer = () => {
     formLoading,
   ]);
 
+  useEffect(() => {
+    if (props?.open === false) {
+      setCurrent(0);
+      setProductiveTasks([]);
+      setHarvestingTasks([]);
+      setInspectingTasks([]);
+      setFarmers([]);
+      setInspectors([]);
+      setChosenFarmers([]);
+      setPlants([]);
+      setExperts([]);
+      setYields([]);
+      setPackagingTasks([]);
+      formProps.form?.resetFields();
+    } else {
+      planRefetch();
+      plantRefetch();
+      yieldRefetch();
+      expertRefetch();
+      farmersRefetch();
+      chosenFarmerRefetch();
+      caringRefetch();
+      harvestingRefetch();
+      inspectingFormRefetch();
+      packagingRefetch();
+      inspectorRefetch();
+    }
+  }, [props?.open]);
+
   const steps = [
     {
       title: "1",
-      content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
-      ),
-    },
-    {
-      title: "2",
       content: (
         <>
           <ChooseFarmers
@@ -405,7 +548,7 @@ export const ApprovingPlanDrawer = () => {
       ),
     },
     {
-      title: "3",
+      title: "2",
       content: (
         <>
           <AssignTasks
@@ -427,30 +570,14 @@ export const ApprovingPlanDrawer = () => {
         </>
       ),
     },
-    {
-      title: "4",
-      content: (
-        <>
-          <VerifyPlanInformation
-            plants={plants}
-            yields={yields}
-            formProps={formProps}
-            experts={experts}
-            productiveTasks={productiveTasks}
-            harvestingTasks={harvestingTasks}
-            inspectingTasks={inspectingTasks}
-            inspectors={inspectors}
-            farmers={farmers}
-            packagingTasks={packagingTasks}
-          />
-        </>
-      ),
-    },
   ];
+
   return (
-    <Drawer
-      loading={loadingForm}
-      open
+    <Modal
+      width={"60%"}
+      height={"40%"}
+      open={props?.open}
+      onCancel={props?.onClose}
       title={
         <>
           <Steps
@@ -458,39 +585,43 @@ export const ApprovingPlanDrawer = () => {
             current={current}
             onChange={(value: any) => setCurrent(value)}
           >
-            <Steps.Step key={1} title="Thông tin chung" />
-            <Steps.Step key={2} title="Nông dân tham gia" />
-            <Steps.Step key={3} title="Phân bổ công việc" />
-            <Steps.Step key={4} title="Xác nhận" />
+            <Steps.Step key={1} title="Nông dân tham gia" />
+            <Steps.Step key={2} title="Phân bổ công việc" />
           </Steps>
         </>
       }
-      width={"100%"}
-      height={"100%"}
-      onClose={back}
       footer={
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}
-            {current < 3 && (
+            {current < steps.length - 1 && (
               <Button
                 type="primary"
                 onClick={() => {
-                  if (current == 2) {
-                    if (!validateAllTasks()) return;
-                  }
                   next();
                 }}
               >
                 Next
               </Button>
             )}
-            {current === 3 && (
-              <Button type="primary" onClick={() => handleDone("Ongoing")} loading={loading}>
+            {current === steps.length - 1 && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  if (validateAllTasks()) {
+                    handleDone(props?.type ? props?.type : "Ongoing");
+                  }
+                }}
+                loading={loading}
+              >
                 Done
               </Button>
             )}
@@ -501,6 +632,6 @@ export const ApprovingPlanDrawer = () => {
       <Spin spinning={loadingForm}>
         <div style={contentStyle}>{steps[current].content}</div>
       </Spin>
-    </Drawer>
+    </Modal>
   );
 };

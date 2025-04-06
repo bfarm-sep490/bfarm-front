@@ -30,6 +30,8 @@ const getStatusTagValue = (value: string) => {
       return "Trong quá trình";
     case "Incomplete":
       return "Chưa hoàn thành";
+    case "Draft":
+      return "Nháp";
     case "Unapprove":
       return "Không phê duyệt";
     default:

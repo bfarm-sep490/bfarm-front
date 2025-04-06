@@ -107,9 +107,7 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 renderItem={(item) => (
                   <List.Item>
                     <List.Item.Meta
-                      style={{
-                        padding: "0 16px",
-                      }}
+                      style={{ padding: "0 16px" }}
                       avatar={<Typography.Text type="secondary">{item.label}</Typography.Text>}
                       title={item.value}
                     />

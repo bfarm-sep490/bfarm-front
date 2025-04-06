@@ -47,7 +47,7 @@ export const PesticidesListTable: React.FC = () => {
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Search ID" />
+            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="STìm ID" />
           )}
           render={(value) => (
             <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
@@ -59,7 +59,7 @@ export const PesticidesListTable: React.FC = () => {
           title="Ảnh"
           dataIndex="image"
           key="image"
-          render={(image: string) => <Avatar shape="square" src={image} alt="Pesticide" />}
+          render={(image: string) => <Avatar shape="square" src={image} alt="Thuốc trừ sâu" />}
         />
 
         <Table.Column
@@ -71,11 +71,11 @@ export const PesticidesListTable: React.FC = () => {
             <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-          filterDropdown={(props) => <Input placeholder="Search name" />}
+          filterDropdown={(props) => <Input placeholder="Tìm tên thuốc" />}
         />
 
         <Table.Column
-          title="Mô tảtả"
+          title="Mô tả"
           dataIndex="description"
           key="description"
           width={300}
@@ -96,7 +96,7 @@ export const PesticidesListTable: React.FC = () => {
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+            <InputNumber placeholder="Tìm theo số lượng" style={{ width: "100%" }} />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />

@@ -40,7 +40,7 @@ export const OrderListTable: React.FC = () => {
         filterDropdown={(props) => (
           <InputNumber
             style={{ width: "100%" }}
-            placeholder="Search ID"
+            placeholder="Tìm ID"
             onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
           />
         )}

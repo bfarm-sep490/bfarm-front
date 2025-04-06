@@ -190,6 +190,18 @@ const App: React.FC = () => {
                     label: "Đơn hàng",
                   },
                 },
+
+                // {
+                //   name: "inspections",
+                //   list: "/inspections",
+                //   edit: "/inspections/edit/:id",
+                //   show: "/inspections/show/:id",
+                //   meta: {
+                //     label: "Inspecting Forms",
+                //     icon: <ScheduleOutlined />,
+                //   },
+                // },
+
                 {
                   name: "products",
                   meta: {
@@ -197,6 +209,7 @@ const App: React.FC = () => {
                     icon: <ProductOutlined />,
                   },
                 },
+
                 {
                   name: "harvesting-products",
                   list: "/harvesting-products",
@@ -217,6 +230,94 @@ const App: React.FC = () => {
                     canDelete: true,
                   },
                 },
+
+                // {
+                //   name: "inspections",
+                //   list: "/inspections",
+                //   edit: "/inspections/edit/:id",
+                //   show: "/inspections/show/:id",
+                //   meta: {
+                //     label: "Inspecting Forms",
+                //     icon: <ScheduleOutlined />,
+                //   },
+                // },
+
+                // {
+                //   name: "yield",
+                //   list: "/yield",
+                //   create: "/yield/create",
+                //   edit: "/yield/edit/:id",
+                //   show: "/yield/show/:id",
+                //   meta: {
+                //     label: "Yields",
+                //     icon: <EnvironmentOutlined />,
+                //   },
+                // },
+                // {
+                //   name: "plants",
+                //   list: "/plants",
+                //   create: "/plants/create",
+                //   edit: "/plants/edit/:id",
+                //   show: "/plants/:id",
+                //   meta: {
+                //     label: "Plants",
+                //     icon: <EnvironmentOutlined />,
+                //   },
+                // },
+                // {
+                //   name: "material",
+                //   meta: {
+                //     label: "Material",
+                //     icon: <GoldOutlined />,
+                //   },
+                // },
+                // {
+                //   name: "fertilizers",
+                //   list: "/fertilizers",
+                //   create: "/fertilizers/create",
+                //   edit: "/fertilizers/edit/:id",
+                //   show: "/fertilizers/:id",
+                //   meta: { parent: "material", canDelete: true },
+                // },
+                // {
+                //   name: "items",
+                //   list: "/items",
+                //   create: "/items/create",
+                //   edit: "/items/edit/:id",
+                //   show: "/items/:id",
+                //   meta: { parent: "material", canDelete: true },
+                // },
+                // {
+                //   name: "pesticides",
+                //   list: "/pesticides",
+                //   create: "/pesticides/create",
+                //   edit: "/pesticides/edit/:id",
+                //   show: "/pesticides/:id",
+                //   meta: { parent: "material", canDelete: true },
+                // },
+                // {
+                //   name: "employees",
+                //   meta: {
+                //     label: "Employees",
+                //     icon: <GoldOutlined />,
+                //   },
+                // },
+                // {
+                //   name: "farmers",
+                //   list: "/farmers",
+                //   create: "/farmers/create",
+                //   edit: "/farmers/edit/:id",
+                //   show: "/farmers/:id",
+                //   meta: { parent: "employees", canDelete: true },
+                // },
+                // {
+                //   name: "experts",
+                //   list: "/experts",
+                //   create: "/experts/create",
+                //   edit: "/experts/edit/:id",
+                //   show: "/experts/:id",
+                //   meta: { parent: "employees", canDelete: true },
+                // },
                 {
                   name: "plans",
                   list: "/plans",
@@ -430,6 +531,9 @@ const App: React.FC = () => {
                           </PlanShow>
                         }
                       />
+
+                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+
                       <Route
                         path="farmers"
                         element={
@@ -640,16 +744,16 @@ const App: React.FC = () => {
 
                   <Route
                     path="/inspection-forms"
-                    element={<InspectionsList />}
-                  />
-                  <Route
-                    path="/inspection-forms/:id"
-                    element={<InspectionShow />}
-                  />
-                  <Route
-                    path="/inspection-forms/edit/:id"
-                    element={<InspectionEdit />}
-                  />
+                    element={
+                      <InspectionsList>
+                        <Outlet></Outlet>
+                      </InspectionsList>
+                    }
+                  >
+                    <Route path=":id" element={<InspectionShow />} />
+                  </Route>
+                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
+                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
 
                   <Route
                     path="/plants"

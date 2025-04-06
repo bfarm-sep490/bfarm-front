@@ -69,7 +69,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Add New Fertilizer
+          Thêm Mới
         </CreateButton>,
       ]}
     >

@@ -81,11 +81,18 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
+          fixed="right"
           title={translate("table.actions")}
-          dataIndex="actions"
+          dataIndex="id"
           render={(_, record: BaseRecord) => (
             <Space>
-              <ShowButton hideText size="small" onClick={() => {}} />
+              <ShowButton
+                hideText
+                size="small"
+                onClick={() => {
+                  navigate(`${record.id}`);
+                }}
+              />
             </Space>
           )}
         />

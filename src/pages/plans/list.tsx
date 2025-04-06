@@ -27,7 +27,7 @@ export const PlanList = () => {
 
   return (
     <List>
-      <Table {...tableProps} rowKey="id">
+      <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
         <Table.Column
           dataIndex="id"
           title={translate("plans.fields.id", "ID")}
@@ -78,6 +78,7 @@ export const PlanList = () => {
           }}
         />
         <Table.Column
+          fixed="right"
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (

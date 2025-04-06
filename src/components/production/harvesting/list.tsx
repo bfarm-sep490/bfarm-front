@@ -71,11 +71,18 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
         />
 
         <Table.Column
+          fixed="right"
           title={translate("table.actions")}
           dataIndex="actions"
           render={(_, record: BaseRecord) => (
             <Space>
-              <ShowButton hideText size="small" onClick={() => {}} />
+              <ShowButton
+                hideText
+                size="small"
+                onClick={() => {
+                  navigate(`${record.harvesting_task_id}`);
+                }}
+              />
             </Space>
           )}
         />

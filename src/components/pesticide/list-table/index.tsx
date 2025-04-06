@@ -31,7 +31,7 @@ export const PesticidesListTable: React.FC = () => {
       <Table
         {...tableProps}
         rowKey="id"
-        scroll={{ x: true }}
+        scroll={{ x: "max-content" }}
         pagination={{
           ...tableProps.pagination,
           showTotal: (total) => <PaginationTotal total={total} entityName="pesticides" />,
@@ -118,9 +118,9 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
+          fixed="right"
           title="Hành động"
           key="actions"
-          fixed="right"
           align="center"
           render={(_, record: IPesticide) => (
             <Button

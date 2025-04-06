@@ -103,7 +103,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
       cacheTime: 1000 * 60,
     },
   });
-  const { data: problemsData, isLoading: problemsLoading } = useOne<IProblem[], HttpError>({
+  const { data: problemsData, isLoading: problemsLoading } = useOne<
+    IProblem[],
+    HttpError
+  >({
     resource: "plans",
     id: `${id}/problems`,
   });
@@ -116,6 +119,21 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     resource: "plans",
     id: `${id}/tasks/count`,
   });
+  const {
+    data: inspectingTaskData,
+    isLoading: inspectingTaskLoading,
+    error: inspectingTaskError,
+  } = useList<any, HttpError>({
+    resource: "inspecting-forms",
+    filters: [
+      {
+        field: "plan_id",
+        operator: "eq",
+        value: id,
+      },
+    ],
+  });
+  const inspecting_task_dashboard = inspectingTaskData?.data as any[];
   const caring_task_dashboard = taskDashBoardData?.data?.caring_tasks;
   const havesting_task_dashboard = taskDashBoardData?.data?.harvesting_tasks;
   const packaging_task_dashboard = taskDashBoardData?.data?.packaging_tasks;
@@ -241,7 +259,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <UserOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Cây trồng:</Typography.Text>
                     <Typography.Text>
-                      {general_info?.plant_information?.plant_name || "Chưa xác định"}
+                      {general_info?.plant_information?.plant_name ||
+                        "Chưa xác định"}
                     </Typography.Text>
                   </Space>
 
@@ -249,7 +268,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <GoldOutlined style={{ fontSize: 16 }} />
                     <Typography.Text strong>Khu đất</Typography.Text>
                     <Typography.Text>
-                      <Tag>{general_info?.yield_information?.yield_name || "Chưa xác định"}</Tag>
+                      <Tag>
+                        {general_info?.yield_information?.yield_name ||
+                          "Chưa xác định"}
+                      </Tag>
                     </Typography.Text>
                   </Space>
                   <Space align="start" style={{ marginTop: 12 }}>
@@ -271,9 +293,14 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     <Typography.Text strong>Ngày tạo:</Typography.Text>
                     <Typography.Text type="secondary">
                       {general_info?.created_at ? (
-                        <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
+                        <DateField
+                          value={general_info?.created_at}
+                          format="hh:mm DD/MM/YYYY"
+                        />
                       ) : (
-                        <Typography.Text type="danger">Chưa xác định</Typography.Text>
+                        <Typography.Text type="danger">
+                          Chưa xác định
+                        </Typography.Text>
                       )}
                     </Typography.Text>
                   </Space>
@@ -332,7 +359,8 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 loading={problemsLoading}
                 navigate={`/plans/${id}/problems`}
                 completedTasks={
-                  problemsData?.data?.filter((x) => x.status === "Pending").length || 0
+                  problemsData?.data?.filter((x) => x.status === "Pending")
+                    .length || 0
                 }
               />
             </Col>
@@ -372,7 +400,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   >
                     <ActivityCard
                       icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
-                      completedTasks={caring_task_dashboard?.complete_quantity || 0}
+                      completedTasks={
+                        caring_task_dashboard?.complete_quantity || 0
+                      }
                       title="Chăm sóc"
                       loading={isTaskDashboardLoading}
                       totalActivity={
@@ -384,7 +414,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       }
                       lastActivityDate={
                         "Lần cuối: " +
-                        new Date(caring_task_dashboard?.last_create_date).toLocaleDateString()
+                        new Date(
+                          caring_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
                       }
                       navigate={`/plans/${id}/caring-tasks`}
                     />
@@ -392,14 +424,24 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <ActivityCard
-                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                    completedTasks={12}
-                    title="Kiểm định"
-                    totalActivity={13}
-                    lastActivityDate={"Lần cuối: 13/12/2025"}
-                    navigate={`/plans/${id}/inspecting-tasks`}
-                  />
+                  <Badge.Ribbon
+                    color="red"
+                    text={`${
+                      inspecting_task_dashboard?.filter((x) => x.status === "Pending")?.length || 0
+                    }`}
+                  >
+                    <ActivityCard
+                      loading={inspectingTaskLoading}
+                      icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
+                      completedTasks={
+                        inspecting_task_dashboard?.filter((x) => x.status === "Complete")?.length || 0
+                      }
+                      title="Kiểm định"
+                      totalActivity={inspecting_task_dashboard?.length || 0}
+                      lastActivityDate={"Lần cuối: 13/12/2025"}
+                      navigate={`/plans/${id}/inspecting-tasks`}
+                    />
+                  </Badge.Ribbon>
                 </Col>
 
                 <Col xs={24} sm={12} md={12} lg={12} xl={12}>
@@ -409,7 +451,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   >
                     <ActivityCard
                       icon={<GiftOutlined style={{ color: "#52c41a" }} />}
-                      completedTasks={havesting_task_dashboard?.complete_quantity || 0}
+                      completedTasks={
+                        havesting_task_dashboard?.complete_quantity || 0
+                      }
                       loading={isTaskDashboardLoading}
                       title="Thu hoạch"
                       totalActivity={
@@ -421,7 +465,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       }
                       lastActivityDate={
                         "Lần cuối: " +
-                        new Date(havesting_task_dashboard?.last_create_date).toLocaleDateString()
+                        new Date(
+                          havesting_task_dashboard?.last_create_date
+                        ).toLocaleDateString()
                       }
                       navigate={`/plans/${id}/harvesting-tasks`}
                     />
@@ -435,7 +481,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     children={
                       <ActivityCard
                         icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                        completedTasks={packaging_task_dashboard?.complete_quantity || 0}
+                        completedTasks={
+                          packaging_task_dashboard?.complete_quantity || 0
+                        }
                         loading={isTaskDashboardLoading}
                         totalActivity={
                           packaging_task_dashboard?.cancel_quantity +
@@ -447,7 +495,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         title="Đóng gói"
                         lastActivityDate={
                           "Lần cuối: " +
-                          new Date(packaging_task_dashboard?.last_create_date).toLocaleDateString()
+                          new Date(
+                            packaging_task_dashboard?.last_create_date
+                          ).toLocaleDateString()
                         }
                         navigate={`/plans/${id}/packaging-tasks`}
                       />
@@ -545,7 +595,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
         onClose={() => setCompletedModal(false)}
         status={valueModal}
       />
-      {children}
+      {children}{" "}
     </div>
   );
 };

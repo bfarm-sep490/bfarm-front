@@ -19,6 +19,7 @@ import {
   Input,
   Form,
   theme,
+  Card,
 } from "antd";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -42,127 +43,152 @@ export const OrderDrawerShow = () => {
       {contextHolder}
       <Drawer
         open={true}
-        width={breakpoint.sm ? "736px" : "100%"}
+        width={breakpoint.sm ? "60%" : "100%"}
         onClose={back}
+        style={{
+          backgroundColor: token.colorBgLayout,
+        }}
+        headerStyle={{
+          backgroundColor: token.colorBgContainer,
+        }}
         title={
           <>
-            {order?.status === "Pending" && (
-              <Flex justify="end">
-                <Space>
-                  <Button color="danger" variant="solid">
-                    Từ chối
-                  </Button>
-                  <Button>Chấp nhận</Button>
-                </Space>
-              </Flex>
-            )}
-            {order?.status === "Deposit" && (
-              <>
-                <Flex justify="end" gap={10}>
-                  <Button color="danger" onClick={() => navigate("cancel")}>
-                    Hủy bỏ
-                  </Button>
-                  <Button
-                    type="primary"
-                    disabled={order?.plan_id === null}
-                    onClick={() => setOpen(true)}
-                  >
-                    Hoàn thành
-                  </Button>
+            <Flex justify="space-between" align="center" style={{ marginLeft: 16 }}>
+              <Typography.Title level={4} style={{ margin: 0 }}>
+                Thông tin đơn hàng #{orderId}
+              </Typography.Title>
+              {order?.status === "Pending" && (
+                <Flex justify="end">
+                  <Space>
+                    <Button color="danger" variant="solid">
+                      Từ chối
+                    </Button>
+                    <Button>Chấp nhận</Button>
+                  </Space>
                 </Flex>
+              )}
+              {order?.status === "Deposit" && (
+                <>
+                  <Flex justify="end" gap={10}>
+                    <Button color="danger" onClick={() => navigate("cancel")}>
+                      Hủy bỏ
+                    </Button>
+                    <Button
+                      type="primary"
+                      disabled={order?.plan_id === null}
+                      onClick={() => setOpen(true)}
+                    >
+                      Hoàn thành
+                    </Button>
+                  </Flex>
 
-                {order.plan_id === null && (
-                  <TextField
-                    style={{
-                      textAlign: "end",
-                      fontSize: 12,
-                      color: "red",
-                      fontStyle: "italic",
-                      marginTop: 10,
-                      marginBottom: 10,
-                      justifyContent: "end",
-                    }}
-                    value={"* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"}
-                  ></TextField>
-                )}
-              </>
-            )}
+                  {order.plan_id === null && (
+                    <TextField
+                      style={{
+                        textAlign: "end",
+                        fontSize: 12,
+                        color: "red",
+                        fontStyle: "italic",
+                        marginTop: 10,
+                        marginBottom: 10,
+                        justifyContent: "end",
+                      }}
+                      value={"* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"}
+                    ></TextField>
+                  )}
+                </>
+              )}
+            </Flex>
           </>
         }
       >
-        <Flex vertical gap={24} style={{ padding: "32px" }}>
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Thông tin chi tiết
-          </Typography.Title>
-          <List
-            style={{ backgroundColor: token.colorBgContainer }}
-            bordered
-            dataSource={[
-              {
-                label: "Nhà mua sỉ",
-                value: order?.retailer_name,
-              },
-              {
-                label: "Giống cây",
-                value: order?.plant_name,
-              },
-              {
-                label: "Trạng thái",
-                value: order?.status,
-              },
-              { label: "Địa chỉ", value: order?.address },
-              { label: "Số điện thoại", value: order?.phone },
-              {
-                label: "Số lượng dự kiến",
-                value: order?.preorder_quantity + " kg",
-              },
-              {
-                label: "Ngày ước tính lấy hàng",
-                value: <DateField value={order?.estimate_pick_up_date} format="DD/MM/YYYY" />,
-              },
-              {
-                label: "Ngày tạo đơn",
-                value: <DateField value={order?.created_at} format="hh:mm DD/MM/YYYY" />,
-              },
-              {
-                label: "Mức giá đặt cọc",
-                value: order?.deposit_price + " vnd",
-              },
-              {
-                label: "Giá tổng",
-                value: order?.total_price ? order?.total_price + " vnd" : "Chưa có",
-              },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
-              </List.Item>
-            )}
-          />
-          <Divider />
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Kế hoạch
-          </Typography.Title>
-          <List
-            style={{ backgroundColor: token.colorBgContainer }}
-            bordered
-            dataSource={[
-              {
-                label: "Id ",
-                value: order?.plan_id ?? "Chưa có kế hoạch nào",
-              },
-              {
-                label: "Kế hoạch",
-                value: order?.plan_name ? order?.plan_name : "Chưa có kế hoạch nào",
-              },
-            ]}
-            renderItem={(item) => (
-              <List.Item>
-                <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
-              </List.Item>
-            )}
-          />
-        </Flex>
+        <Card
+          title={
+            <>
+              <Flex justify="space-between">
+                <Flex vertical={false} gap={6}>
+                  <Typography.Title level={5} style={{ margin: 0 }}>
+                    Đơn hàng #{orderId}
+                  </Typography.Title>
+                  <Typography.Text
+                    style={{
+                      fontSize: 14,
+                      color: `${
+                        order?.status === "Deposit"
+                          ? "green"
+                          : order?.status === "Pending"
+                            ? "orange"
+                            : "red"
+                      }`,
+                    }}
+                  >
+                    {order?.status === "Deposit"
+                      ? "Đã đặt cọc"
+                      : order?.status === "Pending"
+                        ? "Chờ duyệt"
+                        : order?.status}
+                  </Typography.Text>
+                </Flex>
+                <Flex justify="end">
+                  <TagField value={order?.status} />
+                </Flex>
+              </Flex>
+            </>
+          }
+        >
+          <Flex vertical gap={12}>
+            <Flex justify="space-between">
+              <Typography.Text strong>Nhà mua sỉ</Typography.Text>
+              <Typography.Text>{order?.retailer_name}</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Giống cây</Typography.Text>
+              <Typography.Text>{order?.plant_name}</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Địa chỉ</Typography.Text>
+              <Typography.Text>{order?.address}</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Số điện thoại</Typography.Text>
+              <Typography.Text>{order?.phone}</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Số lượng dự kiến</Typography.Text>
+              <Typography.Text>{order?.preorder_quantity} kg</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Ngày ước tính lấy hàng</Typography.Text>
+              <DateField format="DD/MM/YYYY" value={order?.estimate_pick_up_date} />
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Ngày tạo đơn</Typography.Text>
+              <DateField format="hh:mm DD/MM/YYYY" value={order?.created_at} />
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Mức giá đặt cọc</Typography.Text>
+              <Typography.Text>{order?.deposit_price} vnd</Typography.Text>
+            </Flex>
+            <Flex justify="space-between">
+              <Typography.Text strong>Giá tổng</Typography.Text>
+              <Typography.Text>
+                {order?.total_price ? order?.total_price + " vnd" : "Chưa có"}
+              </Typography.Text>
+            </Flex>
+          </Flex>
+        </Card>
+
+        <Divider />
+        <Card title={"Thông tin kế hoạch"}>
+          <Flex justify="space-between">
+            <Typography.Text strong>Id</Typography.Text>
+            <Typography.Text>{order?.plan_id}</Typography.Text>
+          </Flex>
+          <Flex justify="space-between">
+            <Typography.Text strong>Tên kế hoạch</Typography.Text>
+            <Typography.Text>{order?.plan_name}</Typography.Text>
+          </Flex>
+        </Card>
         <CompleteOrderModal
           onCancel={() => setOpen(false)}
           onClose={() => setOpen(false)}

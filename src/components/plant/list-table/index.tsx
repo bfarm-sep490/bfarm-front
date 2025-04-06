@@ -29,7 +29,7 @@ export const PlantsListTable: React.FC = () => {
       <Table
         {...tableProps}
         rowKey="id"
-        scroll={{ x: true }}
+        scroll={{ x: "max-content" }}
         pagination={{
           ...tableProps.pagination,
           showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
@@ -101,9 +101,9 @@ export const PlantsListTable: React.FC = () => {
         />
 
         <Table.Column
+          fixed="right"
           title="Hành động"
           key="actions"
-          fixed="right"
           align="center"
           render={(_, record: IPlant) => (
             <Button

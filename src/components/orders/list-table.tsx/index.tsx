@@ -22,7 +22,7 @@ export const OrderListTable: React.FC = () => {
     <Table
       {...tableProps}
       rowKey="id"
-      scroll={{ x: true }}
+      scroll={{ x: "max-content" }}
       pagination={{
         ...tableProps.pagination,
         showTotal: (total) => <PaginationTotal total={total} entityName="inspections" />,

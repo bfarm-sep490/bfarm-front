@@ -104,7 +104,6 @@ export const PlantsListTable: React.FC = () => {
           fixed="right"
           title="Hành động"
           key="actions"
-          fixed="right"
           align="center"
           render={(_, record: IPlant) => (
             <Button

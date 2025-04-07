@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { DateField, TagField, TextField, Title, useForm, useModalForm } from "@refinedev/antd";
 import { useShow, useNavigation, useBack, useList } from "@refinedev/core";
 import {

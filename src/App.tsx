@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
@@ -521,7 +522,10 @@ const App: React.FC = () => {
                   </Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
-                    <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
+                    <Route
+                      path=":id/approve"
+                      element={<ApprovingPlanDrawer />}
+                    ></Route>
                     <Route path=":id">
                       <Route
                         index
@@ -532,7 +536,10 @@ const App: React.FC = () => {
                         }
                       />
 
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
 
                       <Route
                         path="farmers"
@@ -553,7 +560,9 @@ const App: React.FC = () => {
                         {" "}
                         <Route
                           path=":productId"
-                          element={<HarvestingProductShow></HarvestingProductShow>}
+                          element={
+                            <HarvestingProductShow></HarvestingProductShow>
+                          }
                         ></Route>
                       </Route>
                       <Route
@@ -752,8 +761,14 @@ const App: React.FC = () => {
                   >
                     <Route path=":id" element={<InspectionShow />} />
                   </Route>
-                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
-                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
+                  <Route
+                    path="/inspection-forms/:id"
+                    element={<InspectionShow />}
+                  />
+                  <Route
+                    path="/inspection-forms/edit/:id"
+                    element={<InspectionEdit />}
+                  />
 
                   <Route
                     path="/plants"

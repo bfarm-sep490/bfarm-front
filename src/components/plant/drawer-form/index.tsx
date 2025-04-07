@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
 import axios from "axios";
@@ -12,12 +13,15 @@ import {
   Avatar,
   Spin,
   message,
-  Drawer,
+  Modal,
   Select,
+  Row,
+  Col,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
+import { PlantType } from "../plant-type";
 
 type Props = {
   id?: BaseKey;
@@ -26,16 +30,6 @@ type Props = {
   onClose?: () => void;
   onMutationSuccess?: () => void;
 };
-export enum PlantType {
-  Cruciferous = "Rau họ thập tự",
-  Onion = "Hành",
-  Leafy = "Rau ăn lá",
-  FruitVeg = "Rau ăn quả",
-  RootVeg = "Rau ăn củ",
-  Mushroom = "Nấm",
-  MixedVeg = "Rau củ quả",
-  DriedVeg = "Rau khô",
-}
 
 export const PlantDrawerForm = (props: Props) => {
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -67,7 +61,7 @@ export const PlantDrawerForm = (props: Props) => {
     },
   });
 
-  const onDrawerClose = () => {
+  const onModalClose = () => {
     close();
     if (props?.onClose) {
       props.onClose();
@@ -106,12 +100,14 @@ export const PlantDrawerForm = (props: Props) => {
   };
 
   return (
-    <Drawer
-      {...drawerProps}
+    <Modal
       open={true}
       title={props.action === "edit" ? "Chỉnh Sửa" : "Thêm Cây Trồng"}
-      width={breakpoint.sm ? "400px" : "100%"}
-      onClose={onDrawerClose}
+      width={breakpoint.sm ? "1200px" : "100%"}
+      onCancel={onModalClose}
+      footer={null}
+      destroyOnClose
+      bodyStyle={{ maxHeight: "1000px", overflowY: "auto", paddingRight: 16 }}
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
@@ -128,7 +124,7 @@ export const PlantDrawerForm = (props: Props) => {
                   shape="square"
                   src={previewImage || "/images/plant-default-img.png"}
                   alt="Ảnh cây trồng"
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ width: "40%", height: "50%" }}
                 />
                 <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
                   {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
@@ -182,7 +178,16 @@ export const PlantDrawerForm = (props: Props) => {
               ))}
             </Select>
           </Form.Item>
-
+          <Form.Item label="Ước lượng theo một đơn vị" name="estimated_per_one">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập lượng ước tính mỗi đơn vị"
+            />
+          </Form.Item>
+          <Form.Item label="Số ngày bảo quản" name="preservation_day">
+            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số ngày bảo quản" />
+          </Form.Item>
           <Form.Item label="Delta 1" name="delta_one">
             <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 1" />
           </Form.Item>
@@ -194,39 +199,28 @@ export const PlantDrawerForm = (props: Props) => {
           <Form.Item label="Delta 3" name="delta_three">
             <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 3" />
           </Form.Item>
-
-          <Form.Item label="Số ngày bảo quản" name="preservation_day">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số ngày bảo quản" />
-          </Form.Item>
-
-          <Form.Item label="Ước lượng theo một đơn vị" name="estimated_per_one">
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder="Nhập lượng ước tính mỗi đơn vị"
-            />
-          </Form.Item>
-
           <Form.Item
             label="Trạng thái"
             name="status"
             rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+            style={{ display: 'flex', alignItems: 'center' }} 
           >
-            <Select placeholder="Chọn trạng thái">
+            <Select placeholder="Chọn trạng thái" style={{ width: '110%' }}>
               <Select.Option value="Available">Có sẵn</Select.Option>
               <Select.Option value="Out of Stock">Hết hàng</Select.Option>
               <Select.Option value="Limited Stock">Còn ít</Select.Option>
             </Select>
           </Form.Item>
 
+
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Hủy</Button>
+            <Button onClick={onModalClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Lưu
             </SaveButton>
           </Flex>
         </Form>
       </Spin>
-    </Drawer>
+    </Modal>
   );
 };

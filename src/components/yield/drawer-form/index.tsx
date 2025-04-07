@@ -1,6 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
-import { Form, Input, InputNumber, Select, Button, Flex, Drawer, Spin, Switch } from "antd";
+import { Form, Input, InputNumber, Select, Button, Modal, Spin } from "antd";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 
@@ -19,7 +20,7 @@ export const YieldDrawerForm = (props: Props) => {
   const go = useGo();
   const apiUrl = useApiUrl();
 
-  const { drawerProps, formProps, close, saveButtonProps } = useDrawerForm<any>({
+  const { formProps, close, saveButtonProps } = useDrawerForm<any>({
     resource: "yields",
     id: props?.id,
     action: props.action,
@@ -35,7 +36,7 @@ export const YieldDrawerForm = (props: Props) => {
     },
   });
 
-  const onDrawerClose = () => {
+  const onModalClose = () => {
     close();
 
     if (props?.onClose) {
@@ -53,7 +54,16 @@ export const YieldDrawerForm = (props: Props) => {
   const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Khu Đất";
 
   return (
-    <Drawer {...drawerProps} open={true} title={title} width={400} onClose={onDrawerClose}>
+    <Modal
+      visible={props.open}
+      title={title}
+      onCancel={onModalClose}
+      footer={null}
+      width={700}
+      destroyOnClose
+      style={{ maxHeight: "1000px" }}
+      bodyStyle={{ height: "900px", overflowY: "auto" }}
+    >
       <Spin spinning={formLoading}>
         <Form
           form={formProps?.form}
@@ -74,13 +84,19 @@ export const YieldDrawerForm = (props: Props) => {
             name="area"
             rules={[{ required: true, message: "Vui lòng nhập diện tích!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập diện tích" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập diện tích"
+            />
           </Form.Item>
 
           <Form.Item
             label="Đơn vị diện tích"
             name="area_unit"
-            rules={[{ required: true, message: "Vui lòng nhập đơn vị diện tích!" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập đơn vị diện tích!" },
+            ]}
           >
             <Input placeholder="Ví dụ: m², hecta" />
           </Form.Item>
@@ -92,15 +108,6 @@ export const YieldDrawerForm = (props: Props) => {
           >
             <Input.TextArea rows={3} placeholder="Nhập mô tả" />
           </Form.Item>
-
-          <Form.Item
-            label="Kích thước"
-            name="size"
-            rules={[{ required: true, message: "Vui lòng nhập kích thước!" }]}
-          >
-            <Input placeholder="Nhập kích thước" />
-          </Form.Item>
-
           <Form.Item
             label="Loại đất"
             name="type"
@@ -129,14 +136,20 @@ export const YieldDrawerForm = (props: Props) => {
             </Select>
           </Form.Item>
 
-          <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Hủy</Button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: 16,
+            }}
+          >
+            <Button onClick={onModalClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               Lưu
             </SaveButton>
-          </Flex>
+          </div>
         </Form>
       </Spin>
-    </Drawer>
+    </Modal>
   );
 };

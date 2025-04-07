@@ -55,7 +55,7 @@ export const YieldDrawerForm = (props: Props) => {
 
   return (
     <Modal
-      visible={props.open}
+      open={true}
       title={title}
       onCancel={onModalClose}
       footer={null}

@@ -28,7 +28,7 @@
   },
   "include": [
     "commitlint.config.ts",
-    "src"
+    "src",
   ],
   "references": [
     {

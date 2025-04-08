@@ -530,28 +530,8 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
       title: "1",
       content: (
         <>
-          <ChooseFarmers
-            farmers={farmers}
-            productiveTasks={productiveTasks}
-            setProductiveTasks={setProductiveTasks}
-            harvestingTasks={harvestingTasks}
-            setHarvestingTasks={setHarvestingTasks}
-            inspectingTasks={inspectingTasks}
-            setInspectingTasks={setInspectingTasks}
-            formProps={formProps}
-            chosenFarmers={chosenFarmers}
-            setChosenFarmers={setChosenFarmers}
-            packagingTasks={packagingTasks}
-            setPackagingTasks={setPackagingTasks}
-          />
-        </>
-      ),
-    },
-    {
-      title: "2",
-      content: (
-        <>
           <AssignTasks
+            type="Draft"
             loading={loading}
             saveHandle={handleDone}
             chosenFarmers={chosenFarmers}
@@ -585,8 +565,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
             current={current}
             onChange={(value: any) => setCurrent(value)}
           >
-            <Steps.Step key={1} title="Nông dân tham gia" />
-            <Steps.Step key={2} title="Phân bổ công việc" />
+            <Steps.Step key={1} title="Phân bổ công việc" />
           </Steps>
         </>
       }
@@ -594,11 +573,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button
-                loading={loading}
-                style={{ margin: "0 8px" }}
-                onClick={() => prev()}
-              >
+              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
                 Previous
               </Button>
             )}

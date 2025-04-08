@@ -13,9 +13,6 @@ type CaringCreateProps = {
   refetch?: () => void;
 };
 export const CaringModal = (props: CaringCreateProps) => {
-  console.log("props", props);
-  console.log("method", props?.taskId ? "edit" : "create");
-
   return (
     <>
       {" "}

@@ -1,12 +1,7 @@
-/* eslint-disable prettier/prettier */
-import React from "react";
+import React, { useEffect } from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import {
-  ThemedLayoutV2,
-  ErrorComponent,
-  useNotificationProvider,
-} from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -14,6 +9,7 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+
 import {
   CalendarOutlined,
   DashboardOutlined,
@@ -118,7 +114,6 @@ import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 import { PackagingProductShow } from "./components/production/packaging/drawer-show";
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
-
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -150,7 +145,6 @@ const App: React.FC = () => {
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
-
   if (loading) {
     return null;
   }

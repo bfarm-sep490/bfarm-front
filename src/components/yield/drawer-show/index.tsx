@@ -112,6 +112,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
+
                   {
                     label: t("yield.description"),
                     value: yieldData.description,
@@ -126,6 +127,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   },
                   {
                     label: t("yield.status"),
+
                     value: <YieldStatusTag value={yieldData.status} />,
                   },
                 ]}

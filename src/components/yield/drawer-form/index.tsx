@@ -91,14 +91,18 @@ export const YieldDrawerForm = (props: Props) => {
             <InputNumber
               min={0}
               style={{ width: "100%" }}
+
               placeholder={t("yield.placeholder.area")}
+
             />
           </Form.Item>
 
           <Form.Item
             label={t("yield.areaUnit")}
             name="area_unit"
+
             rules={[{ required: true, message: t("yield.required.areaUnit") }]}
+
           >
             <Input placeholder={t("yield.placeholder.areaUnit")} />
           </Form.Item>
@@ -106,6 +110,7 @@ export const YieldDrawerForm = (props: Props) => {
           <Form.Item
             label={t("yield.description")}
             name="description"
+
             rules={[
               { required: true, message: t("yield.required.description") },
             ]}
@@ -169,7 +174,9 @@ export const YieldDrawerForm = (props: Props) => {
               paddingTop: 16,
             }}
           >
+
             <Button onClick={onModalClose}>{t("actions.cancel")}</Button>
+
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               {t("buttons.save")}
             </SaveButton>

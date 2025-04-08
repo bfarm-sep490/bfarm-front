@@ -275,9 +275,7 @@ export const ProblemShowInProblem = () => {
             title={
               <>
                 <Flex vertical={false} gap={16} justify="space-between">
-                  <Typography.Title level={5}>
-                    Danh sách hoạt động
-                  </Typography.Title>
+                  <Typography.Title level={5}>Danh sách hoạt động</Typography.Title>
                   {task?.status === "Pending" && (
                     <Flex gap={10}>
                       <Button

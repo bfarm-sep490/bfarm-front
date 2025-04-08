@@ -1,3 +1,4 @@
+
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
@@ -10,6 +11,7 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+
 import {
   CalendarOutlined,
   DashboardOutlined,
@@ -98,7 +100,6 @@ import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 import { PackagingProductShow } from "./components/production/packaging/drawer-show";
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
-
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -136,7 +137,6 @@ const App: React.FC = () => {
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
-
   if (loading) {
     return null;
   }

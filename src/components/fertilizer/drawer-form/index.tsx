@@ -320,9 +320,11 @@ export const FertilizerDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
+
             <Button onClick={onDrawerClose}>
               {t("buttons.cancel", "Hủy")}
             </Button>
+
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               {t("buttons.save", "Lưu")}
             </SaveButton>

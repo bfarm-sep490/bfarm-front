@@ -90,7 +90,9 @@ export const InspectionListTable: React.FC = () => {
       />
 
       <Table.Column
+
         title={t("fertilizers.actions")}
+
         key="actions"
         fixed="right"
         align="center"

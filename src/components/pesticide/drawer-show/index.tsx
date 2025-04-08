@@ -89,10 +89,12 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 />
               </Flex>
 
+
               <Flex
                 vertical
                 style={{ backgroundColor: token.colorBgContainer }}
               >
+
                 <Flex vertical style={{ padding: "16px" }}>
                   <Typography.Title level={5}>
                     {pesticide.name}

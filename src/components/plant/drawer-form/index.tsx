@@ -15,12 +15,16 @@ import {
   message,
   Modal,
   Select,
+  Row,
+  Col,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { PlantType } from "../plant-type";
+
 import { useTranslation } from "react-i18next";
+
 
 type Props = {
   id?: BaseKey;
@@ -109,12 +113,16 @@ export const PlantDrawerForm = (props: Props) => {
   return (
     <Modal
       open={true}
+
       title={props.action === "edit" ? t("plant.edit") : t("plant.add")}
+
       width={breakpoint.sm ? "1200px" : "100%"}
       onCancel={onModalClose}
       footer={null}
       destroyOnClose
+
       bodyStyle={{ maxHeight: "700px", overflowY: "auto", paddingRight: 16 }}
+
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
@@ -130,7 +138,9 @@ export const PlantDrawerForm = (props: Props) => {
                 <Avatar
                   shape="square"
                   src={previewImage || "/images/plant-default-img.png"}
+
                   alt={t("plant.imageAlt")}
+
                   style={{ width: "40%", height: "50%" }}
                 />
                 <Button
@@ -203,6 +213,7 @@ export const PlantDrawerForm = (props: Props) => {
             </Select>
           </Form.Item>
 
+
           <Form.Item
             label={t("plant.estimatedPerUnit")}
             name="estimated_per_one"
@@ -212,6 +223,7 @@ export const PlantDrawerForm = (props: Props) => {
               style={{ width: "100%" }}
               placeholder={t("plant.estimatedPerUnitPlaceholder")}
             />
+
           </Form.Item>
 
           <Form.Item label={t("plant.preservationDay")} name="preservation_day">
@@ -230,6 +242,7 @@ export const PlantDrawerForm = (props: Props) => {
             />
           </Form.Item>
 
+
           <Form.Item label={t("plant.deltaTwo")} name="delta_two">
             <InputNumber
               min={0}
@@ -246,9 +259,11 @@ export const PlantDrawerForm = (props: Props) => {
             />
           </Form.Item>
 
+
           <Form.Item
             label={t("plant.status")}
             name="status"
+
             rules={[{ required: true, message: t("plant.statusRequired") }]}
             style={{ display: "flex", alignItems: "center" }}
           >
@@ -265,11 +280,15 @@ export const PlantDrawerForm = (props: Props) => {
               <Select.Option value="Limited Stock">
                 {t("plant.statusLimited")}
               </Select.Option>
+
             </Select>
           </Form.Item>
 
+
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
+
             <Button onClick={onModalClose}>{t("actions.cancel")}</Button>
+
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               {t("buttons.save")}
             </SaveButton>

@@ -113,12 +113,13 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   </Typography.Text>
                 </Flex>
               </Flex>
-
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
+
                 <Typography.Title level={5}>
                   {t("plant.title")}
                 </Typography.Title>
+
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
@@ -159,9 +160,11 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
+
                 <Typography.Title level={5}>
                   {t("plant.plantRatioTitle")}
                 </Typography.Title>
+
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}

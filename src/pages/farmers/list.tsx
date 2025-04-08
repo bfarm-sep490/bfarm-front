@@ -69,7 +69,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("buttons.add_farmer", "Tạo mới")}{" "}
+          {t("farmer.add_farmer", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

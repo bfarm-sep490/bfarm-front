@@ -111,7 +111,9 @@
   },
   "status": {
     "enable": "Enable",
-    "disable": "Disable"
+    "disable": "Disable",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
   "notifications": {
@@ -209,7 +211,7 @@
       "name": "Pesticides"
     },
     "yield": {
-      "name": "Field"
+      "name": "Yield"
     },
     "plants": {
       "name": "Plants"
@@ -372,6 +374,161 @@
       "create": "Add Item"
     }
   },
+  "plant": {
+    "edit": "Edit",
+    "add": "Add Plant",
+    "imageAlt": "Image",
+    "name": "Plant Name",
+    "nameRequired": "Please enter the plant name!",
+    "namePlaceholder": "Enter plant name",
+    "quantity": "Quantity",
+    "quantityRequired": "Please enter the quantity!",
+    "quantityPlaceholder": "Enter quantity",
+    "description": "Description",
+    "descriptionRequired": "Please enter the description!",
+    "descriptionPlaceholder": "Enter description",
+    "basePrice": "Base Price",
+    "basePriceRequired": "Please enter the base price!",
+    "basePricePlaceholder": "Enter base price",
+    "type": "Type",
+    "typeRequired": "Please select a type!",
+    "typePlaceholder": "Select plant type",
+    "estimatedPerUnit": "Estimated per unit",
+    "estimatedPerUnitPlaceholder": "Enter estimated per unit",
+    "preservationDay": "Preservation Days",
+    "preservationDayPlaceholder": "Enter preservation days",
+    "deltaOne": "Rate Type 1",
+    "deltaOnePlaceholder": "Enter rate type 1",
+    "deltaTwo": "Rate Type 2",
+    "deltaTwoPlaceholder": "Enter rate type 2",
+    "deltaThree": "Rate Type 3",
+    "deltaThreePlaceholder": "Enter rate type 3",
+    "status": "Status",
+    "statusRequired": "Please select a status!",
+    "statusPlaceholder": "Select status",
+    "statusAvailable": "Available",
+    "statusOutOfStock": "Out of Stock",
+    "statusLimited": "Limited Stock",
+    "upload": "Upload Image",
+    "uploading": "Uploading...",
+    "title": "Plant Variety Details",
+    "plantRatioTitle": "Plant Price Ratios",
+    "suitableSoilList": "List of Suitable Soils",
+    "day": "date",
+    "create": "Add Plant"
+  },
+  "yield": {
+    "landName": "Land Name",
+    "area": "Area",
+    "areaUnit": "Area Unit",
+    "description": "Description",
+    "soilType": "Soil Type",
+    "status": "Status",
+    "editLand": "Edit Yield",
+    "addLand": "Add Yield",
+    "available": "Available",
+    "maintenance": "Maintenance",
+    "inUse": "In Use",
+    "suitablePlants": "Suitable Plants",
+    "loading": "Loading...",
+    "create": "Add Yield",
+    "soilTypes": {
+      "gray": "Gray Soil",
+      "sandy": "Sandy Soil",
+      "red": "Red Soil",
+      "black": "Black Soil",
+      "acidSulfate": "Acid Sulfate Soil",
+      "acidic": "Acidic Soil",
+      "organic": "Organic Soil"
+    },
+    "required": {
+      "landName": "Please enter the land name!",
+      "area": "Please enter the area!",
+      "areaUnit": "Please enter the area unit!",
+      "description": "Please enter the description!",
+      "soilType": "Please select a soil type!",
+      "status": "Please select a status!"
+    },
+    "placeholder": {
+      "landName": "Enter land name",
+      "area": "Enter area",
+      "areaUnit": "e.g. m², hectare",
+      "description": "Enter description",
+      "soilType": "Select soil type",
+      "status": "Select status"
+    }
+  },
+  "form": {
+    "edit_farmer": "Edit farmer",
+    "create_farmer": "Create farmer",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "images": {
+    "upload": "Upload Image",
+    "uploading": "Uploading..."
+  },
+  "farmer_name": "Farmer name",
+  "farmer": {
+    "phone": "Phone number",
+    "email": "Email",
+    "status": "Status",
+    "created_at": "Created At",
+    "updated_at": "Updated At",
+    "not_updated": "Not Updated",
+    "avatar": "Image",
+    "add_farmer": "Add Farmer"
+  },
+  "validation": {
+    "name_required": "Please input name!",
+    "name_length": "Name must be between 6 and 50 characters!",
+    "phone_required": "Please input phone number!",
+    "phone_invalid": "Invalid phone number format!",
+    "email_required": "Please input your email!",
+    "email_invalid": "The input is not valid E-mail!"
+  },
+  "experts": {
+    "form": {
+      "edit": "Edit Expert",
+      "add": "Add Expert",
+      "cancel": "Cancel",
+      "save": "Save",
+      "add_expert": "Add Expert"
+    },
+    "fields": {
+      "name": "Expert Name",
+      "phone": "Phone",
+      "email": "Email",
+      "status": "Status",
+      "avatar": "Image",
+      "created_at": "Created At",
+      "updated_at": "Updated At",
+      "not_updated": "Not Updated"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "upload": {
+      "uploading": "Uploading...",
+      "button": "Upload Image"
+    },
+    "validation": {
+      "required_name": "Please enter a name",
+      "name_length": "Name must be between 6 and 50 characters",
+      "required_phone": "Please input your phone!",
+      "invalid_phone": "The input is not valid phone number!",
+      "required_email": "Please input your email!",
+      "invalid_email": "The input is not valid E-mail!"
+    },
+    "common": {
+      "search_id": "Search ID",
+      "search_name": "Search name",
+      "search_email": "Search email",
+      "filter_by_status": "Filter by status"
+    }
+  },
+
   "enum": {
     "orderStatuses": {
       "Pending": "Pending",

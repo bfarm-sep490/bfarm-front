@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   type BaseKey,
   type HttpError,
@@ -7,7 +8,17 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+  Tag,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
@@ -101,44 +112,49 @@ export const ExpertDrawerShow = (props: Props) => {
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("expert.phone", "Điện thoại")}
+                  {t("experts.fields.phone")}
                 </Typography.Text>
               ),
               value: expert?.phone,
             },
             {
               label: (
-                <Typography.Text type="secondary">{t("expert.email", "Email")}</Typography.Text>
+                <Typography.Text type="secondary">
+                  {t("experts.fields.email")}
+                </Typography.Text>
               ),
               value: expert?.email,
             },
-
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("expert.status", "Trạng thái")}
+                  {t("experts.fields.status")}
                 </Typography.Text>
               ),
-              value: expert?.status && <ExpertStatusTag status={expert.status} />,
+              value: expert?.status && (
+                <ExpertStatusTag status={expert.status} />
+              ),
             },
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("expert.created_at", "Ngày tạo")}
+                  {t("experts.fields.created_at")}
                 </Typography.Text>
               ),
-              value: <DateField format="DD/MM/YYYY" value={expert?.created_at} />,
+              value: (
+                <DateField format="DD/MM/YYYY" value={expert?.created_at} />
+              ),
             },
             {
               label: (
                 <Typography.Text type="secondary">
-                  {t("expert.updated_at", "Ngày cập nhập")}{" "}
+                  {t("experts.fields.updated_at")}
                 </Typography.Text>
               ),
               value: expert?.updated_at ? (
-                <DateField value={expert?.created_date} />
+                <DateField value={expert?.updated_at} />
               ) : (
-                <TextField value="Chưa cập nhập" />
+                <TextField value={t("experts.fields.not_updated")} />
               ),
             },
           ]}

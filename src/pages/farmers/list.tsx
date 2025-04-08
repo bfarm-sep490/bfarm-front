@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FarmerListTable } from "@/components/farmer";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
@@ -14,10 +15,11 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("farmers-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("farmers-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
-    // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(value);
@@ -29,6 +31,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.farmers.name", "Nông dân")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

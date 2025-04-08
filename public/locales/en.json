@@ -204,6 +204,174 @@
       "value": "Value"
     }
   },
+  "resources": {
+    "pesticides": {
+      "name": "Pesticides"
+    },
+    "yield": {
+      "name": "Field"
+    },
+    "plants": {
+      "name": "Plants"
+    },
+    "items": {
+      "name": "Items"
+    },
+    "fertilizers": {
+      "name": "Fertilizers"
+    },
+    "farmers": {
+      "name": "Farmers"
+    },
+    "experts": {
+      "name": "Experts"
+    },
+    "inspection-forms": {
+      "name": "Inspection Forms"
+    },
+    "inspectors": {
+      "name": "Inspectors"
+    },
+    "plans": {
+      "name": "Plans"
+    }
+  },
+  "fertilizers": {
+    "entity": "fertilizers",
+    "tableTitle": "Fertilizer List",
+    "actions": "Actions",
+    "filters": {
+      "id": "Search ID",
+      "name": "Search name",
+      "quantity": "Search quantity"
+    },
+    "buttons": {
+      "create": "Add Fertilizer"
+    },
+    "fields": {
+      "id": "ID",
+      "image": "Image",
+      "imageAlt": "Fertilizer image",
+      "uploading": "Uploading...",
+      "upload": "Upload image",
+      "name": "Fertilizer Name",
+      "name_required": "Please enter the name!",
+      "name_placeholder": "Enter fertilizer name",
+      "description": "Description",
+      "description_required": "Please enter the description!",
+      "description_placeholder": "Enter fertilizer description",
+      "quantity": "Quantity",
+      "quantity_required": "Please enter quantity!",
+      "quantity_placeholder": "Enter quantity",
+      "unit": "Unit",
+      "unit_required": "Please enter unit!",
+      "unit_placeholder": "kg, liter, bag, etc.",
+      "status": "Status",
+      "status_required": "Please select status!",
+      "status_placeholder": "Select status",
+      "type": "Fertilizer Type",
+      "type_required": "Please select type!",
+      "type_placeholder": "Select type"
+    },
+    "status": {
+      "available": "Available",
+      "out": "Out of stock",
+      "limited": "Limited"
+    },
+    "type": {
+      "organic": "Organic",
+      "chemical": "Chemical",
+      "mineral": "Mineral"
+    }
+  },
+  "title": {
+    "edit": "Edit",
+    "create": "Add "
+  },
+  "pesticides": {
+    "imageAlt": "Pesticide image",
+    "uploading": "Uploading...",
+    "upload": "Upload Image",
+    "actions": "Actions",
+    "fields": {
+      "id": "ID",
+      "image": "Image",
+      "name": "Pesticide Name",
+      "description": "Description",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "type": "Type",
+      "status": "Status",
+      "searchById": "Search ID",
+      "searchByName": "Search by name",
+      "searchByQuantity": "Search by quantity"
+    },
+    "placeholders": {
+      "name": "Enter pesticide name",
+      "description": "Enter pesticide description",
+      "quantity": "Enter total quantity",
+      "selectType": "Select type",
+      "selectStatus": "Select status"
+    },
+    "messages": {
+      "nameRequired": "Please enter the name!",
+      "descriptionRequired": "Please enter the description!",
+      "quantityRequired": "Please enter the quantity!",
+      "unitRequired": "Please enter the unit!",
+      "typeRequired": "Please select a type!",
+      "statusRequired": "Please select a status!"
+    },
+    "types": {
+      "organic": "Organic",
+      "chemical": "Chemical",
+      "mineral": "Mineral"
+    },
+    "status": {
+      "limited": "Limited Stock",
+      "out": "Out of Stock",
+      "available": "Available"
+    }
+  },
+  "items": {
+    "id": "ID",
+    "image": "Image",
+    "edit": "Edit",
+    "add": "Add Item",
+    "imageAlt": "Item Image",
+    "uploading": "Uploading...",
+    "upload": "Upload Image",
+    "name": "Item Name",
+    "nameRequired": "Please enter the name!",
+    "namePlaceholder": "Enter item name",
+    "description": "Description",
+    "descriptionRequired": "Please enter the description!",
+    "descriptionPlaceholder": "Enter item description",
+    "quantity": "Quantity",
+    "quantityRequired": "Please enter the quantity!",
+    "quantityPlaceholder": "Enter quantity",
+    "unit": "Unit",
+    "unitRequired": "Please enter the unit!",
+    "unitPlaceholder": "piece, box, machine, basket",
+    "status": "Status",
+    "statusRequired": "Please select status!",
+    "statusPlaceholder": "Select status",
+    "statusActive": "Active",
+    "statusInStock": "In Stock",
+    "statusOutStock": "Out of Stock",
+    "type": "Type",
+    "typeRequired": "Please select type!",
+    "typePlaceholder": "Select type",
+    "typePackaging": "Packaging",
+    "typeCaring": "Caring",
+    "typeHarvesting": "Harvesting",
+    "searchId": "Search ID",
+    "searchName": "Search name",
+    "searchQuantity": "Search quantity",
+    "actions": "Actions",
+    "buttons": {
+      "create": "Add Item"
+    }
+  },
   "enum": {
     "orderStatuses": {
       "Pending": "Pending",

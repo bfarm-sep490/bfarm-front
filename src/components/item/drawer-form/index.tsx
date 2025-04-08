@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
 import axios from "axios";
@@ -18,6 +19,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id?: BaseKey;
@@ -36,28 +38,29 @@ export const ItemDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "items",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.image) {
-          console.log("Fetched data:", data);
-          setPreviewImage(data.data.image);
-          formProps.form.setFieldsValue({
-            ...data?.data,
-            image_url: data?.data.image,
-          });
-        }
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "items",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image) {
+            console.log("Fetched data:", data);
+            setPreviewImage(data.data.image);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+              image_url: data?.data.image,
+            });
+          }
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
     close();
@@ -88,9 +91,13 @@ export const ItemDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(`${apiUrl}/items/images/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${apiUrl}/items/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -109,7 +116,9 @@ export const ItemDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Chỉnh Sửa" : "TThêm Vật Tư";
+  const { t } = useTranslation();
+
+  const title = props.action === "edit" ? t("items.edit") : t("items.add");
 
   return (
     <Drawer
@@ -144,75 +153,100 @@ export const ItemDrawerForm = (props: Props) => {
                     height: previewImage ? "100%" : "80px",
                   }}
                   src={previewImage || "/images/item-default-img.png"}
-                  alt="Ảnh vật tư"
+                  alt={t("items.imageAlt")}
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
-                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading ? t("items.uploading") : t("items.upload")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
           <Form.Item
-            label="Tên vật tư"
+            label={t("items.name")}
             name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+            rules={[{ required: true, message: t("items.nameRequired") }]}
           >
-            <Input placeholder="Nhập tên vật phẩm" />
+            <Input placeholder={t("items.namePlaceholder")} />
           </Form.Item>
 
           <Form.Item
-            label="Mô tả"
+            label={t("items.description")}
             name="description"
-            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+            rules={[
+              { required: true, message: t("items.descriptionRequired") },
+            ]}
           >
-            <Input.TextArea rows={3} placeholder="Nhập mô tả vật phẩm" />
+            <Input.TextArea
+              rows={3}
+              placeholder={t("items.descriptionPlaceholder")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Số lượng"
+            label={t("items.quantity")}
             name="quantity"
-            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            rules={[{ required: true, message: t("items.quantityRequired") }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("items.quantityPlaceholder")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Đơn vị"
+            label={t("items.unit")}
             name="unit"
-            rules={[{ required: true, message: "Vui lòng nhập đơn vị!" }]}
+            rules={[{ required: true, message: t("items.unitRequired") }]}
           >
-            <Input placeholder="cái, hộp, máy, giỏ" />
+            <Input placeholder={t("items.unitPlaceholder")} />
           </Form.Item>
 
           <Form.Item
-            label="Trạng thái"
+            label={t("items.status")}
             name="status"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+            rules={[{ required: true, message: t("items.statusRequired") }]}
           >
-            <Select placeholder="Chọn trạng thái">
-              <Select.Option value="Active">Đang hoạt động</Select.Option>
-              <Select.Option value="In-stock">Còn hàng</Select.Option>
-              <Select.Option value="Out-stock">Hết hàng</Select.Option>
+            <Select placeholder={t("items.statusPlaceholder")}>
+              <Select.Option value="Active">
+                {t("items.statusActive")}
+              </Select.Option>
+              <Select.Option value="In-stock">
+                {t("items.statusInStock")}
+              </Select.Option>
+              <Select.Option value="Out-stock">
+                {t("items.statusOutStock")}
+              </Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="Loại"
+            label={t("items.type")}
             name="type"
-            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+            rules={[{ required: true, message: t("items.typeRequired") }]}
           >
-            <Select placeholder="Chọn loại">
-              <Select.Option value="Packaging">Đóng gói</Select.Option>
-              <Select.Option value="Caring">Chăm sóc</Select.Option>
-              <Select.Option value="Harvesting">Thu hoạch</Select.Option>
+            <Select placeholder={t("items.typePlaceholder")}>
+              <Select.Option value="Packaging">
+                {t("items.typePackaging")}
+              </Select.Option>
+              <Select.Option value="Caring">
+                {t("items.typeCaring")}
+              </Select.Option>
+              <Select.Option value="Harvesting">
+                {t("items.typeHarvesting")}
+              </Select.Option>
             </Select>
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Hủy</Button>
+            <Button onClick={onDrawerClose}>{t("actions.cancel")}</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Lưu
+              {t("buttons.save")}
             </SaveButton>
           </Flex>
         </Form>

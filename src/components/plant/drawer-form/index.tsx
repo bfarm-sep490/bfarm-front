@@ -15,8 +15,6 @@ import {
   message,
   Modal,
   Select,
-  Row,
-  Col,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -40,26 +38,28 @@ export const PlantDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "plants",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.image_url) {
-          setPreviewImage(data.data.image_url);
-          formProps.form.setFieldsValue({
-            ...data?.data,
-          });
-        }
+  const { formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>(
+    {
+      resource: "plants",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image_url) {
+            setPreviewImage(data.data.image_url);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+            });
+          }
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    }
+  );
 
   const onModalClose = () => {
     close();
@@ -80,9 +80,13 @@ export const PlantDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(`${apiUrl}/plants/images/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${apiUrl}/plants/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
@@ -107,7 +111,7 @@ export const PlantDrawerForm = (props: Props) => {
       onCancel={onModalClose}
       footer={null}
       destroyOnClose
-      bodyStyle={{ maxHeight: "1000px", overflowY: "auto", paddingRight: 16 }}
+      bodyStyle={{ maxHeight: "700px", overflowY: "auto", paddingRight: 16 }}
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
@@ -126,7 +130,11 @@ export const PlantDrawerForm = (props: Props) => {
                   alt="Ảnh cây trồng"
                   style={{ width: "40%", height: "50%" }}
                 />
-                <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={uploading}
+                  style={{ marginTop: 16 }}
+                >
                   {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
                 </Button>
               </Flex>
@@ -136,7 +144,9 @@ export const PlantDrawerForm = (props: Props) => {
           <Form.Item
             label="Tên cây trồng"
             name="plant_name"
-            rules={[{ required: true, message: "Vui lòng nhập tên cây trồng!" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập tên cây trồng!" },
+            ]}
           >
             <Input placeholder="Nhập tên cây trồng" />
           </Form.Item>
@@ -146,7 +156,11 @@ export const PlantDrawerForm = (props: Props) => {
             name="quantity"
             rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập số lượng"
+            />
           </Form.Item>
 
           <Form.Item
@@ -162,7 +176,11 @@ export const PlantDrawerForm = (props: Props) => {
             name="base_price"
             rules={[{ required: true, message: "Vui lòng nhập giá cơ bản!" }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập giá cơ bản" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập giá cơ bản"
+            />
           </Form.Item>
 
           <Form.Item
@@ -186,32 +204,47 @@ export const PlantDrawerForm = (props: Props) => {
             />
           </Form.Item>
           <Form.Item label="Số ngày bảo quản" name="preservation_day">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số ngày bảo quản" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập số ngày bảo quản"
+            />
           </Form.Item>
           <Form.Item label="Delta 1" name="delta_one">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 1" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập Delta 1"
+            />
           </Form.Item>
 
           <Form.Item label="Delta 2" name="delta_two">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 2" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập Delta 2"
+            />
           </Form.Item>
 
           <Form.Item label="Delta 3" name="delta_three">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 3" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Nhập Delta 3"
+            />
           </Form.Item>
           <Form.Item
             label="Trạng thái"
             name="status"
             rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
-            style={{ display: 'flex', alignItems: 'center' }} 
+            style={{ display: "flex", alignItems: "center" }}
           >
-            <Select placeholder="Chọn trạng thái" style={{ width: '110%' }}>
+            <Select placeholder="Chọn trạng thái" style={{ width: "110%" }}>
               <Select.Option value="Available">Có sẵn</Select.Option>
               <Select.Option value="Out of Stock">Hết hàng</Select.Option>
               <Select.Option value="Limited Stock">Còn ít</Select.Option>
             </Select>
           </Form.Item>
-
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
             <Button onClick={onModalClose}>Hủy</Button>

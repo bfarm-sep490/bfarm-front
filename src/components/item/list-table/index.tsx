@@ -1,7 +1,20 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import { useTable } from "@refinedev/antd";
-import { type HttpError, getDefaultFilter } from "@refinedev/core";
-import { Table, Avatar, Button, Input, InputNumber, Typography, theme } from "antd";
+import {
+  type HttpError,
+  getDefaultFilter,
+  useTranslate,
+} from "@refinedev/core";
+import {
+  Table,
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Typography,
+  theme,
+} from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IItem } from "@/interfaces";
@@ -24,6 +37,8 @@ export const ItemsListTable: React.FC = () => {
 
   const [selectedItemId, setSelectedItemId] = useState<string | undefined>();
 
+  const t = useTranslate();
+
   return (
     <>
       <Table
@@ -32,23 +47,32 @@ export const ItemsListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="items" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="items" />
+          ),
         }}
       >
         <Table.Column
-          title="ID"
+          title={t("items.id")}
           dataIndex="id"
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={(props) => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
+          filterDropdown={(props) => (
+            <InputNumber
+              style={{ width: "100%" }}
+              placeholder={t("items.searchId")}
+            />
+          )}
         />
 
         <Table.Column
-          title="Hình ảnh"
+          title={t("items.image")}
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -61,44 +85,57 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Tên vật tư"
+          title={t("items.name")}
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-          filterDropdown={(props) => <Input placeholder="Search name" />}
+          filterDropdown={(props) => (
+            <Input placeholder={t("items.searchName")} />
+          )}
         />
 
         <Table.Column
-          title="Mô tả"
+          title={t("items.description")}
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
+
         <Table.Column
-          title="Số lượng"
+          title={t("items.quantity")}
           dataIndex="quantity"
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+            <InputNumber
+              placeholder={t("items.searchQuantity")}
+              style={{ width: "100%" }}
+            />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
 
         <Table.Column
-          title="Loại vật tư"
+          title={t("items.type")}
           dataIndex="type"
           key="type"
           width={120}
@@ -106,7 +143,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Trạng thái"
+          title={t("items.status")}
           dataIndex="status"
           key="status"
           width={120}
@@ -114,7 +151,7 @@ export const ItemsListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Actions"
+          title={t("items.actions")}
           key="actions"
           fixed="right"
           align="center"
@@ -126,9 +163,11 @@ export const ItemsListTable: React.FC = () => {
           )}
         />
       </Table>
-
       {selectedItemId && (
-        <ItemDrawerShow id={selectedItemId} onClose={() => setSelectedItemId(undefined)} />
+        <ItemDrawerShow
+          id={selectedItemId}
+          onClose={() => setSelectedItemId(undefined)}
+        />
       )}
     </>
   );

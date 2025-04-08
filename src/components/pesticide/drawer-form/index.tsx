@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
 import axios from "axios";
@@ -19,6 +20,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { IPesticide } from "@/interfaces";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id?: BaseKey;
@@ -37,8 +39,8 @@ export const PesticideDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IPesticide>(
-    {
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<IPesticide>({
       resource: "pesticides",
       id: props?.id,
       action: props.action ?? "create",
@@ -55,8 +57,7 @@ export const PesticideDrawerForm = (props: Props) => {
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
       },
-    },
-  );
+    });
 
   const onDrawerClose = () => {
     close();
@@ -87,9 +88,13 @@ export const PesticideDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(`${apiUrl}/pesticides/images/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${apiUrl}/pesticides/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -108,7 +113,9 @@ export const PesticideDrawerForm = (props: Props) => {
     }
   };
 
-  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Thuốc";
+  const { t } = useTranslation();
+
+  const title = props.action === "edit" ? t("title.edit") : t("title.create");
 
   return (
     <Drawer
@@ -143,75 +150,130 @@ export const PesticideDrawerForm = (props: Props) => {
                     height: previewImage ? "100%" : "80px",
                   }}
                   src={previewImage || "/images/pesticide-default-img.png"}
-                  alt="Ảnh thuốc trừ sâu"
+                  alt={t("pesticides.imageAlt")}
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
-                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading
+                    ? t("pesticides.uploading")
+                    : t("pesticides.upload")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
           <Form.Item
-            label="Tên thuốc"
+            label={t("pesticides.fields.name")}
             name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.nameRequired"),
+              },
+            ]}
           >
-            <Input placeholder="Nhập tên thuốc trừ sâu" />
+            <Input placeholder={t("pesticides.placeholders.name")} />
           </Form.Item>
 
           <Form.Item
-            label="Mô tả"
+            label={t("pesticides.fields.description")}
             name="description"
-            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.descriptionRequired"),
+              },
+            ]}
           >
-            <Input.TextArea rows={3} placeholder="Nhập mô tả thuốc trừ sâu" />
+            <Input.TextArea
+              rows={3}
+              placeholder={t("pesticides.placeholders.description")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Số lượng"
+            label={t("pesticides.fields.quantity")}
             name="quantity"
-            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.quantityRequired"),
+              },
+            ]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập tổng số lượng" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("pesticides.placeholders.quantity")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Đơn vị"
+            label={t("pesticides.fields.unit")}
             name="unit"
-            rules={[{ required: true, message: "Vui lòng nhập đơn vị!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.unitRequired"),
+              },
+            ]}
           >
             <Input placeholder="ml, l, kg, g" />
           </Form.Item>
 
           <Form.Item
-            label="Loại"
+            label={t("pesticides.fields.type")}
             name="type"
-            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.typeRequired"),
+              },
+            ]}
           >
-            <Select placeholder="Chọn loại">
-              <Select.Option value="Organic">Hữu cơ</Select.Option>
-              <Select.Option value="Chemical">Hóa học</Select.Option>
-              <Select.Option value="Mineral">Khoáng chất</Select.Option>
+            <Select placeholder={t("pesticides.placeholders.selectType")}>
+              <Select.Option value="Organic">
+                {t("pesticides.types.organic")}
+              </Select.Option>
+              <Select.Option value="Chemical">
+                {t("pesticides.types.chemical")}
+              </Select.Option>
+              <Select.Option value="Mineral">
+                {t("pesticides.types.mineral")}
+              </Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="Trạng thái"
+            label={t("pesticides.fields.status")}
             name="status"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+            rules={[
+              {
+                required: true,
+                message: t("pesticides.messages.statusRequired"),
+              },
+            ]}
           >
-            <Select placeholder="Chọn trạng thái">
-              <Select.Option value="Limited Stock">Còn ít</Select.Option>
-              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
-              <Select.Option value="Available">Có sẵn</Select.Option>
+            <Select placeholder={t("pesticides.placeholders.selectStatus")}>
+              <Select.Option value="Limited Stock">
+                {t("pesticides.status.limited")}
+              </Select.Option>
+              <Select.Option value="Out of Stock">
+                {t("pesticides.status.out")}
+              </Select.Option>
+              <Select.Option value="Available">
+                {t("pesticides.status.available")}
+              </Select.Option>
             </Select>
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Hủy</Button>
+            <Button onClick={onDrawerClose}>{t("actions.cancel")}</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Lưu
+              {t("buttons.save")}
             </SaveButton>
           </Flex>
         </Form>

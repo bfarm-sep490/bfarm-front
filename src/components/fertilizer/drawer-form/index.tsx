@@ -1,5 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import {
+  type BaseKey,
+  useApiUrl,
+  useGetToPath,
+  useGo,
+  useTranslate,
+} from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -36,27 +43,28 @@ export const FertilizerDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "fertilizers",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.image) {
-          setPreviewImage(data.data.image);
-          formProps.form.setFieldsValue({
-            ...data?.data,
-            image_url: data?.data.image,
-          });
-        }
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "fertilizers",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image) {
+            setPreviewImage(data.data.image);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+              image_url: data?.data.image,
+            });
+          }
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
     close();
@@ -87,9 +95,13 @@ export const FertilizerDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(`${apiUrl}/fertilizers/images/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${apiUrl}/fertilizers/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -107,8 +119,8 @@ export const FertilizerDrawerForm = (props: Props) => {
       setUploading(false);
     }
   };
-
-  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm Phân Bón";
+  const t = useTranslate();
+  const title = props.action === "edit" ? t("title.edit") : t("title.create");
 
   return (
     <Drawer
@@ -145,68 +157,174 @@ export const FertilizerDrawerForm = (props: Props) => {
                   src={previewImage || "/images/fertilizer-default-img.png"}
                   alt="Ảnh phan bón"
                 />
-                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
-                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
+                <Button
+                  icon={<UploadOutlined />}
+                  style={{ marginTop: 16 }}
+                  disabled={uploading}
+                >
+                  {uploading
+                    ? t("fertilizers.fields.uploading", "Đang tải lên...")
+                    : t("fertilizers.fields.upload", "Tải ảnh lên")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
           <Form.Item
-            label="Tên phân bón"
+            label={t("fertilizers.fields.name", "Tên phân bón")}
             name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.name_required",
+                  "Vui lòng nhập tên!"
+                ),
+              },
+            ]}
           >
-            <Input placeholder="Nhập tên phân bón" />
+            <Input
+              placeholder={t(
+                "fertilizers.fields.name_placeholder",
+                "Nhập tên phân bón"
+              )}
+            />
           </Form.Item>
+
           <Form.Item
-            label="Mô tả"
+            label={t("fertilizers.fields.description", "Mô tả")}
             name="description"
-            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.description_required",
+                  "Vui lòng nhập mô tả!"
+                ),
+              },
+            ]}
           >
-            <Input.TextArea rows={3} placeholder="Nhập mô tả phân bón" />
+            <Input.TextArea
+              rows={3}
+              placeholder={t(
+                "fertilizers.fields.description_placeholder",
+                "Nhập mô tả phân bón"
+              )}
+            />
           </Form.Item>
+
           <Form.Item
-            label="Số lượng"
+            label={t("fertilizers.fields.quantity", "Số lượng")}
             name="quantity"
-            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.quantity_required",
+                  "Vui lòng nhập số lượng!"
+                ),
+              },
+            ]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t(
+                "fertilizers.fields.quantity_placeholder",
+                "Nhập số lượng"
+              )}
+            />
           </Form.Item>
+
           <Form.Item
-            label="Đơn vị"
+            label={t("fertilizers.fields.unit", "Đơn vị")}
             name="unit"
-            rules={[{ required: true, message: "Vui lòng nhập đơn vị!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.unit_required",
+                  "Vui lòng nhập đơn vị!"
+                ),
+              },
+            ]}
           >
-            <Input placeholder="kg, liters, bags, etc." />
+            <Input
+              placeholder={t(
+                "fertilizers.fields.unit_placeholder",
+                "kg, lít, bao, v.v."
+              )}
+            />
           </Form.Item>
+
           <Form.Item
-            label="Trạng thái"
+            label={t("fertilizers.fields.status", "Trạng thái")}
             name="status"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.status_required",
+                  "Vui lòng chọn trạng thái!"
+                ),
+              },
+            ]}
           >
-            <Select placeholder="Chọn trạng thái">
-              <Select.Option value="Available">Đang sử dụng</Select.Option>
-              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
-              <Select.Option value="Limited Stock">Còn ít</Select.Option>
+            <Select
+              placeholder={t(
+                "fertilizers.fields.status_placeholder",
+                "Chọn trạng thái"
+              )}
+            >
+              <Select.Option value="Available">
+                {t("fertilizers.status.available", "Đang sử dụng")}
+              </Select.Option>
+              <Select.Option value="Out of Stock">
+                {t("fertilizers.status.out", "Hết hàng")}
+              </Select.Option>
+              <Select.Option value="Limited Stock">
+                {t("fertilizers.status.limited", "Còn ít")}
+              </Select.Option>
             </Select>
           </Form.Item>
+
           <Form.Item
-            label="Loại"
+            label={t("fertilizers.fields.type", "Loại")}
             name="type"
-            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "fertilizers.fields.type_required",
+                  "Vui lòng chọn loại!"
+                ),
+              },
+            ]}
           >
-            <Select placeholder="Chọn loại">
-              <Select.Option value="Organic">Hữu cơ</Select.Option>
-              <Select.Option value="Chemical">Hóa học</Select.Option>
-              <Select.Option value="Mineral">Khoáng</Select.Option>
+            <Select
+              placeholder={t(
+                "fertilizers.fields.type_placeholder",
+                "Chọn loại"
+              )}
+            >
+              <Select.Option value="Organic">
+                {t("fertilizers.type.organic", "Hữu cơ")}
+              </Select.Option>
+              <Select.Option value="Chemical">
+                {t("fertilizers.type.chemical", "Hóa học")}
+              </Select.Option>
+              <Select.Option value="Mineral">
+                {t("fertilizers.type.mineral", "Khoáng")}
+              </Select.Option>
             </Select>
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Hủy</Button>
+            <Button onClick={onDrawerClose}>
+              {t("buttons.cancel", "Hủy")}
+            </Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Lưu
+              {t("buttons.save", "Lưu")}
             </SaveButton>
           </Flex>
         </Form>

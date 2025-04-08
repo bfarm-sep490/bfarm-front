@@ -1,5 +1,11 @@
+/* eslint-disable prettier/prettier */
 import { NumberField, useSimpleList } from "@refinedev/antd";
-import { type HttpError, useGo, useNavigation, useTranslate } from "@refinedev/core";
+import {
+  type HttpError,
+  useGo,
+  useNavigation,
+  useTranslate,
+} from "@refinedev/core";
 
 import { Card, Divider, Flex, List, Tag, Typography, theme } from "antd";
 
@@ -35,7 +41,7 @@ export const PesticidesListCard = () => {
   const { showUrl } = useNavigation();
 
   const { listProps } = useSimpleList<IPesticide, HttpError>({
-    resource: "pesticide",
+    resource: "pesticides",
     pagination: {
       current: 1,
       pageSize: 12,
@@ -62,7 +68,9 @@ export const PesticidesListCard = () => {
         {...listProps}
         pagination={{
           ...listProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="pesticides" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="pesticides" />
+          ),
         }}
         grid={{
           gutter: [16, 16],
@@ -111,7 +119,10 @@ export const PesticidesListCard = () => {
                   >
                     View
                   </Tag>
-                  <Tag color={getTypeColor(item.type)} style={additionalStyles.typeTag}>
+                  <Tag
+                    color={getTypeColor(item.type)}
+                    style={additionalStyles.typeTag}
+                  >
                     {item.type}
                   </Tag>
                   <img
@@ -162,7 +173,8 @@ export const PesticidesListCard = () => {
                     </Typography.Paragraph>
                     <Flex justify="space-between">
                       <Typography.Text type="secondary">
-                        Available: <NumberField value={item.available_quantity} /> /{" "}
+                        Available:{" "}
+                        <NumberField value={item.available_quantity} /> /{" "}
                         <NumberField value={item.total_quantity} />
                       </Typography.Text>
                     </Flex>

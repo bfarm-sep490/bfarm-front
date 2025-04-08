@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import {
   type BaseKey,
@@ -7,7 +8,16 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -78,9 +88,15 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   alt={pesticide.name}
                 />
               </Flex>
-              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
+
+              <Flex
+                vertical
+                style={{ backgroundColor: token.colorBgContainer }}
+              >
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>{pesticide.name}</Typography.Title>
+                  <Typography.Title level={5}>
+                    {pesticide.name}
+                  </Typography.Title>
                 </Flex>
               </Flex>
 
@@ -88,17 +104,20 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Mô tả", value: pesticide.description },
                   {
-                    label: "Số lượng",
+                    label: t("pesticides.fields.description"),
+                    value: pesticide.description,
+                  },
+                  {
+                    label: t("pesticides.fields.quantity"),
                     value: `${pesticide.quantity} ${pesticide.unit}`,
                   },
                   {
-                    label: "Loại thuốc",
+                    label: t("pesticides.fields.type"),
                     value: <PesticideTypeTag value={pesticide.type} />,
                   },
                   {
-                    label: "Trạng thái",
+                    label: t("pesticides.fields.status"),
                     value: <PesticideStatusTag value={pesticide.status} />,
                   },
                 ]}
@@ -106,21 +125,32 @@ export const PesticideDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   <List.Item>
                     <List.Item.Meta
                       style={{ padding: "0 16px" }}
-                      avatar={<Typography.Text type="secondary">{item.label}</Typography.Text>}
+                      avatar={
+                        <Typography.Text type="secondary">
+                          {item.label}
+                        </Typography.Text>
+                      }
                       title={item.value}
                     />
                   </List.Item>
                 )}
               />
 
-              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
+              <Flex
+                align="center"
+                justify="space-between"
+                style={{ padding: "16px 16px 16px 0" }}
+              >
                 <DeleteButton
                   type="text"
                   recordItemId={pesticide.id}
                   resource="pesticides"
                   onSuccess={handleDrawerClose}
                 />
-                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => setIsEditing(true)}
+                >
                   {t("actions.edit")}
                 </Button>
               </Flex>

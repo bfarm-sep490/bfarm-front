@@ -204,6 +204,174 @@
       "value": "Giá trị"
     }
   },
+  "resources": {
+    "pesticides": {
+      "name": "Thuốc trừ sâu"
+    },
+    "yield": {
+      "name": "Khu đất"
+    },
+    "plants": {
+      "name": "Cây trồng"
+    },
+    "items": {
+      "name": "Vật tư"
+    },
+    "fertilizers": {
+      "name": "Phân bón"
+    },
+    "farmers": {
+      "name": "Nông dân"
+    },
+    "experts": {
+      "name": "Chuyên gia"
+    },
+    "inspection-forms": {
+      "name": "Đơn kiểm định"
+    },
+    "inspectors": {
+      "name": "Nhà kiểm định"
+    },
+    "plans": {
+      "name": "Kế hoạch"
+    }
+  },
+  "fertilizers": {
+    "entity": "phân bón",
+    "tableTitle": "Danh sách phân bón",
+    "actions": "Hành động",
+    "filters": {
+      "id": "Tìm ID",
+      "name": "Tìm tên",
+      "quantity": "Tìm số lượng"
+    },
+    "buttons": {
+      "create": "Thêm Phân Bón"
+    },
+    "fields": {
+      "id": "ID",
+      "image": "Hình ảnh",
+      "imageAlt": "Ảnh phân bón",
+      "uploading": "Đang tải lên...",
+      "upload": "Tải ảnh lên",
+      "name": "Tên phân bón",
+      "name_required": "Vui lòng nhập tên!",
+      "name_placeholder": "Nhập tên phân bón",
+      "description": "Mô tả",
+      "description_required": "Vui lòng nhập mô tả!",
+      "description_placeholder": "Nhập mô tả phân bón",
+      "quantity": "Số lượng",
+      "quantity_required": "Vui lòng nhập số lượng!",
+      "quantity_placeholder": "Nhập số lượng",
+      "unit": "Đơn vị",
+      "unit_required": "Vui lòng nhập đơn vị!",
+      "unit_placeholder": "kg, lít, bao, v.v.",
+      "status": "Trạng thái",
+      "status_required": "Vui lòng chọn trạng thái!",
+      "status_placeholder": "Chọn trạng thái",
+      "type": "Loại phân bón",
+      "type_required": "Vui lòng chọn loại!",
+      "type_placeholder": "Chọn loại"
+    },
+    "status": {
+      "available": "Đang sử dụng",
+      "out": "Hết hàng",
+      "limited": "Còn ít"
+    },
+    "type": {
+      "organic": "Hữu cơ",
+      "chemical": "Hóa học",
+      "mineral": "Khoáng"
+    }
+  },
+  "title": {
+    "edit": "Chỉnh Sửa",
+    "create": "Thêm"
+  },
+  "pesticides": {
+    "imageAlt": "Ảnh thuốc trừ sâu",
+    "uploading": "Đang tải lên...",
+    "upload": "Tải ảnh lên",
+    "actions": "Hành động",
+    "fields": {
+      "id": "ID",
+      "image": "Ảnh",
+      "name": "Tên thuốc",
+      "description": "Mô tả",
+      "quantity": "Số lượng",
+      "unit": "Đơn vị",
+      "type": "Loại",
+      "status": "Trạng thái",
+      "searchById": "Tìm ID",
+      "searchByName": "Tìm tên thuốc",
+      "searchByQuantity": "Tìm theo số lượng"
+    },
+    "placeholders": {
+      "name": "Nhập tên thuốc trừ sâu",
+      "description": "Nhập mô tả thuốc trừ sâu",
+      "quantity": "Nhập tổng số lượng",
+      "selectType": "Chọn loại",
+      "selectStatus": "Chọn trạng thái"
+    },
+    "messages": {
+      "nameRequired": "Vui lòng nhập tên!",
+      "descriptionRequired": "Vui lòng nhập mô tả!",
+      "quantityRequired": "Vui lòng nhập số lượng!",
+      "unitRequired": "Vui lòng nhập đơn vị!",
+      "typeRequired": "Vui lòng chọn loại!",
+      "statusRequired": "Vui lòng chọn trạng thái!"
+    },
+    "types": {
+      "organic": "Hữu cơ",
+      "chemical": "Hóa học",
+      "mineral": "Khoáng chất"
+    },
+    "status": {
+      "limited": "Còn ít",
+      "out": "Hết hàng",
+      "available": "Có sẵn"
+    }
+  },
+  "items": {
+    "id": "ID",
+    "image": "Ảnh",
+    "edit": "Chỉnh sửa",
+    "add": "Thêm Vật Tư",
+    "imageAlt": "Ảnh vật tư",
+    "uploading": "Đang tải lên...",
+    "upload": "Tải ảnh lên",
+    "name": "Tên vật tư",
+    "nameRequired": "Vui lòng nhập tên!",
+    "namePlaceholder": "Nhập tên vật phẩm",
+    "description": "Mô tả",
+    "descriptionRequired": "Vui lòng nhập mô tả!",
+    "descriptionPlaceholder": "Nhập mô tả vật phẩm",
+    "quantity": "Số lượng",
+    "quantityRequired": "Vui lòng nhập số lượng!",
+    "quantityPlaceholder": "Nhập số lượng",
+    "unit": "Đơn vị",
+    "unitRequired": "Vui lòng nhập đơn vị!",
+    "unitPlaceholder": "cái, hộp, máy, giỏ",
+    "status": "Trạng thái",
+    "statusRequired": "Vui lòng chọn trạng thái!",
+    "statusPlaceholder": "Chọn trạng thái",
+    "statusActive": "Đang hoạt động",
+    "statusInStock": "Còn hàng",
+    "statusOutStock": "Hết hàng",
+    "type": "Loại",
+    "typeRequired": "Vui lòng chọn loại!",
+    "typePlaceholder": "Chọn loại",
+    "typePackaging": "Đóng gói",
+    "typeCaring": "Chăm sóc",
+    "typeHarvesting": "Thu hoạch",
+    "actions": "Hành động",
+    "searchId": "Tìm ID",
+    "searchName": "Tìm tên",
+    "searchQuantity": "Tìm số lượng",
+    "buttons": {
+      "create": "Thêm Vật Tư"
+    }
+  },
   "enum": {
     "orderStatuses": {
       "Pending": "Đang chờ xử lý",

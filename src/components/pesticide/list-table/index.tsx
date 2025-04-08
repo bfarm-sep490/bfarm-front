@@ -1,13 +1,23 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Table, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Table,
+  Typography,
+  theme,
+} from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { IPesticide } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { PesticideDrawerShow } from "@/components/pesticide/drawer-show";
 import { PesticideStatusTag } from "../status";
 import { PesticideTypeTag } from "../type";
+import { useTranslation } from "react-i18next";
 
 export const PesticidesListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -24,7 +34,11 @@ export const PesticidesListTable: React.FC = () => {
     },
   });
 
-  const [selectedPesticideId, setSelectedPesticideId] = useState<string | undefined>(undefined);
+  const [selectedPesticideId, setSelectedPesticideId] = useState<
+    string | undefined
+  >(undefined);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -34,75 +48,103 @@ export const PesticidesListTable: React.FC = () => {
         scroll={{ x: "max-content" }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="pesticides" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="pesticides" />
+          ),
         }}
       >
         <Table.Column
-          title="ID"
+          title={t("pesticides.fields.id")}
           dataIndex="id"
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="STìm ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder={t("pesticides.fields.searchById")}
+            />
           )}
           render={(value) => (
-            <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+            <Typography.Text style={{ fontWeight: "bold" }}>
+              #{value}
+            </Typography.Text>
           )}
         />
 
         <Table.Column
           width={"auto"}
-          title="Ảnh"
+          title={t("pesticides.fields.image")}
           dataIndex="image"
           key="image"
-          render={(image: string) => <Avatar shape="square" src={image} alt="Thuốc trừ sâu" />}
+          render={(image: string) => (
+            <Avatar
+              shape="square"
+              src={image}
+              alt={t("pesticides.fields.imageAlt")}
+            />
+          )}
         />
 
         <Table.Column
-          title="Tên thuốc"
+          title={t("pesticides.fields.name")}
           width={"auto"}
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-          filterDropdown={(props) => <Input placeholder="Tìm tên thuốc" />}
+          filterDropdown={(props) => (
+            <Input placeholder={t("pesticides.fields.searchByName")} />
+          )}
         />
 
         <Table.Column
-          title="Mô tả"
+          title={t("pesticides.fields.description")}
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
 
         <Table.Column
-          title="Số lượng"
+          title={t("pesticides.fields.quantity")}
           dataIndex="quantity"
           key="quantity"
           width={"auto"}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={(props) => (
-            <InputNumber placeholder="Tìm theo số lượng" style={{ width: "100%" }} />
+            <InputNumber
+              placeholder={t("pesticides.fields.searchByQuantity")}
+              style={{ width: "100%" }}
+            />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
 
         <Table.Column
-          title="Loại thuốc"
+          title={t("pesticides.fields.type")}
           dataIndex="type"
           key="type"
           width={120}
@@ -110,7 +152,7 @@ export const PesticidesListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Trạng thái"
+          title={t("pesticides.fields.status")}
           dataIndex="status"
           key="status"
           width={120}
@@ -119,7 +161,7 @@ export const PesticidesListTable: React.FC = () => {
 
         <Table.Column
           fixed="right"
-          title="Hành động"
+          title={t("pesticides.actions")}
           key="actions"
           align="center"
           render={(_, record: IPesticide) => (

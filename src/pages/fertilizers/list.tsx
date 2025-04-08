@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FertilizersListCard } from "@/components/fertilizer/list-card";
 import { FertilizersListTable } from "@/components/fertilizer/list-table";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
@@ -16,7 +17,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("fertilizer-view") as View) || "table",
+    (localStorage.getItem("fertilizer-view") as View) || "table"
   );
 
   const handleViewChange = (value: View) => {
@@ -32,6 +33,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.fertilizers.name", "Phân bón")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"
@@ -69,7 +71,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Phân Bón
+          {t("fertilizers.buttons.create")}
         </CreateButton>,
       ]}
     >

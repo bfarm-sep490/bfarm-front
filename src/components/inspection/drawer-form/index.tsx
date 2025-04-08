@@ -75,7 +75,7 @@ export const InspectionDrawerForm = (props: Props) => {
     });
   };
 
-  const title = props.action === "edit" ? "Edit Inspection" : "Add Inspection";
+  const title = props.action === "edit" ? "Chỉnh Sửa" : "Thêm";
 
   return (
     <Drawer {...drawerProps} open={props.open} title={title} width={500} onClose={onDrawerClose}>
@@ -87,7 +87,7 @@ export const InspectionDrawerForm = (props: Props) => {
           onValuesChange={formProps?.onValuesChange}
         >
           <Form.Item
-            label="Task Name"
+            label="Tên kế hoạch"
             name="task_name"
             rules={[{ required: true, message: "Please enter task name!" }]}
           >
@@ -95,7 +95,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="Description"
+            label="Mô tả"
             name="description"
             rules={[{ required: true, message: "Please enter description!" }]}
           >
@@ -103,7 +103,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="Start Date"
+            label="Ngày bắt đầu"
             name="start_date"
             rules={[{ required: true, message: "Please select start date!" }]}
           >
@@ -111,7 +111,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="End Date"
+            label="Ngày kết thúc"
             name="end_date"
             rules={[{ required: true, message: "Please select end date!" }]}
           >
@@ -119,7 +119,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label="Updated By"
+            label="Cập nhật bởi"
             name="updated_by"
             rules={[{ required: true, message: "Please enter who updated this form!" }]}
           >
@@ -127,9 +127,9 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onDrawerClose}>Cancel</Button>
+            <Button onClick={onDrawerClose}>Hủy</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Save
+              Lưu
             </SaveButton>
           </Flex>
         </Form>

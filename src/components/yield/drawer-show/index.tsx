@@ -90,17 +90,17 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
-                  { label: "Description ", value: yieldData.description },
+                  { label: "Mô tả", value: yieldData.description },
                   {
-                    label: "Area ",
+                    label: "Diện tích",
                     value: `${yieldData.area} ${yieldData.area_unit}`,
                   },
                   {
-                    label: "Type ",
+                    label: "Loại",
                     value: <YieldTypeTag value={yieldData.type} />,
                   },
                   {
-                    label: "Status ",
+                    label: "Trạng thái",
                     value: <YieldStatusTag value={yieldData.status} />,
                   },
                 ]}

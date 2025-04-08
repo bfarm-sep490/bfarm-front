@@ -1,11 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import {
-  ThemedLayoutV2,
-  ErrorComponent,
-  useNotificationProvider,
-} from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -13,6 +9,7 @@ import routerProvider, {
   DocumentTitleHandler,
 } from "@refinedev/react-router";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router";
+
 import {
   CalendarOutlined,
   DashboardOutlined,
@@ -108,16 +105,12 @@ import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
-import {
-  CancelOrderModal,
-  CompleteOrderModal,
-} from "./components/orders/complete-modal";
+import { CancelOrderModal, CompleteOrderModal } from "./components/orders/complete-modal";
 import { OrderComplete } from "./pages/orders/complete";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 import { PackagingProductShow } from "./components/production/packaging/drawer-show";
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
-
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -134,8 +127,7 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -149,7 +141,6 @@ const App: React.FC = () => {
     changeLocale: (lang: string) => i18n.changeLanguage(lang),
     getLocale: () => i18n.language,
   };
-
   if (loading) {
     return null;
   }
@@ -521,7 +512,10 @@ const App: React.FC = () => {
                   </Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
-                    <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
+                    <Route
+                      path=":id/approve"
+                      element={<ApprovingPlanDrawer />}
+                    ></Route>
                     <Route path=":id">
                       <Route
                         index
@@ -532,7 +526,10 @@ const App: React.FC = () => {
                         }
                       />
 
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
+                      <Route
+                        path="approve"
+                        element={<ApprovingPlanDrawer />}
+                      ></Route>
 
                       <Route
                         path="farmers"
@@ -553,7 +550,9 @@ const App: React.FC = () => {
                         {" "}
                         <Route
                           path=":productId"
-                          element={<HarvestingProductShow></HarvestingProductShow>}
+                          element={
+                            <HarvestingProductShow></HarvestingProductShow>
+                          }
                         ></Route>
                       </Route>
                       <Route
@@ -752,8 +751,14 @@ const App: React.FC = () => {
                   >
                     <Route path=":id" element={<InspectionShow />} />
                   </Route>
-                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
-                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
+                  <Route
+                    path="/inspection-forms/:id"
+                    element={<InspectionShow />}
+                  />
+                  <Route
+                    path="/inspection-forms/edit/:id"
+                    element={<InspectionEdit />}
+                  />
 
                   <Route
                     path="/plants"

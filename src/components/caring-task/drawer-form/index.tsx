@@ -64,10 +64,7 @@ export const CaringTaskPage = (props: Props) => {
     filters: [{ field: "status", operator: "eq", value: "Ongoing" }],
   });
 
-  const plans = [
-    ...(queryPendingPlans.data?.data || []),
-    ...(queryOngoingPlans?.data?.data || []),
-  ];
+  const plans = [...(queryPendingPlans.data?.data || []), ...(queryOngoingPlans?.data?.data || [])];
 
   const queryPendingProblems = useList({
     resource: "problems",
@@ -216,7 +213,10 @@ export const CaringTaskPage = (props: Props) => {
     { label: t("status.planting", "Gieo trồng"), value: "Planting" },
     { label: t("status.nurturing", "Chăm sóc"), value: "Nurturing" },
   ];
-  const addField = (list: any[], setList: React.Dispatch<React.SetStateAction<any[]>>) => {
+  const addField = (
+    list: any[],
+    setList: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
     const newList = [
       ...list,
       {
@@ -264,6 +264,12 @@ export const CaringTaskPage = (props: Props) => {
           unit: "unit",
         }))
       );
+    if (props?.problemId !== null && props?.problemId !== undefined) {
+      formProps.form?.setFieldValue("problem_id", props?.problemId);
+    }
+    if (props?.planId !== null && props?.planId !== undefined) {
+      formProps.form?.setFieldValue("plan_id", props?.planId);
+    }
     formProps.form?.setFieldValue("created_by", "Farm Owner");
     onFinish();
   };
@@ -276,7 +282,11 @@ export const CaringTaskPage = (props: Props) => {
           layout="vertical"
           onFinish={handleFinish}
         >
-          <Form.Item label="Tên công việc" name="task_name" rules={[{ required: true }]}>
+          <Form.Item
+            label="Tên công việc"
+            name="task_name"
+            rules={[{ required: true }]}
+          >
             <Input name="task_name" />
           </Form.Item>
           <Row gutter={16}>
@@ -299,7 +309,11 @@ export const CaringTaskPage = (props: Props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Ngày kết thúc dự kiến" name="end_date" rules={[{ required: true }]}>
+              <Form.Item
+                label="Ngày kết thúc dự kiến"
+                name="end_date"
+                rules={[{ required: true }]}
+              >
                 <DatePicker
                   showTime
                   value={endDate}
@@ -311,59 +325,13 @@ export const CaringTaskPage = (props: Props) => {
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Kế hoạch liên quan" name="plan_id" rules={[{ required: true }]}>
-                <Select
-                  value={idPlan ?? props?.planId}
-                  onChange={(value) => {
-                    setIdPlan(value);
-                    setIdProblem(null);
-                  }}
-                >
-                  {plans.map((x) => (
-                    <Select.Option key={x.id} value={x.id}>
-                      <StatusTag status={x.status} /> {x.plan_name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item label="Vấn đề liên quan" name="problem_id">
-                <Select
-                  value={idProblem ?? props?.problemId}
-                  onChange={(value) => setIdProblem(value)}
-                  disabled={!idPlan}
-                >
-                  {filteredProblems?.map((x) => (
-                    <Select.Option key={x.id} value={x.id}>
-                      <ProblemStatusTag status={x.status} /> {x.problem_name}
-                    </Select.Option>
-                  ))}
-                  <Select.Option value={null}>
-                    Không vấn đề liên quan
-                  </Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
           <Form.Item label="Loại công việc" name="task_type" rules={[{ required: true }]}>
             <Select options={taskTypeOptions} />
           </Form.Item>
-          <Form.Item
-            label="Trạng thái"
-            name="status"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Trạng thái" name="status" rules={[{ required: true }]}>
             <Select options={statusOptions} />
           </Form.Item>
-          <Form.Item
-            label="Mô tả"
-            name="description"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
             <Input.TextArea rows={7} />
           </Form.Item>
           <div className="form-section">
@@ -397,18 +365,13 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) => {
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, id: value }
-                                : f
+                              f.id_block === field.id_block ? { ...f, id: value } : f,
                             )
                           );
                         }}
                       >
                         {fertilizerData?.data.map((fertilizer) => (
-                          <Select.Option
-                            key={`fetilizer_${fertilizer.id}`}
-                            value={fertilizer.id}
-                          >
+                          <Select.Option key={`fetilizer_${fertilizer.id}`} value={fertilizer.id}>
                             {fertilizer.name}
                           </Select.Option>
                         ))}
@@ -426,9 +389,7 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) =>
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, quantity: value || 0 }
-                                : f
+                              f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
                             )
                           )
                         }

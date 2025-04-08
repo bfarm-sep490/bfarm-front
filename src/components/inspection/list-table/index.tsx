@@ -89,7 +89,7 @@ export const InspectionListTable: React.FC = () => {
       />
 
       <Table.Column
-        title="Actions"
+        title="Hành động"
         key="actions"
         fixed="right"
         align="center"

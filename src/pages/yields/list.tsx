@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { YieldListCard, YieldListTable } from "@/components/yield";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
@@ -14,10 +15,11 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("yield-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("yield-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
-    // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(value);
@@ -54,9 +56,8 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
           key="create"
           size="large"
           onClick={() => {
-            console.log("Navigating to:", "/yield/create");
             return go({
-              to: "/yield/create",
+              to: `${createUrl("yield")}`,
               query: {
                 to: pathname,
               },

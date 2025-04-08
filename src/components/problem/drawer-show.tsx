@@ -216,12 +216,17 @@ export const ProblemShowInProblem = () => {
                 dataSource={[
                   {
                     label: "Nội dung",
-                    value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
+                    value: (
+                      <Typography.Paragraph>
+                        {task?.result_content}
+                      </Typography.Paragraph>
+                    ),
                   },
                 ]}
                 renderItem={(item) => (
                   <List.Item>
-                    <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
+                    <Typography.Text strong>{item.label}:</Typography.Text>{" "}
+                    {item.value}
                   </List.Item>
                 )}
               />

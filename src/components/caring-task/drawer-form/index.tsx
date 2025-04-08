@@ -1,4 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { TextField, useForm } from "@refinedev/antd";
+import {
+  type BaseKey,
+  useBack,
+  useGo,
+  useList,
+  useTranslate,
+} from "@refinedev/core";
 import {
   type BaseKey,
   useBack,
@@ -30,9 +38,13 @@ type Props = {
   onClose?: () => void;
   problemId?: number;
   planId?: number;
+  onClose?: () => void;
+  problemId?: number;
+  planId?: number;
   taskId?: BaseKey;
   action: "edit" | "create";
   onMutationSuccess?: () => void;
+  refetch?: () => void;
   refetch?: () => void;
 };
 
@@ -64,7 +76,10 @@ export const CaringTaskPage = (props: Props) => {
     filters: [{ field: "status", operator: "eq", value: "Ongoing" }],
   });
 
-  const plans = [...(queryPendingPlans.data?.data || []), ...(queryOngoingPlans?.data?.data || [])];
+  const plans = [
+    ...(queryPendingPlans.data?.data || []),
+    ...(queryOngoingPlans?.data?.data || []),
+  ];
 
   const queryPendingProblems = useList({
     resource: "problems",

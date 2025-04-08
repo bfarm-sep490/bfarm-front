@@ -105,7 +105,10 @@ import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
-import { CancelOrderModal, CompleteOrderModal } from "./components/orders/complete-modal";
+import {
+  CancelOrderModal,
+  CompleteOrderModal,
+} from "./components/orders/complete-modal";
 import { OrderComplete } from "./pages/orders/complete";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
@@ -127,7 +130,8 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL =
+    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 

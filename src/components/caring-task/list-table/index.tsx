@@ -1,21 +1,8 @@
 import React, { PropsWithChildren } from "react";
 import { BaseRecord, useBack, useList, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  EditButton,
-  ShowButton,
-  ImageField,
-  TagField,
-  EmailField,
-  DateField,
-  Title,
-  TextField,
-} from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, TableProps } from "antd";
-import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Typography } from "antd/lib";
+import { List, ShowButton, DateField, TextField } from "@refinedev/antd";
+import { Table, Space, TableProps } from "antd";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { CaringTypeTag } from "../type-tag";
 import { StatusTag } from "../status-tag";
 

@@ -87,21 +87,9 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   <Typography.Text type="secondary">{plant.type}</Typography.Text>
                 </Flex>
               </Flex>
-
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
                 <Typography.Title level={5}>Chi tiết giống cây trồng</Typography.Title>
-                <Flex align="center" justify="end">
-                  <DeleteButton
-                    type="text"
-                    recordItemId={plant.id}
-                    resource="plants"
-                    onSuccess={handleDrawerClose}
-                  />
-                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                    {t("actions.edit")}
-                  </Button>
-                </Flex>
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
@@ -135,11 +123,6 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
                 <Typography.Title level={5}>Tỉ lệ giá cây trồng</Typography.Title>
-                <Flex align="center" justify="end">
-                  <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                    {t("actions.edit")}
-                  </Button>
-                </Flex>
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}

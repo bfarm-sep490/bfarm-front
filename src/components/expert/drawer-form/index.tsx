@@ -1,10 +1,16 @@
+/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import {
+  type BaseKey,
+  useApiUrl,
+  useGetToPath,
+  useGo,
+  useTranslate,
+} from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
   Input,
-  InputNumber,
   Select,
   Upload,
   Grid,
@@ -12,18 +18,12 @@ import {
   Flex,
   Avatar,
   Spin,
-  DatePicker,
-  message,
 } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
-import { IExpert, IFertilizer } from "@/interfaces";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import { before, set } from "lodash";
-import moment from "moment";
 
 type Props = {
   id?: BaseKey;
@@ -44,24 +44,25 @@ export const ExpertDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "experts",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.[0]?.avatar_image) {
-          setPreviewImage(data?.data?.[0]?.avatar_image);
-        }
-        formProps.form.setFieldsValue(data?.data?.[0]);
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
+    useDrawerForm<any>({
+      resource: "experts",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.[0]?.avatar_image) {
+            setPreviewImage(data?.data?.[0]?.avatar_image);
+          }
+          formProps.form.setFieldsValue(data?.data?.[0]);
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    });
 
   const onDrawerClose = () => {
     close();
@@ -87,7 +88,7 @@ export const ExpertDrawerForm = (props: Props) => {
     }
   }, [props.action, formProps.form]);
 
-  const uploadImage = async ({ onSuccess, onError, file, onProgress }: any) => {
+  const uploadImage = async ({ onSuccess, onError, file }: any) => {
     const formData = new FormData();
     formData.append("image", file);
     setUploading(true);
@@ -99,7 +100,7 @@ export const ExpertDrawerForm = (props: Props) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -120,12 +121,15 @@ export const ExpertDrawerForm = (props: Props) => {
   };
   const title =
     props.action === "edit"
-      ? t("form.edit_expert", "Chỉnh sửa chuyên gia")
-      : t("form.add_expert", "Thêm chuyên gia");
+      ? t("experts.form.edit", "Chỉnh sửa chuyên gia")
+      : t("experts.form.add", "Thêm chuyên gia");
 
   const statusOptions = [
-    { label: "Hoạt động", value: "Active" },
-    { label: "Không hoạt động", value: "Inactive" },
+    { label: t("experts.status.active", "Hoạt động"), value: "Active" },
+    {
+      label: t("experts.status.inactive", "Không hoạt động"),
+      value: "Inactive",
+    },
   ];
 
   return (
@@ -188,71 +192,112 @@ export const ExpertDrawerForm = (props: Props) => {
                   }}
                   disabled={uploading}
                 >
-                  {uploading ? "Đang tải ảnh lên..." : "Tải ảnh lên"}
+                  {uploading
+                    ? t("experts.upload.uploading", "Đang tải ảnh lên...")
+                    : t("experts.upload.button", "Tải ảnh lên")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
           <Flex vertical>
             <Form.Item
-              label={t("expert.expert_name", "Tên chuyên gia")}
+              label={t("experts.fields.name", "Tên chuyên gia")}
               name="name"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Vui lòng nhập tên" },
+                {
+                  required: true,
+                  message: t(
+                    "experts.validation.required_name",
+                    "Vui lòng nhập tên"
+                  ),
+                },
                 {
                   min: 6,
                   max: 50,
-                  message: "Tên phải từ 6 đến 50 ký tự",
+                  message: t(
+                    "experts.validation.name_length",
+                    "Tên phải từ 6 đến 50 ký tự"
+                  ),
                 },
               ]}
             >
               <Input />
             </Form.Item>
+
             <Form.Item
-              label={t("expert.phone", "Điện thoại")}
+              label={t("experts.fields.phone", "Điện thoại")}
               name="phone"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your phone!" },
                 {
-                  message: "The input is not valid phone number!",
+                  required: true,
+                  message: t(
+                    "experts.validation.required_phone",
+                    "Vui lòng nhập số điện thoại!"
+                  ),
+                },
+                {
                   min: 10,
                   max: 11,
+                  message: t(
+                    "experts.validation.invalid_phone",
+                    "Số điện thoại không hợp lệ!"
+                  ),
                 },
               ]}
             >
               <Input />
             </Form.Item>
+
             <Form.Item
-              label={t("expert.email", "Email")}
+              label={t("experts.fields.email", "Email")}
               name="email"
               className={styles.formItem}
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: t(
+                    "experts.validation.required_email",
+                    "Vui lòng nhập email!"
+                  ),
                 },
                 {
                   type: "email",
-                  message: "The input is not valid E-mail!",
+                  message: t(
+                    "experts.validation.invalid_email",
+                    "Email không hợp lệ!"
+                  ),
                 },
               ]}
             >
               <Input />
             </Form.Item>
+
             <Form.Item
-              label={t("expert.status", "Trạng thái")}
+              label={t("experts.fields.status", "Trạng thái")}
               name="status"
               className={styles.formItem}
               rules={[{ required: true }]}
             >
               <Select options={statusOptions} />
             </Form.Item>
-            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
-              <Button onClick={onDrawerClose}>{t("form.cancel", "Hủy bỏ")}</Button>
-              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
-                {t("form.save", "Lưu")}
+
+            <Flex
+              align="center"
+              justify="space-between"
+              style={{ padding: "16px 16px 0px 16px" }}
+            >
+              <Button onClick={onDrawerClose}>
+                {t("experts.form.cancel", "Hủy bỏ")}
+              </Button>
+              <SaveButton
+                {...saveButtonProps}
+                htmlType="submit"
+                type="primary"
+                icon={null}
+              >
+                {t("experts.form.save", "Lưu")}
               </SaveButton>
             </Flex>
           </Flex>

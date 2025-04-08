@@ -111,7 +111,9 @@
   },
   "status": {
     "enable": "Kích hoạt",
-    "disable": "Vô hiệu hóa"
+    "disable": "Vô hiệu hóa",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động"
   },
   "warnWhenUnsavedChanges": "Bạn có chắc chắn muốn rời đi? Bạn có thay đổi chưa được lưu.",
   "notifications": {
@@ -424,8 +426,119 @@
   "inspectors": {
     "title": "Nhà kiểm định",
     "avatar": "Ảnh đại diện",
-    "address": "Địa chỉ",
     "name": "Tên",
+    "address": "Địa chỉ",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "status": "Trạng thái",
+    "created_at": "Ngày tạo",
+    "updated_at": "Ngày cập nhật",
+    "actions": "Thao tác",
+    "search_id": "Tìm theo ID",
+    "search_name": "Tìm theo tên",
+    "search_email": "Tìm theo email",
+    "filter_status": "Lọc theo trạng thái",
+    "not_updated": "Chưa cập nhật",
+    "uploading": "Đang tải lên...",
+    "uploadImage": "Tải ảnh lên",
+    "create": "Thêm nhà kiểm định"
+  },
+  "plant": {
+    "edit": "Chỉnh Sửa",
+    "add": "Thêm Cây Trồng",
+    "imageAlt": "Ảnh",
+    "name": "Tên cây trồng",
+    "nameRequired": "Vui lòng nhập tên cây trồng!",
+    "namePlaceholder": "Nhập tên cây trồng",
+    "quantity": "Số lượng",
+    "quantityRequired": "Vui lòng nhập số lượng!",
+    "quantityPlaceholder": "Nhập số lượng",
+    "description": "Mô tả",
+    "descriptionRequired": "Vui lòng nhập mô tả!",
+    "descriptionPlaceholder": "Nhập mô tả",
+    "basePrice": "Giá cơ bản",
+    "basePriceRequired": "Vui lòng nhập giá cơ bản!",
+    "basePricePlaceholder": "Nhập giá cơ bản",
+    "type": "Loại",
+    "typeRequired": "Vui lòng chọn loại!",
+    "typePlaceholder": "Chọn loại cây",
+    "estimatedPerUnit": "Ước lượng theo một đơn vị",
+    "estimatedPerUnitPlaceholder": "Nhập lượng ước tính mỗi đơn vị",
+    "preservationDay": "Số ngày bảo quản",
+    "preservationDayPlaceholder": "Nhập số ngày bảo quản",
+    "deltaOne": "Tỉ giá loại 1",
+    "deltaOnePlaceholder": "Nhập Tỉ giá loại 1",
+    "deltaTwo": "Tỉ giá loại 2",
+    "deltaTwoPlaceholder": "Nhập Tỉ giá loại 2",
+    "deltaThree": "Tỉ giá loại 3",
+    "deltaThreePlaceholder": "Nhập Tỉ giá loại 3",
+    "status": "Trạng thái",
+    "statusRequired": "Vui lòng chọn trạng thái!",
+    "statusPlaceholder": "Chọn trạng thái",
+    "statusAvailable": "Có sẵn",
+    "statusOutOfStock": "Hết hàng",
+    "statusLimited": "Còn ít",
+    "upload": "Tải ảnh lên",
+    "uploading": "Đang tải lên...",
+    "title": "Chi tiết giống cây trồng",
+    "plantRatioTitle": "Tỉ lệ giá cây trồng",
+    "suitableSoilList": "Danh sách đất trồng phù hợp",
+    "day": "ngày",
+    "create": "Thêm Giống Cây"
+  },
+  "yield": {
+    "landName": "Tên khu đất",
+    "area": "Diện tích",
+    "areaUnit": "Đơn vị diện tích",
+    "description": "Mô tả",
+    "soilType": "Loại đất",
+    "status": "Trạng thái",
+    "editLand": "Chỉnh Sửa",
+    "addLand": "Thêm Khu Đất",
+    "available": "Sẵn sàng",
+    "maintenance": "Bảo trì",
+    "inUse": "Đang sử dụng",
+    "suitablePlants": "Cây trồng phù hợp",
+    "loading": "Đang tải...",
+    "create": "Thêm khu đất",
+    "soilTypes": {
+      "gray": "Đất xám",
+      "sandy": "Đất cát",
+      "red": "Đất đỏ",
+      "black": "Đất đen",
+      "acidSulfate": "Đất phèn",
+      "acidic": "Đất chua",
+      "organic": "Đất hữu cơ"
+    },
+    "required": {
+      "landName": "Vui lòng nhập tên khu đất!",
+      "area": "Vui lòng nhập diện tích!",
+      "areaUnit": "Vui lòng nhập đơn vị diện tích!",
+      "description": "Vui lòng nhập mô tả!",
+      "soilType": "Vui lòng chọn loại đất!",
+      "status": "Vui lòng chọn trạng thái!"
+    },
+    "placeholder": {
+      "landName": "Nhập tên khu đất",
+      "area": "Nhập diện tích",
+      "areaUnit": "Ví dụ: m², hecta",
+      "description": "Nhập mô tả",
+      "soilType": "Chọn loại đất",
+      "status": "Chọn trạng thái"
+    }
+  },
+  "form": {
+    "edit_farmer": "Chỉnh sửa nông dân",
+    "create_farmer": "Tạo nông dân",
+    "cancel": "Hủy bỏ",
+    "save": "Lưu"
+  },
+  "images": {
+    "upload": "Tải ảnh lên",
+    "uploading": "Đang tải ảnh lên..."
+  },
+  "farmer_name": "Tên nông dân",
+  "farmer": {
     "phone": "Số điện thoại",
     "email": "Email",
     "status": "Trạng thái",
@@ -439,7 +552,59 @@
     "not_updated": "Chưa cập nhật",
     "uploading": "Đang tải...",
     "uploadImage": "Tải ảnh lên",
-    "create": "Thêm nhà kiểm định"
+    "create": "Thêm nhà kiểm định",
+    "avatar": "Ảnh đại diện",
+    "add_farmer": "Tạo mới"
+  },
+  "validation": {
+    "name_required": "Vui lòng nhập tên!",
+    "name_length": "Tên có độ dài 6 đến 50 kí tự!",
+    "phone_required": "Vui lòng nhập số điện thoại",
+    "phone_invalid": "Không phải định dạng số điện thoại",
+    "email_required": "Vui lòng nhập email!",
+    "email_invalid": "Định dạng email không hợp lệ!"
+  },
+  "experts": {
+    "form": {
+      "edit": "Chỉnh sửa chuyên gia",
+      "add": "Thêm chuyên gia",
+      "cancel": "Hủy bỏ",
+      "save": "Lưu",
+      "add_expert": "Tạo mới"
+    },
+    "fields": {
+      "name": "Tên chuyên gia",
+      "phone": "Điện thoại",
+      "email": "Email",
+      "status": "Trạng thái",
+      "avatar": "Ảnh đại diện",
+      "created_at": "Ngày tạo",
+      "updated_at": "Ngày cập nhật",
+      "not_updated": "Chưa cập nhật"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "upload": {
+      "uploading": "Đang tải ảnh lên...",
+      "button": "Tải ảnh lên"
+    },
+    "validation": {
+      "required_name": "Vui lòng nhập tên",
+      "name_length": "Tên phải từ 6 đến 50 ký tự",
+      "required_phone": "Vui lòng nhập số điện thoại!",
+      "invalid_phone": "Số điện thoại không hợp lệ!",
+      "required_email": "Vui lòng nhập email!",
+      "invalid_email": "Email không hợp lệ!"
+    },
+    "common": {
+      "search_id": "Tìm ID",
+      "search_name": "Tìm tên",
+      "search_email": "Tìm email",
+      "filter_by_status": "Lọc theo trạng thái"
+    }
+
   },
   "enum": {
     "orderStatuses": {

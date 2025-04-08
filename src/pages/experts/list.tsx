@@ -69,7 +69,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("buttons.add_expert", "Tạo mới")}{" "}
+          {t("experts.form.add_expert", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

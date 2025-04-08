@@ -1,12 +1,22 @@
+/* eslint-disable prettier/prettier */
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Table,
+  theme,
+  Typography,
+} from "antd";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { useState } from "react";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { YieldStatusTag } from "../status";
 import { YieldTypeTag } from "../type";
 import { YieldDrawerShow } from "../drawer-show";
+import { useTranslation } from "react-i18next";
 
 export const YieldListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -23,7 +33,10 @@ export const YieldListTable: React.FC = () => {
     },
   });
 
-  const [selectedYieldId, setSelectedYieldId] = useState<string | undefined>(undefined);
+  const [selectedYieldId, setSelectedYieldId] = useState<string | undefined>(
+    undefined
+  );
+  const { t } = useTranslation();
 
   return (
     <>
@@ -33,7 +46,9 @@ export const YieldListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="yields" />,
+          showTotal: (total) => (
+            <PaginationTotal total={total} entityName="yields" />
+          ),
         }}
       >
         <Table.Column
@@ -42,25 +57,38 @@ export const YieldListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
+          filterDropdown={() => (
+            <InputNumber
+              style={{ width: "100%" }}
+              placeholder={t("yield.search.id")}
+            />
+          )}
         />
 
         <Table.Column
-          title="Tên khu đất"
+          title={t("yield.landName")}
           dataIndex="yield_name"
           key="yield_name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
-          defaultFilteredValue={getDefaultFilter("yield_name", filters, "contains")}
-          filterDropdown={() => <Input placeholder="Tìm theo tên" />}
+          defaultFilteredValue={getDefaultFilter(
+            "yield_name",
+            filters,
+            "contains"
+          )}
+          filterDropdown={() => <Input placeholder={t("yield.search.name")} />}
         />
 
         <Table.Column
-          title="Diện tích"
+          title={t("yield.area")}
           dataIndex="area"
           key="area"
           width={120}
@@ -68,19 +96,22 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Mô tả"
+          title={t("yield.description")}
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
 
         <Table.Column
-          title="Loại đất"
+          title={t("yield.soilType")}
           dataIndex="type"
           key="type"
           width={120}
@@ -88,7 +119,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Trạng thái"
+          title={t("yield.status")}
           dataIndex="status"
           key="status"
           width={120}
@@ -96,7 +127,7 @@ export const YieldListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Hành động"
+          title={t("fertilizers.actions")}
           key="actions"
           fixed="right"
           align="center"
@@ -109,7 +140,10 @@ export const YieldListTable: React.FC = () => {
         />
       </Table>
       {selectedYieldId && (
-        <YieldDrawerShow id={selectedYieldId} onClose={() => setSelectedYieldId(undefined)} />
+        <YieldDrawerShow
+          id={selectedYieldId}
+          onClose={() => setSelectedYieldId(undefined)}
+        />
       )}
     </>
   );

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useMemo } from "react";
-import { type HttpError, useShow, useTranslate } from "@refinedev/core";
+import { type HttpError, useShow } from "@refinedev/core";
 import {
   Button,
   List,
@@ -25,6 +25,7 @@ import {
   columns,
   getChemicalData,
 } from "../chemical/ChemicalConstants";
+import { useTranslation } from "react-i18next";
 
 export const InspectionsShow: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,7 +34,7 @@ export const InspectionsShow: React.FC = () => {
   const { token } = theme.useToken();
   const { id } = useParams();
   const navigate = useNavigate();
-  const t = useTranslate();
+
 
   const { queryResult: formQueryResult } = useShow<{ data: IInspectingForm[] }, HttpError>({
     resource: "inspecting-forms",
@@ -84,6 +85,7 @@ export const InspectionsShow: React.FC = () => {
 
   const handleOpenModal = () => setIsModalVisible(true);
   const handleCloseModal = () => setIsModalVisible(false);
+  const { t } = useTranslation();
 
   if (!id) return <Alert type="error" message="No inspection ID provided" />;
   if (isLoading) return <Spin size="large" />;
@@ -104,21 +106,14 @@ export const InspectionsShow: React.FC = () => {
         </Typography.Title>
       }
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 8,
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
         <Typography.Title level={3} style={{ margin: 0 }}>
-          Thông tin kết quả
+          {t("inspections.result_info")}
         </Typography.Title>
 
         {inspection.status !== "Cancel" && inspectionResult && (
           <Button type="primary" icon={<EyeOutlined />} onClick={handleOpenModal}>
-            Xem chi tiết
+            {t("inspections.view_details")}
           </Button>
         )}
       </div>
@@ -136,37 +131,24 @@ export const InspectionsShow: React.FC = () => {
       >
         {inspection.status === "Cancel" ? (
           <Typography.Text type="danger">
-            Đợt kiểm nghiệm đã bị hủy. Không thể tạo kết quả.
+            {t("inspections.cancelled_warning")}
           </Typography.Text>
         ) : inspectionResult ? (
           <List
             dataSource={[
+              { label: t("inspections.evaluation"), value: <InspectionResultTag value={inspectionResult.evaluated_result} /> },
+              { label: t("inspections.content"), value: inspectionResult.result_content || "N/A" },
               {
-                label: "Đánh giá",
-                value: <InspectionResultTag value={inspectionResult.evaluated_result} />,
-              },
-              {
-                label: "Nội dung",
-                value: inspectionResult.result_content || "N/A",
-              },
-              {
-                label: "Ảnh kết quả",
+                label: t("inspections.result_image"),
                 value:
-                  Array.isArray(inspectionResult.inspect_images) &&
-                    inspectionResult.inspect_images.length > 0
-                    ? "Có"
-                    : "Không có",
+                  Array.isArray(inspectionResult.inspect_images) && inspectionResult.inspect_images.length > 0
+                    ? t("inspections.yes")
+                    : t("inspections.no"),
               },
             ]}
             renderItem={(data) => (
               <List.Item>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
+                <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                   <Typography.Text strong>{data.label}</Typography.Text>
                   <Typography.Text>{data.value}</Typography.Text>
                 </div>
@@ -174,28 +156,20 @@ export const InspectionsShow: React.FC = () => {
             )}
           />
         ) : (
-          <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
+          <Typography.Text type="secondary">{t("inspections.no_result")}</Typography.Text>
         )}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: 8,
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
         <Typography.Title level={3} style={{ margin: 0 }}>
-          Thông tin công việc
+          {t("inspections.job_info")}
         </Typography.Title>
-
         <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
-          Thay đổi
+          {t("inspections.create")}
         </Button>
       </div>
-      <Divider style={{ marginTop: 0 }} />
 
+      <Divider style={{ marginTop: 0 }} />
 
       <div
         style={{
@@ -209,35 +183,17 @@ export const InspectionsShow: React.FC = () => {
         {inspection && (
           <List
             dataSource={[
-              { label: "Tên kế hoạch", value: inspection.plan_name || "N/A" },
-              { label: "Trung tâm kiểm định", value: inspection.inspector_name || "N/A" },
-              { label: "Mô tả", value: inspection.description || "N/A" },
-              {
-                label: "Ngày bắt đầu",
-                value: new Date(inspection.start_date).toLocaleDateString(),
-              },
-              {
-                label: "Ngày kết thúc",
-                value: new Date(inspection.end_date).toLocaleDateString(),
-              },
-              {
-                label: "Trạng thái",
-                value: <InspectionStatusTag value={inspection.status} />,
-              },
-              {
-                label: "Cho thu hoạch",
-                value: inspection.can_harvest ? "Có" : "Không",
-              },
+              { label: t("inspections.plan_name"), value: inspection.plan_name || "N/A" },
+              { label: t("inspections.inspector_center"), value: inspection.inspector_name || "N/A" },
+              { label: t("inspections.description"), value: inspection.description || "N/A" },
+              { label: t("inspections.start_date"), value: new Date(inspection.start_date).toLocaleDateString() },
+              { label: t("inspections.end_date"), value: new Date(inspection.end_date).toLocaleDateString() },
+              { label: t("inspections.status"), value: <InspectionStatusTag value={inspection.status} /> },
+              { label: t("inspections.can_harvest"), value: inspection.can_harvest ? t("inspections.yes") : t("inspections.no") },
             ]}
             renderItem={(item) => (
               <List.Item>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
+                <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                   <Typography.Text strong>{item.label}</Typography.Text>
                   <Typography.Text>{item.value}</Typography.Text>
                 </div>
@@ -247,9 +203,8 @@ export const InspectionsShow: React.FC = () => {
         )}
       </div>
 
-
       <Typography.Title level={3} style={{ marginBottom: 8 }}>
-        Thời gian
+        {t("inspections.time_info")}
       </Typography.Title>
       <Divider style={{ marginTop: 0 }} />
 
@@ -265,20 +220,16 @@ export const InspectionsShow: React.FC = () => {
         <List
           dataSource={[
             {
-              label: "Hoàn thành",
-              value: inspection.complete_date
-                ? new Date(inspection.complete_date).toLocaleDateString()
-                : "N/A",
+              label: t("inspections.completed_at"),
+              value: inspection.complete_date ? new Date(inspection.complete_date).toLocaleDateString() : "N/A",
             },
-            { label: "Tạo lúc", value: new Date(inspection.created_at).toLocaleDateString() },
-            { label: "Tạo bởi", value: inspection.created_by || "N/A" },
+            { label: t("inspections.created_at"), value: new Date(inspection.created_at).toLocaleDateString() },
+            { label: t("inspections.created_by"), value: inspection.created_by || "N/A" },
             {
-              label: "Cập nhật",
-              value: inspection.updated_at
-                ? new Date(inspection.updated_at).toLocaleDateString()
-                : "N/A",
+              label: t("inspections.updated_at"),
+              value: inspection.updated_at ? new Date(inspection.updated_at).toLocaleDateString() : "N/A",
             },
-            { label: "Cập nhật bởi", value: inspection.updated_by || "N/A" },
+            { label: t("inspections.updated_by"), value: inspection.updated_by || "N/A" },
           ]}
           renderItem={(data) => (
             <List.Item>
@@ -291,24 +242,15 @@ export const InspectionsShow: React.FC = () => {
         />
       </div>
 
-
-      <Modal
-
-        open={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        width={900}
-      >
-        <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
+      <Modal open={isModalVisible} onCancel={handleCloseModal} footer={null} width={900}>
+        <Typography.Title level={3}>{t("inspections.result_detail")}</Typography.Title>
         {chemicalGroups.map((group) => {
-          const groupData = chemicalData.filter((item) =>
-            group.keys.includes(item.key)
-          );
+          const groupData = chemicalData.filter((item) => group.keys.includes(item.key));
           if (groupData.length === 0) return null;
 
           return (
             <div key={group.title} style={{ marginBottom: 24 }}>
-              <Typography.Text strong>{group.title}</Typography.Text>
+              <Typography.Text strong>{t(group.title)}</Typography.Text>
               <Table
                 rowKey="key"
                 dataSource={groupData}

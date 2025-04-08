@@ -372,6 +372,75 @@
       "create": "Add Item"
     }
   },
+  "inspections": {
+    "search_id": "Search ID",
+    "edit": "Edit",
+    "add": "Add",
+    "task_name": "Task Name",
+    "inspector_name": "Inspector",
+    "plan_name": "Plan Name",
+    "status": "Status",
+    "result_info": "Result Information",
+    "view_details": "View Details",
+    "cancelled_warning": "The inspection has been cancelled. Cannot create result.",
+    "evaluation": "Evaluation",
+    "content": "Content",
+    "result_image": "Result Image",
+    "no_result": "No result yet.",
+    "job_info": "Job Information",
+    "inspector_center": "Inspection Center",
+    "can_harvest": "Can Harvest",
+    "time_info": "Time",
+    "created_at": "Created At",
+    "created_by": "Created By",
+    "completed_at": "Completed At",
+    "updated_at": "Updated At",
+    "result_detail": "Inspection Result Details",
+    "task_name_required": "Please enter the plan name!",
+    "task_name_placeholder": "Enter plan name",
+    "description": "Description",
+    "description_required": "Please enter a description!",
+    "description_placeholder": "Enter description",
+    "start_date": "Start Date",
+    "start_date_required": "Please select a start date!",
+    "start_date_placeholder": "Select start date",
+    "end_date": "End Date",
+    "end_date_required": "Please select an end date!",
+    "end_date_placeholder": "Select end date",
+    "updated_by": "Updated By",
+    "updated_by_required": "Please enter the name of the updater!",
+    "updated_by_placeholder": "Enter name of updater",
+    "yes": "Yes",
+    "no": "No",
+    "create": "Update",
+    "categories": {
+      "heavy_metals": "Heavy Metals",
+      "pathogens": "Pathogenic Microorganisms",
+      "pesticides": "Pesticides & Residues",
+      "fumigants": "Fumigants & Preservatives",
+      "agrochemicals": "Agricultural Chemicals"
+    }
+  },
+  "inspectors": {
+    "title": "Inspector",
+    "avatar": "Avatar",
+    "name": "Name",
+    "address": "Address",
+    "phone": "Phone number",
+    "email": "Email",
+    "status": "Status",
+    "created_at": "Created at",
+    "updated_at": "Updated at",
+    "actions": "Actions",
+    "search_id": "Search by ID",
+    "search_name": "Search by name",
+    "search_email": "Search by email",
+    "filter_status": "Filter by status",
+    "not_updated": "Not updated",
+    "uploading": "Uploading...",
+    "uploadImage": "Upload Image",
+    "create": "Add Inspector"
+  },
   "enum": {
     "orderStatuses": {
       "Pending": "Pending",
@@ -381,7 +450,6 @@
       "Cancelled": "Cancelled"
     }
   },
-
   "users": {
     "users": "Customers",
     "titles": {

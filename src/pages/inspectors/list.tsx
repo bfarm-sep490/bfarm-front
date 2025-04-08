@@ -58,7 +58,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("farmers")}`,
+              to: `${createUrl("inspectors")}`,
               query: {
                 to: pathname,
               },
@@ -69,7 +69,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Mới
+          {t("inspectors.create")}
         </CreateButton>,
       ]}
     >

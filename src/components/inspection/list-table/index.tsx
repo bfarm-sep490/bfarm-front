@@ -8,6 +8,7 @@ import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { InspectionStatusTag } from "../status";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export const InspectionListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -34,6 +35,7 @@ export const InspectionListTable: React.FC = () => {
     }
   };
 
+  const { t } = useTranslation();
   return (
     <Table
       {...tableProps}
@@ -56,40 +58,39 @@ export const InspectionListTable: React.FC = () => {
         filterDropdown={(props) => (
           <InputNumber
             style={{ width: "100%" }}
-            placeholder="Tìm ID"
+            placeholder={t("inspections.search_id")}
             onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
           />
         )}
       />
 
-      <Table.Column title="Tên kế hoạch" dataIndex="plan_name" key="plan_name" />
-      <Table.Column title="Tên công việc" dataIndex="task_name" key="task_name" />
+      <Table.Column title={t("inspections.plan_name")} dataIndex="plan_name" key="plan_name" />
+      <Table.Column title={t("inspections.task_name")} dataIndex="task_name" key="task_name" />
+      <Table.Column title={t("inspections.inspector_name")} dataIndex="inspector_name" key="inspector_name" />
 
-      <Table.Column title="Người kiểm tra" dataIndex="inspector_name" key="inspector_name" />
       <Table.Column
-        title="Ngày bắt đầu"
+        title={t("inspections.start_date")}
         dataIndex="start_date"
         key="start_date"
         render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
       />
 
       <Table.Column
-        title="Ngày kết thúc"
+        title={t("inspections.end_date")}
         dataIndex="end_date"
         key="end_date"
         render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
       />
 
-
       <Table.Column
-        title="Trạng thái"
+        title={t("inspections.status")}
         dataIndex="status"
         key="status"
         render={(status) => <InspectionStatusTag value={status} />}
       />
 
       <Table.Column
-        title="Hành động"
+        title={t("fertilizers.actions")}
         key="actions"
         fixed="right"
         align="center"

@@ -33,17 +33,16 @@ export const OrderDrawerShow = () => {
   });
   const order = queryResult?.data;
 
-  const { data: packagingProductsData, isLoading: packagingProductsLoading } =
-    useList({
-      resource: "packaging-products",
-      filters: [
-        {
-          field: "plan_id",
-          operator: "eq",
-          value: order?.plan_id,
-        },
-      ],
-    });
+  const { data: packagingProductsData, isLoading: packagingProductsLoading } = useList({
+    resource: "packaging-products",
+    filters: [
+      {
+        field: "plan_id",
+        operator: "eq",
+        value: order?.plan_id,
+      },
+    ],
+  });
 
   const back = useBack();
   const [api, contextHolder] = notification.useNotification();
@@ -53,7 +52,7 @@ export const OrderDrawerShow = () => {
 
   const processedPackageProducts = useMemo(
     () => packagingProductsData?.data || [],
-    [packagingProductsData]
+    [packagingProductsData],
   );
 
   const handleUpdate = (value: string) => {
@@ -86,28 +85,17 @@ export const OrderDrawerShow = () => {
           backgroundColor: token.colorBgContainer,
         }}
         title={
-          <Flex
-            justify="space-between"
-            align="center"
-            style={{ marginLeft: 16 }}
-          >
+          <Flex justify="space-between" align="center" style={{ marginLeft: 16 }}>
             <Typography.Title level={4} style={{ margin: 0 }}>
               Thông tin đơn hàng #{orderId}
             </Typography.Title>
             {order?.status === "PendingConfirmation" && (
               <Flex justify="end">
                 <Space>
-                  <Button
-                    color="danger"
-                    variant="solid"
-                    onClick={() => handleUpdate("Reject")}
-                  >
+                  <Button color="danger" variant="solid" onClick={() => handleUpdate("Reject")}>
                     Từ chối
                   </Button>
-                  <Button
-                    type="primary"
-                    onClick={() => handleUpdate("Pending")}
-                  >
+                  <Button type="primary" onClick={() => handleUpdate("Pending")}>
                     Chấp nhận
                   </Button>
                 </Space>
@@ -131,9 +119,7 @@ export const OrderDrawerShow = () => {
                       marginBottom: 10,
                       justifyContent: "end",
                     }}
-                    value={
-                      "* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"
-                    }
+                    value={"* Đơn hàng này không thể hoàn thành khi chưa có kế hoạch"}
                   />
                 )}
               </Flex>
@@ -163,17 +149,12 @@ export const OrderDrawerShow = () => {
               { label: "Số điện thoại", value: order?.phone },
               {
                 label: "Số lượng dự kiến",
-                value: order?.preorder_quantity
-                  ? `${order.preorder_quantity} kg`
-                  : "N/A",
+                value: order?.preorder_quantity ? `${order.preorder_quantity} kg` : "N/A",
               },
               {
                 label: "Ngày ước tính lấy hàng",
                 value: order?.estimate_pick_up_date ? (
-                  <DateField
-                    format="DD/MM/YYYY"
-                    value={order.estimate_pick_up_date}
-                  />
+                  <DateField format="DD/MM/YYYY" value={order.estimate_pick_up_date} />
                 ) : (
                   "N/A"
                 ),
@@ -181,25 +162,18 @@ export const OrderDrawerShow = () => {
               {
                 label: "Ngày tạo đơn",
                 value: order?.created_at ? (
-                  <DateField
-                    format="hh:mm DD/MM/YYYY"
-                    value={order.created_at}
-                  />
+                  <DateField format="hh:mm DD/MM/YYYY" value={order.created_at} />
                 ) : (
                   "N/A"
                 ),
               },
               {
                 label: "Mức giá đặt cọc",
-                value: order?.deposit_price
-                  ? `${order.deposit_price} vnd`
-                  : "N/A",
+                value: order?.deposit_price ? `${order.deposit_price} vnd` : "N/A",
               },
               {
                 label: "Giá tổng",
-                value: order?.total_price
-                  ? `${order.total_price} vnd`
-                  : "Chưa có",
+                value: order?.total_price ? `${order.total_price} vnd` : "Chưa có",
               },
             ].map(({ label, value }) => (
               <Flex key={label} justify="space-between">
@@ -224,23 +198,19 @@ export const OrderDrawerShow = () => {
         <Divider />
         <Card title={"Thông tin sản phẩm"}>
           <Table dataSource={order?.products || []} rowKey="product_id">
-            <Table.Column
-              title={"ID"}
-              dataIndex="product_id"
-              key="product_id"
-            />
+            <Table.Column title={"ID"} dataIndex="product_id" key="product_id" />
 
             <Table.Column
               title={"Kiểm định"}
               dataIndex="evaluated_result"
               key="evaluated_result"
-              render={(value) => {
+              render={(value: string) => {
                 const gradeMap = {
                   "Grade 3": { color: "red", label: "Loại 3" },
                   "Grade 2": { color: "orange", label: "Loại 2" },
                   "Grade 1": { color: "green", label: "Loại 1" },
                 };
-                const gradeInfo = gradeMap[value] || {};
+                const gradeInfo = gradeMap[value as keyof typeof gradeMap] || {};
                 return gradeInfo.color ? (
                   <Tag color={gradeInfo.color}>{gradeInfo.label}</Tag>
                 ) : null;
@@ -258,9 +228,7 @@ export const OrderDrawerShow = () => {
               dataIndex="product_id"
               key="kind_packaging"
               render={(productId) => {
-                const packageProduct = processedPackageProducts.find(
-                  (pkg) => pkg.id === productId
-                );
+                const packageProduct = processedPackageProducts.find((pkg) => pkg.id === productId);
                 return <TextField value={packageProduct?.name || "N/A"} />;
               }}
             />

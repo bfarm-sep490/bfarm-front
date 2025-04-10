@@ -76,7 +76,6 @@ export const InspectionDrawerForm = (props: Props) => {
     });
   };
 
-
   const { t } = useTranslation();
 
   const title = props.action === "edit" ? t("inspections.edit") : t("inspections.add");
@@ -92,7 +91,6 @@ export const InspectionDrawerForm = (props: Props) => {
         >
           <Form.Item
             label={t("inspections.task_name")}
-
             name="task_name"
             rules={[{ required: true, message: t("inspections.task_name_required") }]}
           >
@@ -100,9 +98,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-
             label={t("inspections.description")}
-
             name="description"
             rules={[{ required: true, message: t("inspections.description_required") }]}
           >
@@ -110,9 +106,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-
             label={t("inspections.start_date")}
-
             name="start_date"
             rules={[{ required: true, message: t("inspections.start_date_required") }]}
           >
@@ -124,9 +118,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-
             label={t("inspections.end_date")}
-
             name="end_date"
             rules={[{ required: true, message: t("inspections.end_date_required") }]}
           >
@@ -138,9 +130,7 @@ export const InspectionDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-
             label={t("inspections.updated_by")}
-
             name="updated_by"
             rules={[{ required: true, message: t("inspections.updated_by_required") }]}
           >
@@ -151,7 +141,6 @@ export const InspectionDrawerForm = (props: Props) => {
             <Button onClick={onDrawerClose}>{t("actions.cancel")}</Button>
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               {t("buttons.save")}
-
             </SaveButton>
           </Flex>
         </Form>

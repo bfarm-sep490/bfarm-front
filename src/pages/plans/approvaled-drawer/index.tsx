@@ -1,6 +1,6 @@
 import axios from "axios";
 import { DateField, TextField, useForm } from "@refinedev/antd";
-import { useBack, useList, useOne, useShow } from "@refinedev/core";
+import { useBack, useList, useOne, useShow, useUpdate } from "@refinedev/core";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import {
   Avatar,
@@ -13,7 +13,9 @@ import {
   Drawer,
   Flex,
   Input,
+  message,
   Modal,
+  notification,
   Row,
   Select,
   Space,
@@ -37,6 +39,7 @@ import { ChooseFarmers } from "./choose-farmers";
 import { AssignTasks } from "./assign-tasks";
 
 interface GainingPlan {
+  seed_quantity: number;
   plan_name: string;
   plant_id: number;
   expert_id: number;
@@ -78,13 +81,36 @@ export const ApprovingPlanDrawer = () => {
   const [experts, setExperts] = React.useState<any[]>([]);
   const [yields, setYields] = React.useState<any[]>([]);
   const [packagingTasks, setPackagingTasks] = React.useState<any[]>([]);
-
+  const [api, contextHolder] = notification?.useNotification();
+  const { mutate, isLoading } = useUpdate({
+    resource: "plans",
+    mutationOptions: {
+      onSuccess: (data) => {
+        const planData = data.data;
+        if (planData !== null) {
+          api?.error({
+            message: "Lỗi! Vui lòng thử lại.",
+            description: planData as unknown as string,
+          });
+          return;
+        }
+        formProps?.form?.resetFields();
+        back();
+      },
+    },
+  });
   const { formProps, formLoading, onFinish } = useForm<GainingPlan>({
     resource: "plans",
     id: `${id}/tasks-assign`,
     action: "edit",
     queryOptions: {
       enabled: false,
+    },
+    updateMutationOptions: {
+      onSuccess: () => {
+        formProps?.form?.resetFields();
+        back();
+      },
     },
   });
   const { data: generalData, isLoading: generalLoading } = useOne({
@@ -94,7 +120,8 @@ export const ApprovingPlanDrawer = () => {
       onSuccess(data: any) {
         const plan = data?.data;
         formProps?.form?.setFieldsValue({
-          description: data.description,
+          seed_quantity: plan.seed_quantity,
+          description: plan.description,
           end_date: plan.end_date,
           plant_id: plan.plant_information.plant_id,
           yield_id: plan.yield_information.yield_id,
@@ -176,6 +203,7 @@ export const ApprovingPlanDrawer = () => {
       },
     },
   });
+
   const { data: CaringTaskData, isLoading: caringLoading } = useList({
     resource: "caring-tasks",
     filters: [
@@ -314,7 +342,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -325,7 +353,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -336,7 +364,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -380,55 +408,16 @@ export const ApprovingPlanDrawer = () => {
     {
       title: "1",
       content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
+        <InputGeneralPlan
+          experts={experts}
+          yields={yields}
+          plants={plants}
+          formProps={formProps}
+        />
       ),
     },
     {
       title: "2",
-      content: (
-        <>
-          <ChooseFarmers
-            farmers={farmers}
-            productiveTasks={productiveTasks}
-            setProductiveTasks={setProductiveTasks}
-            harvestingTasks={harvestingTasks}
-            setHarvestingTasks={setHarvestingTasks}
-            inspectingTasks={inspectingTasks}
-            setInspectingTasks={setInspectingTasks}
-            formProps={formProps}
-            chosenFarmers={chosenFarmers}
-            setChosenFarmers={setChosenFarmers}
-            packagingTasks={packagingTasks}
-            setPackagingTasks={setPackagingTasks}
-          />
-        </>
-      ),
-    },
-    {
-      title: "3",
-      content: (
-        <>
-          <AssignTasks
-            loading={loading}
-            saveHandle={handleDone}
-            chosenFarmers={chosenFarmers}
-            productiveTasks={productiveTasks}
-            harvestingTasks={harvestingTasks}
-            inspectingTasks={inspectingTasks}
-            setChosenFarmers={setChosenFarmers}
-            setProductiveTasks={setProductiveTasks}
-            setHarvestingTasks={setHarvestingTasks}
-            inspectors={inspectors}
-            setInspectingTasks={setInspectingTasks}
-            formProps={formProps}
-            packagingTasks={packagingTasks}
-            setPackagingTasks={setPackagingTasks}
-          />
-        </>
-      ),
-    },
-    {
-      title: "4",
       content: (
         <>
           <VerifyPlanInformation
@@ -458,10 +447,8 @@ export const ApprovingPlanDrawer = () => {
             current={current}
             onChange={(value: any) => setCurrent(value)}
           >
-            <Steps.Step key={1} title="Thông tin chung" />
-            <Steps.Step key={2} title="Nông dân tham gia" />
-            <Steps.Step key={3} title="Phân bổ công việc" />
-            <Steps.Step key={4} title="Xác nhận" />
+            <Steps.Step key={0} title="Thông tin chung" />
+            <Steps.Step key={1} title="Xác nhận" />
           </Steps>
         </>
       }
@@ -472,14 +459,19 @@ export const ApprovingPlanDrawer = () => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading || isLoading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}
-            {current < 3 && (
+            {current < 1 && (
               <Button
+                loading={loading || isLoading}
                 type="primary"
-                onClick={() => {
+                onClick={async () => {
                   if (current == 2) {
                     if (!validateAllTasks()) return;
                   }
@@ -489,8 +481,18 @@ export const ApprovingPlanDrawer = () => {
                 Next
               </Button>
             )}
-            {current === 3 && (
-              <Button type="primary" onClick={() => handleDone("Ongoing")} loading={loading}>
+            {current === 1 && (
+              <Button
+                type="primary"
+                onClick={() =>
+                  mutate({
+                    resource: `plans`,
+                    id: `${id}/plan-approval`,
+                    values: {},
+                  })
+                }
+                loading={loading || isLoading}
+              >
                 Done
               </Button>
             )}
@@ -499,7 +501,7 @@ export const ApprovingPlanDrawer = () => {
       }
     >
       <Spin spinning={loadingForm}>
-        <div style={contentStyle}>{steps[current].content}</div>
+        <div style={contentStyle}>{steps[current]?.content}</div>
       </Spin>
     </Drawer>
   );

@@ -68,7 +68,9 @@ export const HarvestingProductShow = () => {
       headerStyle={{
         backgroundColor: token.colorBgContainer,
       }}
-      title={<TextField style={{ padding: "16px" }} value={"Chi tiết thành phẩm"} />}
+      title={
+        <TextField style={{ padding: "16px" }} value={"Chi tiết thành phẩm"} />
+      }
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Card
@@ -84,10 +86,10 @@ export const HarvestingProductShow = () => {
                       fontSize: 14,
                       color: `${
                         task?.evaluated_result === "Grade 3"
-                          ? "green"
+                          ? "red"
                           : task?.evaluated_result === "Grade 2"
                             ? "orange"
-                            : "red"
+                            : "green"
                       }`,
                     }}
                   >
@@ -115,7 +117,10 @@ export const HarvestingProductShow = () => {
             </Flex>
             <Flex justify="space-between">
               <Typography.Text strong>Ngày đóng gói</Typography.Text>
-              <DateField format="hh:mm DD/MM/YYYY" value={task?.harvesting_date} />
+              <DateField
+                format="hh:mm DD/MM/YYYY"
+                value={task?.harvesting_date}
+              />
             </Flex>
 
             <Flex justify="space-between">
@@ -136,7 +141,9 @@ export const HarvestingProductShow = () => {
           <Divider />
           <Flex justify="space-between">
             <Typography.Text strong>Gía cơ bản</Typography.Text>
-            <Typography.Text>{plant?.base_price.toLocaleString() + " VND"}</Typography.Text>
+            <Typography.Text>
+              {plant?.base_price.toLocaleString() + " VND"}
+            </Typography.Text>
           </Flex>
           <Flex justify="space-between">
             <Typography.Text strong>
@@ -173,7 +180,12 @@ export const HarvestingProductShow = () => {
         </Card>
 
         <Card title="Danh sách thành phẩm" style={{ width: "100%" }}>
-          <Table pagination={false} bordered columns={columns} dataSource={packagingProducts} />
+          <Table
+            pagination={false}
+            bordered
+            columns={columns}
+            dataSource={packagingProducts}
+          />
         </Card>
       </Flex>
     </Drawer>

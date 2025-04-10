@@ -1,4 +1,3 @@
-
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";

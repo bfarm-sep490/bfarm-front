@@ -17,9 +17,7 @@ import {
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { StatusTag } from "../../caring-task/status-tag";
-import ChangeAssignedTasksModal, {
-  HistoryAssignedModal,
-} from "@/components/caring-task/show";
+import ChangeAssignedTasksModal, { HistoryAssignedModal } from "@/components/caring-task/show";
 
 export const HarvestingTaskShow = () => {
   const { taskId } = useParams();
@@ -110,12 +108,7 @@ export const HarvestingTaskShow = () => {
               dataSource={[
                 {
                   label: "Ngày hoàn thành",
-                  value: (
-                    <DateField
-                      format="hh:mm DD/MM/YYYY"
-                      value={task?.complete_date}
-                    />
-                  ),
+                  value: <DateField format="hh:mm DD/MM/YYYY" value={task?.complete_date} />,
                 },
                 {
                   label: "Sản lượng thu hoạch",
@@ -127,17 +120,12 @@ export const HarvestingTaskShow = () => {
                 },
                 {
                   label: "Nội dung",
-                  value: (
-                    <Typography.Paragraph>
-                      {task?.result_content}
-                    </Typography.Paragraph>
-                  ),
+                  value: <Typography.Paragraph>{task?.result_content}</Typography.Paragraph>,
                 },
               ]}
               renderItem={(item) => (
                 <List.Item>
-                  <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-                  {item.value}
+                  <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
                 </List.Item>
               )}
             />
@@ -150,11 +138,7 @@ export const HarvestingTaskShow = () => {
         <Flex justify="space-between" align="center">
           <Typography.Title level={4}>Chi tiết công việc</Typography.Title>
           {(task?.status === "Ongoing" || task?.status === "Pending") && (
-            <Button
-              color="primary"
-              variant="solid"
-              onClick={() => navigate("edit")}
-            >
+            <Button color="primary" variant="solid" onClick={() => navigate("edit")}>
               Thay đổi
             </Button>
           )}
@@ -165,18 +149,11 @@ export const HarvestingTaskShow = () => {
           dataSource={[
             {
               label: "Ngày bắt đầu",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.start_date}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.start_date} />,
             },
             {
               label: "Ngày kết thúc",
-              value: (
-                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.end_date} />,
             },
             {
               label: "Trạng thái",
@@ -189,15 +166,12 @@ export const HarvestingTaskShow = () => {
             { label: "Kế hoạch", value: task?.plan_name },
             {
               label: "Mô tả công việc",
-              value: (
-                <Typography.Paragraph>{task?.description}</Typography.Paragraph>
-              ),
+              value: <Typography.Paragraph>{task?.description}</Typography.Paragraph>,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -207,12 +181,7 @@ export const HarvestingTaskShow = () => {
           dataSource={[
             {
               label: "Ngày tạo",
-              value: (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.created_at}
-                />
-              ),
+              value: <DateField format={"hh:mm DD/MM/YYYY"} value={task?.created_at} />,
             },
             {
               label: "Người tạo",
@@ -221,10 +190,7 @@ export const HarvestingTaskShow = () => {
             {
               label: "Câp nhật lần cuối",
               value: task?.updated_at ? (
-                <DateField
-                  format={"hh:mm DD/MM/YYYY"}
-                  value={task?.updated_at}
-                />
+                <DateField format={"hh:mm DD/MM/YYYY"} value={task?.updated_at} />
               ) : (
                 "Chưa cập nhập lần nào"
               ),
@@ -236,8 +202,7 @@ export const HarvestingTaskShow = () => {
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />
@@ -250,11 +215,7 @@ export const HarvestingTaskShow = () => {
               Lịch sử
             </Button>
             {(task?.status === "Ongoing" || task?.status === "Pending") && (
-              <Button
-                type="primary"
-                color="cyan"
-                onClick={() => setAssignedModal(true)}
-              >
+              <Button type="primary" color="cyan" onClick={() => setAssignedModal(true)}>
                 Thay đổi
               </Button>
             )}
@@ -267,28 +228,17 @@ export const HarvestingTaskShow = () => {
             {
               label: "Id",
               value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"
-                  }
-                />
+                <TextField value={task?.farmer_information?.[0]?.farmer_id || "Chưa giao việc"} />
               ),
             },
             {
               label: "Tên nông dân",
-              value: (
-                <TextField
-                  value={
-                    task?.farmer_information?.[0]?.name || "Chưa giao việc"
-                  }
-                />
-              ),
+              value: <TextField value={task?.farmer_information?.[0]?.name || "Chưa giao việc"} />,
             },
           ]}
           renderItem={(item) => (
             <List.Item>
-              <Typography.Text strong>{item.label}:</Typography.Text>{" "}
-              {item.value}
+              <Typography.Text strong>{item.label}:</Typography.Text> {item.value}
             </List.Item>
           )}
         />

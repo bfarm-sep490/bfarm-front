@@ -1,6 +1,6 @@
 import { MoneyCollectOutlined, QrcodeOutlined, TruckOutlined } from "@ant-design/icons";
 import { TextField, useForm, useModalForm } from "@refinedev/antd";
-import { useBack, useCustomMutation, useGo, useList, useOne } from "@refinedev/core";
+import { useBack, useGo, useList, useOne } from "@refinedev/core";
 import {
   Button,
   Card,
@@ -12,7 +12,6 @@ import {
   Steps,
   Table,
   Typography,
-  Tooltip,
   Row,
   Col,
   Alert,
@@ -22,8 +21,6 @@ import {
   Space,
 } from "antd";
 import dayjs from "dayjs";
-import { init } from "i18next";
-import { isBuffer, set } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { usePayOS } from "@payos/payos-checkout";
@@ -35,6 +32,7 @@ type OrderProduct = {
 };
 
 type PackagedProduct = {
+  packaging_type_id: number;
   id: number;
   plan_id: string;
   plan_name: string;
@@ -57,7 +55,7 @@ export const CompleteOrderModal = (props: Props) => {
   const [isSuccessPayment, setIsSuccessPayment] = useState(false);
   const [payOSOpen, setPayOSOpen] = useState(false);
   const [payOSConfig, setPayOSConfig] = useState({
-    RETURN_URL: "http://localhost:3000/payment-success",
+    RETURN_URL: "http://localhost:5173/payment-success",
     ELEMENT_ID: "embedded-payment-container",
     CHECKOUT_URL: "",
     embedded: true,
@@ -81,7 +79,16 @@ export const CompleteOrderModal = (props: Props) => {
   const navigate = useNavigate();
   const back = useBack();
   const [api, contextHolder] = notification.useNotification();
-
+  const {
+    data: productTypeData,
+    isLoading: productTypeLoading,
+    refetch: productTypeRefetch,
+  } = useList({
+    resource: "packaging-types",
+    queryOptions: {
+      enabled: !!orderId,
+    },
+  });
   const {
     data: orderData,
     isLoading: orderLoading,
@@ -93,9 +100,8 @@ export const CompleteOrderModal = (props: Props) => {
       enabled: !!orderId,
     },
   });
-
   const order = orderData?.data;
-
+  const packagingType = productTypeData?.data?.find((x) => x.id === order?.packaging_type_id);
   const {
     data: plantData,
     isLoading: plantLoading,
@@ -136,6 +142,7 @@ export const CompleteOrderModal = (props: Props) => {
     if (props?.open === true) {
       orderRefect();
       plantRefect();
+      productTypeRefetch();
       packagedProductRefect();
     } else {
       setPayOSConfig({ ...payOSConfig, CHECKOUT_URL: "" });
@@ -154,7 +161,7 @@ export const CompleteOrderModal = (props: Props) => {
   const packagedProducts: PackagedProduct[] = useMemo(() => {
     return (packagedProductData?.data as PackagedProduct[]) ?? [];
   }, [packagedProductData?.data]);
-  const isLoading = orderLoading || plantLoading || packagedProductLoading;
+  const isLoading = orderLoading || plantLoading || packagedProductLoading || productTypeLoading;
 
   useEffect(() => {
     const totalQuantity = orderProducts.reduce(
@@ -219,72 +226,28 @@ export const CompleteOrderModal = (props: Props) => {
     );
   };
 
-  const autoFill = () => {
-    const targetQuantity = order?.preorder_quantity ?? 0;
-
-    if (targetQuantity <= 0 || selectedIds.length === 0) return;
-
-    const selectedProducts = packagedProducts
-      .filter((product) => selectedIds.includes(Number(product.id)))
-      .map((product) => ({
-        id: Number(product.id),
-        perPackage: Number(product.quantity_per_pack),
-        maxPackages: product.pack_quantity,
-        expiryDate: new Date(product.expired_date),
-      }))
-      .sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
-
-    const newOrderProducts = selectedProducts.map((product) => ({
-      id: product.id,
-      quantity: 0,
-      per_package: product.perPackage,
-    }));
-
-    let remainingTarget = targetQuantity;
-
-    for (const product of selectedProducts) {
-      if (remainingTarget <= 0) break;
-
-      const exactPackages = remainingTarget / product.perPackage;
-      const packagesToUse = Math.min(Math.floor(exactPackages), product.maxPackages);
-
-      const productIndex = newOrderProducts.findIndex((p) => p.id === product.id);
-      if (productIndex !== -1) {
-        newOrderProducts[productIndex].quantity = packagesToUse;
-        const allocated = packagesToUse * product.perPackage;
-        remainingTarget -= allocated;
-      }
-    }
-
-    if (remainingTarget > 0) {
-      const remainingOptions = selectedProducts
-        .filter((product) => {
-          const currentAllocation =
-            newOrderProducts.find((p) => p.id === product.id)?.quantity || 0;
-          return currentAllocation < product.maxPackages;
-        })
-        .sort((a, b) => a.perPackage - b.perPackage);
-
-      let smallestSuitablePackage = remainingOptions.find(
-        (product) => product.perPackage >= remainingTarget,
-      );
-
-      if (!smallestSuitablePackage && remainingOptions.length > 0) {
-        smallestSuitablePackage = remainingOptions[0];
-      }
-
-      if (smallestSuitablePackage) {
-        const productIndex = newOrderProducts.findIndex((p) => p.id === smallestSuitablePackage.id);
-        if (productIndex !== -1) {
-          newOrderProducts[productIndex].quantity += 1;
-        }
-      }
-    }
-
-    setOrderProducts(newOrderProducts);
-  };
-
   const isQuantitySufficient = quantity >= (order?.preorder_quantity || 0);
+  const [isCorrectKindGoods, setIsCorrectKindGoods] = useState<boolean>(true);
+  useEffect(() => {
+    if (!packagedProducts.length || !orderProducts.length || !order || !productTypeData?.data)
+      return;
+
+    let correctType = true;
+
+    for (const item of orderProducts) {
+      if (item.quantity <= 0) continue;
+
+      const product = packagedProducts.find((p) => p.id === item.id);
+      if (!product) continue;
+
+      if (product.packaging_type_id !== order.packaging_type_id) {
+        correctType = false;
+        break;
+      }
+    }
+
+    setIsCorrectKindGoods(correctType);
+  }, [orderProducts, packagedProducts, order, productTypeData?.data]);
   const percentageFulfilled = order?.preorder_quantity
     ? Math.floor((quantity / order.preorder_quantity) * 100)
     : 0;
@@ -320,7 +283,6 @@ export const CompleteOrderModal = (props: Props) => {
     },
   });
   useEffect(() => {
-    console.log("PayOSConfig", payOSConfig);
     if (payOSConfig.CHECKOUT_URL != null) {
       open();
       setIsCheckoutLoading(false);
@@ -344,7 +306,13 @@ export const CompleteOrderModal = (props: Props) => {
 
   const selectionColumns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Tên kế hoạch của sản phẩm", dataIndex: "plan_name" },
+    {
+      title: "Loại bao bì",
+      dataIndex: "packaging_type_id",
+      render: (value: number) => (
+        <TextField value={productTypeData?.data?.find((x: any) => x.id === value)?.name} />
+      ),
+    },
     { title: "Số lượng", dataIndex: "pack_quantity" },
     {
       title: "Số lượng trong mỗi gói",
@@ -354,14 +322,13 @@ export const CompleteOrderModal = (props: Props) => {
     {
       title: "Ngày hết hạn",
       dataIndex: "expired_date",
-      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+      render: (value: string) => dayjs(value).format("hh:mm DD/MM/YYYY"),
     },
     {
       title: "Ngày đóng gói",
       dataIndex: "packaging_date",
-      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+      render: (value: string) => dayjs(value).format("hh:mm DD/MM/YYYY"),
     },
-    { title: "Tên cây trồng", dataIndex: "plant_name" },
     {
       title: "Kiểm định",
       dataIndex: "evaluated_result",
@@ -385,7 +352,6 @@ export const CompleteOrderModal = (props: Props) => {
 
   const quantityColumns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Tên kế hoạch của sản phẩm", dataIndex: "plan_name" },
     { title: "Số lượng", dataIndex: "pack_quantity" },
     {
       title: "Số lượng trong mỗi gói",
@@ -395,14 +361,13 @@ export const CompleteOrderModal = (props: Props) => {
     {
       title: "Ngày hết hạn",
       dataIndex: "expired_date",
-      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+      render: (value: string) => dayjs(value).format("hh:mm DD/MM/YYYY"),
     },
     {
       title: "Ngày đóng gói",
       dataIndex: "packaging_date",
-      render: (value: string) => dayjs(value).format("DD/MM/YYYY"),
+      render: (value: string) => dayjs(value).format("hh:mm DD/MM/YYYY"),
     },
-    { title: "Tên cây trồng", dataIndex: "plant_name" },
     {
       title: "Kiểm định",
       dataIndex: "evaluated_result",
@@ -503,22 +468,12 @@ export const CompleteOrderModal = (props: Props) => {
       case 0:
         return (
           <>
-            <Typography.Title level={5}>Lựa chọn sản phẩm</Typography.Title>
-            <Divider />
-            <Table
-              dataSource={packagedProducts}
-              columns={selectionColumns}
-              rowKey="id"
-              pagination={false}
-            />
-          </>
-        );
-
-      case 1:
-        return (
-          <>
-            <Card style={{ marginBottom: 16 }}>
+            <Card style={{ marginBottom: 16 }} title="Yêu cầu đơn hàng">
               <Flex vertical={true} justify="space-between" gap={8}>
+                <Typography.Text>
+                  <Typography.Text strong>Loại bao bì: </Typography.Text>
+                  {packagingType?.name}
+                </Typography.Text>
                 <Typography.Text>
                   <Typography.Text strong>Sản lượng dự kiến của đơn hàng:</Typography.Text>
                   {" " + order?.preorder_quantity} kg
@@ -535,17 +490,60 @@ export const CompleteOrderModal = (props: Props) => {
                     * Lưu ý chưa đủ sản lượng yêu cầu
                   </Typography.Text>
                 )}
+                {isCorrectKindGoods === false && (
+                  <Typography.Text type="danger" style={{ fontSize: 12, fontStyle: "italic" }}>
+                    * Có hàng chưa đúng mẫu bao
+                  </Typography.Text>
+                )}
+              </Flex>
+            </Card>
+            <Typography.Title level={5}>Lựa chọn sản phẩm</Typography.Title>
+            <Divider />
+            <Table
+              dataSource={packagedProducts}
+              columns={selectionColumns}
+              rowKey="id"
+              pagination={false}
+            />
+          </>
+        );
+
+      case 1:
+        return (
+          <>
+            <Card style={{ marginBottom: 16 }} title="Yêu cầu đơn hàng">
+              <Flex vertical={true} justify="space-between" gap={8}>
+                <Typography.Text>
+                  <Typography.Text strong>Loại bao bì: </Typography.Text>
+                  {packagingType?.name}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Sản lượng dự kiến của đơn hàng:</Typography.Text>
+                  {" " + order?.preorder_quantity} kg
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Sản lượng đã chọn:</Typography.Text>
+                  {" " + quantity} kg ({percentageFulfilled}%)
+                </Typography.Text>
+                {excessQuantity > 0 && (
+                  <Typography.Text type="warning">Dư thừa: {excessQuantity} kg</Typography.Text>
+                )}
+                {!isQuantitySufficient && (
+                  <Typography.Text type="danger" style={{ fontSize: 12, fontStyle: "italic" }}>
+                    * Lưu ý chưa đủ sản lượng yêu cầu
+                  </Typography.Text>
+                )}
+                {isCorrectKindGoods === false && (
+                  <Typography.Text type="danger" style={{ fontSize: 12, fontStyle: "italic" }}>
+                    * Có hàng chưa đúng mẫu bao
+                  </Typography.Text>
+                )}
               </Flex>
             </Card>
             <Flex justify="space-between" align="middle" style={{ marginBottom: 16 }}>
               <Typography.Title level={5} style={{ margin: 0 }}>
                 Chọn số lượng cho từng sản phẩm
               </Typography.Title>
-              <Tooltip title="Tự động phân bổ vừa đủ sản lượng thu hoạch theo yêu cầu">
-                <Button type="primary" onClick={autoFill} disabled={selectedIds.length === 0}>
-                  Tự động phân bổ
-                </Button>
-              </Tooltip>
             </Flex>
             <Divider />
             <Table

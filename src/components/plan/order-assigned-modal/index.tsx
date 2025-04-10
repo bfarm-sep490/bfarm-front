@@ -92,7 +92,6 @@ export const OrderAssignedModal = () => {
           </Select>
         </Form.Item>
 
-        {/* Hiển thị chi tiết đơn hàng nếu đã chọn */}
         {selectedOrder && (
           <Flex vertical gap={24}>
             <Typography.Title level={4}>Chi tiết đơn hàng</Typography.Title>

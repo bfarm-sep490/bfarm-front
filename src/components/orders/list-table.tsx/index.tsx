@@ -6,6 +6,7 @@ import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { useNavigate, useParams } from "react-router";
+import { OrderStatusTag } from "../order-status";
 export const OrderListTable: React.FC = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
@@ -52,10 +53,10 @@ export const OrderListTable: React.FC = () => {
         key="retailer_name"
       />
       <Table.Column
-        title={translate("plan_name", "Tên kế hoạch")}
-        dataIndex="plan_name"
-        key="plan_name"
-        render={(value) => <TextField value={value ? value : "Chưa xác định kế hoạch"} />}
+        title={translate("plant_name", "Giống cây")}
+        dataIndex="plant_name"
+        key="plant_name"
+        render={(value) => <TextField value={value ? value : "Chưa xác định giống cây"} />}
       />
       <Table.Column
         title={translate("packaging_type_name", "Loại bao bì")}
@@ -69,15 +70,9 @@ export const OrderListTable: React.FC = () => {
         key="deposit_price"
         render={(value) => <TextField value={value ? value + " vnd" : "Chưa đặt cọc"} />}
       />
-      <Table.Column
-        title={translate("total_price", "Tổng tiền")}
-        dataIndex="total_price"
-        key="total_price"
-        render={(value) => <TextField value={value ? value + " vnd" : "Chưa xác định tổng"} />}
-      />
       <Table.Column title={translate("phone", "Điện thoại")} dataIndex="phone" key="phone" />
       <Table.Column
-        title={translate("preorder_quantity", "Số lượng đặt trước")}
+        title={translate("preorder_quantity", "Đặt trước")}
         dataIndex="preorder_quantity"
         key="preorder_quantity"
         render={(value) => (
@@ -85,7 +80,7 @@ export const OrderListTable: React.FC = () => {
         )}
       />
       <Table.Column
-        title={translate("estimate_pick_up_date", "Ngày dự kiến lấy hàng")}
+        title={translate("estimate_pick_up_date", "Dự kiến lấy hàng")}
         dataIndex="estimate_pick_up_date"
         key="estimate_pick_up_date"
         render={(value) => <DateField value={value} format="DD/MM/YYYY" />}
@@ -97,7 +92,12 @@ export const OrderListTable: React.FC = () => {
         render={(value) => <DateField value={value} format="DD/MM/YYYY" />}
       />
 
-      <Table.Column title={translate("Status", "Trạng thái")} dataIndex="status" key="status" />
+      <Table.Column
+        title={translate("Status", "Trạng thái")}
+        dataIndex="status"
+        key="status"
+        render={(value) => <OrderStatusTag status={value} />}
+      />
 
       <Table.Column
         title={translate("Actions", "Hành động")}

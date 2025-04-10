@@ -1,6 +1,16 @@
 import { DateField, TagField, TextField } from "@refinedev/antd";
 import { useShow, useBack, useOne } from "@refinedev/core";
-import { Table, theme, Flex, Grid, Typography, List, Divider, Drawer, Card } from "antd";
+import {
+  Table,
+  theme,
+  Flex,
+  Grid,
+  Typography,
+  List,
+  Divider,
+  Drawer,
+  Card,
+} from "antd";
 import { useParams } from "react-router";
 import { ProductionStatus } from "./list";
 
@@ -57,7 +67,9 @@ export const PackagingProductShow = () => {
       headerStyle={{
         backgroundColor: token.colorBgContainer,
       }}
-      title={<TextField style={{ padding: "16px" }} value={"Chi tiết thành phẩm"} />}
+      title={
+        <TextField style={{ padding: "16px" }} value={"Chi tiết thành phẩm"} />
+      }
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Card
@@ -74,10 +86,10 @@ export const PackagingProductShow = () => {
                       fontSize: 14,
                       color: `${
                         task?.evaluated_result === "Grade 3"
-                          ? "green"
+                          ? "red"
                           : task?.evaluated_result === "Grade 2"
                             ? "orange"
-                            : "red"
+                            : "green"
                       }`,
                     }}
                   >
@@ -105,7 +117,10 @@ export const PackagingProductShow = () => {
             </Flex>
             <Flex justify="space-between">
               <Typography.Text strong>Ngày đóng gói</Typography.Text>
-              <DateField format="hh:mm DD/MM/YYYY" value={task?.packaging_date} />
+              <DateField
+                format="hh:mm DD/MM/YYYY"
+                value={task?.packaging_date}
+              />
             </Flex>
 
             <Flex justify="space-between">
@@ -123,7 +138,9 @@ export const PackagingProductShow = () => {
               </Typography.Text>{" "}
             </Flex>
             <Flex justify="space-between">
-              <Typography.Text strong>Sản lượng trong thành phẩm</Typography.Text>
+              <Typography.Text strong>
+                Sản lượng trong thành phẩm
+              </Typography.Text>
               <Typography.Text>
                 <Typography.Text style={{ fontSize: 18 }} strong>
                   {task?.quantity_per_pack + " kg/"}
@@ -135,7 +152,9 @@ export const PackagingProductShow = () => {
           <Divider />
           <Flex justify="space-between">
             <Typography.Text strong>Gía cơ bản</Typography.Text>
-            <Typography.Text>{plant?.base_price.toLocaleString() + " VND"}</Typography.Text>
+            <Typography.Text>
+              {plant?.base_price.toLocaleString() + " VND"}
+            </Typography.Text>
           </Flex>
           <Flex justify="space-between">
             <Typography.Text strong>
@@ -161,10 +180,16 @@ export const PackagingProductShow = () => {
             <Typography.Text>
               <Typography.Text style={{ fontSize: 18 }} strong>
                 {(task?.evaluated_result === "Grade 3"
-                  ? plant?.delta_three * plant?.base_price * task?.quantity_per_pack
+                  ? plant?.delta_three *
+                    plant?.base_price *
+                    task?.quantity_per_pack
                   : task?.evaluated_result === "Grade 2"
-                    ? plant?.delta_two * plant?.base_price * task?.quantity_per_pack
-                    : task?.delta_one * plant?.base_price * task?.quantity_per_pack
+                    ? plant?.delta_two *
+                      plant?.base_price *
+                      task?.quantity_per_pack
+                    : task?.delta_one *
+                      plant?.base_price *
+                      task?.quantity_per_pack
                 ).toLocaleString() + " VND"}
               </Typography.Text>
             </Typography.Text>
@@ -172,7 +197,12 @@ export const PackagingProductShow = () => {
         </Card>
 
         <Card title="Danh sách đơn hàng" style={{ width: "100%" }}>
-          <Table pagination={false} bordered columns={columns} dataSource={orders} />
+          <Table
+            pagination={false}
+            bordered
+            columns={columns}
+            dataSource={orders}
+          />
         </Card>
       </Flex>
     </Drawer>

@@ -86,21 +86,12 @@ export const FarmerListInPlan = ({ children }: PropsWithChildren) => {
       <List
         breadcrumb={false}
         headerButtons={(props) => [
-          <Button
-            type="primary"
-            variant="filled"
-            onClick={() => setAddOpen(true)}
-          >
+          <Button type="primary" variant="filled" onClick={() => setAddOpen(true)}>
             Thêm nông dân
           </Button>,
         ]}
       >
-        <Table
-          dataSource={farmers}
-          loading={isLoading}
-          rowKey="id"
-          scroll={{ x: true }}
-        >
+        <Table dataSource={farmers} loading={isLoading} rowKey="id" scroll={{ x: true }}>
           <Table.Column
             title="ID"
             dataIndex="id"
@@ -220,7 +211,7 @@ export const DeleteFarmerInPlanModal = ({
           }
           onClose?.();
         },
-      }
+      },
     );
   };
   return (
@@ -241,11 +232,8 @@ export const DeleteFarmerInPlanModal = ({
       }
     >
       {error && <Alert message={error} type="error" />}
-      <Typography.Text
-        style={{ fontSize: 12, color: "red", fontStyle: "italic" }}
-      >
-        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn
-        xóa không?
+      <Typography.Text style={{ fontSize: 12, color: "red", fontStyle: "italic" }}>
+        * Không thể xóa các nông dân đang thực hiện công việc. Bạn có chắc chắn xóa không?
       </Typography.Text>
     </Modal>
   );
@@ -316,8 +304,7 @@ export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
   const farmers = farmerData?.data as IFarmer[];
   const chosenFarmers = chosenFarmrtData?.data as IFarmer[];
   const filterFarmers =
-    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ??
-    [];
+    farmers?.filter((x) => !chosenFarmers?.some((y: any) => y.id === x.id)) ?? [];
 
   const navigate = useNavigate();
   const { formProps, saveButtonProps } = useForm({
@@ -364,7 +351,7 @@ export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
               end: x.end_date,
               status: x.status,
             };
-          }) || []
+          }) || [],
         );
       },
     },
@@ -408,10 +395,7 @@ export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
           label="Chọn nông dân"
           rules={[{ required: true, message: "Vui lòng chọn nông dân!" }]}
         >
-          <Space
-            direction="vertical"
-            style={{ width: "100%", marginBottom: 20 }}
-          >
+          <Space direction="vertical" style={{ width: "100%", marginBottom: 20 }}>
             <Flex>
               <Select value={selectFarmer} onChange={handleSelect}>
                 {filterFarmers?.map((farmer) => (
@@ -427,10 +411,7 @@ export const AddFarmerIntoPlanModal = (props: AddFarmerIntoPlanModalProps) => {
                   Xem lịch
                 </Button>
 
-                <Button
-                  onClick={() => setViewCalendar(false)}
-                  disabled={!viewCalendar}
-                >
+                <Button onClick={() => setViewCalendar(false)} disabled={!viewCalendar}>
                   Ẩn lịch
                 </Button>
               </Space>{" "}

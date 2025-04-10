@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { PlantListCard, PlantsListTable } from "@/components/plant";
 
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
@@ -15,7 +16,9 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("plant-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("plant-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
     replace("");
@@ -29,6 +32,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.plants.name", "Cây trồng")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"
@@ -66,7 +70,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm giống cây
+          {t("plant.create")}
         </CreateButton>,
       ]}
     >

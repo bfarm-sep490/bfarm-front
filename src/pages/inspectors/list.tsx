@@ -1,8 +1,8 @@
-import { FarmerListTable } from "@/components/farmer";
+/* eslint-disable prettier/prettier */
 import { InspectorListTable } from "@/components/inspectors/table-list";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
-import { useGo, useNavigation } from "@refinedev/core";
+import { useGo, useNavigation, useTranslate } from "@refinedev/core";
 import { Segmented } from "antd";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation } from "react-router";
@@ -16,22 +16,22 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("inspectors-view") as View) || "table",
+    (localStorage.getItem("inspectors-view") as View) || "table"
   );
 
   const handleViewChange = (value: View) => {
-    // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(value);
     localStorage.setItem("farmers-view", value);
   };
 
-  // const t = useTranslate();
+  const t = useTranslate();
 
   return (
     <List
       breadcrumb={false}
+      title={t("resources.inspectors.name", "Nhà kiểm định")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"
@@ -58,7 +58,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
           size="large"
           onClick={() => {
             return go({
-              to: `${createUrl("farmers")}`,
+              to: `${createUrl("inspectors")}`,
               query: {
                 to: pathname,
               },
@@ -69,7 +69,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm Mới
+          {t("inspectors.create")}
         </CreateButton>,
       ]}
     >

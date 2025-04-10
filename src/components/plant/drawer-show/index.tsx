@@ -1,6 +1,25 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
-import { type BaseKey, useGetToPath, useGo, useList, useShow, useTranslate } from "@refinedev/core";
-import { Avatar, Button, Card, Divider, Flex, Grid, List, Tag, Typography, theme } from "antd";
+import {
+  type BaseKey,
+  useGetToPath,
+  useGo,
+  useList,
+  useShow,
+  useTranslate,
+} from "@refinedev/core";
+import {
+  Avatar,
+  Button,
+  Card,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Tag,
+  Typography,
+  theme,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -81,69 +100,103 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 />
               </Flex>
 
-              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
+              <Flex
+                vertical
+                style={{ backgroundColor: token.colorBgContainer }}
+              >
                 <Flex vertical style={{ padding: "16px" }}>
-                  <Typography.Title level={5}>{plant.plant_name}</Typography.Title>
-                  <Typography.Text type="secondary">{plant.type}</Typography.Text>
+                  <Typography.Title level={5}>
+                    {plant.plant_name}
+                  </Typography.Title>
+                  <Typography.Text type="secondary">
+                    {plant.type}
+                  </Typography.Text>
                 </Flex>
               </Flex>
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
-                <Typography.Title level={5}>Chi tiết giống cây trồng</Typography.Title>
+
+                <Typography.Title level={5}>
+                  {t("plant.title")}
+                </Typography.Title>
+
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
-                  { label: "Số lượng giống (đơn vị)", value: plant.quantity },
                   {
-                    label: "Giá cơ bản",
+                    label: t("plant.quantity"),
+                    value: plant.quantity,
+                  },
+                  {
+                    label: t("plant.basePrice"),
                     value: `${plant.base_price.toLocaleString()} VND`,
                   },
                   {
-                    label: "Số ngày được phép bảo quản",
-                    value: `${plant.preservation_day} ngày`,
+                    label: t("plant.preservationDay"),
+                    value: `${plant.preservation_day} ${t("plant.day")}`,
                   },
                   {
-                    label: "Sản lượng dự kiến trên 1 đơn vị giống",
+                    label: t("plant.estimatedPerUnit"),
                     value: `${plant.estimated_per_one} kg`,
                   },
                   {
-                    label: "Trạng thái",
+                    label: t("plant.status"),
                     value: <PlantStatusTag value={plant.status} />,
                   },
-                  { label: "Mô tả", value: plant.description },
+                  {
+                    label: t("plant.description"),
+                    value: plant.description,
+                  },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
-                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
+                    <Typography.Text strong>{itemData.label}:</Typography.Text>{" "}
+                    {itemData.value}
                   </List.Item>
                 )}
               />
+
               <Divider />
               <Flex style={{ margin: 10 }} justify="space-between">
-                <Typography.Title level={5}>Tỉ lệ giá cây trồng</Typography.Title>
+
+                <Typography.Title level={5}>
+                  {t("plant.plantRatioTitle")}
+                </Typography.Title>
+
               </Flex>
               <List
                 style={{ margin: 10, backgroundColor: token.colorBgContainer }}
                 bordered
                 dataSource={[
-                  { label: "Loại 1", value: plant.delta_one * 100 + " %" },
-                  { label: "Loại 2", value: plant.delta_two * 100 + " %" },
-                  { label: "Loại 3", value: plant.delta_three * 100 + " %" },
+                  {
+                    label: t("plant.deltaOne"),
+                    value: plant.delta_one * 100 + " %",
+                  },
+                  {
+                    label: t("plant.deltaTwo"),
+                    value: plant.delta_two * 100 + " %",
+                  },
+                  {
+                    label: t("plant.deltaThree"),
+                    value: plant.delta_three * 100 + " %",
+                  },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
-                    <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
+                    <Typography.Text strong>{itemData.label}:</Typography.Text>{" "}
+                    {itemData.value}
                   </List.Item>
                 )}
               />
+
               <Divider />
               <Typography.Title level={4} style={{ margin: 10 }}>
-                Danh sách đất trồng phù hợp
+                {t("plant.suitableSoilList")}
               </Typography.Title>
               {isYieldsLoading ? (
-                <Typography.Text>Loading...</Typography.Text>
+                <Typography.Text>{t("plant.loading")}</Typography.Text>
               ) : (
                 <List
                   style={{
@@ -155,17 +208,25 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   renderItem={(yieldItem) => (
                     <List.Item>
                       <List.Item.Meta
-                        title={<Typography.Text strong>{yieldItem.yield_name}</Typography.Text>}
+                        title={
+                          <Typography.Text strong>
+                            {yieldItem.yield_name}
+                          </Typography.Text>
+                        }
                         description={
                           <>
                             <Typography.Text>
-                              Diện tích: {yieldItem.area} {yieldItem.area_unit}
+                              {t("plant.area")}: {yieldItem.area}{" "}
+                              {yieldItem.area_unit}
                             </Typography.Text>
                             <br />
-                            <Typography.Text>Loại đất: {yieldItem.type}</Typography.Text>
+                            <Typography.Text>
+                              {t("plant.soilType")}: {yieldItem.type}
+                            </Typography.Text>
                             <br />
                             <Typography.Text>
-                              Trạng thái: <YieldStatusTag value={yieldItem?.status} />
+                              {t("plant.yieldStatus")}:{" "}
+                              <YieldStatusTag value={yieldItem?.status} />
                             </Typography.Text>
                           </>
                         }
@@ -175,17 +236,24 @@ export const PlantDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 />
               )}
 
-              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
+              <Flex
+                align="center"
+                justify="space-between"
+                style={{ padding: "16px 16px 16px 0" }}
+              >
                 <DeleteButton
                   type="text"
                   recordItemId={plant.id}
                   resource="plants"
                   onSuccess={handleDrawerClose}
                 >
-                  Xoá
+                  {t("actions.delete")}
                 </DeleteButton>
-                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
-                  Chỉnh sửa
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => setIsEditing(true)}
+                >
+                  {t("actions.edit")}
                 </Button>
               </Flex>
             </>

@@ -1,6 +1,15 @@
+/* eslint-disable prettier/prettier */
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Table,
+  theme,
+  Typography,
+} from "antd";
 import { IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FertilizerStatusTag } from "../status";
@@ -8,6 +17,7 @@ import { useState } from "react";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { FertilizerTypeTag } from "../type";
 import { FertilizerDrawerShow } from "../drawer-show";
+import { useTranslation } from "react-i18next";
 
 export const FertilizersListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -24,7 +34,10 @@ export const FertilizersListTable: React.FC = () => {
     },
   });
 
-  const [selectedFertilizerId, setSelectedFertilizerId] = useState<string | undefined>(undefined);
+  const [selectedFertilizerId, setSelectedFertilizerId] = useState<
+    string | undefined
+  >(undefined);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -34,23 +47,35 @@ export const FertilizersListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => <PaginationTotal total={total} entityName="fertilizers" />,
+          showTotal: (total) => (
+            <PaginationTotal
+              total={total}
+              entityName={t("fertilizers.entity")}
+            />
+          ),
         }}
       >
         <Table.Column
-          title="ID"
+          title={t("fertilizers.fields.id")}
           dataIndex="id"
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
-          filterDropdown={() => <InputNumber style={{ width: "100%" }} placeholder="Tìm ID" />}
+          filterDropdown={() => (
+            <InputNumber
+              style={{ width: "100%" }}
+              placeholder={t("fertilizers.filters.id")}
+            />
+          )}
         />
 
         <Table.Column
-          title="Hình ảnh"
+          title={t("fertilizers.fields.image")}
           dataIndex="image"
           key="image"
           render={(image) => (
@@ -63,53 +88,65 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Tên phân bón"
+          title={t("fertilizers.fields.name")}
           dataIndex="name"
           key="name"
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
-          filterDropdown={() => <Input placeholder="Search name" />}
+          filterDropdown={() => (
+            <Input placeholder={t("fertilizers.filters.name")} />
+          )}
         />
 
         <Table.Column
-          title="Mô tả"
+          title={t("fertilizers.fields.description")}
           dataIndex="description"
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: true }}
+              style={{ marginBottom: 0 }}
+            >
               {value}
             </Typography.Paragraph>
           )}
         />
 
         <Table.Column
-          title="Số lựong"
+          title={t("fertilizers.fields.quantity")}
           dataIndex="quantity"
           key="quantity"
           width={120}
           filterIcon={(filtered) => (
-            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
+            <SearchOutlined
+              style={{ color: filtered ? token.colorPrimary : undefined }}
+            />
           )}
           defaultFilteredValue={getDefaultFilter("quantity", filters, "eq")}
           filterDropdown={() => (
-            <InputNumber placeholder="Search total quantity" style={{ width: "100%" }} />
+            <InputNumber
+              placeholder={t("fertilizers.filters.quantity")}
+              style={{ width: "100%" }}
+            />
           )}
           render={(value, record) => `${value} ${record.unit}`}
         />
 
         <Table.Column
-          title="Loại phân bón"
+          title={t("fertilizers.fields.type")}
           dataIndex="type"
           key="type"
-          width={120}
+          width={140}
           render={(value) => <FertilizerTypeTag value={value} />}
         />
 
         <Table.Column
-          title="trạng thái"
+          title={t("fertilizers.fields.status")}
           dataIndex="status"
           key="status"
           width={120}
@@ -117,7 +154,7 @@ export const FertilizersListTable: React.FC = () => {
         />
 
         <Table.Column
-          title="Hành động"
+          title={t("fertilizers.actions")}
           key="actions"
           fixed="right"
           align="center"

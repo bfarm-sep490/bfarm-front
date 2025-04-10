@@ -1,4 +1,8 @@
-import { PesticidesListCard, PesticidesListTable } from "@/components/pesticide";
+/* eslint-disable prettier/prettier */
+import {
+  PesticidesListCard,
+  PesticidesListTable,
+} from "@/components/pesticide";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
 import { useGo, useNavigation, useTranslate } from "@refinedev/core";
@@ -15,11 +19,10 @@ export const PesticidesList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("pesticide-view") as View) || "table",
+    (localStorage.getItem("pesticide-view") as View) || "table"
   );
 
   const handleViewChange = (value: View) => {
-    // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(value);
@@ -31,6 +34,7 @@ export const PesticidesList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.pesticides.name", "Thuốc trừ sâu")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

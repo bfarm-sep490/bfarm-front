@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ExpertListTable } from "@/components/expert";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
@@ -14,10 +15,11 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>((localStorage.getItem("experts-view") as View) || "table");
+  const [view, setView] = useState<View>(
+    (localStorage.getItem("experts-view") as View) || "table"
+  );
 
   const handleViewChange = (value: View) => {
-    // remove query params (pagination, filters, etc.) when changing view
     replace("");
 
     setView(value);
@@ -29,6 +31,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.experts.name", "Chuyên gia")}
       headerButtons={(props: any) => [
         <Segmented<View>
           key="view"
@@ -66,7 +69,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          {t("buttons.add_expert", "Tạo mới")}{" "}
+          {t("experts.form.add_expert", "Tạo mới")}{" "}
         </CreateButton>,
       ]}
     >

@@ -1,3 +1,5 @@
+
+/* eslint-disable prettier/prettier */
 import React, { useEffect } from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
@@ -32,12 +34,6 @@ import { Header, Title } from "./components";
 import { ConfigProvider } from "./context";
 
 import "@refinedev/antd/dist/reset.css";
-import {
-  FarmerManagementCreate,
-  FarmerManagementEdit,
-  FarmerManagementShow,
-} from "./pages/farmer-managements";
-import { DeviceList } from "./pages/devices";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
@@ -75,8 +71,6 @@ import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
 import { InspectorShow } from "./pages/inspectors/show";
-import { ablyClient } from "./utils/ablyClient";
-import { liveProvider } from "@refinedev/ably";
 import { ItemCreate, ItemEdit, ItemsList, ItemsShow } from "./pages/item";
 import { PlantCreate, PlantEdit, PlantsList, PlantsShow } from "./pages/plant";
 import {
@@ -96,20 +90,12 @@ import {
   InspectionsList,
   InspectionShow,
 } from "./pages/inspections";
-import {
-  AddFarmerIntoPlanModal,
-  DeleteFarmerInPlanModal,
-  FarmerListInPlan,
-} from "./pages/plans/farmers/list";
+import { FarmerListInPlan } from "./pages/plans/farmers/list";
 import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
 import { AssignedOrder } from "./pages/plans/assigned-order";
-import {
-  CancelOrderModal,
-  CompleteOrderModal,
-} from "./components/orders/complete-modal";
-import { OrderComplete } from "./pages/orders/complete";
+import { CancelOrderModal } from "./components/orders/complete-modal";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 import { PackagingProductShow } from "./components/production/packaging/drawer-show";
@@ -139,6 +125,12 @@ const App: React.FC = () => {
   interface TranslationParams {
     [key: string]: string | number;
   }
+  useEffect(() => {
+    if (i18n.language !== "vi") {
+      i18n.changeLanguage("vi");
+    }
+    console.log("Current language:", i18n.language);
+  }, []);
 
   const i18nProvider = {
     translate: (key: string, params?: TranslationParams) => t(key, params),
@@ -185,18 +177,6 @@ const App: React.FC = () => {
                     label: "Đơn hàng",
                   },
                 },
-
-                // {
-                //   name: "inspections",
-                //   list: "/inspections",
-                //   edit: "/inspections/edit/:id",
-                //   show: "/inspections/show/:id",
-                //   meta: {
-                //     label: "Inspecting Forms",
-                //     icon: <ScheduleOutlined />,
-                //   },
-                // },
-
                 {
                   name: "products",
                   meta: {
@@ -225,94 +205,6 @@ const App: React.FC = () => {
                     canDelete: true,
                   },
                 },
-
-                // {
-                //   name: "inspections",
-                //   list: "/inspections",
-                //   edit: "/inspections/edit/:id",
-                //   show: "/inspections/show/:id",
-                //   meta: {
-                //     label: "Inspecting Forms",
-                //     icon: <ScheduleOutlined />,
-                //   },
-                // },
-
-                // {
-                //   name: "yield",
-                //   list: "/yield",
-                //   create: "/yield/create",
-                //   edit: "/yield/edit/:id",
-                //   show: "/yield/show/:id",
-                //   meta: {
-                //     label: "Yields",
-                //     icon: <EnvironmentOutlined />,
-                //   },
-                // },
-                // {
-                //   name: "plants",
-                //   list: "/plants",
-                //   create: "/plants/create",
-                //   edit: "/plants/edit/:id",
-                //   show: "/plants/:id",
-                //   meta: {
-                //     label: "Plants",
-                //     icon: <EnvironmentOutlined />,
-                //   },
-                // },
-                // {
-                //   name: "material",
-                //   meta: {
-                //     label: "Material",
-                //     icon: <GoldOutlined />,
-                //   },
-                // },
-                // {
-                //   name: "fertilizers",
-                //   list: "/fertilizers",
-                //   create: "/fertilizers/create",
-                //   edit: "/fertilizers/edit/:id",
-                //   show: "/fertilizers/:id",
-                //   meta: { parent: "material", canDelete: true },
-                // },
-                // {
-                //   name: "items",
-                //   list: "/items",
-                //   create: "/items/create",
-                //   edit: "/items/edit/:id",
-                //   show: "/items/:id",
-                //   meta: { parent: "material", canDelete: true },
-                // },
-                // {
-                //   name: "pesticides",
-                //   list: "/pesticides",
-                //   create: "/pesticides/create",
-                //   edit: "/pesticides/edit/:id",
-                //   show: "/pesticides/:id",
-                //   meta: { parent: "material", canDelete: true },
-                // },
-                // {
-                //   name: "employees",
-                //   meta: {
-                //     label: "Employees",
-                //     icon: <GoldOutlined />,
-                //   },
-                // },
-                // {
-                //   name: "farmers",
-                //   list: "/farmers",
-                //   create: "/farmers/create",
-                //   edit: "/farmers/edit/:id",
-                //   show: "/farmers/:id",
-                //   meta: { parent: "employees", canDelete: true },
-                // },
-                // {
-                //   name: "experts",
-                //   list: "/experts",
-                //   create: "/experts/create",
-                //   edit: "/experts/edit/:id",
-                //   show: "/experts/:id",
-                //   meta: { parent: "employees", canDelete: true },
-                // },
                 {
                   name: "plans",
                   list: "/plans",
@@ -336,7 +228,7 @@ const App: React.FC = () => {
                 },
                 {
                   name: "inspections",
-                  list: "/inspections", // Added missing route
+                  list: "/inspections",
                   meta: {
                     label: "Kiểm định",
                     icon: <ScheduleOutlined />,

@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { before, set } from "lodash";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id?: BaseKey;
@@ -39,7 +40,6 @@ export const InspectorDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-  const t = useTranslate();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
@@ -122,12 +122,14 @@ export const InspectorDrawerForm = (props: Props) => {
       setUploading(false);
     }
   };
-  const title = props.action === "edit" ? "Edit this farmer" : "Add a farmer";
+  const { t } = useTranslation();
+  const title = props.action === "edit" ? t("title.edit") : t("title.create");
 
   const statusOptions = [
     { label: "Active", value: "Hoạt động" },
     { label: "Inactive", value: "Không hoạt động" },
   ];
+
   return (
     <Drawer
       {...drawerProps}
@@ -177,7 +179,7 @@ export const InspectorDrawerForm = (props: Props) => {
                     transform: previewImage ? undefined : "translateY(50%)",
                   }}
                   src={previewImage || "/images/fertilizer-default-img.png"}
-                  alt="Farmer Image"
+                  alt={t("inspector.avatar")}
                 />
                 <Button
                   icon={<UploadOutlined />}
@@ -188,46 +190,46 @@ export const InspectorDrawerForm = (props: Props) => {
                   }}
                   disabled={uploading}
                 >
-                  {uploading ? "Uploading..." : "Upload Image"}
+                  {uploading ? t("inspectors.uploading") : t("inspectors.uploadImage")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
           <Flex vertical>
             <Form.Item
-              key={"name"}
-              label="Name"
+              key="name"
+              label={t("inspectors.name")}
               name="name"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your name!" },
+                { required: true, message: t("inspectors.messages.nameRequired") },
                 {
                   min: 6,
                   max: 50,
-                  message: "Name must be between 6 and 50 characters!",
+                  message: t("inspectors.messages.nameLength"),
                 },
               ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              key={"address"}
-              label="Address"
+              key="address"
+              label={t("inspectors.address")}
               name="address"
               className={styles.formItem}
-              rules={[{ required: true, message: "Please input the address!" }]}
+              rules={[{ required: true, message: t("messages.addressRequired") }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
-              key={"phone"}
-              label="Phone"
+              key="phone"
+              label={t("inspectors.phone")}
               name="phone"
               className={styles.formItem}
               rules={[
-                { required: true, message: "Please input your phone!" },
+                { required: true, message: t("messages.phoneRequired") },
                 {
-                  message: "The input is not valid phone number!",
+                  message: t("messages.phoneInvalid"),
                   min: 10,
                   max: 11,
                 },
@@ -236,27 +238,21 @@ export const InspectorDrawerForm = (props: Props) => {
               <Input />
             </Form.Item>
             <Form.Item
-              key={"email"}
-              label="Email"
+              key="email"
+              label={t("inspectors.email")}
               name="email"
               className={styles.formItem}
               rules={[
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-                {
-                  type: "email",
-                  message: "The input is not valid E-mail!",
-                },
+                { required: true, message: t("messages.emailRequired") },
+                { type: "email", message: t("messages.emailInvalid") },
               ]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item
-              key={"status"}
-              label="Status"
+              key="status"
+              label={t("inspectors.status")}
               name="status"
               className={styles.formItem}
               rules={[{ required: true }]}
@@ -264,9 +260,9 @@ export const InspectorDrawerForm = (props: Props) => {
               <Select options={statusOptions} />
             </Form.Item>
             <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
-              <Button onClick={onDrawerClose}>Cancel</Button>
+              <Button onClick={onDrawerClose}>{t("actions.cancel")}</Button>
               <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
-                Save
+                {t("buttons.save")}
               </SaveButton>
             </Flex>
           </Flex>

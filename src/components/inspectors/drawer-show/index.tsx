@@ -13,6 +13,7 @@ import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { FarmerStatus } from "@/interfaces";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id?: BaseKey;
@@ -35,7 +36,6 @@ export const InspectorDrawerShow = (props: Props) => {
   const { id } = useParams();
   const go = useGo();
   const { editUrl } = useNavigation();
-  const t = useTranslate();
   const { token } = theme.useToken();
   const breakpoint = Grid.useBreakpoint();
 
@@ -58,6 +58,7 @@ export const InspectorDrawerShow = (props: Props) => {
       type: "replace",
     });
   };
+  const { t } = useTranslation();
 
   return (
     <Drawer
@@ -81,18 +82,9 @@ export const InspectorDrawerShow = (props: Props) => {
           alt={inspector?.name}
         />
       </Flex>
-      <Flex
-        vertical
-        style={{
-          backgroundColor: token.colorBgContainer,
-        }}
-      >
-        <Flex
-          vertical
-          style={{
-            padding: "16px",
-          }}
-        >
+
+      <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
+        <Flex vertical style={{ padding: "16px" }}>
           <Typography.Title level={5}>{inspector?.name}</Typography.Title>
         </Flex>
 
@@ -100,41 +92,42 @@ export const InspectorDrawerShow = (props: Props) => {
         <List
           dataSource={[
             {
-              label: <Typography.Text type="secondary">Address</Typography.Text>,
+              label: <Typography.Text type="secondary">{t("inspectors.address")}</Typography.Text>,
               value: inspector?.address,
             },
             {
-              label: <Typography.Text type="secondary">Phone</Typography.Text>,
+              label: <Typography.Text type="secondary">{t("inspectors.phone")}</Typography.Text>,
               value: inspector?.phone,
             },
             {
-              label: <Typography.Text type="secondary">Email</Typography.Text>,
+              label: <Typography.Text type="secondary">{t("inspectors.email")}</Typography.Text>,
               value: inspector?.email,
             },
-
             {
-              label: <Typography.Text type="secondary">Status</Typography.Text>,
+              label: <Typography.Text type="secondary">{t("inspectors.status")}</Typography.Text>,
               value: inspector?.status && <FarmerStatusTag status={inspector.status} />,
             },
             {
-              label: <Typography.Text type="secondary">Ngày tạo</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">{t("inspectors.created_at")}</Typography.Text>
+              ),
               value: inspector?.created_at && <DateField value={inspector?.created_at} />,
             },
             {
-              label: <Typography.Text type="secondary">Ngày cập nhập</Typography.Text>,
+              label: (
+                <Typography.Text type="secondary">{t("inspectors.updated_at")}</Typography.Text>
+              ),
               value: inspector?.updated_at ? (
-                <FarmerStatusTag status={inspector?.updated_at} />
+                <DateField value={inspector?.updated_at} format="DD/MM/YYYY" />
               ) : (
-                <TextField value={"Chưa cập nhập"} />
+                <TextField value={t("inspectors.not_updated")} />
               ),
             },
           ]}
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta
-                style={{
-                  padding: "0 16px",
-                }}
+                style={{ padding: "0 16px" }}
                 avatar={item.label}
                 title={item.value}
               />

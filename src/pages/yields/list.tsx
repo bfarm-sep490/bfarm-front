@@ -31,6 +31,7 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
+      title={t("resources.yield.name", "Khu đất")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"
@@ -68,7 +69,7 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
             });
           }}
         >
-          Thêm khu đất
+          {t("yield.create")}
         </CreateButton>,
       ]}
     >

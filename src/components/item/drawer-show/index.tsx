@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import {
   type BaseKey,
@@ -7,7 +8,17 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  List,
+  Typography,
+  theme,
+  Tag,
+} from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DeleteButton } from "@refinedev/antd";
@@ -78,7 +89,11 @@ export const ItemDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                   alt={item.name}
                 />
               </Flex>
-              <Flex vertical style={{ backgroundColor: token.colorBgContainer }}>
+
+              <Flex
+                vertical
+                style={{ backgroundColor: token.colorBgContainer }}
+              >
                 <Flex vertical style={{ padding: "16px" }}>
                   <Typography.Title level={5}>{item.name}</Typography.Title>
                 </Flex>
@@ -88,34 +103,40 @@ export const ItemDrawerShow: React.FC<Props> = ({ id, onClose }) => {
 
               <List
                 dataSource={[
-                  { label: "Mô tả", value: item.description },
+                  { label: t("items.description"), value: item.description },
                   {
-                    label: "Số lượng",
+                    label: t("items.quantity"),
                     value: `${item.quantity}`,
                   },
                   {
-                    label: "Loại",
+                    label: t("items.type"),
                     value: <ItemtypeTag value={item.type} />,
                   },
                   {
-                    label: "Trạng thái",
+                    label: t("items.status"),
                     value: <ItemStatusTag value={item.status} />,
                   },
                 ]}
                 renderItem={(itemData) => (
                   <List.Item>
                     <List.Item.Meta
-                      style={{
-                        padding: "0 16px",
-                      }}
-                      avatar={<Typography.Text type="secondary">{itemData.label}</Typography.Text>}
+                      style={{ padding: "0 16px" }}
+                      avatar={
+                        <Typography.Text type="secondary">
+                          {itemData.label}
+                        </Typography.Text>
+                      }
                       title={itemData.value}
                     />
                   </List.Item>
                 )}
               />
 
-              <Flex align="center" justify="space-between" style={{ padding: "16px 16px 16px 0" }}>
+              <Flex
+                align="center"
+                justify="space-between"
+                style={{ padding: "16px 16px 16px 0" }}
+              >
                 <DeleteButton
                   type="text"
                   recordItemId={item.id}
@@ -124,7 +145,10 @@ export const ItemDrawerShow: React.FC<Props> = ({ id, onClose }) => {
                 >
                   {t("actions.delete")}
                 </DeleteButton>
-                <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => setIsEditing(true)}
+                >
                   {t("actions.edit")}
                 </Button>
               </Flex>

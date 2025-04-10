@@ -23,6 +23,9 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { PlantType } from "../plant-type";
 
+import { useTranslation } from "react-i18next";
+
+
 type Props = {
   id?: BaseKey;
   action: "edit" | "create";
@@ -40,26 +43,28 @@ export const PlantDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
-    resource: "plants",
-    id: props?.id,
-    action: props.action,
-    redirect: false,
-    queryOptions: {
-      enabled: props.action === "edit",
-      onSuccess: (data) => {
-        if (data?.data?.image_url) {
-          setPreviewImage(data.data.image_url);
-          formProps.form.setFieldsValue({
-            ...data?.data,
-          });
-        }
+  const { formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>(
+    {
+      resource: "plants",
+      id: props?.id,
+      action: props.action,
+      redirect: false,
+      queryOptions: {
+        enabled: props.action === "edit",
+        onSuccess: (data) => {
+          if (data?.data?.image_url) {
+            setPreviewImage(data.data.image_url);
+            formProps.form.setFieldsValue({
+              ...data?.data,
+            });
+          }
+        },
       },
-    },
-    onMutationSuccess: () => {
-      props.onMutationSuccess?.();
-    },
-  });
+      onMutationSuccess: () => {
+        props.onMutationSuccess?.();
+      },
+    }
+  );
 
   const onModalClose = () => {
     close();
@@ -80,9 +85,13 @@ export const PlantDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(`${apiUrl}/plants/images/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        `${apiUrl}/plants/images/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
@@ -99,15 +108,21 @@ export const PlantDrawerForm = (props: Props) => {
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <Modal
       open={true}
-      title={props.action === "edit" ? "Chỉnh Sửa" : "Thêm Cây Trồng"}
+
+      title={props.action === "edit" ? t("plant.edit") : t("plant.add")}
+
       width={breakpoint.sm ? "1200px" : "100%"}
       onCancel={onModalClose}
       footer={null}
       destroyOnClose
-      bodyStyle={{ maxHeight: "1000px", overflowY: "auto", paddingRight: 16 }}
+
+      bodyStyle={{ maxHeight: "700px", overflowY: "auto", paddingRight: 16 }}
+
     >
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
@@ -123,54 +138,73 @@ export const PlantDrawerForm = (props: Props) => {
                 <Avatar
                   shape="square"
                   src={previewImage || "/images/plant-default-img.png"}
-                  alt="Ảnh cây trồng"
+
+                  alt={t("plant.imageAlt")}
+
                   style={{ width: "40%", height: "50%" }}
                 />
-                <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
-                  {uploading ? "Đang tải lên..." : "Tải ảnh lên"}
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={uploading}
+                  style={{ marginTop: 16 }}
+                >
+                  {uploading ? t("plant.uploading") : t("plant.upload")}
                 </Button>
               </Flex>
             </Upload.Dragger>
           </Form.Item>
 
           <Form.Item
-            label="Tên cây trồng"
+            label={t("plant.name")}
             name="plant_name"
-            rules={[{ required: true, message: "Vui lòng nhập tên cây trồng!" }]}
+            rules={[{ required: true, message: t("plant.nameRequired") }]}
           >
-            <Input placeholder="Nhập tên cây trồng" />
+            <Input placeholder={t("plant.namePlaceholder")} />
           </Form.Item>
 
           <Form.Item
-            label="Số lượng"
+            label={t("plant.quantity")}
             name="quantity"
-            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            rules={[{ required: true, message: t("plant.quantityRequired") }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số lượng" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.quantityPlaceholder")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Mô tả"
+            label={t("plant.description")}
             name="description"
-            rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+            rules={[
+              { required: true, message: t("plant.descriptionRequired") },
+            ]}
           >
-            <Input.TextArea rows={3} placeholder="Nhập mô tả" />
+            <Input.TextArea
+              rows={3}
+              placeholder={t("plant.descriptionPlaceholder")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Giá cơ bản"
+            label={t("plant.basePrice")}
             name="base_price"
-            rules={[{ required: true, message: "Vui lòng nhập giá cơ bản!" }]}
+            rules={[{ required: true, message: t("plant.basePriceRequired") }]}
           >
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập giá cơ bản" />
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.basePricePlaceholder")}
+            />
           </Form.Item>
 
           <Form.Item
-            label="Loại"
+            label={t("plant.type")}
             name="type"
-            rules={[{ required: true, message: "Vui lòng chọn loại!" }]}
+            rules={[{ required: true, message: t("plant.typeRequired") }]}
           >
-            <Select placeholder="Chọn loại cây">
+            <Select placeholder={t("plant.typePlaceholder")}>
               {Object.values(PlantType).map((type) => (
                 <Select.Option key={type} value={type}>
                   {type}
@@ -178,45 +212,85 @@ export const PlantDrawerForm = (props: Props) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Ước lượng theo một đơn vị" name="estimated_per_one">
+
+
+          <Form.Item
+            label={t("plant.estimatedPerUnit")}
+            name="estimated_per_one"
+          >
             <InputNumber
               min={0}
               style={{ width: "100%" }}
-              placeholder="Nhập lượng ước tính mỗi đơn vị"
+              placeholder={t("plant.estimatedPerUnitPlaceholder")}
+            />
+
+          </Form.Item>
+
+          <Form.Item label={t("plant.preservationDay")} name="preservation_day">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.preservationDayPlaceholder")}
             />
           </Form.Item>
-          <Form.Item label="Số ngày bảo quản" name="preservation_day">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập số ngày bảo quản" />
-          </Form.Item>
-          <Form.Item label="Delta 1" name="delta_one">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 1" />
+
+          <Form.Item label={t("plant.deltaOne")} name="delta_one">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.deltaOnePlaceholder")}
+            />
           </Form.Item>
 
-          <Form.Item label="Delta 2" name="delta_two">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 2" />
+
+          <Form.Item label={t("plant.deltaTwo")} name="delta_two">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.deltaTwoPlaceholder")}
+            />
           </Form.Item>
 
-          <Form.Item label="Delta 3" name="delta_three">
-            <InputNumber min={0} style={{ width: "100%" }} placeholder="Nhập Delta 3" />
+          <Form.Item label={t("plant.deltaThree")} name="delta_three">
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder={t("plant.deltaThreePlaceholder")}
+            />
           </Form.Item>
+
+
           <Form.Item
-            label="Trạng thái"
+            label={t("plant.status")}
             name="status"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
-            style={{ display: 'flex', alignItems: 'center' }} 
+
+            rules={[{ required: true, message: t("plant.statusRequired") }]}
+            style={{ display: "flex", alignItems: "center" }}
           >
-            <Select placeholder="Chọn trạng thái" style={{ width: '110%' }}>
-              <Select.Option value="Available">Có sẵn</Select.Option>
-              <Select.Option value="Out of Stock">Hết hàng</Select.Option>
-              <Select.Option value="Limited Stock">Còn ít</Select.Option>
+            <Select
+              placeholder={t("plant.statusPlaceholder")}
+              style={{ width: "110%" }}
+            >
+              <Select.Option value="Available">
+                {t("plant.statusAvailable")}
+              </Select.Option>
+              <Select.Option value="Out of Stock">
+                {t("plant.statusOutOfStock")}
+              </Select.Option>
+              <Select.Option value="Limited Stock">
+                {t("plant.statusLimited")}
+              </Select.Option>
+
             </Select>
           </Form.Item>
 
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-            <Button onClick={onModalClose}>Hủy</Button>
+
+            <Button onClick={onModalClose}>{t("actions.cancel")}</Button>
+
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              Lưu
+              {t("buttons.save")}
             </SaveButton>
           </Flex>
         </Form>

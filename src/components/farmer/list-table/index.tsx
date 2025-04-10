@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   type HttpError,
   getDefaultFilter,
@@ -5,9 +6,23 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd";
+import {
+  DateField,
+  FilterDropdown,
+  TextField,
+  useTable,
+} from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Table,
+  Typography,
+  theme,
+} from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -63,7 +78,9 @@ export const FarmerListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="farmers" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="farmers" />
+        ),
       }}
     >
       <Table.Column
@@ -72,7 +89,9 @@ export const FarmerListTable: React.FC = () => {
         key="id"
         width={"auto"}
         render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+          <Typography.Text style={{ fontWeight: "bold" }}>
+            #{value}
+          </Typography.Text>
         )}
         filterIcon={(filtered) => (
           <SearchOutlined
@@ -84,7 +103,11 @@ export const FarmerListTable: React.FC = () => {
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Tìm ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder="Tìm ID"
+            />
           </FilterDropdown>
         )}
       />
@@ -94,7 +117,9 @@ export const FarmerListTable: React.FC = () => {
         width={"auto"}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(image: string) => <Avatar shape="square" src={image} alt="Farmer" />}
+        render={(image: string) => (
+          <Avatar shape="square" src={image} alt="Farmer" />
+        )}
       />
 
       <Table.Column
@@ -123,7 +148,10 @@ export const FarmerListTable: React.FC = () => {
         key="phone"
         width={"auto"}
         render={(value) => (
-          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+          <Typography.Paragraph
+            ellipsis={{ rows: 2, tooltip: true }}
+            style={{ marginBottom: 0 }}
+          >
             {value}
           </Typography.Paragraph>
         )}
@@ -170,14 +198,14 @@ export const FarmerListTable: React.FC = () => {
         render={(value) => <FarmerStatusTag value={value} />}
       />
       <Table.Column
-        title="Ngày tạo"
+        title={translate("farmer.created_at", "Ngày tạo")}
         dataIndex="created_at"
         key="created_at"
         width={120}
         render={(value) => <DateField value={value} />}
       />
       <Table.Column
-        title="Ngày cập nhập"
+        title={translate("farmer.updated_at", "Ngày cập nhật")}
         dataIndex="updated_at"
         key="updated_at"
         width={"auto"}
@@ -185,13 +213,15 @@ export const FarmerListTable: React.FC = () => {
           value ? (
             <DateField value={value} format="DD/MM/YYYY" />
           ) : (
-            <TextField value="Chưa cập nhập" />
+            <TextField
+              value={translate("farmer.not_updated", "Chưa cập nhật")}
+            />
           )
         }
       />
 
       <Table.Column
-        title={translate("tables.Actions", "Hành động")}
+        title={translate("fertilizers.actions", "Hành động")}
         key="actions"
         fixed="right"
         align="center"

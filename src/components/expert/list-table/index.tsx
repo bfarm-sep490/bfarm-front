@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   type HttpError,
   getDefaultFilter,
@@ -8,13 +9,21 @@ import {
 import {
   DateField,
   FilterDropdown,
-  NumberField,
   TextField,
-  getDefaultSortOrder,
   useTable,
 } from "@refinedev/antd";
 
-import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
+import {
+  Avatar,
+  Button,
+  Input,
+  InputNumber,
+  Select,
+  Table,
+  Tag,
+  Typography,
+  theme,
+} from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router";
@@ -29,7 +38,7 @@ export const ExpertListTable: React.FC = () => {
   const { pathname } = useLocation();
   const { showUrl } = useNavigation();
 
-  const { tableProps, sorters, filters } = useTable<IFertilizer, HttpError>({
+  const { tableProps, filters } = useTable<IFertilizer, HttpError>({
     resource: "experts",
 
     filters: {
@@ -70,7 +79,9 @@ export const ExpertListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName="experts" />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName="experts" />
+        ),
       }}
     >
       <Table.Column
@@ -80,84 +91,90 @@ export const ExpertListTable: React.FC = () => {
         width={80}
         filterIcon={(filtered) => (
           <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
+            style={{ color: filtered ? token.colorPrimary : undefined }}
           />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <InputNumber addonBefore="#" style={{ width: "100%" }} placeholder="Tìm ID" />
+            <InputNumber
+              addonBefore="#"
+              style={{ width: "100%" }}
+              placeholder={t("experts.common.search_id", "Tìm ID")}
+            />
           </FilterDropdown>
         )}
         render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
+          <Typography.Text style={{ fontWeight: "bold" }}>
+            #{value}
+          </Typography.Text>
         )}
       />
 
       <Table.Column
-        width={"auto"}
-        title={t("expert.avatar", "Ảnh đại diện")}
+        title={t("experts.fields.avatar", "Ảnh đại diện")}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(image: string) => <Avatar shape="square" src={image} alt="Expert" />}
+        render={(image: string) => (
+          <Avatar shape="square" src={image} alt="Expert" />
+        )}
       />
 
       <Table.Column
-        title={t("exper.expert_name", "Tên chuyên gia")}
-        width={"auto"}
+        title={t("experts.fields.name")}
         dataIndex="name"
         key="name"
+        width={"auto"}
         filterIcon={(filtered) => (
           <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
+            style={{ color: filtered ? token.colorPrimary : undefined }}
           />
         )}
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder="Search name" />
+            <Input placeholder={t("experts.common.search_name", "Tìm tên")} />
           </FilterDropdown>
         )}
       />
 
       <Table.Column
-        title={t("expert.phone", "Số điện thoại")}
-        width={"auto"}
+        title={t("experts.fields.phone")}
         dataIndex="phone"
         key="phone"
+        width={"auto"}
         render={(value) => (
-          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
+          <Typography.Paragraph
+            ellipsis={{ rows: 2, tooltip: true }}
+            style={{ marginBottom: 0 }}
+          >
             {value}
           </Typography.Paragraph>
         )}
       />
 
       <Table.Column
-        title={t("expert.email", "Email")}
+        title={t("experts.fields.email")}
         dataIndex="email"
         key="email"
         width={"auto"}
         filterIcon={(filtered) => (
           <SearchOutlined
-            style={{
-              color: filtered ? token.colorPrimary : undefined,
-            }}
+            style={{ color: filtered ? token.colorPrimary : undefined }}
           />
         )}
         defaultFilteredValue={getDefaultFilter("email", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input placeholder="Search email" />
+            <Input
+              placeholder={t("experts.common.search_email", "Tìm email")}
+            />
           </FilterDropdown>
         )}
       />
 
       <Table.Column
-        title={t("expert.status", "Trạng thái")}
+        title={t("experts.fields.status")}
         dataIndex="status"
         key="status"
         width={"auto"}
@@ -166,11 +183,18 @@ export const ExpertListTable: React.FC = () => {
             <Select
               style={{ width: "200px" }}
               mode="multiple"
-              placeholder="Filter by status"
+              placeholder={t(
+                "experts.common.filter_by_status",
+                "Lọc theo trạng thái"
+              )}
               allowClear
             >
-              <Select.Option value="Active">Actived</Select.Option>
-              <Select.Option value="Inactive">UnActived</Select.Option>
+              <Select.Option value="Active">
+                {t("experts.status.active", "Hoạt động")}
+              </Select.Option>
+              <Select.Option value="Inactive">
+                {t("experts.status.inactive", "Không hoạt động")}
+              </Select.Option>
             </Select>
           </FilterDropdown>
         )}
@@ -178,14 +202,15 @@ export const ExpertListTable: React.FC = () => {
       />
 
       <Table.Column
-        title={t("expert.created_at", "Ngày tạo")}
-        width={"auto"}
+        title={t("experts.fields.created_at")}
         dataIndex="created_at"
         key="created_at"
+        width={"auto"}
         render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
       />
+
       <Table.Column
-        title={t("expert.updated_at", "Ngày cập nhập")}
+        title={t("experts.fields.updated_at")}
         dataIndex="updated_at"
         key="updated_at"
         width={"auto"}
@@ -193,12 +218,12 @@ export const ExpertListTable: React.FC = () => {
           value ? (
             <DateField format="DD/MM/YYYY" value={value} />
           ) : (
-            <TextField value={"Chưa cập nhập"} />
+            <TextField value={t("experts.fields.not_updated")} />
           )
         }
       />
       <Table.Column
-        title={t("expert.actions", "Hành động")}
+        title={t("fertilizers.actions", "Hành động")}
         key="actions"
         fixed="right"
         align="center"

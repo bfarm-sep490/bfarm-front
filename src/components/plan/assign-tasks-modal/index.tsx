@@ -266,9 +266,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
       onSuccess(data: any) {
         if (props?.problemId)
           setProductiveTasks(
-            data?.data.filter(
-              (task: any) => task?.problem_id === props?.problemId
-            ) || []
+            data?.data.filter((task: any) => task?.problem_id === props?.problemId) || [],
           );
         else setProductiveTasks(data?.data || []);
       },
@@ -417,7 +415,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -429,7 +427,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -441,7 +439,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }
@@ -453,7 +451,7 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
           "Chưa chọn nông dân cho công việc đóng gói cho công việc " +
             task.name +
             " #ID: " +
-            task.id
+            task.id,
         );
         return false;
       }

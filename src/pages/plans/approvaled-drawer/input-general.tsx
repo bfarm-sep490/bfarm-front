@@ -98,6 +98,14 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
                     ))}
                 </Select>
               </Form.Item>
+              <Form.Item
+                label="Số lượng giống"
+                name="seed_quantity"
+                style={{ flex: 1 }}
+                rules={[{ required: true, message: "Nhập số lượng giống" }]}
+              >
+                <Input />
+              </Form.Item>
               <Flex gap={10} align="center">
                 <Form.Item
                   label="Sản lượng dự kiến"
@@ -164,7 +172,10 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
                 </Form.Item>
               </Flex>
               <Form.Item label="Mô tả" name="description">
-                <Input.TextArea size="large" />
+                <Input.TextArea
+                  value={formProps?.form?.getFieldValue("descriptiondescription")}
+                  size="large"
+                />
               </Form.Item>
             </Flex>
           </Card>

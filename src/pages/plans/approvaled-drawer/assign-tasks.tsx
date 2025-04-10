@@ -1,15 +1,5 @@
 import { DateField } from "@refinedev/antd";
-import {
-  Button,
-  Card,
-  Flex,
-  FormProps,
-  notification,
-  Select,
-  Table,
-  Tabs,
-  Typography,
-} from "antd";
+import { Button, Card, Flex, FormProps, notification, Select, Table, Tabs, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { CaringTypeTag } from "../../../components/caring-task/type-tag";
 import React, { use, useEffect } from "react";
@@ -17,12 +7,7 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { filter } from "lodash";
 import { useParams } from "react-router";
-import {
-  useCustom,
-  useCustomMutation,
-  useOne,
-  useUpdate,
-} from "@refinedev/core";
+import { useCustom, useCustomMutation, useOne, useUpdate } from "@refinedev/core";
 
 interface Task {
   id: number;
@@ -98,12 +83,9 @@ export const AssignTasks = ({
   const [viewChart, setViewChart] = React.useState(false);
   const calculateTaskCountForFarmer = (farmerId: number) => {
     return (
-      (productiveTasks?.filter((task) => task.farmer_id === farmerId)?.length ??
-        0) +
-      (harvestingTasks?.filter((task) => task.farmer_id === farmerId)?.length ??
-        0) +
-      (packagingTasks?.filter((task) => task.farmer_id === farmerId)?.length ??
-        0)
+      (productiveTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
+      (harvestingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0) +
+      (packagingTasks?.filter((task) => task.farmer_id === farmerId)?.length ?? 0)
     );
   };
   const {
@@ -147,12 +129,9 @@ export const AssignTasks = ({
       havestingTasks: harvestingAuto,
       packingTasks: packagingAuto,
     } = autoTaskData?.data || {};
-    console.log("autoTaskData", autoTaskData);
     setProductiveTasks(
       productiveTasks.map((task) => {
-        const newTask = caringTasks?.find(
-          (x: any) => x?.caringTaskId === task.id
-        );
+        const newTask = caringTasks?.find((x: any) => x?.caringTaskId === task.id);
         if (newTask) {
           return {
             ...task,
@@ -160,13 +139,11 @@ export const AssignTasks = ({
           };
         }
         return task;
-      })
+      }),
     );
     setHarvestingTasks(
       harvestingTasks.map((task) => {
-        const newTask = harvestingAuto?.find(
-          (x: any) => x?.harvestingTaskId === task.id
-        );
+        const newTask = harvestingAuto?.find((x: any) => x?.harvestingTaskId === task.id);
         if (newTask) {
           return {
             ...task,
@@ -174,13 +151,11 @@ export const AssignTasks = ({
           };
         }
         return task;
-      })
+      }),
     );
     setPackagingTasks(
       packagingTasks.map((task) => {
-        const newTask = packagingAuto?.find(
-          (x: any) => x?.packagingTaskId === task.id
-        );
+        const newTask = packagingAuto?.find((x: any) => x?.packagingTaskId === task.id);
         if (newTask) {
           return {
             ...task,
@@ -188,7 +163,7 @@ export const AssignTasks = ({
           };
         }
         return task;
-      })
+      }),
     );
   }, [autoTaskData]);
   const [chartState, setChartState] = React.useState<{
@@ -198,9 +173,7 @@ export const AssignTasks = ({
     series: [
       {
         name: "Số lượng công việc",
-        data: chosenFarmers?.map((farmer) =>
-          calculateTaskCountForFarmer(farmer.id)
-        ),
+        data: chosenFarmers?.map((farmer) => calculateTaskCountForFarmer(farmer.id)),
       },
     ],
     options: {
@@ -229,9 +202,7 @@ export const AssignTasks = ({
       series: [
         {
           name: "Số lượng công việc",
-          data: chosenFarmers?.map((farmer) =>
-            calculateTaskCountForFarmer(farmer.id)
-          ),
+          data: chosenFarmers?.map((farmer) => calculateTaskCountForFarmer(farmer.id)),
         },
       ],
       options: {
@@ -262,17 +233,13 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (_, record) => (
-        <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => (
-        <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Loại chăm sóc",
@@ -342,17 +309,13 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (_, record) => (
-        <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => (
-        <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nông dân",
@@ -402,17 +365,13 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "startDate",
-      render: (_, record) => (
-        <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => (
-        <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="hh:mm DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nông dân",
@@ -462,17 +421,13 @@ export const AssignTasks = ({
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       key: "start_date",
-      render: (_, record) => (
-        <DateField value={record.start_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.start_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_date",
       key: "end_date",
-      render: (_, record) => (
-        <DateField value={record.end_date} format="DD/MM/YYYY" />
-      ),
+      render: (_, record) => <DateField value={record.end_date} format="DD/MM/YYYY" />,
     },
     {
       title: "Lựa chọn nhà kiểm định",
@@ -509,7 +464,6 @@ export const AssignTasks = ({
   const { mutate, isLoading } = useUpdate();
 
   const handleUpdate = () => {
-    const values = formProps?.form?.getFieldsValue?.();
     mutate(
       {
         resource: "plans",
@@ -519,8 +473,7 @@ export const AssignTasks = ({
           end_date: formProps?.form?.getFieldValue("end_date"),
           plant_id: formProps?.form?.getFieldValue("plant_id"),
           yield_id: formProps?.form?.getFieldValue("yield_id"),
-          estimated_product:
-            formProps?.form?.getFieldValue("estimated_product"),
+          estimated_product: formProps?.form?.getFieldValue("estimated_product"),
           plan_name: formProps?.form?.getFieldValue("plan_name"),
           expert_id: formProps?.form?.getFieldValue("expert_id"),
           start_date: formProps?.form?.getFieldValue("start_date"),
@@ -578,7 +531,7 @@ export const AssignTasks = ({
               duration: 2,
             });
         },
-      }
+      },
     );
   };
 
@@ -586,11 +539,7 @@ export const AssignTasks = ({
     <>
       {contextHolder}
 
-      <Flex
-        justify="end"
-        align="center"
-        style={{ marginBottom: 20, marginTop: 20 }}
-      >
+      <Flex justify="end" align="center" style={{ marginBottom: 20, marginTop: 20 }}>
         <Flex gap={10} style={{ marginLeft: 20 }}>
           <Button loading={isLoading} onClick={handleUpdate}>
             Lưu
@@ -604,11 +553,7 @@ export const AssignTasks = ({
           </Button>
         </Flex>
       </Flex>
-      <Tabs
-        defaultActiveKey={"1"}
-        tabPosition={"left"}
-        style={{ minHeight: 220 }}
-      >
+      <Tabs defaultActiveKey={"1"} tabPosition={"left"} style={{ minHeight: 220 }}>
         <Tabs.TabPane key="1" tab="Chăm sóc">
           <Table
             pagination={{

@@ -154,10 +154,8 @@ export const ScheduleComponent = () => {
           type: "Chăm sóc" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...harvestData.data.map((task) => ({
           id: task.id as number,
@@ -167,10 +165,8 @@ export const ScheduleComponent = () => {
           type: "Thu hoạch" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...packingData.data.map((task) => ({
           id: task.id as number,
@@ -180,10 +176,8 @@ export const ScheduleComponent = () => {
           type: "Đóng gói" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...inspectionData.data.map((form) => ({
           id: form.id as number,
@@ -192,15 +186,10 @@ export const ScheduleComponent = () => {
           end: new Date(form.end_date),
           type: "Kiểm định" as const,
           status: form.status as keyof typeof STATUS_COLOR_MAP,
-          actor_id: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.id as number,
-          actor_name: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.name,
-          avatar: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.image_url,
+          actor_id: inspectors?.find((inspector) => inspector.id === form.inspector_id)
+            ?.id as number,
+          actor_name: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.name,
+          avatar: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.image_url,
         })),
       ].filter((event) => event.id !== undefined);
 
@@ -250,8 +239,7 @@ export const ScheduleComponent = () => {
             }
           }}
           events={events.map((event) => {
-            const statusColor =
-              STATUS_COLOR_MAP[event.status] || STATUS_COLOR_MAP.default;
+            const statusColor = STATUS_COLOR_MAP[event.status] || STATUS_COLOR_MAP.default;
 
             return {
               title: (

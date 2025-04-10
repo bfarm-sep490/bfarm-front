@@ -74,10 +74,10 @@ export const PackagingProductShow = () => {
                       fontSize: 14,
                       color: `${
                         task?.evaluated_result === "Grade 3"
-                          ? "green"
+                          ? "red"
                           : task?.evaluated_result === "Grade 2"
                             ? "orange"
-                            : "red"
+                            : "green"
                       }`,
                     }}
                   >

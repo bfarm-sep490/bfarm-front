@@ -374,7 +374,6 @@
       "create": "Add Item"
     }
   },
-
   "inspections": {
     "search_id": "Search ID",
     "edit": "Edit",
@@ -487,6 +486,29 @@
     "day": "date",
     "create": "Add Plant"
   },
+    "common": {
+      "personalInfo": "Personal Information",
+      "locationInfo": "Address Information"
+    },
+  "retailers": {
+    "title": "Retailer Details",
+    "id": "ID",
+    "avatar": "Avatar",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "dob": "Date of Birth",
+    "address": "Address",
+    "location": "Location (Longitude, Latitude)",
+    "status": "Status",
+    "is_active": "Active Status",
+    "actions": "Actions",
+    "created_at": "Created Date",
+    "active": "Active",
+    "inactive": "Inactive",
+    "searchId": "Search by ID",
+    "searchName": "Search by Name"
+  },
   "yield": {
     "landName": "Land Name",
     "area": "Area",
@@ -598,7 +620,6 @@
       "filter_by_status": "Filter by status"
     }
   },
-
   "enum": {
     "orderStatuses": {
       "Pending": "Pending",

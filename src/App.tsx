@@ -18,6 +18,7 @@ import {
   GoldOutlined,
   ProductOutlined,
   ScheduleOutlined,
+  ShopOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -99,6 +100,8 @@ import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
 import { PackagingProductShow } from "./components/production/packaging/drawer-show";
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
+import { RetailersList } from "./pages/retailer/list";
+import { RetailersShow } from "./pages/retailer/show";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -174,6 +177,15 @@ const App: React.FC = () => {
                   show: "/orders/:orderId",
                   meta: {
                     label: "Đơn hàng",
+                  },
+                },
+                {
+                  name: "retailers",
+                  list: "/retailers",
+                  show: "/retailers/:retailerId",
+                  meta: {
+                    label: "Nhà mua sỉ",
+                    icon: <ShopOutlined />
                   },
                 },
                 {
@@ -587,6 +599,9 @@ const App: React.FC = () => {
                       <Route path="cancel" element={<CancelOrderModal />} />
                     </Route>
                   </Route>
+
+                  <Route path="/retailers" element={<RetailersList />} />
+                  <Route path="/retailers/:id" element={<RetailersShow />} />
                   <Route
                     path="/yield"
                     element={

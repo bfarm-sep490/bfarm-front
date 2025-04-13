@@ -486,6 +486,29 @@
     "day": "ngày",
     "create": "Thêm Giống Cây"
   },
+    "common": {
+      "personalInfo": "Thông tin cá nhân",
+      "locationInfo": "Thông tin địa chỉ"
+    },
+  "retailers": {
+    "title": "Chi tiết Nhà mua sỉ",
+    "id": "ID",
+    "avatar": "Ảnh đại diện",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "dob": "Ngày sinh",
+    "address": "Địa chỉ",
+    "location": "Vị trí (Kinh độ, Vĩ độ)",
+    "status": "Trạng thái",
+    "is_active": "Trạng thái hoạt động",
+    "actions": "Thao tác",
+    "created_at": "Ngày tạo",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "searchId": "Tìm theo ID",
+    "searchName": "Tìm theo tên"
+  },
   "yield": {
     "landName": "Tên khu đất",
     "area": "Diện tích",
@@ -604,7 +627,6 @@
       "search_email": "Tìm email",
       "filter_by_status": "Lọc theo trạng thái"
     }
-
   },
   "enum": {
     "orderStatuses": {

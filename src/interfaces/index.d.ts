@@ -403,3 +403,18 @@ export interface IPesticide {
   status: PesticideStatus;
   type: PesticideType;
 }
+
+export interface IRetailer {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  avatar_image: string;
+  dob: string;
+  created_at: string;
+  updated_at: string | null;
+  longitude: number;
+  latitude: number;
+  address: string;
+  is_active: boolean;
+}

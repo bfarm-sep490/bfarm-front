@@ -1,8 +1,7 @@
-/* eslint-disable prettier/prettier */
-import React, { useEffect } from "react";
+import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -15,6 +14,7 @@ import {
   CalendarOutlined,
   DashboardOutlined,
   EnvironmentOutlined,
+  ExceptionOutlined,
   GoldOutlined,
   ProductOutlined,
   ScheduleOutlined,
@@ -61,12 +61,7 @@ import { FarmerList } from "./pages/farmers";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-import {
-  ExpertCreate,
-  ExpertEdit,
-  ExpertList,
-  ExpertShow,
-} from "./pages/experts";
+import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
@@ -85,11 +80,7 @@ import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
 import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
 import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 
-import {
-  InspectionEdit,
-  InspectionsList,
-  InspectionShow,
-} from "./pages/inspections";
+import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
 import { FarmerListInPlan } from "./pages/plans/farmers/list";
 import { ShowProductList } from "./pages/plans/production";
 import { OrdersList } from "./pages/orders/list";
@@ -102,6 +93,8 @@ import { PackagingProductShow } from "./components/production/packaging/drawer-s
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
 import { RetailersList } from "./pages/retailer/list";
 import { RetailersShow } from "./pages/retailer/show";
+import { liveProvider } from "@refinedev/ably";
+import { ablyClient } from "./utils/ablyClient";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -118,8 +111,7 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -127,12 +119,6 @@ const App: React.FC = () => {
   interface TranslationParams {
     [key: string]: string | number;
   }
-  useEffect(() => {
-    if (i18n.language !== "vi") {
-      i18n.changeLanguage("vi");
-    }
-    console.log("Current language:", i18n.language);
-  }, []);
 
   const i18nProvider = {
     translate: (key: string, params?: TranslationParams) => t(key, params),
@@ -158,8 +144,8 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              // notificationProvider={useNotificationProvider}
-              // liveProvider={liveProvider(ablyClient)}
+              notificationProvider={useNotificationProvider}
+              liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
                   name: "dashboard",
@@ -177,6 +163,7 @@ const App: React.FC = () => {
                   show: "/orders/:orderId",
                   meta: {
                     label: "Đơn hàng",
+                    icon: <ExceptionOutlined />,
                   },
                 },
                 {
@@ -185,7 +172,7 @@ const App: React.FC = () => {
                   show: "/retailers/:retailerId",
                   meta: {
                     label: "Nhà mua sỉ",
-                    icon: <ShopOutlined />
+                    icon: <ShopOutlined />,
                   },
                 },
                 {
@@ -419,10 +406,7 @@ const App: React.FC = () => {
                   </Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
-                    <Route
-                      path=":id/approve"
-                      element={<ApprovingPlanDrawer />}
-                    ></Route>
+                    <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
                     <Route path=":id">
                       <Route
                         index
@@ -433,10 +417,7 @@ const App: React.FC = () => {
                         }
                       />
 
-                      <Route
-                        path="approve"
-                        element={<ApprovingPlanDrawer />}
-                      ></Route>
+                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
 
                       <Route
                         path="farmers"
@@ -457,9 +438,7 @@ const App: React.FC = () => {
                         {" "}
                         <Route
                           path=":productId"
-                          element={
-                            <HarvestingProductShow></HarvestingProductShow>
-                          }
+                          element={<HarvestingProductShow></HarvestingProductShow>}
                         ></Route>
                       </Route>
                       <Route
@@ -472,9 +451,7 @@ const App: React.FC = () => {
                       >
                         <Route
                           path=":productId"
-                          element={
-                            <PackagingProductShow></PackagingProductShow>
-                          }
+                          element={<PackagingProductShow></PackagingProductShow>}
                         ></Route>
                       </Route>
 
@@ -525,20 +502,11 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route
-                          path=":taskId"
-                          element={<ProductiveTaskShow />}
-                        ></Route>
+                        <Route path=":taskId" element={<ProductiveTaskShow />}></Route>
                       </Route>
 
-                      <Route
-                        path="caring-tasks/create"
-                        element={<CaringCreate />}
-                      ></Route>
-                      <Route
-                        path="caring-tasks/:taskId/edit"
-                        element={<CaringUpdate />}
-                      ></Route>
+                      <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
+                      <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
                       <Route
                         path="harvesting-tasks"
                         element={
@@ -547,15 +515,9 @@ const App: React.FC = () => {
                           </ShowTasksList>
                         }
                       >
-                        <Route
-                          path=":taskId"
-                          element={<HarvestingTaskShow />}
-                        />
+                        <Route path=":taskId" element={<HarvestingTaskShow />} />
                       </Route>
-                      <Route
-                        path="harvesting-tasks/create"
-                        element={<HarvestingCreate />}
-                      ></Route>
+                      <Route path="harvesting-tasks/create" element={<HarvestingCreate />}></Route>
                       <Route
                         path="harvesting-tasks/:taskId/edit"
                         element={<HarvestingUpdate />}
@@ -570,10 +532,7 @@ const App: React.FC = () => {
                       >
                         <Route path=":taskId" element={<PackagingTaskShow />} />
                       </Route>
-                      <Route
-                        path="packaging-tasks/create"
-                        element={<PackagingCreate />}
-                      ></Route>
+                      <Route path="packaging-tasks/create" element={<PackagingCreate />}></Route>
                       <Route
                         path="packaging-tasks/:taskId/edit"
                         element={<PackagingUpdate />}
@@ -635,10 +594,7 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<ProblemShowV2 />} />
-                    <Route
-                      path=":id/create-activity"
-                      element={<CaringCreate />}
-                    />
+                    <Route path=":id/create-activity" element={<CaringCreate />} />
                   </Route>
                   <Route
                     path="/customers"
@@ -661,14 +617,8 @@ const App: React.FC = () => {
                   >
                     <Route path=":id" element={<InspectionShow />} />
                   </Route>
-                  <Route
-                    path="/inspection-forms/:id"
-                    element={<InspectionShow />}
-                  />
-                  <Route
-                    path="/inspection-forms/edit/:id"
-                    element={<InspectionEdit />}
-                  />
+                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
+                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
 
                   <Route
                     path="/plants"
@@ -783,14 +733,8 @@ const App: React.FC = () => {
                       />
                     }
                   />
-                  <Route
-                    path="/forgot-password"
-                    element={<AuthPage type="forgotPassword" />}
-                  />
-                  <Route
-                    path="/update-password"
-                    element={<AuthPage type="updatePassword" />}
-                  />
+                  <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
+                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
                 </Route>
 
                 <Route

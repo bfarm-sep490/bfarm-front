@@ -16,9 +16,11 @@ import {
   DashboardOutlined,
   EnvironmentOutlined,
   GoldOutlined,
+  HistoryOutlined,
   ProductOutlined,
   ScheduleOutlined,
   ShopOutlined,
+  TransactionOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -102,6 +104,8 @@ import { PackagingProductShow } from "./components/production/packaging/drawer-s
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
 import { RetailersList } from "./pages/retailer/list";
 import { RetailersShow } from "./pages/retailer/show";
+import { TransactionListPage } from "./pages/transactions/list";
+import { BatchListPage } from "./pages/batches/list";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -179,13 +183,14 @@ const App: React.FC = () => {
                     label: "Đơn hàng",
                   },
                 },
+
                 {
                   name: "retailers",
                   list: "/retailers",
                   show: "/retailers/:retailerId",
                   meta: {
                     label: "Nhà mua sỉ",
-                    icon: <ShopOutlined />
+                    icon: <ShopOutlined />,
                   },
                 },
                 {
@@ -362,6 +367,22 @@ const App: React.FC = () => {
                     label: "Chuyên gia",
                     parent: "employees",
                     canDelete: true,
+                  },
+                },
+                {
+                  name: "transactions",
+                  list: "/transactions",
+                  meta: {
+                    icon: <TransactionOutlined />,
+                    label: "Giao dịch",
+                  },
+                },
+                {
+                  name: "batches",
+                  list: "/batches",
+                  meta: {
+                    icon: <HistoryOutlined />,
+                    label: "Lịch sử giao hàng",
                   },
                 },
               ]}
@@ -588,8 +609,9 @@ const App: React.FC = () => {
                       </OrdersList>
                     }
                   >
-                    <Route
-                      path=":orderId"
+                  </Route>
+                  <Route
+                      path="/orders/:orderId"
                       element={
                         <OrderShow>
                           <Outlet />
@@ -598,8 +620,11 @@ const App: React.FC = () => {
                     >
                       <Route path="cancel" element={<CancelOrderModal />} />
                     </Route>
-                  </Route>
-
+                  <Route
+                    path="/transactions"
+                    element={<TransactionListPage />}
+                  />
+                  <Route path="/batches" element={<BatchListPage />} />
                   <Route path="/retailers" element={<RetailersList />} />
                   <Route path="/retailers/:id" element={<RetailersShow />} />
                   <Route

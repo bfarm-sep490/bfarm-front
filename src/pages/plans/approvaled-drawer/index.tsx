@@ -495,6 +495,7 @@ export const ApprovingPlanDrawer = () => {
         </>
       }
     >
+      {contextHolder}
       <Spin spinning={loadingForm}>
         <div style={contentStyle}>{steps[current]?.content}</div>
       </Spin>

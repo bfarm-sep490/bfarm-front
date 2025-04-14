@@ -124,9 +124,9 @@ export const CompleteOrderModal = (props: Props) => {
     resource: "packaging-products",
     filters: [
       {
-        field: "plan_id",
+        field: "order_id",
         operator: "eq",
-        value: order?.plan_id,
+        value: order?.id,
       },
       {
         field: "status",

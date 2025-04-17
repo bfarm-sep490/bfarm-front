@@ -39,18 +39,12 @@ import "@refinedev/antd/dist/reset.css";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
-import { PlanList, PlanShow } from "./pages/plans";
-import { ShowProblemList } from "./pages/plans/problem/list";
-import { ShowTasksList } from "./pages/plans/tasks/show";
-import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
+import { PlanList } from "./pages/plans";
+
 import { ProblemShowV2 } from "./pages/problems/show";
-import { ProductiveTaskShow } from "./components/caring-task/show";
 import { HarvestingTaskShow } from "./components/harvesting-task/show";
 import { PackagingTaskShow } from "./components/packaging-task/show";
 import { ProblemListInProblems } from "./pages/problems/list";
-import { CaringCreate } from "./pages/plans/tasks/caring-create";
-import { CaringUpdate } from "./pages/plans/tasks/caring-update";
-import { dataProvider } from "./rest-data-provider";
 import { App as AntdApp } from "antd";
 import { useAutoLoginForDemo } from "./hooks";
 import {
@@ -77,17 +71,11 @@ import {
   PesticidesList,
 } from "./pages/pesticides";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/yields";
-import { HarvestingCreate } from "./pages/plans/tasks/harvesting-create";
-import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
-import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
-import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 
 import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
-import { FarmerListInPlan } from "./pages/plans/farmers/list";
-import { ShowProductList } from "./pages/plans/production";
+
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
-import { AssignedOrder } from "./pages/plans/assigned-order";
 import { CancelOrderModal } from "./components/orders/complete-modal";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
@@ -99,6 +87,9 @@ import { TransactionListPage } from "./pages/transactions/list";
 import { BatchListPage } from "./pages/batches/list";
 import { liveProvider } from "@refinedev/ably";
 import { ablyClient } from "./utils/ablyClient";
+import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
+import { dataProvider } from "./rest-data-provider";
+import { PlanShow } from "./pages/plans/show/show";
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -148,8 +139,8 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              notificationProvider={useNotificationProvider}
-              liveProvider={liveProvider(ablyClient)}
+              // notificationProvider={useNotificationProvider}
+              // liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
                   name: "dashboard",
@@ -428,137 +419,7 @@ const App: React.FC = () => {
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
                     <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
-                    <Route path=":id">
-                      <Route
-                        index
-                        element={
-                          <PlanShow>
-                            <Outlet></Outlet>
-                          </PlanShow>
-                        }
-                      />
-
-                      <Route path="approve" element={<ApprovingPlanDrawer />}></Route>
-
-                      <Route
-                        path="farmers"
-                        element={
-                          <FarmerListInPlan>
-                            <Outlet />
-                          </FarmerListInPlan>
-                        }
-                      ></Route>
-                      <Route
-                        path="harvesting-products"
-                        element={
-                          <ShowProductList>
-                            <Outlet></Outlet>
-                          </ShowProductList>
-                        }
-                      >
-                        {" "}
-                        <Route
-                          path=":productId"
-                          element={<HarvestingProductShow></HarvestingProductShow>}
-                        ></Route>
-                      </Route>
-                      <Route
-                        path="packaged-products"
-                        element={
-                          <ShowProductList>
-                            <Outlet></Outlet>
-                          </ShowProductList>
-                        }
-                      >
-                        <Route
-                          path=":productId"
-                          element={<PackagingProductShow></PackagingProductShow>}
-                        ></Route>
-                      </Route>
-
-                      <Route
-                        path="problems"
-                        element={
-                          <ShowProblemList>
-                            <Outlet />
-                          </ShowProblemList>
-                        }
-                      >
-                        <Route path=":id" element={<ProblemShowV2 />}></Route>
-                      </Route>
-                      <Route
-                        path="orders"
-                        element={
-                          <OrdersList>
-                            <Outlet />
-                          </OrdersList>
-                        }
-                      >
-                        <Route path="create" element={<AssignedOrder />} />
-
-                        <Route
-                          path=":orderId"
-                          element={
-                            <OrderShow>
-                              <Outlet />
-                            </OrderShow>
-                          }
-                        >
-                          <Route path="cancel" element={<CancelOrderModal />} />
-                        </Route>
-                      </Route>
-                      <Route
-                        path="inspecting-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      ></Route>
-                      <Route
-                        path="caring-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route path=":taskId" element={<ProductiveTaskShow />}></Route>
-                      </Route>
-
-                      <Route path="caring-tasks/create" element={<CaringCreate />}></Route>
-                      <Route path="caring-tasks/:taskId/edit" element={<CaringUpdate />}></Route>
-                      <Route
-                        path="harvesting-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet></Outlet>
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route path=":taskId" element={<HarvestingTaskShow />} />
-                      </Route>
-                      <Route path="harvesting-tasks/create" element={<HarvestingCreate />}></Route>
-                      <Route
-                        path="harvesting-tasks/:taskId/edit"
-                        element={<HarvestingUpdate />}
-                      ></Route>
-                      <Route
-                        path="packaging-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route path=":taskId" element={<PackagingTaskShow />} />
-                      </Route>
-                      <Route path="packaging-tasks/create" element={<PackagingCreate />}></Route>
-                      <Route
-                        path="packaging-tasks/:taskId/edit"
-                        element={<PackagingUpdate />}
-                      ></Route>
-                    </Route>
+                    <Route path=":id" element={<PlanShow />} />
                   </Route>
                   <Route
                     path="/orders"
@@ -567,22 +428,18 @@ const App: React.FC = () => {
                         <Outlet />
                       </OrdersList>
                     }
+                  ></Route>
+                  <Route
+                    path="/orders/:orderId"
+                    element={
+                      <OrderShow>
+                        <Outlet />
+                      </OrderShow>
+                    }
                   >
+                    <Route path="cancel" element={<CancelOrderModal />} />
                   </Route>
-                  <Route
-                      path="/orders/:orderId"
-                      element={
-                        <OrderShow>
-                          <Outlet />
-                        </OrderShow>
-                      }
-                    >
-                      <Route path="cancel" element={<CancelOrderModal />} />
-                    </Route>
-                  <Route
-                    path="/transactions"
-                    element={<TransactionListPage />}
-                  />
+                  <Route path="/transactions" element={<TransactionListPage />} />
                   <Route path="/batches" element={<BatchListPage />} />
                   <Route path="/retailers" element={<RetailersList />} />
                   <Route path="/retailers/:id" element={<RetailersShow />} />
@@ -619,7 +476,6 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<ProblemShowV2 />} />
-                    <Route path=":id/create-activity" element={<CaringCreate />} />
                   </Route>
                   <Route
                     path="/customers"

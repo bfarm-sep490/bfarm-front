@@ -5,9 +5,9 @@ const getStatusTagColor = (value: string) => {
   switch (value) {
     case "Pending":
       return "blue";
-    case "Resolved":
+    case "Resolve":
       return "green";
-    case "Cancelled":
+    case "Cancel":
       return "red";
 
     default:
@@ -19,9 +19,9 @@ const getStatusTagValue = (value: string) => {
   switch (value) {
     case "Pending":
       return "Đợi xác nhận";
-    case "Resolved":
+    case "Resolve":
       return "Hoàn thành";
-    case "Cancelled":
+    case "Cancel":
       return "Hủy bỏ";
 
     default:

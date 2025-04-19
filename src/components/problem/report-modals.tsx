@@ -30,24 +30,30 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 type ReportProblemProps = {
+  problem_id?: number;
   status?: string;
   open: boolean;
   close: () => void;
+  refetch?: () => void;
 };
 export const ReportProblemModal = (props: ReportProblemProps) => {
   const { id } = useParams();
-  const back = useBack();
   const [api, context] = notification.useNotification();
-  const { formProps, formLoading, saveButtonProps } = useForm<any>({
+  const { formProps, formLoading, saveButtonProps } = useForm<{
+    result_content: string;
+    status: string;
+  }>({
     resource: "problems",
-    id: `${id}/result-content`,
+    id: `${props?.problem_id ? props?.problem_id : id}/problem-report`,
     action: "edit",
     queryOptions: {
       enabled: false,
     },
+    redirect: false,
     updateMutationOptions: {
       onSuccess: () => {
-        navigate("../../" + id);
+        props?.refetch?.();
+        props?.close();
       },
       onError: (error) => {
         api.error({
@@ -59,23 +65,20 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
       },
     },
   });
-  const navigate = useNavigate();
   const breakpoint = { sm: window.innerWidth > 576 };
 
-  const statusOptions = [
-    { label: "Cancelled", value: "Cancelled" },
-    { label: "Resovled", value: "Resolved" },
-  ];
   useEffect(() => {
-    if (!props.open) {
+    if (props?.open === false) {
       formProps?.form?.resetFields();
+    } else if (props?.open === true) {
+      formProps?.form?.setFieldValue("status", props?.status);
     }
-  }, [props.open]);
+  }, [props?.open]);
   return (
     <>
       <Modal
         open={props.open}
-        title={"Kết quả vấn đề"}
+        title={props?.status === "Resolve" ? "Đồng ý vấn đề" : "Từ chối vấn đề"}
         width={breakpoint.sm ? "378px" : "100%"}
         zIndex={1001}
         onClose={props?.close}
@@ -93,15 +96,14 @@ export const ReportProblemModal = (props: ReportProblemProps) => {
         <Spin spinning={formLoading}>
           <Form {...formProps} layout="vertical">
             <Form.Item
-              label="Kết quả"
+              label="Nội dung kết quả"
               name="result_content"
               rules={[{ required: true, message: "Vui lòng nhập kết quả" }]}
             >
-              <Input.TextArea name="result" />
+              <Input.TextArea name="result_content" />
             </Form.Item>
-
-            <Form.Item label="Status" name="status" rules={[{ required: true }]}>
-              <Select options={statusOptions} />
+            <Form.Item name="status" hidden>
+              <Input name="status" hidden />
             </Form.Item>
           </Form>
         </Spin>

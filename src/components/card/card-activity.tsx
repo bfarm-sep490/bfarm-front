@@ -11,6 +11,7 @@ type ActivityCardProps = {
   icon?: React.ReactNode;
   completedTasks: number;
   loading?: boolean;
+  style?: React.CSSProperties;
 };
 
 export const ActivityCard = (props: ActivityCardProps) => {
@@ -19,6 +20,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <>
       {" "}
       <Card
+        style={props?.style}
         loading={props?.loading}
         title={
           <Flex align="center" gap={8}>

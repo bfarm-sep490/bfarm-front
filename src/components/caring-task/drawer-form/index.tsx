@@ -32,18 +32,17 @@ type Props = {
   onClose?: () => void;
   problemId?: number;
   planId?: number;
-  taskId?: BaseKey;
+  taskId?: number;
+  status?: string;
   action: "edit" | "create";
   onMutationSuccess?: () => void;
   refetch?: () => void;
+  chosenFarmer?: [];
 };
 
 export const CaringTaskPage = (props: Props) => {
-  const { taskId } = useParams();
   const back = useBack();
   const t = useTranslate();
-  const [idProblem, setIdProblem] = useState<number | null>(null);
-  const [idPlan, setIdPlan] = useState<number | null>(null);
   const [startDate, setStartDate] = useState<dayjs.Dayjs | null>(null);
   const [endDate, setEndDate] = useState<dayjs.Dayjs | null>(null);
   const [fertilizerFields, setFertilizerFields] = useState<
@@ -56,30 +55,6 @@ export const CaringTaskPage = (props: Props) => {
     { id: number; quantity: number; id_block: number }[]
   >([]);
 
-  const queryPendingPlans = useList({
-    resource: "plans",
-    filters: [{ field: "status", operator: "eq", value: "Pending" }],
-  });
-
-  const queryOngoingPlans = useList({
-    resource: "plans",
-    filters: [{ field: "status", operator: "eq", value: "Ongoing" }],
-  });
-
-  const plans = [
-    ...(queryPendingPlans.data?.data || []),
-    ...(queryOngoingPlans?.data?.data || []),
-  ];
-
-  const queryPendingProblems = useList({
-    resource: "problems",
-  });
-
-  const filteredProblems = idPlan
-    ? queryPendingProblems.data?.data?.filter(
-        (problem) => problem.plan_id === idPlan
-      )
-    : [];
   const { data: fertilizerData } = useList({
     resource: "fertilizers",
     filters: [
@@ -117,7 +92,7 @@ export const CaringTaskPage = (props: Props) => {
     pesticides: { pesticide_id: number; quantity: number; unit: string }[];
     items: { item_id: number; quantity: number; unit: string }[];
   }>({
-    id: taskId ?? props?.taskId,
+    id: props?.taskId,
     action: props?.action,
     resource: "caring-tasks",
     redirect: false,
@@ -165,8 +140,6 @@ export const CaringTaskPage = (props: Props) => {
             problem_id: caring_tasks.problem_id,
             task_type: caring_tasks.task_type,
           });
-          setIdPlan(caring_tasks.plan_id);
-          setIdProblem(caring_tasks.problem_id);
         }
       },
     },
@@ -191,25 +164,11 @@ export const CaringTaskPage = (props: Props) => {
     },
   });
 
-  const title =
-    props?.action === "edit"
-      ? "Chỉnh sửa công việc chăm sóc #" + taskId
-      : "Thêm công việc chăm sóc";
-
-  const statusOptions = [
-    { label: t("status.draft", "Nháp"), value: "Draft" },
-    { label: t("status.pending", "Chờ xử lý"), value: "Pending" },
-    { label: t("status.cancel", "Đang thực hiện"), value: "Ongoing" },
-    { label: t("status.complete", "Hoàn thành"), value: "Complete" },
-    { label: t("status.cancel", "Hủy bỏ"), value: "Cancel" },
-    { label: t("status.incomplete", "Chưa hoàn thành"), value: "Incomplete" },
-    { label: t("status.unapprove", "Không phê duyệt"), value: "Unapprove" },
-  ];
   const taskTypeOptions = [
     { label: t("status.watering", "Tưới nước"), value: "Watering" },
     {
       label: t("status.fertilizering", "Bón phân"),
-      value: "Fertilizering",
+      value: "Fertilizing",
     },
     { label: t("status.pesticiding", "Phun thuốc"), value: "Pesticide" },
     { label: t("status.setup", "Cài đặt"), value: "Setup" },
@@ -294,6 +253,20 @@ export const CaringTaskPage = (props: Props) => {
           >
             <Input name="task_name" />
           </Form.Item>
+          <Form.Item name="plan_id">
+            <Input value={props?.planId} name="plan_id" />
+          </Form.Item>
+
+          <Form.Item name="problem_id">
+            <Input value={props?.problemId} name="prolem_id" />
+          </Form.Item>
+          <Form.Item
+            label="Loại công việc"
+            name="task_type"
+            rules={[{ required: true }]}
+          >
+            <Select options={taskTypeOptions} />
+          </Form.Item>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -324,19 +297,22 @@ export const CaringTaskPage = (props: Props) => {
                   value={endDate}
                   onChange={setEndDate}
                   disabledDate={(current) => {
-                    return startDate ? current && current.isBefore(startDate, "day") : false;
+                    return startDate
+                      ? current && current.isBefore(startDate, "day")
+                      : false;
                   }}
                 />
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item label="Loại công việc" name="task_type" rules={[{ required: true }]}>
-            <Select options={taskTypeOptions} />
+          <Form.Item name="status">
+            <Input value={props?.status} name="status" />
           </Form.Item>
-          <Form.Item label="Trạng thái" name="status" rules={[{ required: true }]}>
-            <Select options={statusOptions} />
-          </Form.Item>
-          <Form.Item label="Mô tả" name="description" rules={[{ required: true }]}>
+          <Form.Item
+            label="Mô tả"
+            name="description"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+          >
             <Input.TextArea rows={7} />
           </Form.Item>
           <div className="form-section">
@@ -370,13 +346,18 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) => {
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block ? { ...f, id: value } : f,
+                              f.id_block === field.id_block
+                                ? { ...f, id: value }
+                                : f
                             )
                           );
                         }}
                       >
                         {fertilizerData?.data.map((fertilizer) => (
-                          <Select.Option key={`fetilizer_${fertilizer.id}`} value={fertilizer.id}>
+                          <Select.Option
+                            key={`fetilizer_${fertilizer.id}`}
+                            value={fertilizer.id}
+                          >
                             {fertilizer.name}
                           </Select.Option>
                         ))}
@@ -394,7 +375,9 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) =>
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
+                              f.id_block === field.id_block
+                                ? { ...f, quantity: value || 0 }
+                                : f
                             )
                           )
                         }

@@ -113,6 +113,7 @@ export const RetailersListTable: React.FC = () => {
                         {isActive ? t("retailers.active") : t("retailers.inactive")}
                     </Tag>
                 )}
+
             />
 
             <Table.Column

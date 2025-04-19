@@ -1,105 +1,141 @@
-import { Row, Col, theme, Dropdown, type MenuProps, Button, Flex } from "antd";
-import { useTranslation } from "react-i18next";
-import {} from "../../components";
-import { DownOutlined, RiseOutlined, ShoppingOutlined } from "@ant-design/icons";
-import { useMemo, useState } from "react";
-import { List, NumberField } from "@refinedev/antd";
-import { useApiUrl, useCustom } from "@refinedev/core";
-import dayjs from "dayjs";
-import { IQuickStatsEntry } from "../../interfaces";
+import React, { useEffect, useMemo, useState } from "react";
+import { Card, Flex, Progress, Table, theme, Typography, Image, Empty } from "antd";
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
+import { useList } from "@refinedev/core";
+import { DateField, TextField } from "@refinedev/antd";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-type DateFilter = "lastWeek" | "lastMonth";
+import { StatusTag } from "@/components/caring-task/status-tag";
+import { OrderStatusTag } from "@/components/orders/order-status";
+import { DashboardPieOrders } from "@/components/dashboard/dashboard-pie-orders";
+import { RemainingProductsTable } from "@/components/dashboard/table-remaining-products";
+import { DashboardOrdersTracking } from "@/components/dashboard/dashboard-orders-tracking";
+import { DashboardPlanTracking } from "@/components/dashboard/dashboard-plans-tracking";
+import { DashboardTopPlants } from "@/components/dashboard/dashboard-top-plants";
+import { DashboardTransactions } from "@/components/dashboard/dashboard-transactions";
 
-const DATE_FILTERS: Record<
-  DateFilter,
-  {
-    text: string;
-    value: DateFilter;
-  }
-> = {
-  lastWeek: {
-    text: "lastWeek",
-    value: "lastWeek",
-  },
-  lastMonth: {
-    text: "lastMonth",
-    value: "lastMonth",
-  },
-};
+type OrderStatus =
+  | "PendingConfirmation"
+  | "PendingDeposit"
+  | "Cancel"
+  | "Reject"
+  | "Deposit"
+  | "Paid";
+
+type PlanStatus = "Ongoing" | "Complete" | "Cancel";
+
+interface Plant {
+  id: string;
+  plant_name: string;
+  image_url?: string;
+  number_order?: number;
+}
+
+interface Order {
+  id: string;
+  status: OrderStatus;
+  plant_id?: string;
+  retailer_name?: string;
+  deposit_price: number;
+  estimate_pick_up_date: string;
+  preorder_quantity: number;
+  created_at: string;
+}
+
+interface Plan {
+  id: string;
+  plan_name: string;
+  start_date: string;
+  end_date: string;
+  status: PlanStatus;
+  plant_id?: string;
+  yield_name?: string;
+}
 
 export const DashboardPage: React.FC = () => {
-  const { token } = theme.useToken();
-  const { t } = useTranslation();
-  const API_URL = useApiUrl();
-
-  const [selecetedDateFilter, setSelectedDateFilter] = useState<DateFilter>(
-    DATE_FILTERS.lastWeek.value,
+  const [activeOrderTab, setActiveOrderTab] = useState<"Pending" | "PendingConfirm" | "Deposit">(
+    "Pending",
   );
+  const [pendingOrders, setPendingOrders] = useState<Order[]>([]);
+  const [pendingConfirmOrders, setPendingConfirmOrders] = useState<Order[]>([]);
+  const [depositeOrders, setDepositeOrders] = useState<Order[]>([]);
+  const { token } = theme.useToken();
+  const [visiblePlants, setVisiblePlants] = useState(5);
 
-  const dateFilters: MenuProps["items"] = useMemo(() => {
-    const filters = Object.keys(DATE_FILTERS) as DateFilter[];
-
-    return filters.map((filter) => {
-      return {
-        key: DATE_FILTERS[filter].value,
-        label: t(`dashboard.filter.date.${DATE_FILTERS[filter].text}`),
-        onClick: () => {
-          setSelectedDateFilter(DATE_FILTERS[filter].value);
-        },
-      };
-    });
-  }, []);
-
-  const dateFilterQuery = useMemo(() => {
-    const now = dayjs();
-    switch (selecetedDateFilter) {
-      case "lastWeek":
-        return {
-          start: now.subtract(6, "days").startOf("day").format(),
-          end: now.endOf("day").format(),
-        };
-      case "lastMonth":
-        return {
-          start: now.subtract(1, "month").startOf("day").format(),
-          end: now.endOf("day").format(),
-        };
-      default:
-        return {
-          start: now.subtract(7, "days").startOf("day").format(),
-          end: now.endOf("day").format(),
-        };
-    }
-  }, [selecetedDateFilter]);
-
-  const { data: quickStatsData } = useCustom<{
-    data: IQuickStatsEntry[];
-    total: number;
-    trend: number;
-  }>({
-    url: `${API_URL}/quick-stats`,
-    method: "get",
-    config: {
-      query: dateFilterQuery,
-    },
+  const { data: harvestingProductData, isLoading: harvestingProductLoading } = useList<any>({
+    resource: "harvesting-product",
   });
 
-  const quick = useMemo(() => {
-    const data = quickStatsData?.data?.data;
-    if (!data) return { data: [], trend: 0 };
+  const { data: packagingProductData, isLoading: packagingProductLoading } = useList<any>({
+    resource: "packaging-products",
+  });
 
-    const plotData = data.map((order) => {
-      return {
-        timeText: order.stat_name,
-        value: order.value,
-        state: order.description,
-      };
-    });
+  const { data: orderData, isLoading: orderLoading } = useList<Order>({
+    resource: "orders",
+  });
 
-    return {
-      data: plotData,
-      trend: quickStatsData?.data?.trend || 0,
-    };
-  }, [quickStatsData]);
+  const { data: plantData, isLoading: plantLoading } = useList<Plant>({
+    resource: "plants",
+  });
 
-  return <></>;
+  const { data: plansData, isLoading: plansLoading } = useList<Plan>({
+    resource: "plans",
+    filters: [
+      {
+        field: "status",
+        operator: "eq",
+        value: "Ongoing",
+      },
+    ],
+  });
+  const { data: transactionsData, isLoading: transactionsLoading } = useList<any>({
+    resource: "transactions/dashboard",
+  });
+
+  return (
+    <>
+      <Flex gap={10} style={{ marginBottom: 10 }}>
+        <DashboardTransactions
+          transactionsData={transactionsData}
+          loading={transactionsLoading}
+          style={{ width: "70%" }}
+        />
+        <DashboardPieOrders orderData={orderData} style={{ width: "30%" }} loading={orderLoading} />
+      </Flex>
+
+      <Flex gap={10} style={{ marginBottom: 10 }}>
+        <RemainingProductsTable
+          loading={
+            packagingProductLoading || harvestingProductLoading || orderLoading || plantLoading
+          }
+          style={{ width: "50%" }}
+          orderData={orderData}
+          plantData={plantData}
+          packagingProductData={packagingProductData}
+          harvestingProductData={harvestingProductData}
+        />
+        <DashboardOrdersTracking
+          orderData={orderData}
+          plantData={plantData}
+          loading={orderLoading || plantLoading}
+          style={{ width: "50%" }}
+        />
+      </Flex>
+      <Flex vertical={false} gap={10}>
+        <DashboardPlanTracking
+          style={{ width: "70%" }}
+          plansData={plansData}
+          plantData={plantData}
+          loading={plantLoading || plansLoading}
+        />
+        <DashboardTopPlants
+          orderData={orderData}
+          plantData={plantData}
+          loading={orderLoading || plantLoading}
+          style={{ width: "30%" }}
+        />
+      </Flex>
+    </>
+  );
 };

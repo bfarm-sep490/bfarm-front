@@ -1,8 +1,7 @@
-/* eslint-disable prettier/prettier */
-import React, { useEffect } from "react";
+import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -15,10 +14,13 @@ import {
   CalendarOutlined,
   DashboardOutlined,
   EnvironmentOutlined,
+  ExceptionOutlined,
   GoldOutlined,
+  HistoryOutlined,
   ProductOutlined,
   ScheduleOutlined,
   ShopOutlined,
+  TransactionOutlined,
   UserOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
@@ -37,18 +39,12 @@ import "@refinedev/antd/dist/reset.css";
 import { themeConfig } from "./components/theme";
 import { ThemedSiderV2 } from "./components/layout/sider";
 
-import { PlanList, PlanShow } from "./pages/plans";
-import { ShowProblemList } from "./pages/plans/problem/list";
-import { ShowTasksList } from "./pages/plans/tasks/show";
-import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
+import { PlanList } from "./pages/plans";
+
 import { ProblemShowV2 } from "./pages/problems/show";
-import { ProductiveTaskShow } from "./components/caring-task/show";
 import { HarvestingTaskShow } from "./components/harvesting-task/show";
 import { PackagingTaskShow } from "./components/packaging-task/show";
 import { ProblemListInProblems } from "./pages/problems/list";
-import { CaringCreate } from "./pages/plans/tasks/caring-create";
-import { CaringUpdate } from "./pages/plans/tasks/caring-update";
-import { dataProvider } from "./rest-data-provider";
 import { App as AntdApp } from "antd";
 import { useAutoLoginForDemo } from "./hooks";
 import {
@@ -61,12 +57,7 @@ import { FarmerList } from "./pages/farmers";
 import { FarmersShow } from "./pages/farmers/show";
 import { FarmerCreate } from "./pages/farmers/create";
 import { FarmerEdit } from "./pages/farmers/edit";
-import {
-  ExpertCreate,
-  ExpertEdit,
-  ExpertList,
-  ExpertShow,
-} from "./pages/experts";
+import { ExpertCreate, ExpertEdit, ExpertList, ExpertShow } from "./pages/experts";
 import { InspectorList } from "./pages/inspectors";
 import { InspectorEdit } from "./pages/inspectors/edit";
 import { InspectorCreate } from "./pages/inspectors/create";
@@ -80,21 +71,11 @@ import {
   PesticidesList,
 } from "./pages/pesticides";
 import { YieldCreate, YieldEdit, YieldsList, YieldsShow } from "./pages/yields";
-import { HarvestingCreate } from "./pages/plans/tasks/harvesting-create";
-import { HarvestingUpdate } from "./pages/plans/tasks/harvesting-update";
-import { PackagingUpdate } from "./pages/plans/tasks/packaging-update";
-import { PackagingCreate } from "./pages/plans/tasks/packaging-create";
 
-import {
-  InspectionEdit,
-  InspectionsList,
-  InspectionShow,
-} from "./pages/inspections";
-import { FarmerListInPlan } from "./pages/plans/farmers/list";
-import { ShowProductList } from "./pages/plans/production";
+import { InspectionEdit, InspectionsList, InspectionShow } from "./pages/inspections";
+
 import { OrdersList } from "./pages/orders/list";
 import { OrderShow } from "./pages/orders/show";
-import { AssignedOrder } from "./pages/plans/assigned-order";
 import { CancelOrderModal } from "./components/orders/complete-modal";
 import { PackagedProductListPage } from "./pages/packaging-production/list";
 import { HarvestingProductionListPage } from "./pages/harvesting-production/list";
@@ -102,6 +83,14 @@ import { PackagingProductShow } from "./components/production/packaging/drawer-s
 import { HarvestingProductShow } from "./components/production/harvesting/drawer-show";
 import { RetailersList } from "./pages/retailer/list";
 import { RetailersShow } from "./pages/retailer/show";
+import { TransactionListPage } from "./pages/transactions/list";
+import { BatchListPage } from "./pages/batches/list";
+import { liveProvider } from "@refinedev/ably";
+import { ablyClient } from "./utils/ablyClient";
+import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
+import { dataProvider } from "./rest-data-provider";
+import { PlanShow } from "./pages/plans/show/show";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -118,8 +107,7 @@ const App: React.FC = () => {
   // This hook is used to automatically login the user.
   const { loading } = useAutoLoginForDemo();
 
-  const API_URL =
-    import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+  const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
 
   const appDataProvider = dataProvider(API_URL);
 
@@ -127,12 +115,6 @@ const App: React.FC = () => {
   interface TranslationParams {
     [key: string]: string | number;
   }
-  useEffect(() => {
-    if (i18n.language !== "vi") {
-      i18n.changeLanguage("vi");
-    }
-    console.log("Current language:", i18n.language);
-  }, []);
 
   const i18nProvider = {
     translate: (key: string, params?: TranslationParams) => t(key, params),
@@ -177,6 +159,17 @@ const App: React.FC = () => {
                   show: "/orders/:orderId",
                   meta: {
                     label: "Đơn hàng",
+                    icon: <ExceptionOutlined />,
+                  },
+                },
+
+                {
+                  name: "retailers",
+                  list: "/retailers",
+                  show: "/retailers/:retailerId",
+                  meta: {
+                    label: "Nhà mua sỉ",
+                    icon: <ShopOutlined />,
                   },
                 },
                 {
@@ -364,6 +357,22 @@ const App: React.FC = () => {
                     canDelete: true,
                   },
                 },
+                {
+                  name: "transactions",
+                  list: "/transactions",
+                  meta: {
+                    icon: <TransactionOutlined />,
+                    label: "Giao dịch",
+                  },
+                },
+                {
+                  name: "batches",
+                  list: "/batches",
+                  meta: {
+                    icon: <HistoryOutlined />,
+                    label: "Lịch sử giao hàng",
+                  },
+                },
               ]}
             >
               <Routes>
@@ -419,166 +428,8 @@ const App: React.FC = () => {
                   </Route>
                   <Route path="/plans">
                     <Route index element={<PlanList />} />
-                    <Route
-                      path=":id/approve"
-                      element={<ApprovingPlanDrawer />}
-                    ></Route>
-                    <Route path=":id">
-                      <Route
-                        index
-                        element={
-                          <PlanShow>
-                            <Outlet></Outlet>
-                          </PlanShow>
-                        }
-                      />
-
-                      <Route
-                        path="approve"
-                        element={<ApprovingPlanDrawer />}
-                      ></Route>
-
-                      <Route
-                        path="farmers"
-                        element={
-                          <FarmerListInPlan>
-                            <Outlet />
-                          </FarmerListInPlan>
-                        }
-                      ></Route>
-                      <Route
-                        path="harvesting-products"
-                        element={
-                          <ShowProductList>
-                            <Outlet></Outlet>
-                          </ShowProductList>
-                        }
-                      >
-                        {" "}
-                        <Route
-                          path=":productId"
-                          element={
-                            <HarvestingProductShow></HarvestingProductShow>
-                          }
-                        ></Route>
-                      </Route>
-                      <Route
-                        path="packaged-products"
-                        element={
-                          <ShowProductList>
-                            <Outlet></Outlet>
-                          </ShowProductList>
-                        }
-                      >
-                        <Route
-                          path=":productId"
-                          element={
-                            <PackagingProductShow></PackagingProductShow>
-                          }
-                        ></Route>
-                      </Route>
-
-                      <Route
-                        path="problems"
-                        element={
-                          <ShowProblemList>
-                            <Outlet />
-                          </ShowProblemList>
-                        }
-                      >
-                        <Route path=":id" element={<ProblemShowV2 />}></Route>
-                      </Route>
-                      <Route
-                        path="orders"
-                        element={
-                          <OrdersList>
-                            <Outlet />
-                          </OrdersList>
-                        }
-                      >
-                        <Route path="create" element={<AssignedOrder />} />
-
-                        <Route
-                          path=":orderId"
-                          element={
-                            <OrderShow>
-                              <Outlet />
-                            </OrderShow>
-                          }
-                        >
-                          <Route path="cancel" element={<CancelOrderModal />} />
-                        </Route>
-                      </Route>
-                      <Route
-                        path="inspecting-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      ></Route>
-                      <Route
-                        path="caring-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route
-                          path=":taskId"
-                          element={<ProductiveTaskShow />}
-                        ></Route>
-                      </Route>
-
-                      <Route
-                        path="caring-tasks/create"
-                        element={<CaringCreate />}
-                      ></Route>
-                      <Route
-                        path="caring-tasks/:taskId/edit"
-                        element={<CaringUpdate />}
-                      ></Route>
-                      <Route
-                        path="harvesting-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet></Outlet>
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route
-                          path=":taskId"
-                          element={<HarvestingTaskShow />}
-                        />
-                      </Route>
-                      <Route
-                        path="harvesting-tasks/create"
-                        element={<HarvestingCreate />}
-                      ></Route>
-                      <Route
-                        path="harvesting-tasks/:taskId/edit"
-                        element={<HarvestingUpdate />}
-                      ></Route>
-                      <Route
-                        path="packaging-tasks"
-                        element={
-                          <ShowTasksList>
-                            <Outlet />
-                          </ShowTasksList>
-                        }
-                      >
-                        <Route path=":taskId" element={<PackagingTaskShow />} />
-                      </Route>
-                      <Route
-                        path="packaging-tasks/create"
-                        element={<PackagingCreate />}
-                      ></Route>
-                      <Route
-                        path="packaging-tasks/:taskId/edit"
-                        element={<PackagingUpdate />}
-                      ></Route>
-                    </Route>
+                    <Route path=":id/approve" element={<ApprovingPlanDrawer />}></Route>
+                    <Route path=":id" element={<PlanShow />} />
                   </Route>
                   <Route
                     path="/orders"
@@ -587,18 +438,19 @@ const App: React.FC = () => {
                         <Outlet />
                       </OrdersList>
                     }
+                  ></Route>
+                  <Route
+                    path="/orders/:orderId"
+                    element={
+                      <OrderShow>
+                        <Outlet />
+                      </OrderShow>
+                    }
                   >
-                    <Route
-                      path=":orderId"
-                      element={
-                        <OrderShow>
-                          <Outlet />
-                        </OrderShow>
-                      }
-                    >
-                      <Route path="cancel" element={<CancelOrderModal />} />
-                    </Route>
+                    <Route path="cancel" element={<CancelOrderModal />} />
                   </Route>
+                  <Route path="/transactions" element={<TransactionListPage />} />
+                  <Route path="/batches" element={<BatchListPage />} />
 
                   <Route path="/retailers" element={<RetailersList />} />
                   <Route path="/retailers/:id" element={<RetailersShow />} />
@@ -635,10 +487,6 @@ const App: React.FC = () => {
                     }
                   >
                     <Route path=":id" element={<ProblemShowV2 />} />
-                    <Route
-                      path=":id/create-activity"
-                      element={<CaringCreate />}
-                    />
                   </Route>
                   <Route
                     path="/customers"
@@ -661,14 +509,8 @@ const App: React.FC = () => {
                   >
                     <Route path=":id" element={<InspectionShow />} />
                   </Route>
-                  <Route
-                    path="/inspection-forms/:id"
-                    element={<InspectionShow />}
-                  />
-                  <Route
-                    path="/inspection-forms/edit/:id"
-                    element={<InspectionEdit />}
-                  />
+                  <Route path="/inspection-forms/:id" element={<InspectionShow />} />
+                  <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
 
                   <Route
                     path="/plants"
@@ -783,14 +625,8 @@ const App: React.FC = () => {
                       />
                     }
                   />
-                  <Route
-                    path="/forgot-password"
-                    element={<AuthPage type="forgotPassword" />}
-                  />
-                  <Route
-                    path="/update-password"
-                    element={<AuthPage type="updatePassword" />}
-                  />
+                  <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
+                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
                 </Route>
 
                 <Route

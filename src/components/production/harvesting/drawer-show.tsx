@@ -1,9 +1,23 @@
 import { DateField, TagField, TextField } from "@refinedev/antd";
 import { useShow, useBack, useOne, useList } from "@refinedev/core";
-import { Table, theme, Flex, Grid, Typography, List, Divider, Drawer, Card } from "antd";
+import {
+  Table,
+  theme,
+  Flex,
+  Grid,
+  Typography,
+  List,
+  Divider,
+  Drawer,
+  Card,
+  Space,
+  Row,
+  Col,
+} from "antd";
 import { initial } from "lodash";
 import { useParams } from "react-router";
 import { ProductionStatus } from "../packaging/list";
+const { Title, Text } = Typography;
 
 export const HarvestingProductShow = () => {
   const { productId } = useParams();
@@ -52,6 +66,27 @@ export const HarvestingProductShow = () => {
       render: (text: string) => <TextField value={text} />,
     },
   ];
+  const grade = task?.evaluated_result;
+
+  const gradeLabel =
+    grade === "Grade 1"
+      ? "Loại 1"
+      : grade === "Grade 2"
+        ? "Loại 2"
+        : grade === "Grade 3"
+          ? "Loại 3"
+          : grade;
+
+  const gradeColor = grade === "Grade 3" ? "red" : grade === "Grade 2" ? "orange" : "green";
+
+  const gradePriceRatio =
+    grade === "Grade 3"
+      ? plant?.delta_three
+      : grade === "Grade 2"
+        ? plant?.delta_two
+        : plant?.delta_one;
+
+  const finalPrice = (gradePriceRatio ?? 1) * (plant?.base_price ?? 0);
 
   return (
     <Drawer
@@ -72,103 +107,94 @@ export const HarvestingProductShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Card
+          style={{ width: "100%", borderRadius: 8 }}
           title={
-            <>
-              <Flex justify="space-between" align="center">
-                <Flex vertical={false} gap={6}>
-                  <Typography.Title level={4} style={{ margin: 0 }}>
-                    Sản lượng {" " + task?.plant_name?.toLowerCase()}
-                  </Typography.Title>
-                  <Typography.Text
-                    style={{
-                      fontSize: 14,
-                      color: `${
-                        task?.evaluated_result === "Grade 3"
-                          ? "red"
-                          : task?.evaluated_result === "Grade 2"
-                            ? "orange"
-                            : "green"
-                      }`,
-                    }}
-                  >
-                    {task?.evaluated_result === "Grade 3"
-                      ? "Loại 3"
-                      : task?.evaluated_result === "Grade 2"
-                        ? "Loại 2"
-                        : task?.evaluated_result === "Grade 1"
-                          ? "Loại 1"
-                          : task?.evaluated_result}
-                  </Typography.Text>
-                </Flex>
-                <ProductionStatus status={task?.status} />
-              </Flex>
-            </>
+            <Flex justify="space-between" align="center">
+              <Space size="middle">
+                <Title level={4} style={{ margin: 0 }}>
+                  Sản lượng {task?.plant_name?.toLowerCase()}
+                </Title>
+                <Text style={{ color: gradeColor }}>{gradeLabel}</Text>
+              </Space>
+              <ProductionStatus status={task?.status} />
+            </Flex>
           }
-          style={{ width: "100%" }}
         >
-          <Flex vertical gap={12}>
-            <Flex justify="space-between">
-              <Typography.Text strong>Kế hoạch </Typography.Text>
-              <Typography.Text>
-                {task?.plan_name ? task?.plan_name : "Chưa thu hoạch"}
-              </Typography.Text>
-            </Flex>
-            <Flex justify="space-between">
-              <Typography.Text strong>Ngày đóng gói</Typography.Text>
-              <DateField format="hh:mm DD/MM/YYYY" value={task?.harvesting_date} />
-            </Flex>
+          <Flex vertical gap={16}>
+            <Row
+              gutter={[0, 16]}
+              style={{
+                backgroundColor: token.colorBgLayout,
+                padding: 16,
+                borderRadius: 8,
+                border: `1px solid ${token.colorBorderSecondary}`,
+              }}
+            >
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Kế hoạch:</Text>
+                  <Text>{task?.plan_name ?? "Chưa thu hoạch"}</Text>
+                </Flex>
+              </Col>
 
-            <Flex justify="space-between">
-              <Typography.Text strong>Ngày hết hạn</Typography.Text>
-              <DateField format="hh:mm DD/MM/YYYY" value={task?.expired_date} />
-            </Flex>
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Ngày đóng gói:</Text>
+                  <DateField format="HH:mm DD/MM/YYYY" value={task?.harvesting_date} />
+                </Flex>
+              </Col>
 
-            <Flex justify="space-between">
-              <Typography.Text strong>Sản lượng</Typography.Text>
-              <Typography.Text>
-                <Typography.Text style={{ fontSize: 18 }} strong>
-                  {task?.available_harvesting_quantity}
-                </Typography.Text>
-                {"/" + task?.harvesting_quantity + " " + task?.harvesting_unit}
-              </Typography.Text>{" "}
-            </Flex>
-          </Flex>
-          <Divider />
-          <Flex justify="space-between">
-            <Typography.Text strong>Gía cơ bản</Typography.Text>
-            <Typography.Text>{plant?.base_price.toLocaleString() + " VND"}</Typography.Text>
-          </Flex>
-          <Flex justify="space-between">
-            <Typography.Text strong>
-              Tỉ lệ giá{" "}
-              {task?.evaluated_result === "Grade 3"
-                ? "loại 3"
-                : task?.evaluated_result === "Grade 2"
-                  ? "loại 2"
-                  : task?.evaluated_result === "Grade 1"
-                    ? "loại 1"
-                    : task?.evaluated_result}{" "}
-            </Typography.Text>
-            <Typography.Text>
-              {task?.evaluated_result === "Grade 3"
-                ? (plant?.delta_three * 100).toFixed(2) + " %"
-                : task?.evaluated_result === "Grade 2"
-                  ? (plant?.delta_two * 100).toFixed(2) + " %"
-                  : (plant?.delta_one * 100).toFixed(2) + " %"}
-            </Typography.Text>
-          </Flex>
-          <Flex justify="space-between">
-            <Typography.Text strong>Giá sản lượng thực tế</Typography.Text>
-            <Typography.Text>
-              <Typography.Text style={{ fontSize: 18 }} strong>
-                {(task?.evaluated_result === "Grade 3"
-                  ? plant?.delta_three * plant?.base_price
-                  : task?.evaluated_result === "Grade 2"
-                    ? plant?.delta_two * plant?.base_price
-                    : task?.delta_one * plant?.base_price
-                ).toLocaleString() + " VND/ kg"}
-              </Typography.Text>
-            </Typography.Text>
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Ngày hết hạn:</Text>
+                  <DateField format="HH:mm DD/MM/YYYY" value={task?.expired_date} />
+                </Flex>
+              </Col>
+
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Sản lượng:</Text>
+                  <Text>
+                    <Text strong style={{ fontSize: 16 }}>
+                      {task?.available_harvesting_quantity}
+                    </Text>
+                    {` / ${task?.harvesting_quantity} ${task?.harvesting_unit}`}
+                  </Text>
+                </Flex>
+              </Col>
+            </Row>
+            <Row
+              gutter={[0, 16]}
+              style={{
+                backgroundColor: token.colorBgLayout,
+                padding: 16,
+                borderRadius: 8,
+                border: `1px solid ${token.colorBorderSecondary}`,
+              }}
+            >
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Giá cơ bản:</Text>
+                  <Text>{plant?.base_price?.toLocaleString()} VND</Text>
+                </Flex>
+              </Col>
+
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Tỉ lệ giá {gradeLabel?.toLowerCase()}:</Text>
+                  <Text>{(gradePriceRatio * 100).toFixed(2)}%</Text>
+                </Flex>
+              </Col>
+
+              <Col span={24}>
+                <Flex justify="start" gap={10}>
+                  <Text strong>Giá sản lượng thực tế:</Text>
+                  <Text strong style={{ fontSize: 16 }}>
+                    {finalPrice.toLocaleString()} VND/kg
+                  </Text>
+                </Flex>
+              </Col>
+            </Row>
           </Flex>
         </Card>
 

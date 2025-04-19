@@ -90,6 +90,7 @@ import { ablyClient } from "./utils/ablyClient";
 import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
 import { dataProvider } from "./rest-data-provider";
 import { PlanShow } from "./pages/plans/show/show";
+
 interface TitleHandlerOptions {
   resource?: IResourceItem;
 }
@@ -169,6 +170,15 @@ const App: React.FC = () => {
                   meta: {
                     label: "Nhà mua sỉ",
                     icon: <ShopOutlined />,
+                  },
+                },
+                {
+                  name: "retailers",
+                  list: "/retailers",
+                  show: "/retailers/:retailerId",
+                  meta: {
+                    label: "Nhà mua sỉ",
+                    icon: <ShopOutlined />
                   },
                 },
                 {
@@ -441,6 +451,7 @@ const App: React.FC = () => {
                   </Route>
                   <Route path="/transactions" element={<TransactionListPage />} />
                   <Route path="/batches" element={<BatchListPage />} />
+
                   <Route path="/retailers" element={<RetailersList />} />
                   <Route path="/retailers/:id" element={<RetailersShow />} />
                   <Route

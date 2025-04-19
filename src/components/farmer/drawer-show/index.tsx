@@ -24,6 +24,8 @@ import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { FarmerStatus } from "@/interfaces";
+import { ModalSchedule } from "../modal-schedule";
+import { useState } from "react";
 
 type Props = {
   id?: BaseKey;
@@ -41,6 +43,7 @@ const FarmerStatusTag = ({ status }: { status: FarmerStatus }) => {
 };
 
 export const FarmerDrawerShow = (props: Props) => {
+  const [calendarVisible, setCalendarVisible] = useState(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -98,12 +101,16 @@ export const FarmerDrawerShow = (props: Props) => {
         }}
       >
         <Flex
-          vertical
+          vertical={false}
+          justify="space-between"
           style={{
             padding: "16px",
           }}
         >
           <Typography.Title level={5}>{farmer?.name}</Typography.Title>
+          <Button type="primary" onClick={() => setCalendarVisible(true)}>
+            Xem lịch
+          </Button>
         </Flex>
 
         <Divider style={{ margin: 0, padding: 0 }} />
@@ -207,6 +214,11 @@ export const FarmerDrawerShow = (props: Props) => {
           {t("actions.edit", "Cập nhập")}
         </Button>
       </Flex>
+      <ModalSchedule
+        farmerId={farmer?.id}
+        onClose={() => setCalendarVisible(false)}
+        visible={calendarVisible}
+      />
     </Drawer>
   );
 };

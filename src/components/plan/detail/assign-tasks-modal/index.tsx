@@ -203,16 +203,18 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         value: props?.planId || id,
       },
       {
-        field: "status_list",
+        field: "status",
         operator: "eq",
-        value: ["Draft"],
+        value: ["Draft", "Pending"],
       },
     ],
     queryOptions: {
       onSuccess(data: any) {
         if (props?.problemId)
           setProductiveTasks(
-            data?.data.filter((task: any) => task?.problem_id === props?.problemId) || [],
+            data?.data.filter(
+              (task: any) => task?.problem_id === props?.problemId
+            ) || []
           );
         else setProductiveTasks(data?.data || []);
       },
@@ -232,9 +234,9 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         value: props?.planId || id,
       },
       {
-        field: "status_list",
+        field: "status",
         operator: "eq",
-        value: ["Draft"],
+        value: ["Draft", "Pending"],
       },
     ],
     queryOptions: {
@@ -257,9 +259,9 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         value: props?.planId || id,
       },
       {
-        field: "status_list",
+        field: "status",
         operator: "eq",
-        value: ["Draft"],
+        value: ["Draft", "Pending"],
       },
     ],
     queryOptions: {
@@ -282,9 +284,9 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         value: props?.planId || id,
       },
       {
-        field: "status_list",
+        field: "status",
         operator: "eq",
-        value: ["Draft"],
+        value: ["Draft", "Pending"],
       },
     ],
     queryOptions: {
@@ -468,7 +470,11 @@ export const AssignTaskModal = (props: AssignTaskModalProps) => {
         <>
           <Flex justify="end">
             {current > 0 && (
-              <Button loading={loading} style={{ margin: "0 8px" }} onClick={() => prev()}>
+              <Button
+                loading={loading}
+                style={{ margin: "0 8px" }}
+                onClick={() => prev()}
+              >
                 Previous
               </Button>
             )}

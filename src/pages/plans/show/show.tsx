@@ -34,7 +34,7 @@ import {
   SnippetsOutlined,
 } from "@ant-design/icons";
 import { DateField, ShowButton, TextField } from "@refinedev/antd";
-import { HttpError, useList, useOne } from "@refinedev/core";
+import { HttpError, useBack, useList, useOne } from "@refinedev/core";
 import { useNavigate, useParams } from "react-router";
 import React, { PropsWithChildren } from "react";
 // import ReactApexChart from "react-apexcharts"; // Removed as it is unused
@@ -86,6 +86,7 @@ interface IGeneralPlan {
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const [qrCodeModal, setQRCodeModal] = React.useState(false);
   const { id } = useParams();
+  const back = useBack();
   const [completedModal, setCompletedModal] = React.useState(false);
   const [valueModal, setValueModal] = React.useState("");
   const {
@@ -265,11 +266,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const breakpoint = Grid.useBreakpoint();
   return (
     <div>
-      <Button
-        type="text"
-        style={{ width: "40px", height: "40px" }}
-        onClick={() => navigate(`/plans`)}
-      >
+      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <div>

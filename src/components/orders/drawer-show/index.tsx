@@ -23,7 +23,13 @@ import { useState, useMemo } from "react";
 import { Navigate, useNavigate, useParams } from "react-router";
 import { CompleteOrderModal } from "../complete-modal";
 import { OrderStatusTag } from "../order-status";
-import { FileDoneOutlined, ShopOutlined, PhoneOutlined, HomeOutlined } from "@ant-design/icons";
+import {
+  FileDoneOutlined,
+  ShopOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 import { StatusTag } from "@/components/caring-task/status-tag";
 import { CreateBatchModal } from "../create-batches";
 
@@ -124,6 +130,9 @@ export const OrderDrawerShow = () => {
   return (
     <>
       {contextHolder}
+      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
+        <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
+      </Button>
       <Flex
         justify="space-between"
         align="center"

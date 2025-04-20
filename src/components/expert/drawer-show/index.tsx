@@ -31,13 +31,17 @@ type Props = {
   onEdit?: () => void;
 };
 
-const ExpertStatusTag = ({ status }: { status: ExpertStatus }) => {
+const ExpertStatusTag = ({ status }: { status: boolean }) => {
   const colorMap = {
-    Active: "green",
-    Inactive: "red",
+    true: "green",
+    false: "red",
   };
 
-  return <Tag color={colorMap[status]}>{status}</Tag>;
+  return (
+    <Tag color={colorMap[status.toString() as 'true' | 'false']}>
+      {status ? "Hoạt động" : "Không hoạt động"}
+    </Tag>
+  );
 };
 
 export const ExpertDrawerShow = (props: Props) => {
@@ -131,8 +135,8 @@ export const ExpertDrawerShow = (props: Props) => {
                   {t("experts.fields.status")}
                 </Typography.Text>
               ),
-              value: expert?.status && (
-                <ExpertStatusTag status={expert.status} />
+              value: expert?.is_active && (
+                <ExpertStatusTag status={expert?.is_active} />
               ),
             },
             {

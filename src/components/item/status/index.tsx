@@ -8,11 +8,13 @@ interface Props {
 export const ItemStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
     case "In-stock":
-      return <Tag color="green">In Stock</Tag>;
+      return <Tag color="green">Còn hàng</Tag>;
     case "OutStock":
-      return <Tag color="red">Out Stock</Tag>;
+      return <Tag color="red">Hết hàng</Tag>;
     case "Active":
-      return <Tag color="default">Active</Tag>;
+      return <Tag color="green">Hoạt động</Tag>;
+    case "Active":
+      return <Tag color="red">Không hoạt động</Tag>;
     default:
       return null;
   }

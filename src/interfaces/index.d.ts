@@ -128,7 +128,12 @@ export interface ICaringTask {
   problem_id?: number;
   task_name: string;
   result_content?: string;
-  task_type: "Planting" | "Nurturing" | "Watering" | "Fertilizing" | "PestControl";
+  task_type:
+    | "Planting"
+    | "Nurturing"
+    | "Watering"
+    | "Fertilizing"
+    | "PestControl";
   start_date: string;
   end_date: string;
   complete_date?: string;
@@ -145,7 +150,7 @@ export interface IItem {
   description: string;
   image: string;
   quantity: number;
-  status: "Active" | "In-stock" | "OutStock";
+  status: "Active" | "In-stock" | "OutStock" | "Inactive";
   type: "Caring" | "Harvesting" | "Packaging";
 }
 
@@ -336,7 +341,7 @@ export interface IPesticide {
   available_quantity: number;
   total_quantity: number;
   quantity: number;
-  status: "Available" | "Limited Stock" | "Out of Stock";
+  status: "Available" | "Limited Stock" | "Out of Stock" | "Unavailable";
   type: "Organic" | "Chemical" | "Mineral" | "Other";
 }
 
@@ -349,7 +354,7 @@ export interface IFertilizer {
   quantity: number;
   available_quantity: number;
   total_quantity: number;
-  status: "Available" | "Out of Stock" | "Limited Stock";
+  status: "Available" | "Out of Stock" | "Limited Stock" | "Unavailable";
   type: "Organic" | "Chemical" | "Mineral";
 }
 

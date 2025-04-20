@@ -1,6 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
+import {
+  type BaseKey,
+  useApiUrl,
+  useGetToPath,
+  useGo,
+  useList,
+} from "@refinedev/core";
 import axios from "axios";
 import {
   Form,
@@ -17,6 +23,10 @@ import {
   Select,
   Row,
   Col,
+  Card,
+  Divider,
+  Typography,
+  SelectProps,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -24,7 +34,6 @@ import { useSearchParams } from "react-router";
 import { PlantType } from "../plant-type";
 
 import { useTranslation } from "react-i18next";
-
 
 type Props = {
   id?: BaseKey;
@@ -65,7 +74,6 @@ export const PlantDrawerForm = (props: Props) => {
       },
     }
   );
-
   const onModalClose = () => {
     close();
     if (props?.onClose) {
@@ -111,21 +119,12 @@ export const PlantDrawerForm = (props: Props) => {
   const { t } = useTranslation();
 
   return (
-    <Modal
-      open={true}
-
-      title={props.action === "edit" ? t("plant.edit") : t("plant.add")}
-
-      width={breakpoint.sm ? "1200px" : "100%"}
-      onCancel={onModalClose}
-      footer={null}
-      destroyOnClose
-
-      bodyStyle={{ maxHeight: "700px", overflowY: "auto", paddingRight: 16 }}
-
-    >
+    <Card title="Thêm giống cây trồng">
       <Spin spinning={formLoading}>
         <Form {...formProps} layout="vertical">
+          <Typography.Title level={5} style={{ marginBottom: 16 }}>
+            Thông tin cơ bản
+          </Typography.Title>
           <Form.Item name="image_url" valuePropName="file">
             <Upload.Dragger
               name="file"
@@ -138,9 +137,7 @@ export const PlantDrawerForm = (props: Props) => {
                 <Avatar
                   shape="square"
                   src={previewImage || "/images/plant-default-img.png"}
-
                   alt={t("plant.imageAlt")}
-
                   style={{ width: "40%", height: "50%" }}
                 />
                 <Button
@@ -153,27 +150,66 @@ export const PlantDrawerForm = (props: Props) => {
               </Flex>
             </Upload.Dragger>
           </Form.Item>
+          <Flex vertical={!breakpoint.sm} gap={10}>
+            <Form.Item
+              style={{ width: !breakpoint.sm ? "100%" : "50%" }}
+              label={t("plant.name")}
+              name="plant_name"
+              rules={[{ required: true, message: t("plant.nameRequired") }]}
+            >
+              <Input placeholder={t("plant.namePlaceholder")} />
+            </Form.Item>
+            <Form.Item
+              style={{ width: !breakpoint.sm ? "100%" : "50%" }}
+              label={t("plant.type")}
+              name="type"
+              rules={[{ required: true, message: t("plant.typeRequired") }]}
+            >
+              <Select placeholder={t("plant.typePlaceholder")}>
+                {Object.values(PlantType).map((type) => (
+                  <Select.Option key={type} value={type}>
+                    {type}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Flex>
+          <Flex vertical={!breakpoint.sm} gap={10}>
+            <Form.Item
+              style={{ width: !breakpoint.sm ? "100%" : "50%" }}
+              label={t("plant.quantity")}
+              name="quantity"
+              rules={[{ required: true, message: t("plant.quantityRequired") }]}
+            >
+              <InputNumber
+                min={0}
+                style={{ width: "100%" }}
+                placeholder={t("plant.quantityPlaceholder")}
+              />
+            </Form.Item>
+            <Form.Item
+              style={{ width: !breakpoint.sm ? "100%" : "50%" }}
+              label={t("plant.basePrice")}
+              name="base_price"
+              rules={[
+                { required: true, message: t("plant.basePriceRequired") },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                style={{ width: "100%" }}
+                placeholder={t("plant.basePricePlaceholder")}
+              />
+            </Form.Item>
+          </Flex>
 
-          <Form.Item
-            label={t("plant.name")}
-            name="plant_name"
-            rules={[{ required: true, message: t("plant.nameRequired") }]}
-          >
-            <Input placeholder={t("plant.namePlaceholder")} />
-          </Form.Item>
-
-          <Form.Item
-            label={t("plant.quantity")}
-            name="quantity"
-            rules={[{ required: true, message: t("plant.quantityRequired") }]}
-          >
+          <Form.Item label={t("plant.preservationDay")} name="preservation_day">
             <InputNumber
               min={0}
               style={{ width: "100%" }}
-              placeholder={t("plant.quantityPlaceholder")}
+              placeholder={t("plant.preservationDayPlaceholder")}
             />
           </Form.Item>
-
           <Form.Item
             label={t("plant.description")}
             name="description"
@@ -186,64 +222,27 @@ export const PlantDrawerForm = (props: Props) => {
               placeholder={t("plant.descriptionPlaceholder")}
             />
           </Form.Item>
-
+          <Divider />
+          <Typography.Title level={5} style={{ marginBottom: 16 }}>
+            Tỉ lệ giá
+          </Typography.Title>
           <Form.Item
-            label={t("plant.basePrice")}
-            name="base_price"
-            rules={[{ required: true, message: t("plant.basePriceRequired") }]}
+            label={t("plant.deltaOne")}
+            name="delta_one"
+            rules={[{ required: true, message: "Vui lòng nhập tỉ lệ 1" }]}
           >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder={t("plant.basePricePlaceholder")}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label={t("plant.type")}
-            name="type"
-            rules={[{ required: true, message: t("plant.typeRequired") }]}
-          >
-            <Select placeholder={t("plant.typePlaceholder")}>
-              {Object.values(PlantType).map((type) => (
-                <Select.Option key={type} value={type}>
-                  {type}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-
-          <Form.Item
-            label={t("plant.estimatedPerUnit")}
-            name="estimated_per_one"
-          >
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder={t("plant.estimatedPerUnitPlaceholder")}
-            />
-
-          </Form.Item>
-
-          <Form.Item label={t("plant.preservationDay")} name="preservation_day">
-            <InputNumber
-              min={0}
-              style={{ width: "100%" }}
-              placeholder={t("plant.preservationDayPlaceholder")}
-            />
-          </Form.Item>
-
-          <Form.Item label={t("plant.deltaOne")} name="delta_one">
             <InputNumber
               min={0}
               style={{ width: "100%" }}
               placeholder={t("plant.deltaOnePlaceholder")}
             />
           </Form.Item>
-
-
-          <Form.Item label={t("plant.deltaTwo")} name="delta_two">
+          
+          <Form.Item
+            label={t("plant.deltaTwo")}
+            name="delta_two"
+            rules={[{ required: true, message: "Vui lòng nhập tỉ lệ 2" }]}
+          >
             <InputNumber
               min={0}
               style={{ width: "100%" }}
@@ -251,42 +250,34 @@ export const PlantDrawerForm = (props: Props) => {
             />
           </Form.Item>
 
-          <Form.Item label={t("plant.deltaThree")} name="delta_three">
+          <Form.Item
+            label={t("plant.deltaThree")}
+            name="delta_three"
+            rules={[{ required: true, message: "Vui lòng nhập tỉ lệ 3" }]}
+          >
             <InputNumber
               min={0}
               style={{ width: "100%" }}
               placeholder={t("plant.deltaThreePlaceholder")}
             />
           </Form.Item>
-
-
+          <Divider />
           <Form.Item
             label={t("plant.status")}
             name="status"
-
             rules={[{ required: true, message: t("plant.statusRequired") }]}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: "flex", alignItems: "center", width: "100%" }}
           >
             <Select
               placeholder={t("plant.statusPlaceholder")}
-              style={{ width: "110%" }}
+              style={{ width: "100%" }}
             >
-              <Select.Option value="Available">
-                {t("plant.statusAvailable")}
-              </Select.Option>
-              <Select.Option value="Out of Stock">
-                {t("plant.statusOutOfStock")}
-              </Select.Option>
-              <Select.Option value="Limited Stock">
-                {t("plant.statusLimited")}
-              </Select.Option>
-
+              <Select.Option value="Available">Khả dụng</Select.Option>
+              <Select.Option value="Unavailable">Không khả dụng</Select.Option>
             </Select>
           </Form.Item>
 
-
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-
             <Button onClick={onModalClose}>{t("actions.cancel")}</Button>
 
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
@@ -295,6 +286,6 @@ export const PlantDrawerForm = (props: Props) => {
           </Flex>
         </Form>
       </Spin>
-    </Modal>
+    </Card>
   );
 };

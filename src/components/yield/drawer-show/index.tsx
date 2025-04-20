@@ -6,32 +6,46 @@ import {
   useGo,
   useShow,
   useList,
+  useBack,
 } from "@refinedev/core";
 import {
   Avatar,
   Button,
+  Card,
   Divider,
   Flex,
   Grid,
   List,
+  Space,
+  Timeline,
   Typography,
   theme,
 } from "antd";
-import { useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
-import { EditOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  CalendarOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  EditOutlined,
+  FieldTimeOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import { YieldTypeTag } from "../type";
 import { YieldStatusTag } from "../status";
-import { DeleteButton } from "@refinedev/antd";
+import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { YieldDrawerForm } from "../drawer-form";
 import { useTranslation } from "react-i18next";
+import { StatusTag } from "@/components/caring-task/status-tag";
+import dayjs from "dayjs";
 
 type Props = {
-  id?: BaseKey;
   onClose?: () => void;
 };
 
-export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
+export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
+  const { id } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
@@ -52,6 +66,9 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
       enabled: !!id,
     },
   });
+  const { data: historyData, isLoading: historyLoading } = useList({
+    resource: `yields/${id}/history-plans`,
+  });
 
   const suggestedPlants = suggestPlantsData?.data ?? [];
 
@@ -69,154 +86,302 @@ export const YieldDrawerShow: React.FC<Props> = ({ id, onClose }) => {
   };
 
   const { t } = useTranslation();
+  const sortedData = React.useMemo(() => {
+    if (!historyData?.data || historyData.data.length === 0) {
+      return [];
+    }
+
+    return [...historyData.data].sort((a, b) => {
+      return dayjs(b.start_date).valueOf() - dayjs(a.start_date).valueOf();
+    });
+  }, [historyData?.data]);
+
+  const back = useBack();
 
   return (
     <>
       {!isEditing && (
-        <Drawer
-          open={!!id}
-          width={breakpoint.sm ? "40%" : "100%"}
-          zIndex={1001}
-          onClose={handleDrawerClose}
-        >
+        <>
+          <Button
+            type="text"
+            style={{ width: "40px", height: "40px" }}
+            onClick={() => back()}
+          >
+            <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
+          </Button>
           {yieldData && (
             <>
-              <Flex
-                style={{
-                  padding: 10,
-                  backgroundColor: token.colorBgContainer,
-                }}
-                justify="space-between"
-              >
-                <Typography.Title level={4}>
-                  {yieldData.yield_name}
-                </Typography.Title>
-                <Flex align="center" justify="end">
-                  <DeleteButton
-                    type="text"
-                    recordItemId={yieldData.id}
-                    resource="yields"
-                    onSuccess={handleDrawerClose}
-                  />
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => setIsEditing(true)}
+              <Flex vertical={false} gap={10}>
+                <Card
+                  title="Thông tin khu đất"
+                  style={{ width: "50%", height: "400px" }}
+                >
+                  <Flex
+                    style={{
+                      padding: 4,
+                      backgroundColor: token.colorBgContainer,
+                    }}
+                    justify="space-between"
                   >
-                    {t("actions.edit")}
-                  </Button>
-                </Flex>
+                    <Typography.Title level={4}>
+                      {yieldData.yield_name}
+                    </Typography.Title>
+                    <Flex align="center" justify="end">
+                      <DeleteButton
+                        type="text"
+                        recordItemId={yieldData.id}
+                        resource="yields"
+                        onSuccess={handleDrawerClose}
+                      />
+                      <Button
+                        icon={<EditOutlined />}
+                        onClick={() => setIsEditing(true)}
+                      >
+                        {t("actions.edit")}
+                      </Button>
+                    </Flex>
+                  </Flex>
+                  <List
+                    style={{
+                      margin: 10,
+                      backgroundColor: token.colorBgLayout,
+                    }}
+                    bordered
+                    dataSource={[
+                      {
+                        label: t("yield.description"),
+                        value: yieldData.description,
+                      },
+                      {
+                        label: t("yield.area"),
+                        value: `${yieldData.area} ${yieldData.area_unit}`,
+                      },
+                      {
+                        label: t("yield.soilType"),
+                        value: yieldData?.type,
+                      },
+                      {
+                        label: t("yield.status"),
+
+                        value: <YieldStatusTag value={yieldData.status} />,
+                      },
+                    ]}
+                    renderItem={(itemData) => (
+                      <List.Item>
+                        <List.Item.Meta
+                          avatar={
+                            <Typography.Text type="secondary">
+                              {itemData.label}
+                            </Typography.Text>
+                          }
+                          title={itemData.value}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </Card>
+                <Card
+                  loading={isPlantsLoading}
+                  title="Danh sách cây trồng gợi ý"
+                  style={{
+                    width: "50%",
+                    maxWidth: "100%",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    height: "400px",
+                  }}
+                  bodyStyle={{
+                    padding: 0,
+                    height: "calc(100% - 58px)",
+                    overflow: "auto",
+                  }}
+                >
+                  <List
+                    style={{
+                      backgroundColor: token.colorBgContainer,
+                    }}
+                    dataSource={suggestedPlants}
+                    renderItem={(plant) => (
+                      <List.Item
+                        style={{
+                          padding: "16px 24px",
+                          transition: "all 0.3s ease",
+                          borderBottom: `1px solid ${token.colorBorderSecondary}`,
+                        }}
+                      >
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              src={plant.image_url}
+                              size={80}
+                              shape="square"
+                              style={{
+                                borderRadius: 8,
+                                border: "1px solid #f0f0f0",
+                              }}
+                            />
+                          }
+                          title={
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: "18px" }}
+                            >
+                              {plant.plant_name}
+                            </Typography.Text>
+                          }
+                          description={
+                            <Space
+                              direction="vertical"
+                              size="small"
+                              style={{ marginTop: 8 }}
+                            >
+                              <Space>
+                                <InfoCircleOutlined
+                                  style={{ color: token.colorPrimary }}
+                                />
+                                <Typography.Text>
+                                  Loại cây: {plant.type}
+                                </Typography.Text>
+                              </Space>
+                              <Space>
+                                <FieldTimeOutlined
+                                  style={{ color: token.colorPrimary }}
+                                />
+                                <Typography.Text>
+                                  Thời gian bảo quản: {plant.preservation_day}{" "}
+                                  ngày
+                                </Typography.Text>
+                              </Space>
+                            </Space>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </Card>
               </Flex>
               <Divider />
-
-              <List
-                style={{ margin: 10, backgroundColor: token.colorBgContainer }}
-                bordered
-                dataSource={[
-
-                  {
-                    label: t("yield.description"),
-                    value: yieldData.description,
-                  },
-                  {
-                    label: t("yield.area"),
-                    value: `${yieldData.area} ${yieldData.area_unit}`,
-                  },
-                  {
-                    label: t("yield.soilType"),
-                    value: <YieldTypeTag value={yieldData.type} />,
-                  },
-                  {
-                    label: t("yield.status"),
-
-                    value: <YieldStatusTag value={yieldData.status} />,
-                  },
-                ]}
-                renderItem={(itemData) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={
-                        <Typography.Text type="secondary">
-                          {itemData.label}
-                        </Typography.Text>
-                      }
-                      title={itemData.value}
-                    />
-                  </List.Item>
-                )}
-              />
-              <Divider />
-
-              <Typography.Title level={5} style={{ margin: 10 }}>
-                {t("yield.suitablePlants")}
-              </Typography.Title>
-
-              {isPlantsLoading ? (
-                <Typography.Text>{t("yield.loading")}</Typography.Text>
-              ) : (
-                <List
-                  style={{
-                    margin: 10,
-                    backgroundColor: token.colorBgContainer,
-                  }}
-                  bordered
-                  dataSource={suggestedPlants}
-                  renderItem={(plant) => (
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar
-                            src={plant.image_url}
-                            size={200}
-                            style={{ borderRadius: 8 }}
-                          />
-                        }
-                        title={
-                          <Typography.Text strong style={{ fontSize: "30px" }}>
-                            {plant.plant_name}
-                          </Typography.Text>
-                        }
-                        description={
-                          <div
+              <Card
+                loading={historyLoading}
+                title={
+                  <Typography.Title level={4} style={{ margin: 0 }}>
+                    Lịch sử sử dụng đất
+                  </Typography.Title>
+                }
+                style={{
+                  width: "100%",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  height: "400px",
+                }}
+                bodyStyle={{
+                  padding: "16px",
+                  height: "calc(100% - 58px)",
+                  overflow: "auto",
+                }}
+              >
+                {sortedData && sortedData.length > 0 ? (
+                  <Timeline
+                    items={sortedData.map((plan, index) => ({
+                      dot:
+                        plan.status === "Complete" ? (
+                          <CheckCircleOutlined
                             style={{
-                              display: "grid",
-                              gridTemplateColumns: "1fr 1fr",
-                              gap: "12px",
-                              marginTop: 4,
-                              alignItems: "start",
+                              fontSize: "16px",
+                              color: token.colorSuccess,
                             }}
+                          />
+                        ) : (
+                          <ClockCircleOutlined
+                            style={{
+                              fontSize: "16px",
+                              color: token.colorPrimary,
+                            }}
+                          />
+                        ),
+                      color: plan.status === "Complete" ? "green" : "blue",
+                      children: (
+                        <Card
+                          size="small"
+                          style={{
+                            marginBottom: "16px",
+                            borderLeft: `3px solid ${plan.status === "Complete" ? token.colorSuccess : "#3399FF"}`,
+                          }}
+                        >
+                          <Flex align="center" justify="space-between">
+                            <Typography.Title level={5} style={{ margin: 0 }}>
+                              {plan.plant_name}
+                            </Typography.Title>
+                            <StatusTag status={plan.status} />
+                          </Flex>
+
+                          <Space
+                            direction="vertical"
+                            style={{ marginTop: "12px", width: "100%" }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "8px",
-                              }}
-                            >
-                              <Typography.Text>
-                                {t("plant.status")}: {plant.status}
+                            <Flex align="center" gap="small">
+                              <CalendarOutlined
+                                style={{ color: token.colorPrimary }}
+                              />
+                              <Typography.Text type="secondary">
+                                Thời gian:{" "}
                               </Typography.Text>
-                            </div>
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "8px",
-                              }}
-                            >
-                              <Typography.Text>
-                                {t("plant.type")}: {plant.type}
+                              <Typography.Text strong>
+                                <DateField
+                                  value={plan.start_date}
+                                  format="hh:mm DD/MM/YYYY"
+                                />{" "}
+                                —{" "}
+                                <DateField
+                                  value={plan.end_date}
+                                  format="hh:mm DD/MM/YYYY"
+                                />
                               </Typography.Text>
-                            </div>
-                          </div>
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              )}
+                            </Flex>
+
+                            {plan.complete_date && (
+                              <Flex align="center" gap="small">
+                                <CheckCircleOutlined
+                                  style={{ color: token.colorSuccess }}
+                                />
+                                <Typography.Text type="secondary">
+                                  Ngày hoàn thành:{" "}
+                                </Typography.Text>
+                                <Typography.Text
+                                  strong
+                                  style={{ color: token.colorSuccess }}
+                                >
+                                  {plan?.complete_date ? (
+                                    <DateField
+                                      value={plan.complete_date}
+                                      format="hh:mm DD/MM/YYYY"
+                                    />
+                                  ) : (
+                                    <TextField value="Chưa hoàn thành" />
+                                  )}
+                                </Typography.Text>
+                              </Flex>
+                            )}
+                          </Space>
+                        </Card>
+                      ),
+                    }))}
+                  />
+                ) : (
+                  <Flex
+                    justify="center"
+                    align="center"
+                    style={{ height: "100%" }}
+                  >
+                    <Typography.Text type="secondary">
+                      Chưa có lịch sử sử dụng đất
+                    </Typography.Text>
+                  </Flex>
+                )}
+              </Card>
             </>
           )}
-        </Drawer>
+        </>
       )}
       {isEditing && yieldData && (
         <YieldDrawerForm

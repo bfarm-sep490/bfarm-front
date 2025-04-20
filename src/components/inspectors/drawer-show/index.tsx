@@ -14,20 +14,12 @@ import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { FarmerStatus } from "@/interfaces";
 import { useTranslation } from "react-i18next";
+import { FarmerStatusTag } from "@/components/farmer/status";
 
 type Props = {
   id?: BaseKey;
   onClose?: () => void;
   onEdit?: () => void;
-};
-
-const FarmerStatusTag = ({ status }: { status: FarmerStatus }) => {
-  const colorMap = {
-    Inactive: "red",
-    Active: "success",
-  };
-
-  return <Tag color={colorMap[status]}>{status}</Tag>;
 };
 
 export const InspectorDrawerShow = (props: Props) => {
@@ -105,7 +97,7 @@ export const InspectorDrawerShow = (props: Props) => {
             },
             {
               label: <Typography.Text type="secondary">{t("inspectors.status")}</Typography.Text>,
-              value: inspector?.status && <FarmerStatusTag status={inspector.status} />,
+              value: <FarmerStatusTag value={inspector?.is_active as boolean} />,
             },
             {
               label: (

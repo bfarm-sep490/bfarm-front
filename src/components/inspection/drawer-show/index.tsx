@@ -49,7 +49,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     isFetching: inspectingFetching,
   } = useOne<any, HttpError>({
     resource: "inspecting-forms",
-    id,
+    id: props?.taskId ?? id,
     queryOptions: { enabled: props?.visible === true },
   });
 
@@ -60,7 +60,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     isFetching: inspectingResultFetching,
   } = useOne<any, HttpError>({
     resource: "inspecting-results",
-    id,
+    id: props?.taskId ?? id,
     queryOptions: { enabled: props?.visible === true },
   });
 
@@ -116,7 +116,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         inspectingFetching ||
         inspectingResultLoading
       }
-      open={props?.visible}
+      open={props?.visible ? props.visible : true}
       width={breakpoint?.sm ? "60%" : "100%"}
       onClose={props?.onClose ?? handleBack}
       bodyStyle={{ padding: "24px 32px" }}

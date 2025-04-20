@@ -1,5 +1,6 @@
 import { Card, Spin } from "antd";
 import { ApexOptions } from "apexcharts";
+import { title } from "process";
 import ReactApexChart from "react-apexcharts";
 
 type Props = {
@@ -63,6 +64,19 @@ export const DashboardTransactions = ({ transactionsData, style, loading }: Prop
         labels: {
           datetimeUTC: false,
           format: "dd/MM/yyyy",
+        },
+      },
+      title: {
+        text:
+          "Tổng doanh thu: " +
+          transactionsData?.data
+            ?.reduce((acc: number, item: any) => acc + item?.price_per_day, 0)
+            .toLocaleString() +
+          " VND",
+        align: "left",
+        style: {
+          fontSize: "16px",
+          color: "#333",
         },
       },
       yaxis: {

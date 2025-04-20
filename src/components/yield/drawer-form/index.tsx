@@ -19,7 +19,6 @@ export const YieldDrawerForm = (props: Props) => {
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
-  const apiUrl = useApiUrl();
 
   const { formProps, close, saveButtonProps } = useDrawerForm<any>({
     resource: "yields",
@@ -59,14 +58,28 @@ export const YieldDrawerForm = (props: Props) => {
 
   return (
     <Modal
-      open={true}
+      open={props?.open ?? true}
       title={title}
-      onCancel={onModalClose}
-      footer={null}
-      width={700}
+      onCancel={props?.onClose ?? onModalClose}
+      footer={
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingTop: 16,
+          }}
+        >
+          <Button onClick={props?.onClose ?? onModalClose}>
+            {t("actions.cancel")}
+          </Button>
+
+          <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
+            {t("buttons.save")}
+          </SaveButton>
+        </div>
+      }
       destroyOnClose
       style={{ maxHeight: "1000px" }}
-      bodyStyle={{ height: "900px", overflowY: "auto" }}
     >
       <Spin spinning={formLoading}>
         <Form
@@ -84,33 +97,29 @@ export const YieldDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Form.Item
-            label={t("yield.area")}
+            label={t("yield.area") + " (m²)"}
             name="area"
             rules={[{ required: true, message: t("yield.required.area") }]}
           >
             <InputNumber
               min={0}
               style={{ width: "100%" }}
-
               placeholder={t("yield.placeholder.area")}
-
             />
           </Form.Item>
 
           <Form.Item
+            hidden
             label={t("yield.areaUnit")}
             name="area_unit"
-
             rules={[{ required: true, message: t("yield.required.areaUnit") }]}
-
           >
-            <Input placeholder={t("yield.placeholder.areaUnit")} />
+            <Input hidden placeholder={t("yield.placeholder.areaUnit")} />
           </Form.Item>
 
           <Form.Item
             label={t("yield.description")}
             name="description"
-
             rules={[
               { required: true, message: t("yield.required.description") },
             ]}
@@ -127,27 +136,8 @@ export const YieldDrawerForm = (props: Props) => {
             rules={[{ required: true, message: t("yield.required.soilType") }]}
           >
             <Select placeholder={t("yield.placeholder.soilType")}>
-              <Select.Option value="Đất xám">
-                {t("yield.soilTypes.gray")}
-              </Select.Option>
-              <Select.Option value="Đất cát">
-                {t("yield.soilTypes.sandy")}
-              </Select.Option>
-              <Select.Option value="Đất đỏ">
-                {t("yield.soilTypes.red")}
-              </Select.Option>
-              <Select.Option value="Đất đen">
-                {t("yield.soilTypes.black")}
-              </Select.Option>
-              <Select.Option value="Đất phèn">
-                {t("yield.soilTypes.acidSulfate")}
-              </Select.Option>
-              <Select.Option value="Đất chua">
-                {t("yield.soilTypes.acidic")}
-              </Select.Option>
-              <Select.Option value="Đất hữu cơ">
-                {t("yield.soilTypes.organic")}
-              </Select.Option>
+              <Select.Option value="Luân canh">{"Luân canh"}</Select.Option>
+              <Select.Option value="Thâm canh">{"Thâm canh"}</Select.Option>
             </Select>
           </Form.Item>
 
@@ -166,21 +156,6 @@ export const YieldDrawerForm = (props: Props) => {
               <Select.Option value="In-Use">{t("yield.inUse")}</Select.Option>
             </Select>
           </Form.Item>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingTop: 16,
-            }}
-          >
-
-            <Button onClick={onModalClose}>{t("actions.cancel")}</Button>
-
-            <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
-              {t("buttons.save")}
-            </SaveButton>
-          </div>
         </Form>
       </Spin>
     </Modal>

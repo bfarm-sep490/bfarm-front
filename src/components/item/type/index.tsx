@@ -8,11 +8,11 @@ interface Props {
 export const ItemtypeTag: React.FC<Props> = ({ value }) => {
   switch (value) {
     case "Caring":
-      return <Tag color="green">Caring</Tag>;
+      return <Tag color="green">Chăm sóc</Tag>;
     case "Harvesting":
-      return <Tag color="red">Harvesting</Tag>;
+      return <Tag color="red">Thu hoạch</Tag>;
     case "Packaging":
-      return <Tag color="yellow">Packaging</Tag>;
+      return <Tag color="yellow">Đóng gói</Tag>;
     default:
       return null;
   }

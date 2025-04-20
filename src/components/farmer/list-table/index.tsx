@@ -179,8 +179,8 @@ export const FarmerListTable: React.FC = () => {
 
       <Table.Column
         title={translate("farmer.status", "Trạng thái")}
-        dataIndex="status"
-        key="status"
+        dataIndex="is_active"
+        key="is_active"
         width={"auto"}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -190,8 +190,8 @@ export const FarmerListTable: React.FC = () => {
               placeholder="Filter by status"
               allowClear
             >
-              <Select.Option value="Actived">Hoạt động</Select.Option>
-              <Select.Option value="UnActived">Không hoạt động</Select.Option>
+              <Select.Option value={true}>Hoạt động</Select.Option>
+              <Select.Option value={false}>Không hoạt động</Select.Option>
             </Select>
           </FilterDropdown>
         )}

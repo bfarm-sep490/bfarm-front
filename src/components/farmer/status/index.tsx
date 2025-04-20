@@ -2,15 +2,15 @@ import { FarmerStatus } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: FarmerStatus;
+  value: boolean;
 }
 
 export const FarmerStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Active":
+    case true:
       return <Tag color="green">Hoạt động</Tag>;
 
-    case "Inactive":
+    case false:
       return <Tag color="red">Không hoạt động</Tag>;
     default:
       return null;

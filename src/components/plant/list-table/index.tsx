@@ -9,6 +9,7 @@ import { IPlant } from "@/interfaces";
 import { PlantDrawerShow } from "../drawer-show";
 import { PlantStatusTag } from "../status";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 export const PlantsListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -23,7 +24,7 @@ export const PlantsListTable: React.FC = () => {
       ],
     },
   });
-
+  const navigate = useNavigate();
   const [selectedPlantId, setSelectedPlantId] = useState<number | undefined>();
   const { t } = useTranslation();
 
@@ -98,15 +99,7 @@ export const PlantsListTable: React.FC = () => {
           title={t("plant.preservationDay")}
           dataIndex="preservation_day"
           key="preservation_day"
-          render={(value) => <TextField value={`${value} ${t("table.day")}`} />}
-        />
-
-        <Table.Column
-          title={t("plant.estimatedPerUnit")}
-          dataIndex="estimated_per_one"
-          key="estimated_per_one"
-          width={140}
-          render={(value) => <TextField value={`${value} kg`} />}
+          render={(value) => <TextField value={`${value} ngày`} />}
         />
 
         <Table.Column
@@ -126,18 +119,12 @@ export const PlantsListTable: React.FC = () => {
             <Button
               icon={<EyeOutlined />}
               onClick={() => {
-                setSelectedPlantId(record.id);
+                navigate("/plants/" + record.id);
               }}
             />
           )}
         />
       </Table>
-      {selectedPlantId && (
-        <PlantDrawerShow
-          id={selectedPlantId}
-          onClose={() => setSelectedPlantId(undefined)}
-        />
-      )}
     </>
   );
 };

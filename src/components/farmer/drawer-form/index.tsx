@@ -112,7 +112,7 @@ export const FarmerDrawerForm = (props: Props) => {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
         onSuccess(uploadedImageUrl);
-        formProps.form?.setFieldsValue({ avatar_image: uploadedImageUrl });
+        formProps.form?.setFieldsValue({ avatar_url: uploadedImageUrl });
       } else {
         throw new Error(response.data.message || "Tải ảnh lỗi.");
       }

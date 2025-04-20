@@ -175,8 +175,8 @@ export const ExpertListTable: React.FC = () => {
 
       <Table.Column
         title={t("experts.fields.status")}
-        dataIndex="status"
-        key="status"
+        dataIndex="is_active"
+        key="is_active"
         width={"auto"}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
@@ -189,10 +189,10 @@ export const ExpertListTable: React.FC = () => {
               )}
               allowClear
             >
-              <Select.Option value="Active">
+              <Select.Option value={true}>
                 {t("experts.status.active", "Hoạt động")}
               </Select.Option>
-              <Select.Option value="Inactive">
+              <Select.Option value={false}>
                 {t("experts.status.inactive", "Không hoạt động")}
               </Select.Option>
             </Select>

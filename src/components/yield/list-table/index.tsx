@@ -17,6 +17,7 @@ import { YieldStatusTag } from "../status";
 import { YieldTypeTag } from "../type";
 import { YieldDrawerShow } from "../drawer-show";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 export const YieldListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -37,7 +38,7 @@ export const YieldListTable: React.FC = () => {
     undefined
   );
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   return (
     <>
       <Table
@@ -115,7 +116,6 @@ export const YieldListTable: React.FC = () => {
           dataIndex="type"
           key="type"
           width={120}
-          render={(value) => <YieldTypeTag value={value} />}
         />
 
         <Table.Column
@@ -134,17 +134,11 @@ export const YieldListTable: React.FC = () => {
           render={(_, record) => (
             <Button
               icon={<EyeOutlined />}
-              onClick={() => setSelectedYieldId(record.id.toString())}
+              onClick={() => navigate(`${record?.id}`)}
             />
           )}
         />
       </Table>
-      {selectedYieldId && (
-        <YieldDrawerShow
-          id={selectedYieldId}
-          onClose={() => setSelectedYieldId(undefined)}
-        />
-      )}
     </>
   );
 };

@@ -141,9 +141,8 @@ export const InspectorListTable: React.FC = () => {
 
       <Table.Column
         title={t("inspectors.status")}
-        dataIndex="status"
-        key="status"
-        width="auto"
+        dataIndex="is_active"
+        key="is_active"
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
             <Select
@@ -152,8 +151,8 @@ export const InspectorListTable: React.FC = () => {
               placeholder={t("inspectors.filter_status")}
               allowClear
             >
-              <Select.Option value="Actived">{t("status.actived")}</Select.Option>
-              <Select.Option value="UnActived">{t("status.unactived")}</Select.Option>
+              <Select.Option value={true}>{t("status.actived")}</Select.Option>
+              <Select.Option value={false}>{t("status.unactived")}</Select.Option>
             </Select>
           </FilterDropdown>
         )}

@@ -19,28 +19,23 @@ import {
   theme,
   Tag,
 } from "antd";
-import { useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
 import { EditOutlined } from "@ant-design/icons";
 import { FarmerStatus } from "@/interfaces";
+import { ModalSchedule } from "../modal-schedule";
+import { useState } from "react";
+import { FarmerStatusTag } from "../status";
 
 type Props = {
-  id?: BaseKey;
   onClose?: () => void;
   onEdit?: () => void;
 };
 
-const FarmerStatusTag = ({ status }: { status: FarmerStatus }) => {
-  const colorMap = {
-    Inactive: "red",
-    Active: "success",
-  };
-
-  return <Tag color={colorMap[status]}>{status}</Tag>;
-};
-
 export const FarmerDrawerShow = (props: Props) => {
+  const { id } = useParams();
+  const [calendarVisible, setCalendarVisible] = useState(false);
   const getToPath = useGetToPath();
   const [searchParams] = useSearchParams();
   const go = useGo();
@@ -51,9 +46,9 @@ export const FarmerDrawerShow = (props: Props) => {
 
   const { query: queryResult } = useShow<any, HttpError>({
     resource: "farmers",
-    id: props?.id,
+    id: id as BaseKey,
   });
-  const farmer = queryResult?.data?.data?.[0];
+  const farmer = queryResult?.data?.data;
 
   const handleDrawerClose = () => {
     if (props?.onClose) {
@@ -98,12 +93,16 @@ export const FarmerDrawerShow = (props: Props) => {
         }}
       >
         <Flex
-          vertical
+          vertical={false}
+          justify="space-between"
           style={{
             padding: "16px",
           }}
         >
           <Typography.Title level={5}>{farmer?.name}</Typography.Title>
+          <Button type="primary" onClick={() => setCalendarVisible(true)}>
+            Xem lịch
+          </Button>
         </Flex>
 
         <Divider style={{ margin: 0, padding: 0 }} />
@@ -133,8 +132,8 @@ export const FarmerDrawerShow = (props: Props) => {
                   {translate("farmer.status", "Trạng thái")}
                 </Typography.Text>
               ),
-              value: farmer?.status && (
-                <FarmerStatusTag status={farmer.status} />
+              value: farmer?.is_active && (
+                <FarmerStatusTag value={farmer.is_active as boolean} />
               ),
             },
             {
@@ -155,7 +154,7 @@ export const FarmerDrawerShow = (props: Props) => {
                 </Typography.Text>
               ),
               value: farmer?.updated_at ? (
-                <FarmerStatusTag status={farmer?.updated_at} />
+                <DateField value={farmer?.updated_at} />
               ) : (
                 <TextField
                   value={translate("farmer.not_updated", "Chưa cập nhật")}
@@ -207,6 +206,11 @@ export const FarmerDrawerShow = (props: Props) => {
           {t("actions.edit", "Cập nhập")}
         </Button>
       </Flex>
+      <ModalSchedule
+        farmerId={farmer?.id}
+        onClose={() => setCalendarVisible(false)}
+        visible={calendarVisible}
+      />
     </Drawer>
   );
 };

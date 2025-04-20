@@ -8,11 +8,14 @@ interface Props {
 export const PesticideStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
     case "Limited Stock":
-      return <Tag color="green">Limited Stock</Tag>;
+      return <Tag color="gray">Còn ít</Tag>;
     case "Out of Stock":
-      return <Tag color="red">Out of Stock</Tag>;
+      return <Tag color="red">Hết hàng</Tag>;
     case "Available":
-      return <Tag color="gray">Available</Tag>;
+      return <Tag color="green">Hoạt động</Tag>;
+    case "Unavailable":
+      return <Tag color="red">Không hoạt động</Tag>;
+
     default:
       return null;
   }

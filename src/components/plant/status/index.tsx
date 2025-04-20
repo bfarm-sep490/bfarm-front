@@ -2,14 +2,14 @@ import { IPlant } from "@/interfaces";
 import { Tag } from "antd";
 
 interface Props {
-  value: IPlant["status"];
+  value: "Available" | "Unavailable";
 }
 
 export const PlantStatusTag: React.FC<Props> = ({ value }) => {
   switch (value) {
-    case "Active":
+    case "Available":
       return <Tag color="green">Hoạt động</Tag>;
-    case "Inactive":
+    case "Unavailable":
       return <Tag color="red">Không hoạt động</Tag>;
 
       return null;

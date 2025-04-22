@@ -13,6 +13,7 @@ import {
     Input,
     InputNumber,
     theme,
+    Tag,
 } from "antd";
 import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
@@ -104,7 +105,15 @@ export const RetailersListTable: React.FC = () => {
                 title={t("retailers.is_active")}
                 dataIndex="is_active"
                 key="is_active"
-                render={(isActive: boolean) => <RetailerStatusTag isActive={isActive} />}
+                render={(isActive: boolean) => (
+                    <Tag
+                        color={isActive ? "success" : "error"}
+                        style={{ fontSize: '14px', padding: '4px 12px' }}
+                    >
+                        {isActive ? t("retailers.active") : t("retailers.inactive")}
+                    </Tag>
+                )}
+
             />
 
             <Table.Column

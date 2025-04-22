@@ -13,7 +13,7 @@ export const ItemStatusTag: React.FC<Props> = ({ value }) => {
       return <Tag color="red">Hết hàng</Tag>;
     case "Active":
       return <Tag color="green">Hoạt động</Tag>;
-    case "Active":
+    case "Inactive":
       return <Tag color="red">Không hoạt động</Tag>;
     default:
       return null;

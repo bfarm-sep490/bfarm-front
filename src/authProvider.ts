@@ -61,6 +61,20 @@ export const authProvider: AuthProvider = {
           };
         }
 
+        const userRole =
+          tokenPayload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+        if (userRole !== "Farm Owner") {
+          localStorage.removeItem(TOKEN_KEY);
+          return {
+            success: false,
+            error: {
+              message: "Lỗi đăng nhập",
+              name: "Bạn không có quyền truy cập vào hệ thống này",
+            },
+          };
+        }
+
         const userInfo = {
           id: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
           name: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],

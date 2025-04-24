@@ -1,4 +1,4 @@
-# BFarm Frontend
+# BFarmX Owner Frontend
 
 ## 🛠️ Tech Stack
 

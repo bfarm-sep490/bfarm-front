@@ -94,7 +94,7 @@ interface TitleHandlerOptions {
 }
 
 const customTitleHandler = ({ resource }: TitleHandlerOptions): string => {
-  const baseTitle = "BFarm";
+  const baseTitle = "BFarmX Owner";
   const titleSegment = resource?.meta?.label;
 
   const title = titleSegment ? `${titleSegment} | ${baseTitle}` : baseTitle;

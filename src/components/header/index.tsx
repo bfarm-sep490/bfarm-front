@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+// import { Link } from "react-router";
+import { SearchOutlined, DownOutlined } from "@ant-design/icons";
+import { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
 import {
   useGetLocale,
   useSetLocale,
   useGetIdentity,
   useTranslate,
-  useList,
   pickNotDeprecated,
 } from "@refinedev/core";
-import { Link } from "react-router";
-import { SearchOutlined, DownOutlined } from "@ant-design/icons";
-
 import {
   Dropdown,
   Input,
@@ -25,15 +23,18 @@ import {
   theme,
   type MenuProps,
 } from "antd";
-
-import { useTranslation } from "react-i18next";
 import debounce from "lodash/debounce";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import { useConfigProvider } from "../../context";
 import { IconMoon, IconSun } from "../../components/icons";
-import type { IIdentity } from "../../interfaces";
+import { useConfigProvider } from "../../context";
+
 import { useStyles } from "./styled";
-import { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
+
+import type { IIdentity } from "../../interfaces";
+import { useNotificationSystem } from "@/hooks/useNotificationSystem";
+import { NotificationDropdown } from "./notification-dropdown";
 
 const { Header: AntdHeader } = AntdLayout;
 const { useToken } = theme;
@@ -61,6 +62,8 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, st
   const screens = useBreakpoint();
   const t = useTranslate();
 
+  const notificationContext = useNotificationSystem();
+
   const currentLocale = locale();
 
   // const renderTitle = (title: string) => (
@@ -70,17 +73,21 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, st
   //   </div>
   // );
 
-  const renderItem = (title: string, imageUrl: string, link: string) => ({
-    value: title,
-    label: (
-      <Link to={link} style={{ display: "flex", alignItems: "center" }}>
-        {imageUrl && (
-          <Avatar size={32} src={imageUrl} style={{ minWidth: "32px", marginRight: "16px" }} />
-        )}
-        <Text>{title}</Text>
-      </Link>
-    ),
-  });
+  // const renderItem = (title: string, imageUrl: string, link: string) => ({
+  //   value: title,
+  //   label: (
+  //     <Link to={link} style={{ display: "flex", alignItems: "center" }}>
+  //       {imageUrl && (
+  //         <Avatar
+  //           size={32}
+  //           src={imageUrl}
+  //           style={{ minWidth: "32px", marginRight: "16px" }}
+  //         />
+  //       )}
+  //       <Text>{title}</Text>
+  //     </Link>
+  //   ),
+  // });
 
   const [value, setValue] = useState<string>("");
   const [options, setOptions] = useState<IOptions[]>([]);
@@ -111,6 +118,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, st
   }
   return (
     <AntdHeader style={headerStyles}>
+      {notificationContext}
       <Row
         align="middle"
         style={{
@@ -136,7 +144,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, st
           </AutoComplete>
         </Col>
         <Col>
-          <Space size={screens.md ? 32 : 16} align="center">
+          <Space size={screens.md ? 28 : 12} align="center">
             <Dropdown
               menu={{
                 items: menuItems,
@@ -161,6 +169,8 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ isSticky, st
                 setMode(mode === "light" ? "dark" : "light");
               }}
             />
+
+            <NotificationDropdown />
 
             <Space size={screens.md ? 16 : 8} align="center">
               <Text ellipsis className={styles.userName}>

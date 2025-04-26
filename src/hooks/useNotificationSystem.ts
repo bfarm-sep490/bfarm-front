@@ -29,7 +29,7 @@ export const useNotificationSystem = () => {
   useEffect(() => {
     if (!user?.id) return;
 
-    const channel = ablyClient.channels.get(`owner-${user.id}`);
+    const channel = ablyClient.channels.get(`owner`);
 
     const handleNotification = (message: { data: NotificationMessage }) => {
       const notification = message.data;

@@ -94,8 +94,8 @@ export const DashboardPage: React.FC = () => {
   });
 
   return (
-    <>
-      <Flex gap={10} style={{ marginBottom: 10 }}>
+    <Flex vertical={true} gap={16}>
+      <Flex gap={16}>
         <DashboardTransactions
           transactionsData={transactionsData}
           loading={transactionsLoading}
@@ -104,7 +104,7 @@ export const DashboardPage: React.FC = () => {
         <DashboardPieOrders orderData={orderData} style={{ width: "30%" }} loading={orderLoading} />
       </Flex>
 
-      <Flex gap={10} style={{ marginBottom: 10 }}>
+      <Flex gap={16}>
         <RemainingProductsTable
           loading={
             packagingProductLoading || harvestingProductLoading || orderLoading || plantLoading
@@ -122,7 +122,7 @@ export const DashboardPage: React.FC = () => {
           style={{ width: "50%" }}
         />
       </Flex>
-      <Flex vertical={false} gap={10}>
+      <Flex vertical={false} gap={16}>
         <DashboardPlanTracking
           style={{ width: "70%" }}
           plansData={plansData}
@@ -136,6 +136,6 @@ export const DashboardPage: React.FC = () => {
           style={{ width: "30%" }}
         />
       </Flex>
-    </>
+    </Flex>
   );
 };

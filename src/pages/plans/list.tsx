@@ -12,9 +12,11 @@ import {
 import { Table, Space } from "antd";
 import { StatusTag } from "../../components/caring-task/status-tag";
 import { ScheduleComponent } from "@/components/scheduler";
+import "../../components/scheduler/index.css";
+import { useNavigate } from "react-router";
 export const PlanList = () => {
   const translate = useTranslate();
-
+  const navigate = useNavigate();
   const { tableProps } = useTable({
     resource: "plans",
     syncWithLocation: true,
@@ -27,12 +29,22 @@ export const PlanList = () => {
 
   return (
     <List>
-      <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
+      <Table
+        onRow={(row) => ({
+          className: "hover-attribute",
+          onClick: () => {
+            navigate(`/plans/${row.id}`);
+          },
+        })}
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: "max-content" }}
+      >
         <Table.Column
           dataIndex="id"
           title={translate("plans.fields.id", "ID")}
           render={(value, record) => {
-            return <TextField style={{ fontWeight: "bold" }} value={`#${value}`} />;
+            return <TextField value={`#${value}`} />;
           }}
         />
         <Table.Column dataIndex="plan_name" title={translate("plans.plan_name", "Tên kế hoạch")} />
@@ -76,16 +88,6 @@ export const PlanList = () => {
           render={(value: any) => {
             return value ? <DateField value={value} /> : <TextField value="Chưa cập nhập" />;
           }}
-        />
-        <Table.Column
-          fixed="right"
-          title={translate("table.actions")}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <ShowButton hideText size="small" recordItemId={record.id} />
-            </Space>
-          )}
         />
       </Table>
     </List>

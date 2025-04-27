@@ -1,46 +1,43 @@
 /* eslint-disable prettier/prettier */
+import { useList, type HttpError, useTranslate } from "@refinedev/core";
 import {
-    useList,
-    type HttpError,
-    useTranslate,
-} from "@refinedev/core";
-import { 
-    Avatar, 
-    Card, 
-    Flex, 
-    Typography, 
-    Tag, 
-    Spin, 
-    Alert, 
-    Row, 
-    Col, 
-    Space, 
-    Divider 
+  Avatar,
+  Card,
+  Flex,
+  Typography,
+  Tag,
+  Spin,
+  Alert,
+  Row,
+  Col,
+  Space,
+  Divider,
 } from "antd";
 import {
-    UserOutlined,
-    PhoneOutlined,
-    MailOutlined,
-    HomeOutlined,
-    EnvironmentOutlined,
-    CalendarOutlined,
-    ClockCircleOutlined,
-    IdcardOutlined
+  UserOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  HomeOutlined,
+  EnvironmentOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
+  IdcardOutlined,
 } from "@ant-design/icons";
 import { IRetailer } from "@/interfaces";
 import { useParams } from "react-router-dom";
+import "../../plan/detail/dashboard-problems/index.css";
 
 export const RetailerDrawerShow: React.FC = () => {
   const { id } = useParams();
   const parsedId = id ? parseInt(id) : undefined;
-  
+
   const { data, isLoading, isError, error } = useList<IRetailer, HttpError>({
     resource: "retailers",
   });
 
   const t = useTranslate();
-  
-  const retailer = data?.data.find(item => item.id === parsedId);
+
+  const retailer = data?.data.find((item) => item.id === parsedId);
 
   const formatDate = (dateString: string | number | Date) => {
     if (!dateString) return "-";
@@ -48,7 +45,7 @@ export const RetailerDrawerShow: React.FC = () => {
       return new Date(dateString).toLocaleDateString("vi-VN", {
         year: "numeric",
         month: "long",
-        day: "numeric"
+        day: "numeric",
       });
     } catch (e) {
       return "Invalid Date";
@@ -91,7 +88,7 @@ export const RetailerDrawerShow: React.FC = () => {
   }
 
   return (
-    <Card 
+    <Card
       style={{ width: "100%", margin: "24px 0" }}
       bordered={false}
       className="retailer-detail-card"
@@ -100,48 +97,53 @@ export const RetailerDrawerShow: React.FC = () => {
         <Typography.Title level={4} style={{ margin: 0 }}>
           {t("retailers.title")}
         </Typography.Title>
-        <Tag color={retailer.is_active ? "success" : "error"} style={{ fontSize: '14px', padding: '4px 12px' }}>
+        <Tag
+          color={retailer.is_active ? "success" : "error"}
+          style={{ fontSize: "14px", padding: "4px 12px" }}
+        >
           {retailer.is_active ? t("retailers.active") : t("retailers.inactive")}
         </Tag>
       </Flex>
 
       <Row gutter={[32, 24]}>
         <Col xs={24} md={8}>
-          <Card 
+          <Card
+            className="card"
             bordered
-            style={{ 
-              textAlign: "center", 
+            style={{
+              textAlign: "center",
               height: "100%",
-              background: "#fafafa"
+              background: "#fafafa",
             }}
             bodyStyle={{ padding: "24px" }}
           >
             <Flex vertical align="center" gap="middle">
-              <Avatar 
+              <Avatar
                 shape="square"
                 size={180}
                 src={retailer.avatar_image}
                 alt={retailer.name}
                 icon={<UserOutlined />}
-                style={{ 
+                style={{
                   borderRadius: 8,
                   border: "4px solid white",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 }}
               />
               <Space direction="vertical" size={2} style={{ width: "100%" }}>
-                <Typography.Title level={3} style={{ marginTop: 16, marginBottom: 4 }}>
+                <Typography.Title
+                  level={3}
+                  style={{ marginTop: 16, marginBottom: 4 }}
+                >
                   {retailer.name}
                 </Typography.Title>
-                
+
                 <Typography.Text type="secondary">
                   <MailOutlined style={{ marginRight: 8 }} />
                   {retailer.email}
                 </Typography.Text>
-                
+
                 <Divider style={{ margin: "16px 0" }} />
-                
-        
               </Space>
             </Flex>
           </Card>
@@ -149,7 +151,8 @@ export const RetailerDrawerShow: React.FC = () => {
 
         <Col xs={24} md={16}>
           <Space direction="vertical" size={24} style={{ width: "100%" }}>
-            <Card 
+            <Card
+              className="card"
               title={
                 <Flex align="center" gap="small">
                   <UserOutlined />
@@ -160,8 +163,8 @@ export const RetailerDrawerShow: React.FC = () => {
             >
               <Row gutter={[24, 16]}>
                 <Col xs={24} sm={12}>
-                  <Card 
-                    size="small" 
+                  <Card
+                    size="small"
                     bordered={false}
                     style={{ background: "#f5f7fa", height: "100%" }}
                   >
@@ -169,16 +172,19 @@ export const RetailerDrawerShow: React.FC = () => {
                       <Typography.Text type="secondary">
                         <PhoneOutlined /> {t("retailers.phone")}
                       </Typography.Text>
-                      <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
+                      <Typography.Text
+                        strong
+                        style={{ fontSize: 16, marginTop: 4 }}
+                      >
                         {formatPhoneNumber(retailer.phone)}
                       </Typography.Text>
                     </Flex>
                   </Card>
                 </Col>
-                
+
                 <Col xs={24} sm={12}>
-                  <Card 
-                    size="small" 
+                  <Card
+                    size="small"
                     bordered={false}
                     style={{ background: "#f5f7fa", height: "100%" }}
                   >
@@ -186,16 +192,19 @@ export const RetailerDrawerShow: React.FC = () => {
                       <Typography.Text type="secondary">
                         <CalendarOutlined /> {t("retailers.dob")}
                       </Typography.Text>
-                      <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
+                      <Typography.Text
+                        strong
+                        style={{ fontSize: 16, marginTop: 4 }}
+                      >
                         {formatDate(retailer.dob)}
                       </Typography.Text>
                     </Flex>
                   </Card>
                 </Col>
-                
+
                 <Col xs={24} sm={12}>
-                  <Card 
-                    size="small" 
+                  <Card
+                    size="small"
                     bordered={false}
                     style={{ background: "#f5f7fa", height: "100%" }}
                   >
@@ -203,7 +212,10 @@ export const RetailerDrawerShow: React.FC = () => {
                       <Typography.Text type="secondary">
                         <ClockCircleOutlined /> {t("retailers.created_at")}
                       </Typography.Text>
-                      <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
+                      <Typography.Text
+                        strong
+                        style={{ fontSize: 16, marginTop: 4 }}
+                      >
                         {formatDate(retailer.created_at)}
                       </Typography.Text>
                     </Flex>
@@ -212,7 +224,8 @@ export const RetailerDrawerShow: React.FC = () => {
               </Row>
             </Card>
 
-            <Card 
+            <Card
+              className="card"
               title={
                 <Flex align="center" gap="small">
                   <EnvironmentOutlined />
@@ -223,8 +236,8 @@ export const RetailerDrawerShow: React.FC = () => {
             >
               <Row gutter={[24, 16]}>
                 <Col xs={24}>
-                  <Card 
-                    size="small" 
+                  <Card
+                    size="small"
                     bordered={false}
                     style={{ background: "#f5f7fa" }}
                   >
@@ -232,7 +245,10 @@ export const RetailerDrawerShow: React.FC = () => {
                       <Typography.Text type="secondary">
                         <HomeOutlined /> {t("retailers.address")}
                       </Typography.Text>
-                      <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
+                      <Typography.Text
+                        strong
+                        style={{ fontSize: 16, marginTop: 4 }}
+                      >
                         {retailer.address || "-"}
                       </Typography.Text>
                     </Flex>

@@ -4,6 +4,13 @@ import { Card, Empty, Flex, Typography, Image, theme } from "antd";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router";
+import "../index.css";
+import {
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  FieldTimeOutlined,
+} from "@ant-design/icons";
+
 interface Order {
   id: string;
   status: OrderStatus;
@@ -55,6 +62,7 @@ export const DashboardOrdersTracking = ({
   const { token } = theme.useToken();
   return (
     <Card
+      className="card"
       loading={loading}
       style={style}
       title="Theo dõi đơn hàng"
@@ -62,14 +70,17 @@ export const DashboardOrdersTracking = ({
         {
           key: "Pending",
           tab: "Chờ đặt cọc",
+          icon: <FieldTimeOutlined />,
         },
         {
           key: "PendingConfirm",
           tab: "Chờ xác nhận",
+          icon: <ExclamationCircleOutlined />,
         },
         {
           key: "Deposit",
           tab: "Đã đặt cọc",
+          icon: <CheckCircleOutlined />,
         },
       ]}
       activeTabKey={activeOrderTab}
@@ -118,7 +129,7 @@ export const DashboardOrdersTracking = ({
                     onClick={() => {
                       navigate(`/orders/${order.id}`);
                     }}
-                    className="order-item-hover"
+                    className="hover-attribute card"
                     key={order.id}
                     gap={16}
                     style={{
@@ -126,8 +137,6 @@ export const DashboardOrdersTracking = ({
                       borderRadius: 8,
                       background: token?.colorBgLayout,
                       marginBottom: 12,
-                      boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-                      border: "1px solid #f0f0f0",
                       transition: "all 0.3s ease",
                       cursor: "pointer",
                       position: "relative",

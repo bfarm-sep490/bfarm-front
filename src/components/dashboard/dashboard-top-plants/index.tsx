@@ -2,6 +2,8 @@ import { TextField } from "@refinedev/antd";
 import { Card, Flex, Typography, Image, Empty, theme } from "antd";
 import { useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import "../index.css";
+
 type Props = {
   orderData: any;
   plantData: any;
@@ -30,7 +32,7 @@ export const DashboardTopPlants = ({ orderData, plantData, loading, style }: Pro
   }, [orderData, plantData]);
   const { token } = theme.useToken();
   return (
-    <Card style={style} title="Top giống cây trồng" loading={loading}>
+    <Card className="card" style={style} title="Top giống cây trồng" loading={loading}>
       <div
         id="scrollableDiv"
         style={{
@@ -48,8 +50,9 @@ export const DashboardTopPlants = ({ orderData, plantData, loading, style }: Pro
           {topPlantsData.length > 0 ? (
             topPlantsData.slice(0, 5).map((plant: any) => (
               <Flex
+                className="card hover-attribute"
                 key={plant.id}
-                gap={12}
+                gap={16}
                 style={{
                   padding: 16,
                   borderRadius: 8,
@@ -59,11 +62,11 @@ export const DashboardTopPlants = ({ orderData, plantData, loading, style }: Pro
               >
                 {plant.image_url && (
                   <Image
+                    className="card"
                     width={100}
                     style={{
                       borderRadius: 8,
                       objectFit: "cover",
-                      border: "1px solid #f0f0f0",
                     }}
                     src={plant.image_url}
                     alt={plant.plant_name}

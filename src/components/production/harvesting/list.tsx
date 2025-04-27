@@ -16,6 +16,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
 import { ProductionStatus } from "../packaging/list";
+import "../../plan/detail/dashboard-problems/index.css";
 
 export const HarvestingProductList = ({ children }: PropsWithChildren) => {
   const back = useBack();
@@ -39,11 +40,23 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
+      <Table
+        onRow={(record) => ({
+          className: "hover-attribute",
+          onClick: () => {
+            if (record?.harvesting_task_id) {
+              navigate(`/harvesting-products/${record?.harvesting_task_id}`);
+            }
+          },
+        })}
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: "max-content" }}
+      >
         <Table.Column
           dataIndex="harvesting_task_id"
           title={translate("ID")}
-          render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+          render={(value) => <TextField value={"#" + value} />}
         />
         <Table.Column dataIndex="plan_name" title={translate("plan_name", "Tên kế hoạch")} />
         <Table.Column dataIndex="plant_name" title={translate("plant_name", "Cây trồng")} />
@@ -68,23 +81,6 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
           dataIndex="status"
           title={translate("harvesting_product.status", "Trạng thái")}
           render={(value) => <ProductionStatus status={value} />}
-        />
-
-        <Table.Column
-          fixed="right"
-          title={translate("table.actions")}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <ShowButton
-                hideText
-                size="small"
-                onClick={() => {
-                  navigate(`${record.harvesting_task_id}`);
-                }}
-              />
-            </Space>
-          )}
         />
       </Table>
       {children}

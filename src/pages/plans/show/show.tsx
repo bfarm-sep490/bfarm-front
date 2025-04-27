@@ -1,18 +1,4 @@
-import {
-  Image,
-  Card,
-  Typography,
-  Space,
-  Tag,
-  Flex,
-  Divider,
-  Row,
-  Col,
-  Grid,
-  Button,
-  Badge,
-  Table,
-} from "antd";
+import { Image, Card, Typography, Space, Tag, Flex, Divider, Row, Col, Grid, Button } from "antd";
 import {
   EnvironmentOutlined,
   UserOutlined,
@@ -20,14 +6,9 @@ import {
   BranchesOutlined,
   AuditOutlined,
   GiftOutlined,
-  DashboardOutlined,
   ArrowLeftOutlined,
-  FieldTimeOutlined,
   GoldOutlined,
   GroupOutlined,
-  SunOutlined,
-  CloudOutlined,
-  BulbOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
   EditOutlined,
@@ -37,17 +18,11 @@ import { DateField, ShowButton, TextField } from "@refinedev/antd";
 import { HttpError, useBack, useList, useOne } from "@refinedev/core";
 import { useNavigate, useParams } from "react-router";
 import React, { PropsWithChildren } from "react";
-// import ReactApexChart from "react-apexcharts"; // Removed as it is unused
-import { ApexOptions } from "apexcharts";
-
-import { filter, set } from "lodash";
 import { IProblem } from "@/interfaces";
 import { StatusTag } from "@/components/caring-task/status-tag";
 import { DropDownSection } from "@/components/section/drop-down-section";
 import { ActivityCard } from "@/components/card/card-activity";
-import { MaterialDashboard } from "@/components/plan/detail/dashboard-fertilizer-pesticide-item";
 import { ProblemsDashBoard } from "@/components/plan/detail/dashboard-problems";
-import { CaringTaskDashboard } from "@/components/plan/detail/dashboard-caring-tasks";
 import { ScheduleComponent } from "@/components/plan/detail/scheduler";
 import { StatusModal } from "@/components/plan/detail/completd-modal";
 import { ChosenFarmerDashBoard } from "@/components/plan/detail/dashboard-farmers";
@@ -55,7 +30,7 @@ import HarvestingProductDashBoard from "@/components/plan/detail/dashboard-harve
 import PackagingProductDashBoard from "@/components/plan/detail/dashboard-packaging-products";
 import { OrdersListTable } from "@/components/plan/detail/orders-list-table";
 import { QRCodeModal } from "@/components/plan/qrcode-modal";
-
+import "./index.css";
 interface IGeneralPlan {
   plan_id: number;
   plan_name: string;
@@ -346,7 +321,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           </Col>
         </Row>
         <Divider />
-        <Flex gap={10} vertical={!breakpoint.sm ? true : false}>
+        <Flex gap={16} vertical={!breakpoint.sm ? true : false}>
           <Card
             title={
               <Flex vertical={false} gap={10} justify="space-between" align="center">
@@ -354,6 +329,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 <StatusTag status={general_info?.status || "Default"} />
               </Flex>
             }
+            className="card"
             loading={generalLoading}
             style={{ width: !breakpoint.sm ? "100%" : "50%" }}
           >
@@ -369,6 +345,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                 )}
                 <Flex justify="center" align="center">
                   <Image
+                    className="card"
                     style={{ borderRadius: 10, border: "1px solid #ddd" }}
                     width={300}
                     height={300}
@@ -455,8 +432,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               </Flex>
             </Flex>
           </Card>
-          <Flex vertical style={{ width: !breakpoint.sm ? "100%" : "50%" }} gap={10}>
+          <Flex vertical style={{ width: !breakpoint.sm ? "100%" : "50%" }} gap={16}>
             <Card
+              className="card"
               loading={
                 generalLoading ||
                 generalFetching ||
@@ -525,6 +503,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               </Flex>
             </Card>
             <ChosenFarmerDashBoard
+              className="card"
               status={general_info?.status}
               style={{ width: "100%" }}
               chosenFarmer={(chosenfarmerData?.data as []) ?? []}
@@ -544,21 +523,23 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             />
           </Flex>
         </Flex>
-        <OrdersListTable orders={orders} orderLoading={orderLoading} />
+        <OrdersListTable className="card" orders={orders} orderLoading={orderLoading} />
         <Divider />
         <DropDownSection title="Công việc">
-          <Flex gap={10} vertical={true}>
-            <Flex gap={10} vertical={!breakpoint.sm ? true : false}>
+          <Flex gap={16} vertical={true}>
+            <Flex gap={16} vertical={!breakpoint.sm ? true : false}>
               <ProblemsDashBoard
+                className="card"
                 style={{ width: breakpoint?.sm ? "50%" : "100%" }}
                 loading={problemsLoading || problemFetching}
                 refetch={problemRefetch}
                 data={problemsData?.data || []}
               />
 
-              <Flex style={{ width: breakpoint?.sm ? "50%" : "100%" }} gap={10} vertical={true}>
-                <Flex style={{ width: "100%" }} gap={10} vertical={!breakpoint.sm ? true : false}>
+              <Flex style={{ width: breakpoint?.sm ? "50%" : "100%" }} gap={16} vertical={true}>
+                <Flex style={{ width: "100%" }} gap={16} vertical={!breakpoint.sm ? true : false}>
                   <ActivityCard
+                    className="card"
                     style={{ width: "100%" }}
                     icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
                     completedTasks={caring_task_dashboard?.complete_quantity || 0}
@@ -578,6 +559,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   />
 
                   <ActivityCard
+                    className="card"
                     style={{ width: "100%" }}
                     loading={inspectingTaskLoading}
                     icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
@@ -589,8 +571,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     lastActivityDate={"Lần cuối: 13/12/2025"}
                   />
                 </Flex>
-                <Flex style={{ width: "100%" }} gap={10} vertical={!breakpoint.sm ? true : false}>
+                <Flex style={{ width: "100%" }} gap={16} vertical={!breakpoint.sm ? true : false}>
                   <ActivityCard
+                    className="card"
                     style={{ width: "100%" }}
                     icon={<GiftOutlined style={{ color: "#52c41a" }} />}
                     completedTasks={havesting_task_dashboard?.complete_quantity || 0}
@@ -610,6 +593,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   />
 
                   <ActivityCard
+                    className="card"
                     style={{ width: "100%" }}
                     icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
                     completedTasks={packaging_task_dashboard?.complete_quantity || 0}
@@ -631,7 +615,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
               </Flex>
             </Flex>
 
-            <ScheduleComponent status={general_info?.status} />
+            <ScheduleComponent className="card" status={general_info?.status} />
           </Flex>
         </DropDownSection>
       </div>

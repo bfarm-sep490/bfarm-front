@@ -1,5 +1,7 @@
 import { Card, Table, Typography } from "antd";
 import { useMemo } from "react";
+import "../index.css";
+
 type RemainingProps = {
   orderData: any;
   plantData: any;
@@ -103,7 +105,7 @@ export const RemainingProductsTable = ({
     },
   ];
   return (
-    <Card style={style} title="Thành phẩm và sản lượng còn lại" loading={loading}>
+    <Card className="card" style={style} title="Thành phẩm và sản lượng còn lại" loading={loading}>
       <Table
         columns={productYieldColumns}
         dataSource={remainingProducts}

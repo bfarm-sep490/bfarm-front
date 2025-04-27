@@ -12,6 +12,7 @@ type ActivityCardProps = {
   completedTasks: number;
   loading?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 export const ActivityCard = (props: ActivityCardProps) => {
@@ -20,6 +21,7 @@ export const ActivityCard = (props: ActivityCardProps) => {
     <>
       {" "}
       <Card
+        className={props?.className}
         style={props?.style}
         loading={props?.loading}
         title={

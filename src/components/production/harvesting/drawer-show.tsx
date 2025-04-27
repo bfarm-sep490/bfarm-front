@@ -17,6 +17,8 @@ import {
 import { initial } from "lodash";
 import { useParams } from "react-router";
 import { ProductionStatus } from "../packaging/list";
+import "../../plan/detail/dashboard-problems/index.css";
+
 const { Title, Text } = Typography;
 
 export const HarvestingProductShow = () => {
@@ -107,6 +109,7 @@ export const HarvestingProductShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Card
+          className="card"
           style={{ width: "100%", borderRadius: 8 }}
           title={
             <Flex justify="space-between" align="center">
@@ -198,7 +201,7 @@ export const HarvestingProductShow = () => {
           </Flex>
         </Card>
 
-        <Card title="Danh sách thành phẩm" style={{ width: "100%" }}>
+        <Card className="card" title="Danh sách thành phẩm" style={{ width: "100%" }}>
           <Table pagination={false} bordered columns={columns} dataSource={packagingProducts} />
         </Card>
       </Flex>

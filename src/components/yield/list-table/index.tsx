@@ -18,7 +18,7 @@ import { YieldTypeTag } from "../type";
 import { YieldDrawerShow } from "../drawer-show";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-
+import "../../plan/detail/dashboard-problems/index.css";
 export const YieldListTable: React.FC = () => {
   const { token } = theme.useToken();
   const { tableProps, filters } = useTable<any, HttpError>({
@@ -42,6 +42,12 @@ export const YieldListTable: React.FC = () => {
   return (
     <>
       <Table
+        onRow={(row) => ({
+          className: "hover-attribute",
+          onClick: () => {
+            navigate(`/yield/${row.id}`);
+          },
+        })}
         {...tableProps}
         rowKey="id"
         scroll={{ x: true }}
@@ -69,6 +75,7 @@ export const YieldListTable: React.FC = () => {
               placeholder={t("yield.search.id")}
             />
           )}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
 
         <Table.Column
@@ -124,19 +131,6 @@ export const YieldListTable: React.FC = () => {
           key="status"
           width={120}
           render={(value) => <YieldStatusTag value={value} />}
-        />
-
-        <Table.Column
-          title={t("fertilizers.actions")}
-          key="actions"
-          fixed="right"
-          align="center"
-          render={(_, record) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => navigate(`${record?.id}`)}
-            />
-          )}
         />
       </Table>
     </>

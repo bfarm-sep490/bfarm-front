@@ -41,7 +41,6 @@ import { InspectionsShow } from "@/components/inspection";
 import { AssignTaskModal } from "../assign-tasks-modal";
 import TaskModal from "@/components/task-create-update";
 import GenericTaskDrawer from "@/components/task/show";
-
 const locales = {
   vi,
 };
@@ -85,10 +84,11 @@ var defaultMessages = {
 };
 type ScheduleComponentProps = {
   status?: string;
+  className?: string;
 };
 export const ScheduleComponent = (props: ScheduleComponentProps) => {
   const [open, setOpen] = useState(false);
-  const [viewComponent, setViewComponent] = useState("Schedule");
+  const [viewComponent, setViewComponent] = useState<"Schedule" | "List">("Schedule");
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -290,6 +290,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
 
   return (
     <Card
+      className={props?.className}
       title={
         <Flex justify="space-between" align="center">
           <Flex gap={10}>
@@ -314,10 +315,11 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             }
             size="large"
             vertical={false}
-            onChange={(value) => setViewComponent(value)}
+            defaultValue="Schedule"
+            onChange={(value: "Schedule" | "List") => setViewComponent(value)}
             options={[
-              { value: "List", icon: <BarsOutlined /> },
               { value: "Schedule", icon: <CalendarOutlined /> },
+              { value: "List", icon: <BarsOutlined /> },
             ]}
           />
         </Flex>

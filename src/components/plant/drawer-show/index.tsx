@@ -41,7 +41,7 @@ import { IYield } from "@/interfaces";
 import { PlantStatusTag } from "../status";
 import { YieldStatusTag } from "@/components/yield/status";
 import { AddSuitableModal } from "../add-modal";
-
+import "../../plan/detail/dashboard-problems/index.css";
 type Props = {
   onClose?: () => void;
 };
@@ -146,9 +146,15 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
             <>
               {contextHolder}{" "}
               <Flex gap={10}>
-                <Card title={"Thông tin cây trồng"} style={{ width: "50%" }}>
+                <Card
+                  className="card"
+                  loading={queryResult?.isLoading}
+                  title={"Thông tin cây trồng"}
+                  style={{ width: "50%" }}
+                >
                   <Flex align="center" justify="center">
                     <Avatar
+                      className="card"
                       shape="square"
                       style={{
                         aspectRatio: 1,
@@ -258,6 +264,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                   />
                 </Card>
                 <Card
+                  className="card"
                   title={
                     <Flex justify="space-between" align="center">
                       <Typography.Title level={5} style={{ margin: 0 }}>
@@ -277,7 +284,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                     maxWidth: "100%",
                     borderRadius: "8px",
                     overflow: "hidden",
-                    height: "400px",
+                    height: "500px",
                   }}
                   bodyStyle={{
                     padding: 0,

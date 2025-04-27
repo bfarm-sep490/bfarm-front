@@ -2,7 +2,7 @@ import { Card, Spin } from "antd";
 import { ApexOptions } from "apexcharts";
 import { title } from "process";
 import ReactApexChart from "react-apexcharts";
-
+import "../index.css";
 type Props = {
   transactionsData: any;
   style?: React.CSSProperties;
@@ -112,7 +112,7 @@ export const DashboardTransactions = ({ transactionsData, style, loading }: Prop
   };
 
   return (
-    <Card title="Doanh thu" style={style} loading={loading}>
+    <Card className="card" title="Doanh thu" style={style} loading={loading}>
       {transactionsData?.data && transactionsData.data.length > 0 ? (
         <ReactApexChart
           options={revenueChartConfig.options as unknown as ApexOptions}

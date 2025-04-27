@@ -3,6 +3,8 @@ import { useShow, useBack, useOne } from "@refinedev/core";
 import { Table, theme, Flex, Grid, Typography, List, Divider, Drawer, Card } from "antd";
 import { useParams } from "react-router";
 import { ProductionStatus } from "./list";
+import "../../plan/detail/dashboard-problems/index.css";
+
 const { Title, Text } = Typography;
 
 export const PackagingProductShow = () => {
@@ -82,6 +84,7 @@ export const PackagingProductShow = () => {
     >
       <Flex vertical gap={24} style={{ padding: "32px" }}>
         <Card
+          className="card"
           style={{ width: "100%" }}
           title={
             <Flex justify="space-between" align="center">
@@ -170,7 +173,7 @@ export const PackagingProductShow = () => {
           </Flex>
         </Card>
 
-        <Card title="Danh sách đơn hàng" style={{ width: "100%" }}>
+        <Card className="card" title="Danh sách đơn hàng" style={{ width: "100%" }}>
           <Table pagination={false} bordered columns={columns} dataSource={orders} />
         </Card>
       </Flex>

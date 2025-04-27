@@ -15,6 +15,7 @@ import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps, Tag } 
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { StatusTag } from "../../caring-task/status-tag";
+import "../../plan/detail/dashboard-problems/index.css";
 
 export const PackagedProductList = ({ children }: PropsWithChildren) => {
   const back = useBack();
@@ -38,11 +39,23 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <Table {...tableProps} rowKey="id" scroll={{ x: "max-content" }}>
+      <Table
+        onRow={(record) => ({
+          className: "hover-attribute",
+          onClick: () => {
+            if (record.id) {
+              navigate(`/packaging-products/${record.id}`);
+            }
+          },
+        })}
+        {...tableProps}
+        rowKey="id"
+        scroll={{ x: "max-content" }}
+      >
         <Table.Column
           dataIndex="id"
           title={translate("ID")}
-          render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
+          render={(value) => <TextField value={"#" + value} />}
         />
         <Table.Column dataIndex="plan_name" title={translate("plan_name", "Tên kế hoạch")} />
 
@@ -78,23 +91,6 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
           dataIndex="status"
           title={translate("packaging_product.status", "Trạng thái")}
           render={(value) => <ProductionStatus status={value} />}
-        />
-
-        <Table.Column
-          fixed="right"
-          title={translate("table.actions")}
-          dataIndex="id"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <ShowButton
-                hideText
-                size="small"
-                onClick={() => {
-                  navigate(`${record.id}`);
-                }}
-              />
-            </Space>
-          )}
         />
       </Table>
 

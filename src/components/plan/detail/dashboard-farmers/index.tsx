@@ -29,7 +29,7 @@ import { BaseRecord, useCustom, useDelete, useList, useOne, useTranslate } from 
 import { ProblemStatusTag } from "@/components/problem/status-tag";
 import { useNavigate, useParams } from "react-router";
 import { FarmerScheduleComponent } from "../scheduler/farmer-task-scheduler";
-
+import "../scheduler/index.css";
 type ChosenDashBoardProps = {
   status?: string;
   harvesting_task?: [];
@@ -40,6 +40,7 @@ type ChosenDashBoardProps = {
   visible?: boolean;
   loading?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 export const ChosenFarmerDashBoard: React.FC<ChosenDashBoardProps> = ({
@@ -51,6 +52,7 @@ export const ChosenFarmerDashBoard: React.FC<ChosenDashBoardProps> = ({
   loading,
   refetch,
   style,
+  className,
 }) => {
   const [api, contextHolder] = notification.useNotification();
   const [viewComponent, setViewComponent] = useState("Chart");
@@ -160,6 +162,7 @@ export const ChosenFarmerDashBoard: React.FC<ChosenDashBoardProps> = ({
 
   return (
     <Card
+      className={className}
       style={style}
       title={
         <Flex justify="space-between" align="center">

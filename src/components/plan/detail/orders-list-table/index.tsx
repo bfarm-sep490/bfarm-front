@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 type OrderListTableProps = {
   orders: any[];
   orderLoading?: boolean;
+  className?: string;
 };
 
 export const OrdersListTable = (props: OrderListTableProps) => {
@@ -39,7 +40,11 @@ export const OrdersListTable = (props: OrderListTableProps) => {
   ];
 
   return (
-    <Card title={`Đơn hàng (${props?.orders?.length || 0})`} style={{ marginTop: 10 }}>
+    <Card
+      className={props?.className}
+      title={`Đơn hàng (${props?.orders?.length || 0})`}
+      style={{ marginTop: 10 }}
+    >
       <Table
         loading={props?.orderLoading}
         dataSource={props?.orders}

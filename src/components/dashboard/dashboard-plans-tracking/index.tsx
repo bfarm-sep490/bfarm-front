@@ -3,6 +3,7 @@ import { DateField } from "@refinedev/antd";
 import { Card, Typography, Image, Flex, Progress, Empty, theme } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router";
+import "../index.css";
 type PlanTrackingProps = {
   plansData: any;
   plantData: any;
@@ -19,6 +20,7 @@ export const DashboardPlanTracking = ({
   const navigate = useNavigate();
   return (
     <Card
+      className="card"
       loading={loading}
       style={style}
       title="Kế hoạch đang triển khai"
@@ -72,6 +74,7 @@ export const DashboardPlanTracking = ({
 
               return (
                 <Flex
+                  className="hover-attribute card"
                   onClick={() => {
                     navigate(`/plans/${plan.id}`);
                   }}
@@ -82,9 +85,6 @@ export const DashboardPlanTracking = ({
                     borderRadius: 8,
                     background: token?.colorBgLayout,
                     marginBottom: 16,
-                    border: "1px solid #f0f0f0",
-                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
-                    transition: "all 0.2s ease",
                     position: "relative",
                     overflow: "hidden",
                   }}
@@ -94,11 +94,10 @@ export const DashboardPlanTracking = ({
                       <Image
                         width={200}
                         height={150}
+                        className="card"
                         style={{
                           borderRadius: 8,
                           objectFit: "cover",
-                          border: "1px solid #f0f0f0",
-                          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)",
                         }}
                         src={associatedPlant.image_url}
                         alt={associatedPlant.plant_name}

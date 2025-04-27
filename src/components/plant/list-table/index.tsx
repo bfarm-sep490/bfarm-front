@@ -10,7 +10,7 @@ import { PlantDrawerShow } from "../drawer-show";
 import { PlantStatusTag } from "../status";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
-
+import "../../plan/detail/dashboard-problems/index.css";
 export const PlantsListTable: React.FC = () => {
   const { token } = theme.useToken();
 
@@ -31,6 +31,12 @@ export const PlantsListTable: React.FC = () => {
   return (
     <>
       <Table
+        onRow={(row) => ({
+          className: "hover-attribute",
+          onClick: () => {
+            navigate(`/plants/${row.id}`);
+          },
+        })}
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}
@@ -41,7 +47,13 @@ export const PlantsListTable: React.FC = () => {
           ),
         }}
       >
-        <Table.Column title="ID" dataIndex="id" key="id" width={80} />
+        <Table.Column
+          title="ID"
+          dataIndex="id"
+          key="id"
+          width={80}
+          render={(value) => <TextField value={`#${value}`} />}
+        />
         <Table.Column
           title={t("plant.imageAlt")}
           dataIndex="image_url"
@@ -64,7 +76,7 @@ export const PlantsListTable: React.FC = () => {
           title={t("plant.description")}
           dataIndex="description"
           key="description"
-          width={300}
+          width={200}
           render={(value) => (
             <Typography.Paragraph
               ellipsis={{ rows: 2, tooltip: true }}
@@ -96,7 +108,7 @@ export const PlantsListTable: React.FC = () => {
         <Table.Column title={t("plant.type")} dataIndex="type" key="type" />
 
         <Table.Column
-          title={t("plant.preservationDay")}
+          title={"Ngày bảo quản"}
           dataIndex="preservation_day"
           key="preservation_day"
           render={(value) => <TextField value={`${value} ngày`} />}
@@ -108,21 +120,6 @@ export const PlantsListTable: React.FC = () => {
           key="status"
           width={120}
           render={(value) => <PlantStatusTag value={value} />}
-        />
-
-        <Table.Column
-          fixed="right"
-          title={t("pesticides.actions")}
-          key="actions"
-          align="center"
-          render={(_, record: IPlant) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => {
-                navigate("/plants/" + record.id);
-              }}
-            />
-          )}
         />
       </Table>
     </>

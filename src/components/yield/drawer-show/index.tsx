@@ -21,7 +21,7 @@ import {
   Typography,
   theme,
 } from "antd";
-import { useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import {
   ArrowLeftOutlined,
@@ -39,7 +39,7 @@ import { YieldDrawerForm } from "../drawer-form";
 import { useTranslation } from "react-i18next";
 import { StatusTag } from "@/components/caring-task/status-tag";
 import dayjs from "dayjs";
-
+import "../../plan/detail/dashboard-problems/index.css";
 type Props = {
   onClose?: () => void;
 };
@@ -84,7 +84,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
       type: "replace",
     });
   };
-
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const sortedData = React.useMemo(() => {
     if (!historyData?.data || historyData.data.length === 0) {
@@ -113,8 +113,10 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
             <>
               <Flex vertical={false} gap={10}>
                 <Card
+                  className="card"
                   title="Thông tin khu đất"
                   style={{ width: "50%", height: "400px" }}
+                  loading={queryResult.isLoading}
                 >
                   <Flex
                     style={{
@@ -181,6 +183,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                   />
                 </Card>
                 <Card
+                  className="card"
                   loading={isPlantsLoading}
                   title="Danh sách cây trồng gợi ý"
                   style={{
@@ -203,15 +206,21 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                     dataSource={suggestedPlants}
                     renderItem={(plant) => (
                       <List.Item
+                        onClick={() => {
+                          navigate(`/plants/${plant.id}`);
+                        }}
+                        className="hover-attribute"
                         style={{
+                          borderRadius: 8,
                           padding: "16px 24px",
-                          transition: "all 0.3s ease",
                           borderBottom: `1px solid ${token.colorBorderSecondary}`,
                         }}
                       >
                         <List.Item.Meta
+                          style={{ padding: 8, borderRadius: 8 }}
                           avatar={
                             <Avatar
+                              className="card"
                               src={plant.image_url}
                               size={80}
                               shape="square"
@@ -262,12 +271,9 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
               </Flex>
               <Divider />
               <Card
+                className="card"
                 loading={historyLoading}
-                title={
-                  <Typography.Title level={4} style={{ margin: 0 }}>
-                    Lịch sử sử dụng đất
-                  </Typography.Title>
-                }
+                title="Lịch sử dụng đất"
                 style={{
                   width: "100%",
                   borderRadius: "8px",
@@ -302,6 +308,8 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                       color: plan.status === "Complete" ? "green" : "blue",
                       children: (
                         <Card
+                          className="hover-attribute"
+                          onClick={() => navigate(`/plans/${plan.id}`)}
                           size="small"
                           style={{
                             marginBottom: "16px",

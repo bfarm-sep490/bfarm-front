@@ -14,13 +14,14 @@ import { Badge, Card, Flex, Segmented, Space, Spin, Table, Typography } from "an
 import { ApexOptions } from "apexcharts";
 import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
-
+import "./index.css";
 type ProblemsDashBoardProps = {
   data?: IProblem[];
   refetch?: () => void;
   visible?: boolean;
   loading?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 export const ProblemsDashBoard = ({
@@ -29,6 +30,7 @@ export const ProblemsDashBoard = ({
   loading,
   refetch,
   style,
+  className,
 }: ProblemsDashBoardProps) => {
   const [open, setOpen] = useState(false);
   const [selectId, setSelectId] = useState<number | undefined>();
@@ -149,6 +151,7 @@ export const ProblemsDashBoard = ({
 
   return (
     <Card
+      className={className}
       style={style}
       title={
         <Flex justify="space-between" align="center">
@@ -195,6 +198,7 @@ export const ProblemsDashBoard = ({
         <>
           <Table
             onRow={(record) => ({
+              className: "hover-attribute",
               onClick: () => {
                 setSelectId(record?.id as number);
                 setOpen(true);

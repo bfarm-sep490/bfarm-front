@@ -7,6 +7,8 @@ import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { useNavigate, useParams } from "react-router";
 import { OrderStatusTag } from "../order-status";
+import "../../plan/detail/dashboard-problems/index.css";
+
 export const OrderListTable: React.FC = () => {
   const { token } = theme.useToken();
   const navigate = useNavigate();
@@ -21,6 +23,14 @@ export const OrderListTable: React.FC = () => {
   const translate = useTranslate();
   return (
     <Table
+      onRow={(record) => ({
+        className: "hover-attribute",
+        onClick: () => {
+          if (record.id) {
+            navigate(`/orders/${record.id}`);
+          }
+        },
+      })}
       {...tableProps}
       rowKey="id"
       scroll={{ x: "max-content" }}
@@ -97,27 +107,6 @@ export const OrderListTable: React.FC = () => {
         dataIndex="status"
         key="status"
         render={(value) => <OrderStatusTag status={value} />}
-      />
-
-      <Table.Column
-        title={translate("Actions", "Hành động")}
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: IInspectingForm) => (
-          <Space>
-            {record.id ? (
-              <Button
-                icon={<EyeOutlined />}
-                onClick={() =>
-                  navigate(id ? `/plans/${id}/orders/${record.id}` : `/orders/${record.id}`)
-                }
-              />
-            ) : (
-              <Typography.Text type="secondary">N/A</Typography.Text>
-            )}
-          </Space>
-        )}
       />
     </Table>
   );

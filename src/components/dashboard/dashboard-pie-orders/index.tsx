@@ -2,6 +2,7 @@ import { Card } from "antd";
 import { ApexOptions } from "apexcharts";
 import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
+import "../index.css";
 
 type Props = {
   orderData: any;
@@ -75,7 +76,7 @@ export const DashboardPieOrders = ({ orderData, style, loading }: Props) => {
     [orderStatusData],
   );
   return (
-    <Card title="Tình trạng đơn hàng" style={style} loading={loading}>
+    <Card className="card" title="Tình trạng đơn hàng" style={style} loading={loading}>
       <ReactApexChart
         options={orderStatusChartOptions as ApexOptions}
         series={orderStatusData.series}

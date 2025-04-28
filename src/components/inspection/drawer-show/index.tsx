@@ -1,13 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useMemo, useEffect } from "react";
-import { type HttpError, useOne, useShow, useTranslate } from "@refinedev/core";
+import React, { useState, useEffect } from "react";
+import { type HttpError, useOne, useTranslate } from "@refinedev/core";
 import {
   Button,
   List,
   Typography,
-  Spin,
   Table,
-  Alert,
   Drawer,
   Modal,
   Divider,
@@ -50,7 +48,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
   } = useOne<any, HttpError>({
     resource: "inspecting-forms",
     id: props?.taskId ?? id,
-    queryOptions: { enabled: props?.visible === true },
+    queryOptions: { enabled: !!(props?.taskId || id) }, 
   });
 
   const {
@@ -61,7 +59,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
   } = useOne<any, HttpError>({
     resource: "inspecting-results",
     id: props?.taskId ?? id,
-    queryOptions: { enabled: props?.visible === true },
+    queryOptions: { enabled: !!(props?.taskId || id) },
   });
 
   const inspection = formQueryResult?.data?.[0];
@@ -105,7 +103,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
       setIsModalVisible(false);
       setSelectedResult(null);
     }
-  }, [props?.visible]);
+  }, [props?.visible, props?.taskId, id]);
   if (!inspection) return <Typography.Text></Typography.Text>;
 
   return (

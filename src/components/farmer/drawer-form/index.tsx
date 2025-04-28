@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { SaveButton, useForm } from "@refinedev/antd";
 import {
   type BaseKey,
   useGetToPath,
@@ -41,31 +41,27 @@ export const FarmerDrawerForm = (props: Props) => {
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
   const translate = useTranslate();
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<{
-      avatar_image: string;
-      name: string;
-      phone: string;
-      email: string;
-      status: string;
-    }>({
-      resource: "farmers",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data: any) => {
-          if (data?.data?.[0]?.avatar_image) {
-            setPreviewImage(data?.data?.[0]?.avatar_image);
-          }
-          formProps.form.setFieldsValue(data?.data?.[0]);
-        },
+  const { formProps, saveButtonProps } = useForm<{
+    avatar_image: string;
+    name: string;
+    phone: string;
+    email: string;
+    status: string;
+  }>({
+    resource: "farmers",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data: any) => {
+        setPreviewImage(data?.data?.avatar_image);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -86,7 +82,6 @@ export const FarmerDrawerForm = (props: Props) => {
       const currentAvatar = formProps.form.getFieldValue(
         "avatar_image"
       ) as string;
-      console.log("currentAvatar: " + currentAvatar);
       if (currentAvatar) {
         setPreviewImage(currentAvatar);
       }
@@ -127,162 +122,136 @@ export const FarmerDrawerForm = (props: Props) => {
     props.action === "edit"
       ? translate("form.edit_farmer", "Chỉnh sửa nông dân")
       : translate("form.create_farmer", "Tạo nông dân");
-
-  const statusOptions = [
-    { label: translate("status.active", "Hoạt động"), value: "Active" },
-    {
-      label: translate("status.inactive", "Không hoạt động"),
-      value: "Inactive",
-    },
-  ];
   return (
     <Drawer
-      {...drawerProps}
       open={true}
       title={title}
       width={breakpoint.sm ? "378px" : "100%"}
       zIndex={1001}
       onClose={onDrawerClose}
     >
-      <Spin spinning={formLoading}>
-        <Form
-          form={formProps?.form}
-          layout="vertical"
-          onFinish={formProps?.onFinish}
-          onValuesChange={formProps?.onValuesChange}
+      <Form layout="vertical" {...formProps}>
+        <Form.Item
+          name="avatar_url"
+          valuePropName="file"
+          getValueFromEvent={(e: any) => {
+            return e?.file?.response ?? "/images/fertilizer-default-img.png";
+          }}
+          style={{ margin: 0 }}
         >
-          <Form.Item
-            name="avatar_image"
-            valuePropName="file"
-            getValueFromEvent={(e: any) => {
-              return e?.file?.response ?? "/images/fertilizer-default-img.png";
-            }}
-            style={{ margin: 0 }}
+          <Upload.Dragger
+            name="file"
+            customRequest={uploadImage}
+            maxCount={1}
+            accept=".png,.jpg,.jpeg"
+            className={styles.uploadDragger}
+            showUploadList={false}
           >
-            <Upload.Dragger
-              name="file"
-              customRequest={uploadImage}
-              maxCount={1}
-              accept=".png,.jpg,.jpeg"
-              className={styles.uploadDragger}
-              showUploadList={false}
-            >
-              <Flex
-                vertical
-                align="center"
-                justify="center"
-                style={{ position: "relative", height: "100%" }}
-              >
-                <Avatar
-                  shape="square"
-                  style={{
-                    aspectRatio: 1,
-                    objectFit: "contain",
-                    width: previewImage ? "100%" : "48px",
-                    height: previewImage ? "100%" : "48px",
-                    marginTop: previewImage ? undefined : "auto",
-                    transform: previewImage ? undefined : "translateY(50%)",
-                  }}
-                  src={previewImage || "/images/fertilizer-default-img.png"}
-                  alt="Farmer Image"
-                />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{
-                    marginTop: "auto",
-                    marginBottom: "16px",
-                    backgroundColor: theme.colorBgContainer,
-                  }}
-                  disabled={uploading}
-                >
-                  {uploading
-                    ? translate("images.uploading", "Đang tải ảnh lên...")
-                    : translate("images.upload", "Tải ảnh lên")}
-                </Button>
-              </Flex>
-            </Upload.Dragger>
-          </Form.Item>
-          <Flex vertical>
-            <Form.Item
-              key={"name"}
-              label={translate("farmer_name", "Tên nông dân")}
-              name="name"
-              className={styles.formItem}
-              rules={[
-                { required: true, message: "Vui lòng nhập tên!" },
-                {
-                  min: 6,
-                  max: 50,
-                  message: "Tên có độ dài 6 đến 50 kí tự!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              key={"phone"}
-              label={translate("farmer.phone", "Số điện thoại")}
-              name="phone"
-              className={styles.formItem}
-              rules={[
-                { required: true, message: "Vui lòng nhập số điện thoại" },
-                {
-                  message: "Không phải định dạng số điện thoại",
-                  min: 10,
-                  max: 11,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              key={"email"}
-              label={translate("farmer.email", "Email")}
-              name="email"
-              className={styles.formItem}
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-                {
-                  type: "email",
-                  message: "The input is not valid E-mail!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              key={"status"}
-              label={translate("farmer.status", "Trạng thái")}
-              name="status"
-              className={styles.formItem}
-              rules={[{ required: true }]}
-            >
-              <Select options={statusOptions} />
-            </Form.Item>
             <Flex
+              vertical
               align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
+              justify="center"
+              style={{ position: "relative", height: "100%" }}
             >
-              <Button onClick={onDrawerClose}>
-                {translate("form.cancel", "Hủy bỏ")}
-              </Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
+              <Avatar
+                shape="square"
+                style={{
+                  aspectRatio: 1,
+                  objectFit: "contain",
+                  width: previewImage ? "100%" : "48px",
+                  height: previewImage ? "100%" : "48px",
+                  marginTop: previewImage ? undefined : "auto",
+                  transform: previewImage ? undefined : "translateY(50%)",
+                }}
+                src={previewImage || "/images/fertilizer-default-img.png"}
+                alt="Farmer Image"
+              />
+              <Button
+                icon={<UploadOutlined />}
+                style={{
+                  marginTop: "auto",
+                  marginBottom: "16px",
+                  backgroundColor: theme.colorBgContainer,
+                }}
+                disabled={uploading}
               >
-                {translate("form.save", "Lưu")}
-              </SaveButton>
+                {uploading
+                  ? translate("images.uploading", "Đang tải ảnh lên...")
+                  : translate("images.upload", "Tải ảnh lên")}
+              </Button>
             </Flex>
+          </Upload.Dragger>
+        </Form.Item>
+        <Flex vertical>
+          <Form.Item
+            key={"name"}
+            label={translate("farmer_name", "Tên nông dân")}
+            name="name"
+            className={styles.formItem}
+            rules={[
+              { required: true, message: "Vui lòng nhập tên!" },
+              {
+                min: 6,
+                max: 50,
+                message: "Tên có độ dài 6 đến 50 kí tự!",
+              },
+            ]}
+          >
+            <Input name="name" />
+          </Form.Item>
+          <Form.Item
+            key={"phone"}
+            label={translate("farmer.phone", "Số điện thoại")}
+            name="phone"
+            className={styles.formItem}
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại" },
+              {
+                message: "Không phải định dạng số điện thoại",
+                min: 10,
+                max: 11,
+              },
+            ]}
+          >
+            <Input name="phone" />
+          </Form.Item>
+          <Form.Item
+            key={"email"}
+            label={translate("farmer.email", "Email")}
+            name="email"
+            className={styles.formItem}
+            rules={[
+              {
+                required: true,
+                message: "Please input your email!",
+              },
+              {
+                type: "email",
+                message: "The input is not valid E-mail!",
+              },
+            ]}
+          >
+            <Input name="email" />
+          </Form.Item>
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ padding: "16px 16px 0px 16px" }}
+          >
+            <Button onClick={onDrawerClose}>
+              {translate("form.cancel", "Hủy bỏ")}
+            </Button>
+            <SaveButton
+              {...saveButtonProps}
+              htmlType="submit"
+              type="primary"
+              icon={null}
+            >
+              {translate("form.save", "Lưu")}
+            </SaveButton>
           </Flex>
-        </Form>
-      </Spin>
+        </Flex>
+      </Form>
     </Drawer>
   );
 };

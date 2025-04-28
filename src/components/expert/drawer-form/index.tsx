@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { SaveButton, useDrawerForm } from "@refinedev/antd";
+import { SaveButton, useDrawerForm, useForm } from "@refinedev/antd";
 import {
   type BaseKey,
   useApiUrl,
@@ -40,29 +40,24 @@ export const ExpertDrawerForm = (props: Props) => {
   const [searchParams] = useSearchParams();
   const go = useGo();
   const t = useTranslate();
-  const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
   const { styles, theme } = useStyles();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "experts",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.[0]?.avatar_image) {
-            setPreviewImage(data?.data?.[0]?.avatar_image);
-          }
-          formProps.form.setFieldsValue(data?.data?.[0]);
-        },
+  const { formProps, saveButtonProps, formLoading } = useForm<any>({
+    resource: "experts",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        setPreviewImage(data?.data?.avatar_image);
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -107,8 +102,7 @@ export const ExpertDrawerForm = (props: Props) => {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
         onSuccess(uploadedImageUrl);
-        formProps.form.setFieldValue("avatar_url", uploadedImageUrl);
-        console.log("Server response:", response.data);
+        formProps?.form?.setFieldValue("avatar_url", uploadedImageUrl);
       } else {
         throw new Error(response.data.message || "Tải ảnh lỗi.");
       }
@@ -124,17 +118,8 @@ export const ExpertDrawerForm = (props: Props) => {
       ? t("experts.form.edit", "Chỉnh sửa chuyên gia")
       : t("experts.form.add", "Thêm chuyên gia");
 
-  const statusOptions = [
-    { label: t("experts.status.active", "Hoạt động"), value: "Active" },
-    {
-      label: t("experts.status.inactive", "Không hoạt động"),
-      value: "Inactive",
-    },
-  ];
-
   return (
     <Drawer
-      {...drawerProps}
       open={true}
       title={title}
       width={breakpoint.sm ? "378px" : "100%"}
@@ -142,14 +127,9 @@ export const ExpertDrawerForm = (props: Props) => {
       onClose={onDrawerClose}
     >
       <Spin spinning={formLoading}>
-        <Form
-          form={formProps?.form}
-          layout="vertical"
-          onFinish={formProps?.onFinish}
-          onValuesChange={formProps?.onValuesChange}
-        >
+        <Form {...formProps} layout="vertical">
           <Form.Item
-            name="avatar_image"
+            name="avatar_url"
             valuePropName="file"
             getValueFromEvent={(e: any) => {
               return e?.file?.response ?? "/images/fertilizer-default-img.png";
@@ -272,15 +252,6 @@ export const ExpertDrawerForm = (props: Props) => {
               ]}
             >
               <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={t("experts.fields.status", "Trạng thái")}
-              name="status"
-              className={styles.formItem}
-              rules={[{ required: true }]}
-            >
-              <Select options={statusOptions} />
             </Form.Item>
 
             <Flex

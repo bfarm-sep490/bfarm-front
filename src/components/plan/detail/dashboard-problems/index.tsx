@@ -198,12 +198,12 @@ export const ProblemsDashBoard = ({
         <>
           <Table
             onRow={(record) => ({
-              className: "hover-attribute",
               onClick: () => {
                 setSelectId(record?.id as number);
                 setOpen(true);
               },
             })}
+            rowHoverable
             dataSource={data}
             pagination={{
               pageSize: 5,

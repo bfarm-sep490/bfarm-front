@@ -106,24 +106,18 @@ export const OrderDrawerShow = () => {
   const [api, contextHolder] = notification.useNotification();
   const { token } = theme.useToken();
 
-  const { mutate } = useUpdate();
+  const { mutate, isLoading } = useUpdate({});
 
   const processedPackageProducts = useMemo(
     () => packagingProductsData?.data || [],
     [packagingProductsData],
   );
 
-  const handleUpdate = (value: string) => {
+  const handleUpdate = async (value: string) => {
     mutate({
       resource: `orders`,
       id: `${orderId}/status?status=${value}`,
       values: {},
-    });
-    orderRefetch();
-    navigate(-1);
-    api.success({
-      message: "Cập nhật thành công",
-      description: `Đơn hàng #${orderId} đã được cập nhật thành công`,
     });
   };
   return (
@@ -147,10 +141,10 @@ export const OrderDrawerShow = () => {
         {order?.status === "PendingConfirmation" && (
           <Flex justify="end">
             <Space>
-              <Button danger onClick={() => handleUpdate("Reject")}>
+              <Button loading={isLoading} danger onClick={() => handleUpdate("Reject")}>
                 Từ chối
               </Button>
-              <Button type="primary" onClick={() => handleUpdate("Pending")}>
+              <Button loading={isLoading} type="primary" onClick={() => handleUpdate("Pending")}>
                 Chấp nhận
               </Button>
             </Space>
@@ -466,7 +460,11 @@ export const OrderDrawerShow = () => {
         loading={batchesLoading || batchFetching}
       >
         <Flex justify="end" align="center" style={{ marginBottom: 16 }}>
-          <Button type="primary" onClick={() => setCreateBatchOpen(true)}>
+          <Button
+            disabled={order?.status !== "Complete"}
+            type="primary"
+            onClick={() => setCreateBatchOpen(true)}
+          >
             Bàn giao
           </Button>
         </Flex>

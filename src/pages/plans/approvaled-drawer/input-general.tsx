@@ -108,32 +108,12 @@ export const InputGeneralPlan = ({ experts, yields, plants, formProps }: Props) 
               </Form.Item>
               <Flex gap={10} align="center">
                 <Form.Item
-                  label="Sản lượng dự kiến"
+                  label="Sản lượng dự kiến (kg)"
                   name="estimated_product"
                   style={{ flex: 1 }}
                   rules={[{ required: true, message: "Nhập sản lượng dự kiến" }]}
                 >
                   <Input />
-                </Form.Item>
-                <Form.Item
-                  name="estimated_unit"
-                  rules={[{ required: true, message: "Chọn đơn vị" }]}
-                >
-                  <Select
-                    value={formProps.form?.getFieldValue("estimated_unit")}
-                    onChange={(value: any) =>
-                      formProps.form?.setFieldValue("estimated_unit", value)
-                    }
-                    style={{ width: "100px" }}
-                  >
-                    <Select.Option key={"kg"} value={"kg"}>
-                      {"Kg"}
-                    </Select.Option>
-
-                    <Select.Option key={"ton"} value={"ton"}>
-                      {"Ton"}
-                    </Select.Option>
-                  </Select>
                 </Form.Item>
               </Flex>
               <Flex>

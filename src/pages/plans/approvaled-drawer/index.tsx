@@ -459,7 +459,7 @@ export const ApprovingPlanDrawer = () => {
                 style={{ margin: "0 8px" }}
                 onClick={() => prev()}
               >
-                Previous
+                Quay lại
               </Button>
             )}
             {current < 1 && (
@@ -473,7 +473,7 @@ export const ApprovingPlanDrawer = () => {
                   next();
                 }}
               >
-                Next
+                Tiếp theo
               </Button>
             )}
             {current === 1 && (
@@ -488,7 +488,7 @@ export const ApprovingPlanDrawer = () => {
                 }
                 loading={loading || isLoading}
               >
-                Done
+                Xác nhận kế hoạch
               </Button>
             )}
           </Flex>

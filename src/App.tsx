@@ -145,7 +145,7 @@ const App: React.FC = () => {
                   name: "dashboard",
                   list: "/",
                   meta: {
-                    label: "Dashboard",
+                    label: "Bảng điều khiển",
                     icon: <DashboardOutlined />,
                   },
                 },

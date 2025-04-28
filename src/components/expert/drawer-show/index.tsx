@@ -57,7 +57,7 @@ export const ExpertDrawerShow = (props: Props) => {
     resource: "experts",
     id: props?.id,
   });
-  const expert = queryResult?.data?.data?.[0];
+  const expert = queryResult?.data?.data;
 
   const handleDrawerClose = () => {
     if (props?.onClose) {

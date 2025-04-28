@@ -10,7 +10,7 @@ import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd"
 import { Avatar, Button, Input, InputNumber, Select, Table, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FarmerStatusTag } from "@/components/farmer";
 import { useTranslation } from "react-i18next";
@@ -54,6 +54,7 @@ export const InspectorListTable: React.FC = () => {
     },
   });
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <Table
       {...tableProps}
@@ -63,15 +64,20 @@ export const InspectorListTable: React.FC = () => {
         ...tableProps.pagination,
         showTotal: (total) => <PaginationTotal total={total} entityName={t("inspectors.title")} />,
       }}
+      onRow={(record) => ({
+        onClick: () => {
+          if (record.id) {
+            navigate(`/inspectors/${record.id}`);
+          }
+        },
+      })}
+      rowHoverable
     >
       <Table.Column
         title="ID"
         dataIndex="id"
         key="id"
         width="auto"
-        render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>#{value}</Typography.Text>
-        )}
         filterIcon={(filtered) => (
           <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
@@ -85,6 +91,7 @@ export const InspectorListTable: React.FC = () => {
             />
           </FilterDropdown>
         )}
+        render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
       />
 
       <Table.Column
@@ -179,30 +186,6 @@ export const InspectorListTable: React.FC = () => {
             <TextField value={t("inspectors.not_updated")} />
           )
         }
-      />
-
-      <Table.Column
-        title={t("inspectors.actions")}
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: any) => (
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => {
-              go({
-                to: `/inspectors/${record.id}`,
-                query: {
-                  to: pathname,
-                },
-                options: {
-                  keepQuery: true,
-                },
-                type: "replace",
-              });
-            }}
-          />
-        )}
       />
     </Table>
   );

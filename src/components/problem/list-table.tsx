@@ -36,11 +36,11 @@ export const ProblemListTable = ({
       <Typography.Title level={3}>Danh sách vấn đề</Typography.Title>
       <Table
         onRow={(row) => ({
-          className: "hover-attribute",
           onClick: () => {
             navigate(`/problems/${row.id}`);
           },
         })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}

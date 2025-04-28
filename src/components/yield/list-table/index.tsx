@@ -43,11 +43,11 @@ export const YieldListTable: React.FC = () => {
     <>
       <Table
         onRow={(row) => ({
-          className: "hover-attribute",
           onClick: () => {
             navigate(`/yield/${row.id}`);
           },
         })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: true }}

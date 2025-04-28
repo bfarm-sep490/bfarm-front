@@ -52,6 +52,12 @@ export const PesticidesListTable: React.FC = () => {
             <PaginationTotal total={total} entityName="pesticides" />
           ),
         }}
+        onRow={(record) => ({
+          onClick: () => {
+            setSelectedPesticideId(record?.id ? String(record.id) : undefined);
+          },
+        })}
+        rowHoverable
       >
         <Table.Column
           title={t("pesticides.fields.id")}
@@ -71,11 +77,7 @@ export const PesticidesListTable: React.FC = () => {
               placeholder={t("pesticides.fields.searchById")}
             />
           )}
-          render={(value) => (
-            <Typography.Text style={{ fontWeight: "bold" }}>
-              #{value}
-            </Typography.Text>
-          )}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
 
         <Table.Column
@@ -157,19 +159,6 @@ export const PesticidesListTable: React.FC = () => {
           key="status"
           width={120}
           render={(value) => <PesticideStatusTag value={value} />}
-        />
-
-        <Table.Column
-          fixed="right"
-          title={t("pesticides.actions")}
-          key="actions"
-          align="center"
-          render={(_, record: IPesticide) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => setSelectedPesticideId(record.id.toString())}
-            />
-          )}
         />
       </Table>
 

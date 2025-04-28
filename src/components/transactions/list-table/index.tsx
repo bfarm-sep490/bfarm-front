@@ -34,7 +34,13 @@ export const TransactionListTable: React.FC = () => {
           pageSize: 10,
         }}
       >
-        <Table.Column title={"#ID"} dataIndex="id" key="id" width={80} />
+        <Table.Column
+          title={"#ID"}
+          dataIndex="id"
+          key="id"
+          width={80}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
+        />
 
         <Table.Column
           title={"ID Đơn hàng"}

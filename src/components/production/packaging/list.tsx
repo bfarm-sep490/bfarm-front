@@ -41,13 +41,13 @@ export const PackagedProductList = ({ children }: PropsWithChildren) => {
     <>
       <Table
         onRow={(record) => ({
-          className: "hover-attribute",
           onClick: () => {
             if (record.id) {
               navigate(`/packaging-products/${record.id}`);
             }
           },
         })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}

@@ -32,11 +32,11 @@ export const PlantsListTable: React.FC = () => {
     <>
       <Table
         onRow={(row) => ({
-          className: "hover-attribute",
           onClick: () => {
             navigate(`/plants/${row.id}`);
           },
         })}
+      rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}

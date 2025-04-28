@@ -54,6 +54,14 @@ export const FertilizersListTable: React.FC = () => {
             />
           ),
         }}
+        onRow={(record) => ({
+          onClick: () => {
+            if (record.id) {
+              setSelectedFertilizerId(record.id.toString());
+            }
+          },
+        })}
+        rowHoverable
       >
         <Table.Column
           title={t("fertilizers.fields.id")}
@@ -72,6 +80,7 @@ export const FertilizersListTable: React.FC = () => {
               placeholder={t("fertilizers.filters.id")}
             />
           )}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
 
         <Table.Column
@@ -151,19 +160,6 @@ export const FertilizersListTable: React.FC = () => {
           key="status"
           width={120}
           render={(value) => <FertilizerStatusTag value={value} />}
-        />
-
-        <Table.Column
-          title={t("fertilizers.actions")}
-          key="actions"
-          fixed="right"
-          align="center"
-          render={(_, record) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => setSelectedFertilizerId(record.id.toString())}
-            />
-          )}
         />
       </Table>
       {selectedFertilizerId && (

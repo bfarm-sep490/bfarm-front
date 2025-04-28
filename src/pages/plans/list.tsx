@@ -31,11 +31,11 @@ export const PlanList = () => {
     <List>
       <Table
         onRow={(row) => ({
-          className: "hover-attribute",
           onClick: () => {
             navigate(`/plans/${row.id}`);
           },
         })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}

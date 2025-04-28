@@ -26,7 +26,7 @@ import {
 } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { IExpert, IFertilizer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { ExpertStatusTag } from "../status";
@@ -71,7 +71,7 @@ export const ExpertListTable: React.FC = () => {
       ],
     },
   });
-
+  const navigate = useNavigate();
   return (
     <Table
       {...tableProps}
@@ -83,6 +83,14 @@ export const ExpertListTable: React.FC = () => {
           <PaginationTotal total={total} entityName="experts" />
         ),
       }}
+      onRow={(record) => ({
+        onClick: () => {
+          if (record.id) {
+            navigate(`/experts/${record.id}`);
+          }
+        },
+      })}
+      rowHoverable
     >
       <Table.Column
         title="ID"
@@ -104,11 +112,7 @@ export const ExpertListTable: React.FC = () => {
             />
           </FilterDropdown>
         )}
-        render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>
-            #{value}
-          </Typography.Text>
-        )}
+        render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
       />
 
       <Table.Column
@@ -221,29 +225,6 @@ export const ExpertListTable: React.FC = () => {
             <TextField value={t("experts.fields.not_updated")} />
           )
         }
-      />
-      <Table.Column
-        title={t("fertilizers.actions", "Hành động")}
-        key="actions"
-        fixed="right"
-        align="center"
-        render={(_, record: IExpert) => (
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => {
-              go({
-                to: `${showUrl("experts", record.id)}`,
-                query: {
-                  to: pathname,
-                },
-                options: {
-                  keepQuery: true,
-                },
-                type: "replace",
-              });
-            }}
-          />
-        )}
       />
     </Table>
   );

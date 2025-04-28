@@ -42,6 +42,14 @@ export const ItemsListTable: React.FC = () => {
   return (
     <>
       <Table
+        onRow={(record) => ({
+          onClick: () => {
+            if (record.id) {
+              setSelectedItemId(record.id.toString());
+            }
+          },
+        })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: true }}
@@ -69,6 +77,7 @@ export const ItemsListTable: React.FC = () => {
               placeholder={t("items.searchId")}
             />
           )}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
 
         <Table.Column
@@ -148,19 +157,6 @@ export const ItemsListTable: React.FC = () => {
           key="status"
           width={120}
           render={(value) => <ItemStatusTag value={value} />}
-        />
-
-        <Table.Column
-          title={t("items.actions")}
-          key="actions"
-          fixed="right"
-          align="center"
-          render={(_, record: IItem) => (
-            <Button
-              icon={<EyeOutlined />}
-              onClick={() => setSelectedItemId(record.id.toString())}
-            />
-          )}
         />
       </Table>
       {selectedItemId && (

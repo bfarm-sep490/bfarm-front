@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { DateField, useTable } from "@refinedev/antd";
 import { type HttpError, useTranslate } from "@refinedev/core";
-import { Table, theme } from "antd";
+import { Table, theme, Typography } from "antd";
 
 export const BactchListTable: React.FC = () => {
   const { token } = theme.useToken();
@@ -22,7 +22,13 @@ export const BactchListTable: React.FC = () => {
           pageSize: 10,
         }}
       >
-        <Table.Column title={"#ID"} dataIndex="id" key="id" width={80} />
+        <Table.Column
+          title={"#ID"}
+          dataIndex="id"
+          key="id"
+          width={80}
+          render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
+        />
 
         <Table.Column
           title={"ID sản phẩm"}

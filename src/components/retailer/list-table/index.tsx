@@ -41,13 +41,13 @@ export const RetailersListTable: React.FC = () => {
   return (
     <Table
       onRow={(record) => ({
-        className: "hover-attribute",
         onClick: () => {
           if (record.id) {
             navigate(`/retailers/${record.id}`);
           }
         },
       })}
+      rowHoverable
       {...tableProps}
       rowKey="id"
       scroll={{ x: true }}

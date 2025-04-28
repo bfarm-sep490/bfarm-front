@@ -24,13 +24,13 @@ export const OrderListTable: React.FC = () => {
   return (
     <Table
       onRow={(record) => ({
-        className: "hover-attribute",
         onClick: () => {
           if (record.id) {
             navigate(`/orders/${record.id}`);
           }
         },
       })}
+      rowHoverable
       {...tableProps}
       rowKey="id"
       scroll={{ x: "max-content" }}
@@ -55,6 +55,7 @@ export const OrderListTable: React.FC = () => {
             onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
           />
         )}
+        render={(value) => <TextField value={`#${value}`} />}
       />
 
       <Table.Column

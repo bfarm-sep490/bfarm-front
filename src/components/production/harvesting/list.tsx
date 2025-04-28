@@ -42,13 +42,13 @@ export const HarvestingProductList = ({ children }: PropsWithChildren) => {
     <>
       <Table
         onRow={(record) => ({
-          className: "hover-attribute",
           onClick: () => {
             if (record?.harvesting_task_id) {
               navigate(`/harvesting-products/${record?.harvesting_task_id}`);
             }
           },
         })}
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}

@@ -25,7 +25,7 @@ import {
 } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { IFarmer } from "@/interfaces";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { FarmerStatusTag } from "../status";
@@ -70,7 +70,7 @@ export const FarmerListTable: React.FC = () => {
     },
   });
   const translate = useTranslate();
-
+  const navigate = useNavigate();
   return (
     <Table
       {...tableProps}
@@ -82,17 +82,21 @@ export const FarmerListTable: React.FC = () => {
           <PaginationTotal total={total} entityName="farmers" />
         ),
       }}
+      onRow={(record) => ({
+        onClick: () => {
+          if (record.id) {
+            navigate(`/farmers/${record.id}`);
+          }
+        },
+      })}
+      rowHoverable
     >
       <Table.Column
         title="ID"
         dataIndex="id"
         key="id"
         width={"auto"}
-        render={(value) => (
-          <Typography.Text style={{ fontWeight: "bold" }}>
-            #{value}
-          </Typography.Text>
-        )}
+        render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         filterIcon={(filtered) => (
           <SearchOutlined
             style={{

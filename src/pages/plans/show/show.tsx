@@ -1,4 +1,20 @@
-import { Image, Card, Typography, Space, Tag, Flex, Divider, Row, Col, Grid, Button } from "antd";
+import {
+  Image,
+  Card,
+  Typography,
+  Space,
+  Tag,
+  Flex,
+  Divider,
+  Row,
+  Col,
+  Grid,
+  Button,
+  theme,
+  Anchor,
+  Spin,
+  Alert,
+} from "antd";
 import {
   EnvironmentOutlined,
   UserOutlined,
@@ -6,22 +22,23 @@ import {
   BranchesOutlined,
   AuditOutlined,
   GiftOutlined,
-  ArrowLeftOutlined,
   GoldOutlined,
   GroupOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
   EditOutlined,
-  SnippetsOutlined,
+  DashboardOutlined,
+  BarChartOutlined,
+  ShoppingOutlined,
+  ArrowDownOutlined,
 } from "@ant-design/icons";
-import { DateField, ShowButton, TextField } from "@refinedev/antd";
-import { HttpError, useBack, useList, useOne } from "@refinedev/core";
-import { useNavigate, useParams } from "react-router";
+import { DateField, Show } from "@refinedev/antd";
+import { HttpError, useList, useOne, useGo } from "@refinedev/core";
+import { useParams } from "react-router";
 import React, { PropsWithChildren } from "react";
-import { IProblem } from "@/interfaces";
+
+import { IOrder, IPlan, IProblem } from "@/interfaces";
 import { StatusTag } from "@/components/caring-task/status-tag";
-import { DropDownSection } from "@/components/section/drop-down-section";
-import { ActivityCard } from "@/components/card/card-activity";
 import { ProblemsDashBoard } from "@/components/plan/detail/dashboard-problems";
 import { ScheduleComponent } from "@/components/plan/detail/scheduler";
 import { StatusModal } from "@/components/plan/detail/completd-modal";
@@ -29,8 +46,7 @@ import { ChosenFarmerDashBoard } from "@/components/plan/detail/dashboard-farmer
 import HarvestingProductDashBoard from "@/components/plan/detail/dashboard-harvest-product";
 import PackagingProductDashBoard from "@/components/plan/detail/dashboard-packaging-products";
 import { OrdersListTable } from "@/components/plan/detail/orders-list-table";
-import { QRCodeModal } from "@/components/plan/qrcode-modal";
-import "./index.css";
+
 interface IGeneralPlan {
   plan_id: number;
   plan_name: string;
@@ -59,11 +75,12 @@ interface IGeneralPlan {
 }
 
 export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
-  const [qrCodeModal, setQRCodeModal] = React.useState(false);
+  const { token } = theme.useToken();
+  const go = useGo();
   const { id } = useParams();
-  const back = useBack();
   const [completedModal, setCompletedModal] = React.useState(false);
   const [valueModal, setValueModal] = React.useState("");
+  const tasksRef = React.useRef<HTMLDivElement>(null);
   const {
     data: generalData,
     isLoading: generalLoading,
@@ -172,7 +189,6 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const packaging_task_dashboard = taskDashBoardData?.data?.packaging_tasks;
   const general_info = generalData?.data;
 
-  const navigate = useNavigate();
   const {
     data: packagingProductsData,
     isLoading: packagingProductsLoading,
@@ -218,7 +234,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     isLoading: orderLoading,
     refetch: orderRetch,
     isFetching: orderFetching,
-  } = useList<any, HttpError>({
+  } = useList<IOrder, HttpError>({
     resource: `orders`,
     filters: [
       {
@@ -233,50 +249,109 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
     isLoading: planLoading,
     isFetching: planFetching,
     refetch: planRefetch,
-  } = useOne<any, HttpError>({
+  } = useOne<IPlan, HttpError>({
     resource: `plans`,
     id: `${id}`,
   });
   const orders = orderData?.data as any[];
   const breakpoint = Grid.useBreakpoint();
+
+  const handleScrollToTasks = () => {
+    tasksRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div>
-      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
-        <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
-      </Button>
-      <div>
-        <Row gutter={[16, 16]} justify="center">
-          <Col xs={24} md={12} lg={12} xl={12}>
-            <Typography.Title level={3}>📋 Thông tin kế hoạch</Typography.Title>
-          </Col>
-          <Col xs={24} md={12} lg={12} xl={12}>
-            <Flex justify="end">
-              {general_info?.status === "Draft" && (
-                <Space>
-                  <Button
-                    color="danger"
-                    variant="solid"
-                    onClick={() => {
-                      setValueModal("Cancel");
-                      setCompletedModal(true);
-                    }}
-                    icon={<CloseCircleOutlined />}
-                  >
-                    Xóa kế hoạch
-                  </Button>
-                  <Button
-                    color="primary"
-                    variant="solid"
-                    onClick={() => {
-                      setValueModal("Pending");
-                      setCompletedModal(true);
-                    }}
-                    icon={<EditOutlined />}
-                  >
-                    Xác nhận
-                  </Button>
-                </Space>
+    <Show title="Chi tiết kế hoạch" canEdit={false} breadcrumb={false}>
+      <Anchor
+        direction="horizontal"
+        offsetTop={67}
+        targetOffset={120}
+        style={{
+          marginBottom: "24px",
+          backgroundColor: token.colorBgContainer,
+          padding: "12px 0",
+          borderRadius: token.borderRadius,
+        }}
+        items={[
+          {
+            key: "overview",
+            href: "#overview",
+            title: (
+              <Space>
+                <DashboardOutlined />
+                <span>Tổng quan</span>
+              </Space>
+            ),
+          },
+          {
+            key: "dashboard",
+            href: "#dashboard",
+            title: (
+              <Space>
+                <BarChartOutlined />
+                <span>Bảng điều khiển</span>
+              </Space>
+            ),
+          },
+          {
+            key: "orders",
+            href: "#orders",
+            title: (
+              <Space>
+                <ShoppingOutlined />
+                <span>Đơn hàng & Vấn đề</span>
+              </Space>
+            ),
+          },
+          {
+            key: "tasks",
+            href: "#tasks",
+            title: (
+              <Space>
+                <CalendarOutlined />
+                <span>Công việc</span>
+              </Space>
+            ),
+          },
+        ]}
+      />
+      {general_info?.status === "Draft" && (
+        <Alert
+          message={
+            <Flex justify="space-between" align="center">
+              <Space>
+                <UserOutlined />
+                <span>
+                  {chosenfarmerData?.data?.length === 0
+                    ? "Vui lòng thêm nông dân vào kế hoạch trước khi xác nhận"
+                    : "Hãy chắc chắn đã thêm đủ nông dân vào kế hoạch trước khi xác nhận"}
+                </span>
+              </Space>
+              {chosenfarmerData?.data?.length === 0 && (
+                <Button type="link" icon={<ArrowDownOutlined />} onClick={handleScrollToTasks}>
+                  Đi đến phần công việc
+                </Button>
               )}
+            </Flex>
+          }
+          type="warning"
+          showIcon
+          style={{
+            marginBottom: 24,
+            borderRadius: token.borderRadius,
+          }}
+        />
+      )}
+
+      <div>
+        <Row gutter={[16, 16]} justify="space-between" align="middle">
+          <Col>
+            <Typography.Title level={3} style={{ margin: 0 }}>
+              📋 {general_info?.plan_name || "Thông tin kế hoạch"}
+            </Typography.Title>
+          </Col>
+          <Col>
+            <Flex justify="end" gap={8}>
               {general_info?.status === "Pending" && (
                 <Space>
                   <Button
@@ -294,7 +369,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     color="primary"
                     variant="solid"
                     onClick={() => {
-                      navigate(`/plans/${id}/approve`);
+                      go({
+                        to: `/plans/${id}/approve`,
+                        type: "push",
+                      });
                     }}
                     icon={<EditOutlined />}
                   >
@@ -320,304 +398,500 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
             </Flex>
           </Col>
         </Row>
-        <Divider />
-        <Flex gap={16} vertical={!breakpoint.sm ? true : false}>
-          <Card
-            title={
-              <Flex vertical={false} gap={10} justify="space-between" align="center">
-                <Typography.Title level={5}> Thông tin chung</Typography.Title>
-                <StatusTag status={general_info?.status || "Default"} />
-              </Flex>
-            }
-            className="card"
-            loading={generalLoading}
-            style={{ width: !breakpoint.sm ? "100%" : "50%" }}
-          >
-            <Flex gap={breakpoint.md ? 30 : 16}>
-              <Flex vertical={true} gap={10} style={{ flex: 1 }}>
-                <Typography.Title level={4} style={{ textAlign: "center" }}>
-                  🌱 {general_info?.plan_name || "Chưa xác định"}
-                </Typography.Title>
-                {(general_info?.status === "Ongoing" || general_info?.status === "Complete") && (
-                  <Button type="primary" variant="filled" onClick={() => setQRCodeModal(true)}>
-                    QR Code
-                  </Button>
-                )}
-                <Flex justify="center" align="center">
+
+        <Divider style={{ margin: "16px 0" }} />
+
+        <Spin spinning={generalLoading || generalFetching}>
+          <Flex gap={16} vertical={!breakpoint.sm}>
+            <Card
+              id="overview"
+              title={
+                <Flex vertical={false} gap={10} justify="space-between" align="center">
+                  <Typography.Title level={5} style={{ margin: 0 }}>
+                    Tổng quan
+                  </Typography.Title>
+                  <StatusTag status={general_info?.status || "Default"} />
+                </Flex>
+              }
+              style={{
+                width: !breakpoint.sm ? "100%" : "50%",
+                borderRadius: token.borderRadiusLG,
+              }}
+            >
+              <Flex gap={24} vertical>
+                <Flex
+                  gap={24}
+                  align="center"
+                  vertical={!breakpoint.sm}
+                  style={{
+                    width: "100%",
+                    textAlign: !breakpoint.sm ? "center" : "left",
+                  }}
+                >
                   <Image
-                    className="card"
-                    style={{ borderRadius: 10, border: "1px solid #ddd" }}
-                    width={300}
-                    height={300}
+                    style={{
+                      borderRadius: token.borderRadius,
+                      border: `1px solid ${token.colorBorder}`,
+                      objectFit: "cover",
+                      minWidth: !breakpoint.sm ? "100%" : "120px",
+                      maxWidth: !breakpoint.sm ? "100%" : "120px",
+                      height: !breakpoint.sm ? "auto" : "120px",
+                      aspectRatio: "1/1",
+                    }}
                     src={general_info?.plant_information?.plant_image}
                   />
-                </Flex>
-                <Flex
-                  gap={breakpoint.sm || breakpoint.md ? 48 : 10}
-                  vertical={!breakpoint.sm || !breakpoint?.md || !breakpoint?.lg ? true : false}
-                >
-                  <Flex vertical={true} gap={5}>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <EnvironmentOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Thời gian:</Typography.Text>
-                      <Typography.Text>
-                        {general_info?.start_date ? (
-                          <DateField value={general_info?.start_date} />
-                        ) : (
-                          "Chưa xác định"
-                        )}{" "}
-                        -
-                        {general_info?.end_date ? (
-                          <DateField value={general_info?.end_date} />
-                        ) : (
-                          "Chưa xác định"
-                        )}
-                      </Typography.Text>
-                    </Space>
-
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <UserOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Cây trồng:</Typography.Text>
-                      <Typography.Text>
-                        {general_info?.plant_information?.plant_name || "Chưa xác định"}
-                      </Typography.Text>
-                    </Space>
-
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <GoldOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Khu đất</Typography.Text>
-                      <Typography.Text>
-                        <Tag>{general_info?.yield_information?.yield_name || "Chưa xác định"}</Tag>
-                      </Typography.Text>
-                    </Space>
-                  </Flex>
-                  <Flex vertical={true} gap={10}>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <GroupOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Chuyên gia:</Typography.Text>
-                      <Typography.Text>
-                        {general_info?.expert_information.expert_name}
-                      </Typography.Text>
-                    </Space>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <CalendarOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Ngày tạo:</Typography.Text>
-                      <Typography.Text type="secondary">
-                        {general_info?.created_at ? (
-                          <DateField value={general_info?.created_at} format="hh:mm DD/MM/YYYY" />
-                        ) : (
-                          <Typography.Text type="danger">Chưa xác định</Typography.Text>
-                        )}
-                      </Typography.Text>
-                    </Space>
-                    <Space align="start" style={{ marginTop: 12 }}>
-                      <GroupOutlined style={{ fontSize: 16 }} />
-                      <Typography.Text strong>Sản lượng dự kiến:</Typography.Text>
-                      <Typography.Text>
-                        {general_info?.estimated_product || "Không có"}{" "}
-                        {general_info?.estimated_unit || "Không có"}
-                      </Typography.Text>
-                    </Space>
-                  </Flex>
-                </Flex>
-                <Flex style={{ width: "100%" }}>
-                  <Space align="start" style={{ marginTop: 12 }}>
-                    <SnippetsOutlined style={{ fontSize: 16 }} />
-                    <Typography.Text strong>Mô tả</Typography.Text>
-                    <Typography.Paragraph>
+                  <Flex vertical gap={8} style={{ width: "100%" }}>
+                    <Typography.Title level={4} style={{ margin: 0 }}>
+                      🌱 {general_info?.plan_name || "Chưa xác định"}
+                    </Typography.Title>
+                    <Typography.Text type="secondary">
                       {general_info?.description || "Không có mô tả"}
-                    </Typography.Paragraph>
-                  </Space>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Card>
-          <Flex vertical style={{ width: !breakpoint.sm ? "100%" : "50%" }} gap={16}>
-            <Card
-              className="card"
-              loading={
-                generalLoading ||
-                generalFetching ||
-                packagingProductFetching ||
-                packagingTypeFetching ||
-                packagingProductsLoading ||
-                packagingTypesLoading ||
-                orderFetching ||
-                orderLoading
-              }
-            >
-              <Flex gap={44} justify="space-between" align="center">
-                <Flex
-                  style={{
-                    height: 180,
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    width: "33%",
-                  }}
-                >
-                  <Flex style={{ justifyContent: "center" }} gap={10}>
-                    <Typography.Title level={5}>Sản lượng (kg)</Typography.Title>
-                  </Flex>
-                  <Flex
-                    style={{
-                      flex: 1,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <HarvestingProductDashBoard
-                      quantity_available_harvesting_products={
-                        harvesting_products
-                          ?.map((x) => x?.available_harvesting_quantity)
-                          ?.reduce((acc, curr) => acc + curr, 0) || 0
-                      }
-                      total_harvesting_products={general_info?.estimated_product || 0}
-                    />
+                    </Typography.Text>
                   </Flex>
                 </Flex>
-                <Flex
-                  style={{
-                    height: 180,
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    width: "33%",
-                  }}
-                >
-                  <Flex style={{ justifyContent: "center" }} gap={10}>
-                    <Typography.Title level={5}>Thành phẩm</Typography.Title>
-                  </Flex>
-                  <Flex
-                    style={{
-                      flex: 1,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <PackagingProductDashBoard
-                      packaging_products={packagingProductsData?.data || []}
-                      orders={orderData?.data || []}
-                      packaging_types={packagingTypesData?.data || []}
-                    />
-                  </Flex>
-                </Flex>
+
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <UserOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          Cây trồng
+                        </Typography.Text>
+                        <Typography.Text>
+                          {general_info?.plant_information?.plant_name || "Chưa xác định"}
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <GoldOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          Khu đất
+                        </Typography.Text>
+                        <Typography.Text>
+                          <Tag color="blue">
+                            {general_info?.yield_information?.yield_name || "Chưa xác định"}
+                          </Tag>
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <EnvironmentOutlined
+                            style={{ marginRight: 8, color: token.colorPrimary }}
+                          />
+                          Thời gian thực hiện
+                        </Typography.Text>
+                        <Typography.Text>
+                          {general_info?.start_date ? (
+                            <DateField value={general_info?.start_date} />
+                          ) : (
+                            "Chưa xác định"
+                          )}{" "}
+                          -{" "}
+                          {general_info?.end_date ? (
+                            <DateField value={general_info?.end_date} />
+                          ) : (
+                            "Chưa xác định"
+                          )}
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <CalendarOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          Ngày tạo
+                        </Typography.Text>
+                        <Typography.Text>
+                          {general_info?.created_at ? (
+                            <DateField value={general_info?.created_at} format="DD/MM/YYYY HH:mm" />
+                          ) : (
+                            "Chưa xác định"
+                          )}
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <GiftOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          Sản lượng dự kiến
+                        </Typography.Text>
+                        <Typography.Text>
+                          {general_info?.estimated_product || "0"}{" "}
+                          {general_info?.estimated_unit || "kg"}
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                  <Col xs={24} sm={12}>
+                    <Card
+                      size="small"
+                      style={{
+                        background: token.colorBgContainer,
+                        border: `1px solid ${token.colorBorder}`,
+                      }}
+                    >
+                      <Flex gap={8} vertical>
+                        <Typography.Text strong>
+                          <GroupOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          Chuyên gia phụ trách
+                        </Typography.Text>
+                        <Typography.Text>
+                          {general_info?.expert_information?.expert_name || "Chưa xác định"}
+                        </Typography.Text>
+                      </Flex>
+                    </Card>
+                  </Col>
+                </Row>
               </Flex>
             </Card>
-            <ChosenFarmerDashBoard
-              className="card"
-              status={general_info?.status}
-              style={{ width: "100%" }}
-              chosenFarmer={(chosenfarmerData?.data as []) ?? []}
-              caring_task={(caringData?.data as []) ?? []}
-              harvesting_task={(harvestData?.data as []) ?? []}
-              packaging_task={(packingData?.data as []) ?? []}
-              loading={
-                chosenFarmerLoading ||
-                caringLoading ||
-                harvestLoading ||
-                packingLoading ||
-                caringFetching ||
-                harvestingFetching ||
-                packagingFetching
-              }
-              refetch={chosenFarmerRefetch}
-            />
+            <Flex vertical style={{ width: !breakpoint.sm ? "100%" : "50%" }} gap={16}>
+              <Card
+                id="dashboard"
+                loading={
+                  generalLoading ||
+                  generalFetching ||
+                  packagingProductFetching ||
+                  packagingTypeFetching ||
+                  packagingProductsLoading ||
+                  packagingTypesLoading ||
+                  orderFetching ||
+                  orderLoading
+                }
+                style={{
+                  borderRadius: token.borderRadiusLG,
+                }}
+              >
+                <Flex gap={44} justify="space-between" align="center">
+                  <Flex
+                    style={{
+                      height: 180,
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      width: "33%",
+                    }}
+                  >
+                    <Flex style={{ justifyContent: "center" }} gap={10}>
+                      <Typography.Title level={5} style={{ margin: 0 }}>
+                        Sản lượng (kg)
+                      </Typography.Title>
+                    </Flex>
+                    <Flex
+                      style={{
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <HarvestingProductDashBoard
+                        quantity_available_harvesting_products={
+                          harvesting_products
+                            ?.map((x) => x?.available_harvesting_quantity)
+                            ?.reduce((acc, curr) => acc + curr, 0) || 0
+                        }
+                        total_harvesting_products={general_info?.estimated_product || 0}
+                      />
+                    </Flex>
+                  </Flex>
+                  <Flex
+                    style={{
+                      height: 180,
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      width: "33%",
+                    }}
+                  >
+                    <Flex style={{ justifyContent: "center" }} gap={10}>
+                      <Typography.Title level={5} style={{ margin: 0 }}>
+                        Thành phẩm
+                      </Typography.Title>
+                    </Flex>
+                    <Flex
+                      style={{
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <PackagingProductDashBoard
+                        packaging_products={packagingProductsData?.data || []}
+                        orders={orderData?.data || []}
+                        packaging_types={packagingTypesData?.data || []}
+                      />
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Card>
+
+              <Row gutter={[16, 16]} style={{ height: !breakpoint.sm ? "auto" : "120px" }}>
+                <Col xs={24} sm={12}>
+                  <Card
+                    size="small"
+                    style={{
+                      borderRadius: token.borderRadiusLG,
+                      height: !breakpoint.sm ? "auto" : "100%",
+                    }}
+                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                  >
+                    <Flex
+                      vertical
+                      justify="space-between"
+                      style={{ height: !breakpoint.sm ? "auto" : "100%" }}
+                    >
+                      <Flex justify="space-between" align="center">
+                        <Typography.Text strong>
+                          <BranchesOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
+                          Chăm sóc
+                        </Typography.Text>
+                      </Flex>
+                      <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                      >
+                        <Typography.Title level={2} style={{ margin: 0 }}>
+                          {caring_task_dashboard?.complete_quantity || 0}/
+                          {caringData?.data?.length || 0}
+                        </Typography.Title>
+                      </Flex>
+                      <Typography.Text type="secondary">
+                        Lần cuối:{" "}
+                        {new Date(caring_task_dashboard?.last_create_date).toLocaleDateString()}
+                      </Typography.Text>
+                    </Flex>
+                  </Card>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Card
+                    size="small"
+                    style={{
+                      borderRadius: token.borderRadiusLG,
+
+                      height: !breakpoint.sm ? "auto" : "100%",
+                    }}
+                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                  >
+                    <Flex
+                      vertical
+                      justify="space-between"
+                      style={{ height: !breakpoint.sm ? "auto" : "100%" }}
+                    >
+                      <Flex justify="space-between" align="center">
+                        <Typography.Text strong>
+                          <AuditOutlined style={{ marginRight: 8, color: token.colorWarning }} />
+                          Kiểm định
+                        </Typography.Text>
+                      </Flex>
+                      <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                      >
+                        <Typography.Title level={2} style={{ margin: 0 }}>
+                          {inspecting_task_dashboard?.filter((x) => x.status === "Complete")
+                            ?.length || 0}
+                          /{inspectingTaskData?.data?.length || 0}
+                        </Typography.Title>
+                      </Flex>
+                      <Typography.Text type="secondary">Lần cuối: 13/12/2025</Typography.Text>
+                    </Flex>
+                  </Card>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Card
+                    size="small"
+                    style={{
+                      borderRadius: token.borderRadiusLG,
+
+                      height: !breakpoint.sm ? "auto" : "100%",
+                    }}
+                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                  >
+                    <Flex
+                      vertical
+                      justify="space-between"
+                      style={{ height: !breakpoint.sm ? "auto" : "100%" }}
+                    >
+                      <Flex justify="space-between" align="center">
+                        <Typography.Text strong>
+                          <GiftOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
+                          Thu hoạch
+                        </Typography.Text>
+                      </Flex>
+                      <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                      >
+                        <Typography.Title level={2} style={{ margin: 0 }}>
+                          {havesting_task_dashboard?.complete_quantity || 0}/
+                          {harvestData?.data?.length || 0}
+                        </Typography.Title>
+                      </Flex>
+                      <Typography.Text type="secondary">
+                        Lần cuối: {new Date().toLocaleDateString()}
+                      </Typography.Text>
+                    </Flex>
+                  </Card>
+                </Col>
+                <Col xs={24} sm={12}>
+                  <Card
+                    size="small"
+                    style={{
+                      borderRadius: token.borderRadiusLG,
+
+                      height: !breakpoint.sm ? "auto" : "100%",
+                    }}
+                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                  >
+                    <Flex
+                      vertical
+                      justify="space-between"
+                      style={{ height: !breakpoint.sm ? "auto" : "100%" }}
+                    >
+                      <Flex justify="space-between" align="center">
+                        <Typography.Text strong>
+                          <AuditOutlined style={{ marginRight: 8, color: token.colorWarning }} />
+                          Đóng gói
+                        </Typography.Text>
+                      </Flex>
+                      <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                      >
+                        <Typography.Title level={2} style={{ margin: 0 }}>
+                          {packaging_task_dashboard?.complete_quantity || 0}/
+                          {packingData?.data?.length || 0}
+                        </Typography.Title>
+                      </Flex>
+                      <Typography.Text type="secondary">
+                        Lần cuối:{" "}
+                        {new Date(packaging_task_dashboard?.last_create_date).toLocaleDateString()}
+                      </Typography.Text>
+                    </Flex>
+                  </Card>
+                </Col>
+              </Row>
+            </Flex>
           </Flex>
-        </Flex>
-        <OrdersListTable className="card" orders={orders} orderLoading={orderLoading} />
-        <Divider />
-        <DropDownSection title="Công việc">
-          <Flex gap={16} vertical={true}>
-            <Flex gap={16} vertical={!breakpoint.sm ? true : false}>
-              <ProblemsDashBoard
-                className="card"
-                style={{ width: breakpoint?.sm ? "50%" : "100%" }}
-                loading={problemsLoading || problemFetching}
-                refetch={problemRefetch}
-                data={problemsData?.data || []}
+        </Spin>
+        <div id="orders">
+          <Card
+            style={{
+              borderRadius: token.borderRadiusLG,
+              marginBottom: 24,
+              marginTop: 24,
+            }}
+          >
+            <Flex vertical gap={24}>
+              <Flex justify="space-between" align="center">
+                <Typography.Title level={4} style={{ margin: 0 }}>
+                  Đơn hàng & Vấn đề
+                </Typography.Title>
+                <Space>
+                  <Tag color="blue">{orders?.length || 0} đơn hàng</Tag>
+                  <Tag color="red">{problemsData?.data?.length || 0} vấn đề</Tag>
+                </Space>
+              </Flex>
+
+              <Row gutter={[24, 24]} style={{ height: "100%" }}>
+                <Col xs={24} lg={12} style={{ height: "100%" }}>
+                  <OrdersListTable orders={orders} orderLoading={orderLoading} />
+                </Col>
+                <Col xs={24} lg={12} style={{ height: "100%" }}>
+                  <ProblemsDashBoard
+                    loading={problemsLoading || problemFetching}
+                    refetch={problemRefetch}
+                    data={problemsData?.data || []}
+                  />
+                </Col>
+              </Row>
+            </Flex>
+          </Card>
+        </div>
+        <Divider style={{ margin: "24px 0" }} />
+        <div id="tasks" ref={tasksRef}>
+          <Card
+            style={{
+              borderRadius: token.borderRadiusLG,
+
+              marginBottom: 24,
+            }}
+          >
+            <Flex vertical gap={24}>
+              <Typography.Title level={4} style={{ margin: 0 }}>
+                Công việc
+              </Typography.Title>
+
+              <ChosenFarmerDashBoard
+                status={general_info?.status}
+                chosenFarmer={(chosenfarmerData?.data as []) ?? []}
+                caring_task={(caringData?.data as []) ?? []}
+                harvesting_task={(harvestData?.data as []) ?? []}
+                packaging_task={(packingData?.data as []) ?? []}
+                loading={
+                  chosenFarmerLoading ||
+                  caringLoading ||
+                  harvestLoading ||
+                  packingLoading ||
+                  caringFetching ||
+                  harvestingFetching ||
+                  packagingFetching
+                }
+                refetch={chosenFarmerRefetch}
               />
 
-              <Flex style={{ width: breakpoint?.sm ? "50%" : "100%" }} gap={16} vertical={true}>
-                <Flex style={{ width: "100%" }} gap={16} vertical={!breakpoint.sm ? true : false}>
-                  <ActivityCard
-                    className="card"
-                    style={{ width: "100%" }}
-                    icon={<BranchesOutlined style={{ color: "#52c41a" }} />}
-                    completedTasks={caring_task_dashboard?.complete_quantity || 0}
-                    title="Chăm sóc"
-                    loading={isTaskDashboardLoading}
-                    totalActivity={
-                      caring_task_dashboard?.cancel_quantity +
-                        caring_task_dashboard?.complete_quantity +
-                        caring_task_dashboard?.incomplete_quantity +
-                        caring_task_dashboard?.ongoing_quantity +
-                        caring_task_dashboard?.pending_quantity || 0
-                    }
-                    lastActivityDate={
-                      "Lần cuối: " +
-                      new Date(caring_task_dashboard?.last_create_date).toLocaleDateString()
-                    }
-                  />
-
-                  <ActivityCard
-                    className="card"
-                    style={{ width: "100%" }}
-                    loading={inspectingTaskLoading}
-                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                    completedTasks={
-                      inspecting_task_dashboard?.filter((x) => x.status === "Complete")?.length || 0
-                    }
-                    title="Kiểm định"
-                    totalActivity={inspecting_task_dashboard?.length || 0}
-                    lastActivityDate={"Lần cuối: 13/12/2025"}
-                  />
-                </Flex>
-                <Flex style={{ width: "100%" }} gap={16} vertical={!breakpoint.sm ? true : false}>
-                  <ActivityCard
-                    className="card"
-                    style={{ width: "100%" }}
-                    icon={<GiftOutlined style={{ color: "#52c41a" }} />}
-                    completedTasks={havesting_task_dashboard?.complete_quantity || 0}
-                    loading={isTaskDashboardLoading}
-                    title="Thu hoạch"
-                    totalActivity={
-                      havesting_task_dashboard?.cancel_quantity +
-                        havesting_task_dashboard?.complete_quantity +
-                        havesting_task_dashboard?.incomplete_quantity +
-                        havesting_task_dashboard?.ongoing_quantity +
-                        havesting_task_dashboard?.pending_quantity || 0
-                    }
-                    lastActivityDate={
-                      "Lần cuối: " +
-                      new Date(havesting_task_dashboard?.last_create_date).toLocaleDateString()
-                    }
-                  />
-
-                  <ActivityCard
-                    className="card"
-                    style={{ width: "100%" }}
-                    icon={<AuditOutlined style={{ color: "#fa8c16" }} />}
-                    completedTasks={packaging_task_dashboard?.complete_quantity || 0}
-                    loading={isTaskDashboardLoading}
-                    totalActivity={
-                      packaging_task_dashboard?.cancel_quantity +
-                        packaging_task_dashboard?.complete_quantity +
-                        packaging_task_dashboard?.incomplete_quantity +
-                        packaging_task_dashboard?.ongoing_quantity +
-                        packaging_task_dashboard?.pending_quantity || 0
-                    }
-                    title="Đóng gói"
-                    lastActivityDate={
-                      "Lần cuối: " +
-                      new Date(packaging_task_dashboard?.last_create_date).toLocaleDateString()
-                    }
-                  />
-                </Flex>
-              </Flex>
+              <ScheduleComponent status={general_info?.status} />
             </Flex>
-
-            <ScheduleComponent className="card" status={general_info?.status} />
-          </Flex>
-        </DropDownSection>
+          </Card>
+        </div>
       </div>
       <StatusModal
         visible={completedModal}
@@ -639,22 +913,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           problemRefetch();
         }}
       />
-      <QRCodeModal
-        orders={(orders as []) ?? []}
-        address={planData?.data?.contract_address}
-        visible={qrCodeModal}
-        onClose={() => setQRCodeModal(false)}
-      />
-      {children}{" "}
-    </div>
+      {children}
+    </Show>
   );
 };
-
-export interface IDashbobardTask {
-  ongoing_quantity: number;
-  complete_quantity: number;
-  pending_quantity: number;
-  incomplete_quantity: number;
-  cancel_quantity: number;
-  last_create_date: Date;
-}

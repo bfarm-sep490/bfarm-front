@@ -1,17 +1,7 @@
-import React from "react";
-import { BaseRecord, useGo, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  ShowButton,
-  TagField,
-  DateField,
-  EditButton,
-  TextField,
-} from "@refinedev/antd";
-import { Table, Space } from "antd";
+import { useGo, useTranslate } from "@refinedev/core";
+import { useTable, List, TagField, DateField, TextField } from "@refinedev/antd";
+import { Table } from "antd";
 import { StatusTag } from "../../components/caring-task/status-tag";
-import { ScheduleComponent } from "@/components/scheduler";
 import "../../components/scheduler/index.css";
 import { useNavigate } from "react-router";
 export const PlanList = () => {
@@ -21,8 +11,14 @@ export const PlanList = () => {
     resource: "plans",
     syncWithLocation: true,
     queryOptions: {
-      staleTime: 1000 * 60,
-      cacheTime: 1000 * 60,
+      select: (data) => {
+        const filteredData = data.data.filter((item: any) => item.status !== "Draft");
+        return {
+          ...data,
+          data: filteredData,
+          total: filteredData.length,
+        };
+      },
     },
   });
   const go = useGo();
@@ -39,6 +35,10 @@ export const PlanList = () => {
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}
+        pagination={{
+          ...tableProps.pagination,
+          total: tableProps.dataSource?.length || 0,
+        }}
       >
         <Table.Column
           dataIndex="id"

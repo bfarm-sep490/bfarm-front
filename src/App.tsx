@@ -210,7 +210,6 @@ const App: React.FC = () => {
                 {
                   name: "plans",
                   list: "/plans",
-                  create: "/plans/create",
                   show: "/plans/:id",
                   meta: {
                     label: "Kế hoạch",

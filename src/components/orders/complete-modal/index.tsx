@@ -24,6 +24,7 @@ import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { usePayOS } from "@payos/payos-checkout";
+import { round } from "lodash";
 
 type OrderProduct = {
   id: number;
@@ -292,7 +293,7 @@ export const CompleteOrderModal = (props: Props) => {
     if (!formProps.form) return;
     setIsCheckoutLoading(true);
     formProps.form.setFieldsValue({
-      amount: amount - order?.deposit_price,
+      amount: round(amount - order?.deposit_price),
       orderId,
       description: selectedMethod === "cashPayment" ? "Thanh toán tiền mặt" : "Thanh toán qua QR",
       product: orderProducts.map((item) => ({

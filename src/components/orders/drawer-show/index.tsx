@@ -461,7 +461,7 @@ export const OrderDrawerShow = () => {
       >
         <Flex justify="end" align="center" style={{ marginBottom: 16 }}>
           <Button
-            disabled={order?.status !== "Complete"}
+            disabled={order?.status !== "Paid"}
             type="primary"
             onClick={() => setCreateBatchOpen(true)}
           >

@@ -88,9 +88,7 @@ type ScheduleComponentProps = {
 };
 export const ScheduleComponent = (props: ScheduleComponentProps) => {
   const [open, setOpen] = useState(false);
-  const [viewComponent, setViewComponent] = useState<"Schedule" | "List">(
-    "Schedule"
-  );
+  const [viewComponent, setViewComponent] = useState<"Schedule" | "List">("Schedule");
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -226,10 +224,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
           type: "Chăm sóc" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...harvestData.data.map((task) => ({
           id: task.id as number,
@@ -239,10 +235,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
           type: "Thu hoạch" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...packingData.data.map((task) => ({
           id: task.id as number,
@@ -252,10 +246,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
           type: "Đóng gói" as const,
           status: task.status as keyof typeof STATUS_COLOR_MAP,
           actor_id: task.farmer_id as number,
-          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.name,
-          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)
-            ?.avatar_image,
+          actor_name: farmers?.find((farmer) => farmer.id === task.farmer_id)?.name,
+          avatar: farmers?.find((farmer) => farmer.id === task.farmer_id)?.avatar_image,
         })),
         ...inspectionData.data.map((form) => ({
           id: form.id as number,
@@ -264,15 +256,10 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
           end: new Date(form.end_date),
           type: "Kiểm định" as const,
           status: form.status as keyof typeof STATUS_COLOR_MAP,
-          actor_id: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.id as number,
-          actor_name: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.name,
-          avatar: inspectors?.find(
-            (inspector) => inspector.id === form.inspector_id
-          )?.image_url,
+          actor_id: inspectors?.find((inspector) => inspector.id === form.inspector_id)
+            ?.id as number,
+          actor_name: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.name,
+          avatar: inspectors?.find((inspector) => inspector.id === form.inspector_id)?.image_url,
         })),
       ].filter((event) => event.id !== undefined);
 
@@ -338,20 +325,11 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
         </Flex>
       }
       loading={
-        isLoading ||
-        caringFetching ||
-        harvestingFetching ||
-        inspectingFetching ||
-        packagingFetching
+        isLoading || caringFetching || harvestingFetching || inspectingFetching || packagingFetching
       }
     >
       {props?.status !== "Pending" && (
-        <Flex
-          justify="end"
-          align="center"
-          gap={10}
-          style={{ marginBottom: 10 }}
-        >
+        <Flex justify="end" align="center" gap={10} style={{ marginBottom: 10 }}>
           <Button
             icon={<DiffOutlined />}
             type="default"
@@ -405,8 +383,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                 }
               }}
               events={events.map((event) => {
-                const statusColor =
-                  STATUS_COLOR_MAP[event.status] || STATUS_COLOR_MAP.default;
+                const statusColor = STATUS_COLOR_MAP[event.status] || STATUS_COLOR_MAP.default;
 
                 return {
                   title: (
@@ -419,17 +396,12 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                         padding: "0 4px",
                       }}
                     >
-                      <Typography.Text
-                        strong
-                        style={{ color: statusColor.color }}
-                      >
+                      <Typography.Text strong style={{ color: statusColor.color }}>
                         {event.title}
                       </Typography.Text>
                       <Flex align="center" gap={8}>
                         {window.innerWidth > 768 && (
-                          <Typography.Text
-                            style={{ color: "gray", fontSize: 12 }}
-                          >
+                          <Typography.Text style={{ color: "gray", fontSize: 12 }}>
                             {event?.actor_name}
                           </Typography.Text>
                         )}
@@ -452,9 +424,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               style={{ height: 800 }}
               eventPropGetter={(event) => {
                 const statusColor =
-                  STATUS_COLOR_MAP[
-                    event.status as keyof typeof STATUS_COLOR_MAP
-                  ] || STATUS_COLOR_MAP.default;
+                  STATUS_COLOR_MAP[event.status as keyof typeof STATUS_COLOR_MAP] ||
+                  STATUS_COLOR_MAP.default;
 
                 return {
                   style: {
@@ -474,10 +445,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             tab={translate("caring_task.title", "Chăm sóc")}
             icon={
               <Badge
-                count={
-                  caringData?.data?.filter((x) => x?.status === "Pending")
-                    ?.length
-                }
+                count={caringData?.data?.filter((x) => x?.status === "Pending")?.length}
               ></Badge>
             }
             key="caring"
@@ -498,12 +466,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               <Table.Column
                 dataIndex="id"
                 title={translate("ID")}
-                render={(value) => (
-                  <TextField
-                    value={"#" + value}
-                    style={{ fontWeight: "bold" }}
-                  />
-                )}
+                render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
               />
               <Table.Column
                 dataIndex="task_name"
@@ -512,16 +475,12 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               <Table.Column
                 dataIndex="start_date"
                 title={translate("caring_task.start_date", "Ngày bắt đầu")}
-                render={(value) => (
-                  <DateField format="DD/MM/YYYY" value={value} />
-                )}
+                render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="end_date"
                 title={translate("caring_task.end_date", " Ngày kết thúc")}
-                render={(value) => (
-                  <DateField format="DD/MM/YYYY" value={value} />
-                )}
+                render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="task_type"
@@ -541,9 +500,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                     <TextField
                       value={
                         value
-                          ? record?.farmer_information?.find(
-                              (x: any) => x.farmer_id === value
-                            )?.farmer_name
+                          ? record?.farmer_information?.find((x: any) => x.farmer_id === value)
+                              ?.farmer_name
                           : "Không xác định được nông dân"
                       }
                     />
@@ -554,19 +512,13 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                 title={translate("caring_task.plan_name", "Tên kế hoạch")}
                 dataIndex="plan_name"
                 render={(value) => {
-                  return (
-                    <TextField
-                      value={value ? value : "Không xác định được kế hoạch"}
-                    />
-                  );
+                  return <TextField value={value ? value : "Không xác định được kế hoạch"} />;
                 }}
               />
               <Table.Column
                 title={translate("caring_task.create_at", "Ngày tạo")}
                 dataIndex="create_at"
-                render={(value) => (
-                  <DateField format="DD/MM/YYYY" value={value} />
-                )}
+                render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 title={translate("caring_task.update_at", "Ngày cập nhập")}
@@ -586,10 +538,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             key="inspecting"
             icon={
               <Badge
-                count={
-                  inspectionData?.data?.filter((x) => x?.status === "Pending")
-                    ?.length
-                }
+                count={inspectionData?.data?.filter((x) => x?.status === "Pending")?.length}
               ></Badge>
             }
           >
@@ -610,16 +559,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             >
               <Table.Column title="ID" dataIndex="id" key="id" width={80} />
 
-              <Table.Column
-                title="Tên kế hoạch"
-                dataIndex="plan_name"
-                key="plan_name"
-              />
-              <Table.Column
-                title="Tên công việc"
-                dataIndex="task_name"
-                key="task_name"
-              />
+              <Table.Column title="Tên kế hoạch" dataIndex="plan_name" key="plan_name" />
+              <Table.Column title="Tên công việc" dataIndex="task_name" key="task_name" />
 
               <Table.Column
                 title="Người kiểm tra"
@@ -630,18 +571,14 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                 title="Ngày bắt đầu"
                 dataIndex="start_date"
                 key="start_date"
-                render={(value: string) =>
-                  dayjs(value).format("DD/MM/YYYY HH:mm")
-                }
+                render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
               />
 
               <Table.Column
                 title="Ngày kết thúc"
                 dataIndex="end_date"
                 key="end_date"
-                render={(value: string) =>
-                  dayjs(value).format("DD/MM/YYYY HH:mm")
-                }
+                render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
               />
 
               <Table.Column
@@ -657,10 +594,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             key="harvest"
             icon={
               <Badge
-                count={
-                  harvestData?.data?.filter((x) => x?.status === "Pending")
-                    ?.length
-                }
+                count={harvestData?.data?.filter((x) => x?.status === "Pending")?.length}
               ></Badge>
             }
           >
@@ -682,12 +616,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               <Table.Column
                 dataIndex="id"
                 title={translate("ID")}
-                render={(value) => (
-                  <TextField
-                    value={"#" + value}
-                    style={{ fontWeight: "bold" }}
-                  />
-                )}
+                render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
               />
               <Table.Column
                 dataIndex="task_name"
@@ -695,33 +624,18 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               />
               <Table.Column
                 dataIndex="start_date"
-                title={translate(
-                  "harvesting_task.start_date",
-                  "Thời gian bắt đầu"
-                )}
-                render={(value) => (
-                  <DateField format="hh:mm DD/MM/YYYY" value={value} />
-                )}
+                title={translate("harvesting_task.start_date", "Thời gian bắt đầu")}
+                render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="end_date"
-                title={translate(
-                  "harvesting_task.end_date",
-                  "Thời gian kết thúc"
-                )}
-                render={(value) => (
-                  <DateField format="hh:mm DD/MM/YYYY" value={value} />
-                )}
+                title={translate("harvesting_task.end_date", "Thời gian kết thúc")}
+                render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="harvested_quantity"
-                title={translate(
-                  "harvesting_task.harvested_quantity",
-                  "Sản lượng thu hoạch"
-                )}
-                render={(value) => (
-                  <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />
-                )}
+                title={translate("harvesting_task.harvested_quantity", "Sản lượng thu hoạch")}
+                render={(value) => <TextField value={value ? value + " kg" : "Chưa thu hoạch"} />}
               />
 
               <Table.Column
@@ -737,9 +651,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                     <TextField
                       value={
                         value
-                          ? record?.farmer_information?.find(
-                              (x: any) => x.farmer_id === value
-                            )?.farmer_name
+                          ? record?.farmer_information?.find((x: any) => x.farmer_id === value)
+                              ?.farmer_name
                           : "Không xác định được nông dân"
                       }
                     />
@@ -750,19 +663,13 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                 title={translate("harvesting_task.plan_name", "Tên kế hoạch")}
                 dataIndex="plan_name"
                 render={(value) => {
-                  return (
-                    <TextField
-                      value={value ? value : "Không xác định được kế hoạch"}
-                    />
-                  );
+                  return <TextField value={value ? value : "Không xác định được kế hoạch"} />;
                 }}
               />
               <Table.Column
                 title={translate("harvesting_task.created_at", "Ngày tạo")}
                 dataIndex="created_at"
-                render={(value) => (
-                  <DateField format="DD/MM/YYYY" value={value} />
-                )}
+                render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 title={translate("harvesting_task.updated_at", "Ngày cập nhập")}
@@ -782,10 +689,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
             key="packaging"
             icon={
               <Badge
-                count={
-                  packingData?.data?.filter((x) => x?.status === "Pending")
-                    ?.length
-                }
+                count={packingData?.data?.filter((x) => x?.status === "Pending")?.length}
               ></Badge>
             }
           >
@@ -807,12 +711,7 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               <Table.Column
                 dataIndex="id"
                 title={translate("ID")}
-                render={(value) => (
-                  <TextField
-                    value={"#" + value}
-                    style={{ fontWeight: "bold" }}
-                  />
-                )}
+                render={(value) => <TextField value={"#" + value} style={{ fontWeight: "bold" }} />}
               />
               <Table.Column
                 dataIndex="task_name"
@@ -820,43 +719,23 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
               />
               <Table.Column
                 dataIndex="start_date"
-                title={translate(
-                  "packaging_task.start_date",
-                  "Thời gian bắt đầu"
-                )}
-                render={(value) => (
-                  <DateField format="hh:mm DD/MM/YYYY" value={value} />
-                )}
+                title={translate("packaging_task.start_date", "Thời gian bắt đầu")}
+                render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="end_date"
-                title={translate(
-                  "packaging_task.end_date",
-                  "Thời gian kết thúc"
-                )}
-                render={(value) => (
-                  <DateField format="hh:mm DD/MM/YYYY" value={value} />
-                )}
+                title={translate("packaging_task.end_date", "Thời gian kết thúc")}
+                render={(value) => <DateField format="hh:mm DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 dataIndex="packed_quantity"
-                title={translate(
-                  "packaging_task.packed_quantity",
-                  "Số lượng đóng gói"
-                )}
-                render={(value) => (
-                  <TextField value={value ? value : "Chưa thu hoạch"} />
-                )}
+                title={translate("packaging_task.packed_quantity", "Số lượng đóng gói")}
+                render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
               />
               <Table.Column
                 dataIndex="packed_unit"
-                title={translate(
-                  "packaging_task.packed_unit",
-                  "Đơn vị đóng gói"
-                )}
-                render={(value) => (
-                  <TextField value={value ? value : "Chưa thu hoạch"} />
-                )}
+                title={translate("packaging_task.packed_unit", "Đơn vị đóng gói")}
+                render={(value) => <TextField value={value ? value : "Chưa thu hoạch"} />}
               />
               <Table.Column
                 dataIndex="status"
@@ -871,9 +750,8 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                     <TextField
                       value={
                         value
-                          ? record?.farmer_information?.find(
-                              (x: any) => x?.farmer_id === value
-                            )?.farmer_name
+                          ? record?.farmer_information?.find((x: any) => x?.farmer_id === value)
+                              ?.farmer_name
                           : "Chưa phân công nông dân"
                       }
                     />
@@ -884,19 +762,13 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
                 title={translate("packaging_task.plan_name", "Tên kế hoạch")}
                 dataIndex="plan_name"
                 render={(value) => {
-                  return (
-                    <TextField
-                      value={value ? value : "Không xác định được kế hoạch"}
-                    />
-                  );
+                  return <TextField value={value ? value : "Không xác định được kế hoạch"} />;
                 }}
               />
               <Table.Column
                 title={translate("packaging_task.created_at", "Ngày tạo")}
                 dataIndex="created_at"
-                render={(value) => (
-                  <DateField format="DD/MM/YYYY" value={value} />
-                )}
+                render={(value) => <DateField format="DD/MM/YYYY" value={value} />}
               />
               <Table.Column
                 title={translate("packaging_task.updated_at", "Ngày cập nhập")}

@@ -1,16 +1,7 @@
-/* eslint-disable prettier/prettier */
 import React from "react";
 import { useTable } from "@refinedev/antd";
 import { getDefaultFilter, type HttpError, useGo } from "@refinedev/core";
-import {
-  Table,
-  Button,
-  Input,
-  InputNumber,
-  Typography,
-  theme,
-  Space,
-} from "antd";
+import { Table, Button, Input, InputNumber, Typography, theme, Space } from "antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
@@ -23,10 +14,7 @@ export const InspectionListTable: React.FC = () => {
   const { token } = theme.useToken();
   const go = useGo();
 
-  const { tableProps, filters, setFilters } = useTable<
-    IInspectingForm,
-    HttpError
-  >({
+  const { tableProps, filters, setFilters } = useTable<IInspectingForm, HttpError>({
     resource: "inspecting-forms",
     filters: {
       initial: [
@@ -53,9 +41,7 @@ export const InspectionListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="inspections" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="inspections" />,
       }}
       onRow={(record) => ({
         onClick: () => {
@@ -72,33 +58,21 @@ export const InspectionListTable: React.FC = () => {
         key="id"
         width={80}
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
           <InputNumber
             style={{ width: "100%" }}
             placeholder={t("inspections.search_id")}
-            onChange={(value) =>
-              setFilters([{ field: "id", operator: "eq", value }])
-            }
+            onChange={(value) => setFilters([{ field: "id", operator: "eq", value }])}
           />
         )}
         render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
       />
 
-      <Table.Column
-        title={t("inspections.plan_name")}
-        dataIndex="plan_name"
-        key="plan_name"
-      />
-      <Table.Column
-        title={t("inspections.task_name")}
-        dataIndex="task_name"
-        key="task_name"
-      />
+      <Table.Column title={t("inspections.plan_name")} dataIndex="plan_name" key="plan_name" />
+      <Table.Column title={t("inspections.task_name")} dataIndex="task_name" key="task_name" />
       <Table.Column
         title={t("inspections.inspector_name")}
         dataIndex="inspector_name"

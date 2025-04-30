@@ -1,13 +1,6 @@
-/* eslint-disable prettier/prettier */
 import { TextField, useForm } from "@refinedev/antd";
 
-import {
-  type BaseKey,
-  useBack,
-  useGo,
-  useList,
-  useTranslate,
-} from "@refinedev/core";
+import { type BaseKey, useBack, useGo, useList, useTranslate } from "@refinedev/core";
 import {
   Form,
   Input,
@@ -112,21 +105,21 @@ export const CaringTaskPage = (props: Props) => {
               id: fertilizer.fertilizer_id,
               quantity: fertilizer.quantity,
               id_block: index,
-            }))
+            })),
           );
           setPesticideFields(
             pesticides.map((pesticide: any, index: any) => ({
               id: pesticide.pesticide_id,
               quantity: pesticide.quantity,
               id_block: index,
-            }))
+            })),
           );
           setItemFields(
             items.map((item: any, index: any) => ({
               id: item.item_id,
               quantity: item.quantity,
               id_block: index,
-            }))
+            })),
           );
 
           formProps.form?.setFieldsValue({
@@ -177,10 +170,7 @@ export const CaringTaskPage = (props: Props) => {
     { label: t("status.planting", "Gieo trồng"), value: "Planting" },
     { label: t("status.nurturing", "Chăm sóc"), value: "Nurturing" },
   ];
-  const addField = (
-    list: any[],
-    setList: React.Dispatch<React.SetStateAction<any[]>>
-  ) => {
+  const addField = (list: any[], setList: React.Dispatch<React.SetStateAction<any[]>>) => {
     const newList = [
       ...list,
       {
@@ -195,7 +185,7 @@ export const CaringTaskPage = (props: Props) => {
   const removeField = (
     id: number,
     list: any[],
-    setList: React.Dispatch<React.SetStateAction<any[]>>
+    setList: React.Dispatch<React.SetStateAction<any[]>>,
   ) => {
     const newList = list.filter((item) => item.id !== id);
     setList(newList);
@@ -208,7 +198,7 @@ export const CaringTaskPage = (props: Props) => {
           fertilizer_id: field.id,
           quantity: field.quantity,
           unit: "kg",
-        }))
+        })),
       );
     pesticideFields &&
       formProps.form?.setFieldValue(
@@ -217,7 +207,7 @@ export const CaringTaskPage = (props: Props) => {
           pesticide_id: field.id,
           quantity: field.quantity,
           unit: "lit",
-        }))
+        })),
       );
     itemFields &&
       formProps.form?.setFieldValue(
@@ -226,7 +216,7 @@ export const CaringTaskPage = (props: Props) => {
           item_id: field.id,
           quantity: field.quantity,
           unit: "unit",
-        }))
+        })),
       );
     if (props?.problemId !== null && props?.problemId !== undefined) {
       formProps.form?.setFieldValue("problem_id", props?.problemId);
@@ -246,11 +236,7 @@ export const CaringTaskPage = (props: Props) => {
           layout="vertical"
           onFinish={handleFinish}
         >
-          <Form.Item
-            label="Tên công việc"
-            name="task_name"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Tên công việc" name="task_name" rules={[{ required: true }]}>
             <Input name="task_name" />
           </Form.Item>
           <Form.Item name="plan_id">
@@ -260,11 +246,7 @@ export const CaringTaskPage = (props: Props) => {
           <Form.Item name="problem_id">
             <Input value={props?.problemId} name="prolem_id" />
           </Form.Item>
-          <Form.Item
-            label="Loại công việc"
-            name="task_type"
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Loại công việc" name="task_type" rules={[{ required: true }]}>
             <Select options={taskTypeOptions} />
           </Form.Item>
           <Row gutter={16}>
@@ -287,19 +269,13 @@ export const CaringTaskPage = (props: Props) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
-                label="Ngày kết thúc dự kiến"
-                name="end_date"
-                rules={[{ required: true }]}
-              >
+              <Form.Item label="Ngày kết thúc dự kiến" name="end_date" rules={[{ required: true }]}>
                 <DatePicker
                   showTime
                   value={endDate}
                   onChange={setEndDate}
                   disabledDate={(current) => {
-                    return startDate
-                      ? current && current.isBefore(startDate, "day")
-                      : false;
+                    return startDate ? current && current.isBefore(startDate, "day") : false;
                   }}
                 />
               </Form.Item>
@@ -346,18 +322,13 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) => {
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, id: value }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, id: value } : f,
+                            ),
                           );
                         }}
                       >
                         {fertilizerData?.data.map((fertilizer) => (
-                          <Select.Option
-                            key={`fetilizer_${fertilizer.id}`}
-                            value={fertilizer.id}
-                          >
+                          <Select.Option key={`fetilizer_${fertilizer.id}`} value={fertilizer.id}>
                             {fertilizer.name}
                           </Select.Option>
                         ))}
@@ -375,10 +346,8 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) =>
                           setFertilizerFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, quantity: value || 0 }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
+                            ),
                           )
                         }
                       />
@@ -391,13 +360,7 @@ export const CaringTaskPage = (props: Props) => {
                     <Button
                       shape="circle"
                       danger
-                      onClick={() =>
-                        removeField(
-                          field.id,
-                          fertilizerFields,
-                          setFertilizerFields
-                        )
-                      }
+                      onClick={() => removeField(field.id, fertilizerFields, setFertilizerFields)}
                     >
                       <DeleteOutlined />
                     </Button>
@@ -437,18 +400,13 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) => {
                           setPesticideFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, id: value }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, id: value } : f,
+                            ),
                           );
                         }}
                       >
                         {pesticideData?.data.map((fertilizer) => (
-                          <Select.Option
-                            key={`pesticide_${fertilizer.id}`}
-                            value={fertilizer.id}
-                          >
+                          <Select.Option key={`pesticide_${fertilizer.id}`} value={fertilizer.id}>
                             {fertilizer.name}
                           </Select.Option>
                         ))}
@@ -466,10 +424,8 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) =>
                           setPesticideFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, quantity: value || 0 }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
+                            ),
                           )
                         }
                       />
@@ -482,13 +438,7 @@ export const CaringTaskPage = (props: Props) => {
                     <Button
                       shape="circle"
                       danger
-                      onClick={() =>
-                        removeField(
-                          field.id,
-                          pesticideFields,
-                          setPesticideFields
-                        )
-                      }
+                      onClick={() => removeField(field.id, pesticideFields, setPesticideFields)}
                     >
                       <DeleteOutlined />
                     </Button>
@@ -528,18 +478,13 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) => {
                           setItemFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, id: value }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, id: value } : f,
+                            ),
                           );
                         }}
                       >
                         {itemData?.data.map((fertilizer) => (
-                          <Select.Option
-                            key={`item_${fertilizer.id}`}
-                            value={fertilizer.id}
-                          >
+                          <Select.Option key={`item_${fertilizer.id}`} value={fertilizer.id}>
                             {fertilizer.name}
                           </Select.Option>
                         ))}
@@ -557,10 +502,8 @@ export const CaringTaskPage = (props: Props) => {
                         onChange={(value) =>
                           setItemFields((prev) =>
                             prev.map((f) =>
-                              f.id_block === field.id_block
-                                ? { ...f, quantity: value || 0 }
-                                : f
-                            )
+                              f.id_block === field.id_block ? { ...f, quantity: value || 0 } : f,
+                            ),
                           )
                         }
                       />
@@ -573,9 +516,7 @@ export const CaringTaskPage = (props: Props) => {
                     <Button
                       shape="circle"
                       danger
-                      onClick={() =>
-                        removeField(field.id, itemFields, setItemFields)
-                      }
+                      onClick={() => removeField(field.id, itemFields, setItemFields)}
                     >
                       <DeleteOutlined />
                     </Button>

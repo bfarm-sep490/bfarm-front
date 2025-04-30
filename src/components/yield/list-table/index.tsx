@@ -1,15 +1,6 @@
-/* eslint-disable prettier/prettier */
 import { type HttpError, getDefaultFilter } from "@refinedev/core";
 import { useTable } from "@refinedev/antd";
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Table,
-  theme,
-  Typography,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Table, theme, Typography } from "antd";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { useState } from "react";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
@@ -34,9 +25,7 @@ export const YieldListTable: React.FC = () => {
     },
   });
 
-  const [selectedYieldId, setSelectedYieldId] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedYieldId, setSelectedYieldId] = useState<string | undefined>(undefined);
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
@@ -53,9 +42,7 @@ export const YieldListTable: React.FC = () => {
         scroll={{ x: true }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="yields" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="yields" />,
         }}
       >
         <Table.Column
@@ -64,16 +51,11 @@ export const YieldListTable: React.FC = () => {
           key="id"
           width={80}
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
           defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
           filterDropdown={() => (
-            <InputNumber
-              style={{ width: "100%" }}
-              placeholder={t("yield.search.id")}
-            />
+            <InputNumber style={{ width: "100%" }} placeholder={t("yield.search.id")} />
           )}
           render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
@@ -83,15 +65,9 @@ export const YieldListTable: React.FC = () => {
           dataIndex="yield_name"
           key="yield_name"
           filterIcon={(filtered) => (
-            <SearchOutlined
-              style={{ color: filtered ? token.colorPrimary : undefined }}
-            />
+            <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
           )}
-          defaultFilteredValue={getDefaultFilter(
-            "yield_name",
-            filters,
-            "contains"
-          )}
+          defaultFilteredValue={getDefaultFilter("yield_name", filters, "contains")}
           filterDropdown={() => <Input placeholder={t("yield.search.name")} />}
         />
 
@@ -109,21 +85,13 @@ export const YieldListTable: React.FC = () => {
           key="description"
           width={300}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
         />
 
-        <Table.Column
-          title={t("yield.soilType")}
-          dataIndex="type"
-          key="type"
-          width={120}
-        />
+        <Table.Column title={t("yield.soilType")} dataIndex="type" key="type" width={120} />
 
         <Table.Column
           title={t("yield.status")}

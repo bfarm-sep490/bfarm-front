@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import { DateField, useTable } from "@refinedev/antd";
 import { type HttpError, useTranslate } from "@refinedev/core";
@@ -30,20 +29,14 @@ export const BactchListTable: React.FC = () => {
           render={(value) => <Typography.Text>{`#${value}`}</Typography.Text>}
         />
 
-        <Table.Column
-          title={"ID sản phẩm"}
-          dataIndex="product_id"
-          key="product_id"
-        />
+        <Table.Column title={"ID sản phẩm"} dataIndex="product_id" key="product_id" />
 
         <Table.Column title={"Số lượng"} dataIndex="quantity" key="quantity" />
         <Table.Column
           title={"Ngày bàn giao"}
           dataIndex={"created_date"}
           key="created_date"
-          render={(value) => (
-            <DateField value={value} format="hh:mm DD/MM/YYYY" />
-          )}
+          render={(value) => <DateField value={value} format="hh:mm DD/MM/YYYY" />}
         />
       </Table>
     </>

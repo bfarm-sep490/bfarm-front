@@ -1,11 +1,6 @@
-/* eslint-disable prettier/prettier */
 import React from "react";
 import { TextField, useTable } from "@refinedev/antd";
-import {
-  type HttpError,
-  getDefaultFilter,
-  useTranslate,
-} from "@refinedev/core";
+import { type HttpError, getDefaultFilter, useTranslate } from "@refinedev/core";
 import { Table, Avatar, Button, Input, InputNumber, theme, Tag } from "antd";
 import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
@@ -53,9 +48,7 @@ export const RetailersListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="retailers" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="retailers" />,
       }}
     >
       <Table.Column
@@ -64,16 +57,11 @@ export const RetailersListTable: React.FC = () => {
         key="id"
         width={80}
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={() => (
-          <InputNumber
-            style={{ width: "100%" }}
-            placeholder={t("retailers.searchId")}
-          />
+          <InputNumber style={{ width: "100%" }} placeholder={t("retailers.searchId")} />
         )}
         render={(value) => <TextField value={`#${value}`}></TextField>}
       />
@@ -82,9 +70,7 @@ export const RetailersListTable: React.FC = () => {
         title={t("retailers.avatar")}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(url) => (
-          <Avatar src={url?.trim() ? url : "/images/default-avatar.png"} />
-        )}
+        render={(url) => <Avatar src={url?.trim() ? url : "/images/default-avatar.png"} />}
       />
 
       <Table.Column
@@ -92,29 +78,16 @@ export const RetailersListTable: React.FC = () => {
         dataIndex="name"
         key="name"
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={() => (
-          <Input
-            style={{ width: "100%" }}
-            placeholder={t("retailers.searchName")}
-          />
+          <Input style={{ width: "100%" }} placeholder={t("retailers.searchName")} />
         )}
       />
 
-      <Table.Column
-        title={t("retailers.email")}
-        dataIndex="email"
-        key="email"
-      />
-      <Table.Column
-        title={t("retailers.phone")}
-        dataIndex="phone"
-        key="phone"
-      />
+      <Table.Column title={t("retailers.email")} dataIndex="email" key="email" />
+      <Table.Column title={t("retailers.phone")} dataIndex="phone" key="phone" />
       <Table.Column title={t("retailers.dob")} dataIndex="dob" key="dob" />
 
       <Table.Column

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ExpertListTable } from "@/components/expert";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
@@ -15,9 +14,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>(
-    (localStorage.getItem("experts-view") as View) || "table"
-  );
+  const [view, setView] = useState<View>((localStorage.getItem("experts-view") as View) || "table");
 
   const handleViewChange = (value: View) => {
     replace("");

@@ -1,7 +1,5 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
-import axios from "axios";
 import {
   Form,
   Input,
@@ -21,6 +19,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { IPesticide } from "@/interfaces";
 import { useTranslation } from "react-i18next";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -39,8 +38,8 @@ export const PesticideDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<IPesticide>({
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<IPesticide>(
+    {
       resource: "pesticides",
       id: props?.id,
       action: props.action ?? "create",
@@ -57,7 +56,8 @@ export const PesticideDrawerForm = (props: Props) => {
       onMutationSuccess: () => {
         props.onMutationSuccess?.();
       },
-    });
+    },
+  );
 
   const onDrawerClose = () => {
     close();
@@ -88,13 +88,9 @@ export const PesticideDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/pesticides/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axiosInstance.post(`${apiUrl}/pesticides/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -152,14 +148,8 @@ export const PesticideDrawerForm = (props: Props) => {
                   src={previewImage || "/images/pesticide-default-img.png"}
                   alt={t("pesticides.imageAlt")}
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
-                  {uploading
-                    ? t("pesticides.uploading")
-                    : t("pesticides.upload")}
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
+                  {uploading ? t("pesticides.uploading") : t("pesticides.upload")}
                 </Button>
               </Flex>
             </Upload.Dragger>
@@ -188,10 +178,7 @@ export const PesticideDrawerForm = (props: Props) => {
               },
             ]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder={t("pesticides.placeholders.description")}
-            />
+            <Input.TextArea rows={3} placeholder={t("pesticides.placeholders.description")} />
           </Form.Item>
 
           <Form.Item
@@ -235,15 +222,9 @@ export const PesticideDrawerForm = (props: Props) => {
             ]}
           >
             <Select placeholder={t("pesticides.placeholders.selectType")}>
-              <Select.Option value="Organic">
-                {t("pesticides.types.organic")}
-              </Select.Option>
-              <Select.Option value="Chemical">
-                {t("pesticides.types.chemical")}
-              </Select.Option>
-              <Select.Option value="Mineral">
-                {t("pesticides.types.mineral")}
-              </Select.Option>
+              <Select.Option value="Organic">{t("pesticides.types.organic")}</Select.Option>
+              <Select.Option value="Chemical">{t("pesticides.types.chemical")}</Select.Option>
+              <Select.Option value="Mineral">{t("pesticides.types.mineral")}</Select.Option>
             </Select>
           </Form.Item>
 
@@ -258,15 +239,9 @@ export const PesticideDrawerForm = (props: Props) => {
             ]}
           >
             <Select placeholder={t("pesticides.placeholders.selectStatus")}>
-              <Select.Option value="Limited Stock">
-                {t("pesticides.status.limited")}
-              </Select.Option>
-              <Select.Option value="Out of Stock">
-                {t("pesticides.status.out")}
-              </Select.Option>
-              <Select.Option value="Available">
-                {t("pesticides.status.available")}
-              </Select.Option>
+              <Select.Option value="Limited Stock">{t("pesticides.status.limited")}</Select.Option>
+              <Select.Option value="Out of Stock">{t("pesticides.status.out")}</Select.Option>
+              <Select.Option value="Available">{t("pesticides.status.available")}</Select.Option>
             </Select>
           </Form.Item>
 

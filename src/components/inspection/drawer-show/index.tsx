@@ -1,16 +1,6 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from "react";
 import { type HttpError, useOne, useTranslate } from "@refinedev/core";
-import {
-  Button,
-  List,
-  Typography,
-  Table,
-  Drawer,
-  Modal,
-  Divider,
-  theme,
-} from "antd";
+import { Button, List, Typography, Table, Drawer, Modal, Divider, theme } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { IInspectingForm } from "@/interfaces";
 import { InspectionDrawerForm } from "../drawer-form";
@@ -18,11 +8,7 @@ import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
 import { useNavigate, useParams } from "react-router";
 import dayjs from "dayjs";
-import {
-  chemicalGroups,
-  columns,
-  getChemicalData,
-} from "../chemical/ChemicalConstants";
+import { chemicalGroups, columns, getChemicalData } from "../chemical/ChemicalConstants";
 type InspectionShowProps = {
   visible?: boolean;
   onClose?: () => void;
@@ -32,9 +18,7 @@ type InspectionShowProps = {
 export const InspectionsShow = (props: InspectionShowProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(
-    null
-  );
+  const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
   const { token } = theme.useToken();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -74,12 +58,8 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     if (inspection) {
       const formattedInspection = {
         ...inspection,
-        start_date: inspection.start_date
-          ? dayjs(inspection.start_date).toISOString()
-          : "",
-        end_date: inspection.end_date
-          ? dayjs(inspection.end_date).toISOString()
-          : "",
+        start_date: inspection.start_date ? dayjs(inspection.start_date).toISOString() : "",
+        end_date: inspection.end_date ? dayjs(inspection.end_date).toISOString() : "",
       };
       setSelectedResult(formattedInspection);
       setIsEditing(true);
@@ -114,11 +94,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         inspectingFetching ||
         inspectingResultLoading
       }
-      open={
-        props?.visible === true && props?.visible !== null
-          ? props.visible
-          : true
-      }
+      open={props?.visible === true && props?.visible !== null ? props.visible : true}
       width={breakpoint?.sm ? "60%" : "100%"}
       onClose={props?.onClose ?? handleBack}
       bodyStyle={{ padding: "24px 32px" }}
@@ -145,11 +121,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         </Typography.Title>
 
         {inspection.status !== "Cancel" && inspectionResult && (
-          <Button
-            type="primary"
-            icon={<EyeOutlined />}
-            onClick={handleOpenModal}
-          >
+          <Button type="primary" icon={<EyeOutlined />} onClick={handleOpenModal}>
             Xem chi tiết
           </Button>
         )}
@@ -175,11 +147,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
             dataSource={[
               {
                 label: "Đánh giá",
-                value: (
-                  <InspectionResultTag
-                    value={inspectionResult.evaluated_result}
-                  />
-                ),
+                value: <InspectionResultTag value={inspectionResult.evaluated_result} />,
               },
               {
                 label: "Nội dung",
@@ -337,19 +305,10 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         />
       </div>
 
-      <Modal
-        open={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        width={900}
-      >
-        <Typography.Title level={3}>
-          Chi tiết kết quả kiểm nghiệm
-        </Typography.Title>
+      <Modal open={isModalVisible} onCancel={handleCloseModal} footer={null} width={900}>
+        <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
         {chemicalGroups.map((group) => {
-          const groupData = chemicalData.filter((item) =>
-            group.keys.includes(item.key)
-          );
+          const groupData = chemicalData.filter((item) => group.keys.includes(item.key));
           if (groupData.length === 0) return null;
 
           return (

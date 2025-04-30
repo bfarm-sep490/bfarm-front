@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { PlantListCard, PlantsListTable } from "@/components/plant";
 
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
@@ -16,9 +15,7 @@ export const PlantsList = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
   const { createUrl } = useNavigation();
 
-  const [view, setView] = useState<View>(
-    (localStorage.getItem("plant-view") as View) || "table"
-  );
+  const [view, setView] = useState<View>((localStorage.getItem("plant-view") as View) || "table");
 
   const handleViewChange = (value: View) => {
     replace("");

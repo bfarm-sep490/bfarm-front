@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import { TextField, useTable } from "@refinedev/antd";
 import { type HttpError } from "@refinedev/core";
@@ -36,15 +35,13 @@ export const PlantsListTable: React.FC = () => {
             navigate(`/plants/${row.id}`);
           },
         })}
-      rowHoverable
+        rowHoverable
         {...tableProps}
         rowKey="id"
         scroll={{ x: "max-content" }}
         pagination={{
           ...tableProps.pagination,
-          showTotal: (total) => (
-            <PaginationTotal total={total} entityName="plants" />
-          ),
+          showTotal: (total) => <PaginationTotal total={total} entityName="plants" />,
         }}
       >
         <Table.Column
@@ -66,11 +63,7 @@ export const PlantsListTable: React.FC = () => {
             />
           )}
         />
-        <Table.Column
-          title={t("plant.name")}
-          dataIndex="plant_name"
-          key="plant_name"
-        />
+        <Table.Column title={t("plant.name")} dataIndex="plant_name" key="plant_name" />
 
         <Table.Column
           title={t("plant.description")}
@@ -78,10 +71,7 @@ export const PlantsListTable: React.FC = () => {
           key="description"
           width={200}
           render={(value) => (
-            <Typography.Paragraph
-              ellipsis={{ rows: 2, tooltip: true }}
-              style={{ marginBottom: 0 }}
-            >
+            <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
               {value}
             </Typography.Paragraph>
           )}
@@ -89,9 +79,7 @@ export const PlantsListTable: React.FC = () => {
 
         <Table.Column
           title={
-            <div style={{ whiteSpace: "nowrap", textAlign: "center" }}>
-              {t("plant.quantity")}
-            </div>
+            <div style={{ whiteSpace: "nowrap", textAlign: "center" }}>{t("plant.quantity")}</div>
           }
           dataIndex="quantity"
           key="quantity"

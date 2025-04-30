@@ -68,7 +68,7 @@ export const ChooseFarmers = ({
     refetch();
   };
   const { refetch, isLoading } = useCustom({
-    url: `https://api.outfit4rent.online/api/farmers/${selectFarmer}/calendar`,
+    url: `https://api.bfarmx.space/api/farmers/${selectFarmer}/calendar`,
     method: "get",
     queryOptions: {
       enabled: false,

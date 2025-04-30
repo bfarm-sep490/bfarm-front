@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import {
   type BaseKey,
@@ -128,16 +127,12 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
             message: "Lỗi. Vui lòng thử lại sau",
           });
         },
-      }
+      },
     );
   };
   return (
     <>
-      <Button
-        type="text"
-        style={{ width: "40px", height: "40px" }}
-        onClick={() => back()}
-      >
+      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       {!isEditing && (
@@ -170,9 +165,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                   </Flex>
                   <Divider />
                   <Flex style={{ margin: 10 }} justify="space-between">
-                    <Typography.Title level={5}>
-                      {t("plant.title")}
-                    </Typography.Title>
+                    <Typography.Title level={5}>{t("plant.title")}</Typography.Title>
                     <Flex align="center" justify="start" gap={10}>
                       <DeleteButton
                         type="text"
@@ -182,10 +175,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                       >
                         {t("actions.delete")}
                       </DeleteButton>
-                      <Button
-                        icon={<EditOutlined />}
-                        onClick={() => setIsEditing(true)}
-                      >
+                      <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                         {t("actions.edit")}
                       </Button>
                     </Flex>
@@ -219,19 +209,14 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                     ]}
                     renderItem={(itemData) => (
                       <List.Item>
-                        <Typography.Text strong>
-                          {itemData.label}:
-                        </Typography.Text>{" "}
-                        {itemData.value}
+                        <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
                       </List.Item>
                     )}
                   />
 
                   <Divider />
                   <Flex style={{ margin: 10 }} justify="space-between">
-                    <Typography.Title level={5}>
-                      {t("plant.plantRatioTitle")}
-                    </Typography.Title>
+                    <Typography.Title level={5}>{t("plant.plantRatioTitle")}</Typography.Title>
                   </Flex>
                   <List
                     style={{
@@ -255,10 +240,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                     ]}
                     renderItem={(itemData) => (
                       <List.Item>
-                        <Typography.Text strong>
-                          {itemData.label}:
-                        </Typography.Text>{" "}
-                        {itemData.value}
+                        <Typography.Text strong>{itemData.label}:</Typography.Text> {itemData.value}
                       </List.Item>
                     )}
                   />
@@ -270,10 +252,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                       <Typography.Title level={5} style={{ margin: 0 }}>
                         Thông tin đất trồng phù hợp
                       </Typography.Title>
-                      <Button
-                        onClick={() => setIsAddModalVisible(true)}
-                        type="primary"
-                      >
+                      <Button onClick={() => setIsAddModalVisible(true)} type="primary">
                         Thêm
                       </Button>
                     </Flex>
@@ -310,9 +289,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                           <Avatar
                             size={48}
                             style={{
-                              backgroundColor: getAvatarColor(
-                                yieldItem.yield_name
-                              ),
+                              backgroundColor: getAvatarColor(yieldItem.yield_name),
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -324,11 +301,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                           </Avatar>
 
                           <div style={{ flex: 1, width: "100%" }}>
-                            <Flex
-                              style={{ width: "100%" }}
-                              justify="space-between"
-                              align="center"
-                            >
+                            <Flex style={{ width: "100%" }} justify="space-between" align="center">
                               <div
                                 style={{
                                   display: "flex",
@@ -336,10 +309,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                                   marginBottom: "8px",
                                 }}
                               >
-                                <Typography.Title
-                                  level={5}
-                                  style={{ margin: 0, marginRight: 8 }}
-                                >
+                                <Typography.Title level={5} style={{ margin: 0, marginRight: 8 }}>
                                   {yieldItem.yield_name}
                                 </Typography.Title>
                                 <YieldStatusTag value={yieldItem?.status} />
@@ -351,9 +321,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                                     fontSize: 18,
                                     cursor: "pointer",
                                   }}
-                                  onClick={() =>
-                                    handleDelete(yieldItem?.id as number)
-                                  }
+                                  onClick={() => handleDelete(yieldItem?.id as number)}
                                 />
                               </Tooltip>
                             </Flex>
@@ -365,12 +333,8 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                               }}
                             >
                               <Space>
-                                <AreaChartOutlined
-                                  style={{ color: token.colorPrimary }}
-                                />
-                                <Typography.Text
-                                  style={{ color: token.colorTextSecondary }}
-                                >
+                                <AreaChartOutlined style={{ color: token.colorPrimary }} />
+                                <Typography.Text style={{ color: token.colorTextSecondary }}>
                                   {"Diện tích"}:
                                 </Typography.Text>
                                 <Typography.Text strong>
@@ -379,34 +343,21 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                               </Space>
 
                               <Space>
-                                <ExperimentOutlined
-                                  style={{ color: token.colorPrimary }}
-                                />
-                                <Typography.Text
-                                  style={{ color: token.colorTextSecondary }}
-                                >
+                                <ExperimentOutlined style={{ color: token.colorPrimary }} />
+                                <Typography.Text style={{ color: token.colorTextSecondary }}>
                                   {"Loại đất"}:
                                 </Typography.Text>
-                                <Typography.Text strong>
-                                  {yieldItem.type}
-                                </Typography.Text>
+                                <Typography.Text strong>{yieldItem.type}</Typography.Text>
                               </Space>
                               <Space>
-                                <LineChartOutlined
-                                  style={{ color: token.colorSuccess }}
-                                />
-                                <Typography.Text
-                                  style={{ color: token.colorTextSecondary }}
-                                >
+                                <LineChartOutlined style={{ color: token.colorSuccess }} />
+                                <Typography.Text style={{ color: token.colorTextSecondary }}>
                                   {"Thu hoạch ước tính"}:
                                 </Typography.Text>
                                 <Tooltip
                                   title={`Tổng thu hoạch ước tính: ${(yieldItem.area * yieldItem.maximum_quantity).toFixed(1)} kg`}
                                 >
-                                  <Typography.Text
-                                    strong
-                                    style={{ color: token.colorSuccess }}
-                                  >
+                                  <Typography.Text strong style={{ color: token.colorSuccess }}>
                                     {yieldItem?.maximum_quantity} kg/m²
                                   </Typography.Text>
                                 </Tooltip>
@@ -420,9 +371,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                                   }}
                                   style={{ marginTop: "8px", marginBottom: 0 }}
                                 >
-                                  <Typography.Text
-                                    style={{ color: token.colorTextSecondary }}
-                                  >
+                                  <Typography.Text style={{ color: token.colorTextSecondary }}>
                                     {"Mô tả"}:
                                   </Typography.Text>{" "}
                                   {yieldItem.description}
@@ -434,9 +383,7 @@ export const PlantDrawerShow: React.FC<Props> = ({ onClose }) => {
                       </List.Item>
                     )}
                     locale={{
-                      emptyText: (
-                        <Typography.Text>Không có dữ liệu</Typography.Text>
-                      ),
+                      emptyText: <Typography.Text>Không có dữ liệu</Typography.Text>,
                     }}
                   />
                 </Card>

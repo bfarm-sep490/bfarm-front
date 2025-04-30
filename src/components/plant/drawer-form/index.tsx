@@ -1,13 +1,5 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useList,
-} from "@refinedev/core";
-import axios from "axios";
+import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
 import {
   Form,
   Input,
@@ -19,14 +11,10 @@ import {
   Avatar,
   Spin,
   message,
-  Modal,
   Select,
-  Row,
-  Col,
   Card,
   Divider,
   Typography,
-  SelectProps,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -34,6 +22,7 @@ import { useSearchParams } from "react-router";
 import { PlantType } from "../plant-type";
 
 import { useTranslation } from "react-i18next";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -52,28 +41,26 @@ export const PlantDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>(
-    {
-      resource: "plants",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image_url) {
-            setPreviewImage(data.data.image_url);
-            formProps.form.setFieldsValue({
-              ...data?.data,
-            });
-          }
-        },
+  const { formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "plants",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image_url) {
+          setPreviewImage(data.data.image_url);
+          formProps.form.setFieldsValue({
+            ...data?.data,
+          });
+        }
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    }
-  );
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
   const onModalClose = () => {
     close();
     if (props?.onClose) {
@@ -93,13 +80,9 @@ export const PlantDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/plants/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axiosInstance.post(`${apiUrl}/plants/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
         setPreviewImage(uploadedImageUrl);
@@ -140,11 +123,7 @@ export const PlantDrawerForm = (props: Props) => {
                   alt={t("plant.imageAlt")}
                   style={{ width: "40%", height: "50%" }}
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  disabled={uploading}
-                  style={{ marginTop: 16 }}
-                >
+                <Button icon={<UploadOutlined />} disabled={uploading} style={{ marginTop: 16 }}>
                   {uploading ? t("plant.uploading") : t("plant.upload")}
                 </Button>
               </Flex>
@@ -191,9 +170,7 @@ export const PlantDrawerForm = (props: Props) => {
               style={{ width: !breakpoint.sm ? "100%" : "50%" }}
               label={t("plant.basePrice")}
               name="base_price"
-              rules={[
-                { required: true, message: t("plant.basePriceRequired") },
-              ]}
+              rules={[{ required: true, message: t("plant.basePriceRequired") }]}
             >
               <InputNumber
                 min={0}
@@ -213,14 +190,9 @@ export const PlantDrawerForm = (props: Props) => {
           <Form.Item
             label={t("plant.description")}
             name="description"
-            rules={[
-              { required: true, message: t("plant.descriptionRequired") },
-            ]}
+            rules={[{ required: true, message: t("plant.descriptionRequired") }]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder={t("plant.descriptionPlaceholder")}
-            />
+            <Input.TextArea rows={3} placeholder={t("plant.descriptionPlaceholder")} />
           </Form.Item>
           <Divider />
           <Typography.Title level={5} style={{ marginBottom: 16 }}>
@@ -237,7 +209,7 @@ export const PlantDrawerForm = (props: Props) => {
               placeholder={t("plant.deltaOnePlaceholder")}
             />
           </Form.Item>
-          
+
           <Form.Item
             label={t("plant.deltaTwo")}
             name="delta_two"
@@ -268,10 +240,7 @@ export const PlantDrawerForm = (props: Props) => {
             rules={[{ required: true, message: t("plant.statusRequired") }]}
             style={{ display: "flex", alignItems: "center", width: "100%" }}
           >
-            <Select
-              placeholder={t("plant.statusPlaceholder")}
-              style={{ width: "100%" }}
-            >
+            <Select placeholder={t("plant.statusPlaceholder")} style={{ width: "100%" }}>
               <Select.Option value="Available">Khả dụng</Select.Option>
               <Select.Option value="Unavailable">Không khả dụng</Select.Option>
             </Select>

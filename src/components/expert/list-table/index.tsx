@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   type HttpError,
   getDefaultFilter,
@@ -6,24 +5,9 @@ import {
   useNavigation,
   useTranslate,
 } from "@refinedev/core";
-import {
-  DateField,
-  FilterDropdown,
-  TextField,
-  useTable,
-} from "@refinedev/antd";
+import { DateField, FilterDropdown, TextField, useTable } from "@refinedev/antd";
 
-import {
-  Avatar,
-  Button,
-  Input,
-  InputNumber,
-  Select,
-  Table,
-  Tag,
-  Typography,
-  theme,
-} from "antd";
+import { Avatar, Button, Input, InputNumber, Select, Table, Tag, Typography, theme } from "antd";
 
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
@@ -79,9 +63,7 @@ export const ExpertListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => (
-          <PaginationTotal total={total} entityName="experts" />
-        ),
+        showTotal: (total) => <PaginationTotal total={total} entityName="experts" />,
       }}
       onRow={(record) => ({
         onClick: () => {
@@ -98,9 +80,7 @@ export const ExpertListTable: React.FC = () => {
         key="id"
         width={80}
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("id", filters, "eq")}
         filterDropdown={(props) => (
@@ -119,9 +99,7 @@ export const ExpertListTable: React.FC = () => {
         title={t("experts.fields.avatar", "Ảnh đại diện")}
         dataIndex="avatar_image"
         key="avatar_image"
-        render={(image: string) => (
-          <Avatar shape="square" src={image} alt="Expert" />
-        )}
+        render={(image: string) => <Avatar shape="square" src={image} alt="Expert" />}
       />
 
       <Table.Column
@@ -130,9 +108,7 @@ export const ExpertListTable: React.FC = () => {
         key="name"
         width={"auto"}
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("name", filters, "contains")}
         filterDropdown={(props) => (
@@ -148,10 +124,7 @@ export const ExpertListTable: React.FC = () => {
         key="phone"
         width={"auto"}
         render={(value) => (
-          <Typography.Paragraph
-            ellipsis={{ rows: 2, tooltip: true }}
-            style={{ marginBottom: 0 }}
-          >
+          <Typography.Paragraph ellipsis={{ rows: 2, tooltip: true }} style={{ marginBottom: 0 }}>
             {value}
           </Typography.Paragraph>
         )}
@@ -163,16 +136,12 @@ export const ExpertListTable: React.FC = () => {
         key="email"
         width={"auto"}
         filterIcon={(filtered) => (
-          <SearchOutlined
-            style={{ color: filtered ? token.colorPrimary : undefined }}
-          />
+          <SearchOutlined style={{ color: filtered ? token.colorPrimary : undefined }} />
         )}
         defaultFilteredValue={getDefaultFilter("email", filters, "contains")}
         filterDropdown={(props) => (
           <FilterDropdown {...props}>
-            <Input
-              placeholder={t("experts.common.search_email", "Tìm email")}
-            />
+            <Input placeholder={t("experts.common.search_email", "Tìm email")} />
           </FilterDropdown>
         )}
       />
@@ -187,15 +156,10 @@ export const ExpertListTable: React.FC = () => {
             <Select
               style={{ width: "200px" }}
               mode="multiple"
-              placeholder={t(
-                "experts.common.filter_by_status",
-                "Lọc theo trạng thái"
-              )}
+              placeholder={t("experts.common.filter_by_status", "Lọc theo trạng thái")}
               allowClear
             >
-              <Select.Option value={true}>
-                {t("experts.status.active", "Hoạt động")}
-              </Select.Option>
+              <Select.Option value={true}>{t("experts.status.active", "Hoạt động")}</Select.Option>
               <Select.Option value={false}>
                 {t("experts.status.inactive", "Không hoạt động")}
               </Select.Option>

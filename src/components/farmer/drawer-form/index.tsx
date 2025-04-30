@@ -1,28 +1,12 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import axios from "axios";
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-} from "antd";
+import { type BaseKey, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import { Form, Input, Upload, Grid, Button, Flex, Avatar } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { useEffect, useState } from "react";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -79,9 +63,7 @@ export const FarmerDrawerForm = (props: Props) => {
   };
   useEffect(() => {
     if (props.action === "edit" && formProps.form) {
-      const currentAvatar = formProps.form.getFieldValue(
-        "avatar_image"
-      ) as string;
+      const currentAvatar = formProps.form.getFieldValue("avatar_image") as string;
       if (currentAvatar) {
         setPreviewImage(currentAvatar);
       }
@@ -93,14 +75,14 @@ export const FarmerDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        "https://api.outfit4rent.online/api/farmers/images/upload",
+      const response = await axiosInstance.post(
+        "https://api.bfarmx.space/api/farmers/images/upload",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -233,20 +215,9 @@ export const FarmerDrawerForm = (props: Props) => {
           >
             <Input name="email" />
           </Form.Item>
-          <Flex
-            align="center"
-            justify="space-between"
-            style={{ padding: "16px 16px 0px 16px" }}
-          >
-            <Button onClick={onDrawerClose}>
-              {translate("form.cancel", "Hủy bỏ")}
-            </Button>
-            <SaveButton
-              {...saveButtonProps}
-              htmlType="submit"
-              type="primary"
-              icon={null}
-            >
+          <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+            <Button onClick={onDrawerClose}>{translate("form.cancel", "Hủy bỏ")}</Button>
+            <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
               {translate("form.save", "Lưu")}
             </SaveButton>
           </Flex>

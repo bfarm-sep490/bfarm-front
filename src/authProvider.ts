@@ -6,7 +6,7 @@ import axios from "axios";
 export const TOKEN_KEY = "bfarmx-owner-auth";
 export const USER_KEY = "bfarmx-owner-user";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://api.outfit4rent.online/api";
+const API_URL = import.meta.env.VITE_API_URL || "https://api.bfarmx.space/api";
 const authApiClient = axios.create({
   baseURL: `${API_URL}`,
   headers: {

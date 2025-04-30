@@ -2,6 +2,7 @@ import { axiosInstance, generateSort, generateFilter } from "./utils";
 import { stringify } from "query-string";
 import type { AxiosInstance, AxiosResponse } from "axios";
 import type { DataProvider, BaseRecord } from "@refinedev/core";
+export const TOKEN_KEY = "bfarmx-owner-auth";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 type MethodTypesWithBody = "post" | "put" | "patch";
@@ -42,9 +43,9 @@ export const dataProvider = (
 
     const { headers: headersFromMeta, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
+    const userStr = localStorage.getItem(TOKEN_KEY);
 
     const queryFilters = generateFilter(filters);
-
     const query: {
       _start?: number;
       _end?: number;
@@ -70,7 +71,10 @@ export const dataProvider = (
       : url;
 
     const response = await httpClient[requestMethod](urlWithQuery, {
-      headers: headersFromMeta,
+      headers: {
+        Authorization: `Bearer ${userStr}`,
+        ...headersFromMeta,
+      },
     });
 
     const { data } = handleApiResponse(response, true);
@@ -90,10 +94,15 @@ export const dataProvider = (
   getMany: async ({ resource, ids, meta }) => {
     const { headers, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
+    const userStr = localStorage.getItem(TOKEN_KEY);
 
     const response = await httpClient[requestMethod](
       `${apiUrl}/${resource}?${stringify({ id: ids })}`,
-      { headers },
+      {
+        headers: {
+          Authorization: `Bearer ${userStr}`,
+        },
+      },
     );
 
     const { data } = handleApiResponse(response, true);
@@ -127,7 +136,10 @@ export const dataProvider = (
     const requestMethod = (method as MethodTypesWithBody) ?? "put";
 
     const response = await httpClient[requestMethod](url, variables, {
-      headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+        ...headers,
+      },
     });
 
     const { data } = handleApiResponse(response);
@@ -143,7 +155,12 @@ export const dataProvider = (
     const { headers, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
 
-    const response = await httpClient[requestMethod](url, { headers });
+    const response = await httpClient[requestMethod](url, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+        ...headers,
+      },
+    });
 
     const { data } = handleApiResponse(response);
 
@@ -160,7 +177,10 @@ export const dataProvider = (
 
     const response = await httpClient[requestMethod](url, {
       data: variables,
-      headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+        ...headers,
+      },
     });
 
     const { data } = handleApiResponse(response);
@@ -204,18 +224,27 @@ export const dataProvider = (
       case "post":
       case "put":
         axiosResponse = await httpClient[method](url, payload, {
-          headers,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+            ...headers,
+          },
         });
         break;
       case "delete":
         axiosResponse = await httpClient.delete(url, {
           data: payload,
-          headers,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+            ...headers,
+          },
         });
         break;
       default:
         axiosResponse = await httpClient.get(requestUrl, {
-          headers,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+            ...headers,
+          },
         });
         break;
     }

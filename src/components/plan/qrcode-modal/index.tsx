@@ -77,7 +77,9 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
         infors: [
           {
             email,
-            name: retailersData?.data?.find((retailer: any) => retailer?.email === email)?.name,
+            name: retailersData?.data?.find(
+              (retailer: any) => retailer?.email === email
+            )?.name,
           },
         ],
         url: `https://bfarmx.space/qr/${address || ""}`,
@@ -87,7 +89,7 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
 
   const filteredRetailers =
     retailersData?.data?.filter((retailer: any) =>
-      orders?.some((order: any) => retailer?.id === order?.retailer_id),
+      orders?.some((order: any) => retailer?.id === order?.retailer_id)
     ) || [];
 
   const isSmallScreen = !breakpoint?.sm && !breakpoint?.md;
@@ -106,7 +108,9 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
         <Flex
           vertical
           align="center"
-          style={isSmallScreen ? { width: "100%", marginBottom: 16 } : undefined}
+          style={
+            isSmallScreen ? { width: "100%", marginBottom: 16 } : undefined
+          }
         >
           <QRCode
             size={isSmallScreen ? 200 : 250}
@@ -118,11 +122,15 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
             copyable={{ text: `https://bfarmx.space/qr/${address || ""}` }}
             style={{ marginTop: 16 }}
           >
-            {address ? `${address.substring(0, 8)}...${address.substring(address.length - 8)}` : ""}
+            {address
+              ? `${address.substring(0, 8)}...${address.substring(address.length - 8)}`
+              : ""}
           </Typography.Text>
         </Flex>
 
-        {!isSmallScreen && <Divider type="vertical" style={{ height: "100%" }} />}
+        {!isSmallScreen && (
+          <Divider type="vertical" style={{ height: "100%" }} />
+        )}
 
         <Flex
           vertical
@@ -137,7 +145,11 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
           <Typography.Title level={5}>Gửi QR Code</Typography.Title>
 
           {retailerLoading ? (
-            <Flex justify="center" align="center" style={{ height: isSmallScreen ? 240 : 300 }}>
+            <Flex
+              justify="center"
+              align="center"
+              style={{ height: isSmallScreen ? 240 : 300 }}
+            >
               <Spin size="large" />
             </Flex>
           ) : (
@@ -174,9 +186,15 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
                   >
                     <List.Item.Meta
                       avatar={
-                        <Avatar src={item?.avatar_image} size="large" alt={item?.name || ""} />
+                        <Avatar
+                          src={item?.avatar_image}
+                          size="large"
+                          alt={item?.name || ""}
+                        />
                       }
-                      title={<Typography.Text strong>{item.name}</Typography.Text>}
+                      title={
+                        <Typography.Text strong>{item.name}</Typography.Text>
+                      }
                       description={item.email}
                     />
                   </List.Item>

@@ -407,7 +407,9 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   <Button
                     color="gold"
                     variant="solid"
-                    onClick={() => {}}
+                    onClick={() => {
+                      setQrCodeOpen(true);
+                    }}
                     icon={<CheckCircleOutlined />}
                   >
                     QR{" "}

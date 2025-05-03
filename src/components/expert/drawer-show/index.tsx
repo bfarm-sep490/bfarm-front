@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   type BaseKey,
   type HttpError,
@@ -8,17 +7,7 @@ import {
   useShow,
   useTranslate,
 } from "@refinedev/core";
-import {
-  Avatar,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  List,
-  Typography,
-  theme,
-  Tag,
-} from "antd";
+import { Avatar, Button, Divider, Flex, Grid, List, Typography, theme, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { DateField, DeleteButton, TextField } from "@refinedev/antd";
@@ -38,7 +27,7 @@ const ExpertStatusTag = ({ status }: { status: boolean }) => {
   };
 
   return (
-    <Tag color={colorMap[status.toString() as 'true' | 'false']}>
+    <Tag color={colorMap[status.toString() as "true" | "false"]}>
       {status ? "Hoạt động" : "Không hoạt động"}
     </Tag>
   );
@@ -115,45 +104,31 @@ export const ExpertDrawerShow = (props: Props) => {
           dataSource={[
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("experts.fields.phone")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("experts.fields.phone")}</Typography.Text>
               ),
               value: expert?.phone,
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("experts.fields.email")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("experts.fields.email")}</Typography.Text>
               ),
               value: expert?.email,
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("experts.fields.status")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("experts.fields.status")}</Typography.Text>
               ),
-              value: expert?.is_active && (
-                <ExpertStatusTag status={expert?.is_active} />
-              ),
+              value: expert?.is_active && <ExpertStatusTag status={expert?.is_active} />,
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("experts.fields.created_at")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("experts.fields.created_at")}</Typography.Text>
               ),
-              value: (
-                <DateField format="DD/MM/YYYY" value={expert?.created_at} />
-              ),
+              value: <DateField format="DD/MM/YYYY" value={expert?.created_at} />,
             },
             {
               label: (
-                <Typography.Text type="secondary">
-                  {t("experts.fields.updated_at")}
-                </Typography.Text>
+                <Typography.Text type="secondary">{t("experts.fields.updated_at")}</Typography.Text>
               ),
               value: expert?.updated_at ? (
                 <DateField value={expert?.updated_at} />

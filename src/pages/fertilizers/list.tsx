@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { FertilizersListCard } from "@/components/fertilizer/list-card";
 import { FertilizersListTable } from "@/components/fertilizer/list-table";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
@@ -17,7 +16,7 @@ export const FertilizersList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("fertilizer-view") as View) || "table"
+    (localStorage.getItem("fertilizer-view") as View) || "table",
   );
 
   const handleViewChange = (value: View) => {

@@ -1,13 +1,5 @@
-/* eslint-disable prettier/prettier */
 import React, { useState } from "react";
-import {
-  type BaseKey,
-  useGetToPath,
-  useGo,
-  useShow,
-  useList,
-  useBack,
-} from "@refinedev/core";
+import { type BaseKey, useGetToPath, useGo, useShow, useList, useBack } from "@refinedev/core";
 import {
   Avatar,
   Button,
@@ -102,11 +94,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
     <>
       {!isEditing && (
         <>
-          <Button
-            type="text"
-            style={{ width: "40px", height: "40px" }}
-            onClick={() => back()}
-          >
+          <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
             <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
           </Button>
           {yieldData && (
@@ -125,9 +113,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                     }}
                     justify="space-between"
                   >
-                    <Typography.Title level={4}>
-                      {yieldData.yield_name}
-                    </Typography.Title>
+                    <Typography.Title level={4}>{yieldData.yield_name}</Typography.Title>
                     <Flex align="center" justify="end">
                       <DeleteButton
                         type="text"
@@ -135,10 +121,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                         resource="yields"
                         onSuccess={handleDrawerClose}
                       />
-                      <Button
-                        icon={<EditOutlined />}
-                        onClick={() => setIsEditing(true)}
-                      >
+                      <Button icon={<EditOutlined />} onClick={() => setIsEditing(true)}>
                         {t("actions.edit")}
                       </Button>
                     </Flex>
@@ -172,9 +155,7 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                       <List.Item>
                         <List.Item.Meta
                           avatar={
-                            <Typography.Text type="secondary">
-                              {itemData.label}
-                            </Typography.Text>
+                            <Typography.Text type="secondary">{itemData.label}</Typography.Text>
                           }
                           title={itemData.value}
                         />
@@ -231,34 +212,20 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                             />
                           }
                           title={
-                            <Typography.Text
-                              strong
-                              style={{ fontSize: "18px" }}
-                            >
+                            <Typography.Text strong style={{ fontSize: "18px" }}>
                               {plant.plant_name}
                             </Typography.Text>
                           }
                           description={
-                            <Space
-                              direction="vertical"
-                              size="small"
-                              style={{ marginTop: 8 }}
-                            >
+                            <Space direction="vertical" size="small" style={{ marginTop: 8 }}>
                               <Space>
-                                <InfoCircleOutlined
-                                  style={{ color: token.colorPrimary }}
-                                />
-                                <Typography.Text>
-                                  Loại cây: {plant.type}
-                                </Typography.Text>
+                                <InfoCircleOutlined style={{ color: token.colorPrimary }} />
+                                <Typography.Text>Loại cây: {plant.type}</Typography.Text>
                               </Space>
                               <Space>
-                                <FieldTimeOutlined
-                                  style={{ color: token.colorPrimary }}
-                                />
+                                <FieldTimeOutlined style={{ color: token.colorPrimary }} />
                                 <Typography.Text>
-                                  Thời gian bảo quản: {plant.preservation_day}{" "}
-                                  ngày
+                                  Thời gian bảo quản: {plant.preservation_day} ngày
                                 </Typography.Text>
                               </Space>
                             </Space>
@@ -323,42 +290,23 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                             <StatusTag status={plan.status} />
                           </Flex>
 
-                          <Space
-                            direction="vertical"
-                            style={{ marginTop: "12px", width: "100%" }}
-                          >
+                          <Space direction="vertical" style={{ marginTop: "12px", width: "100%" }}>
                             <Flex align="center" gap="small">
-                              <CalendarOutlined
-                                style={{ color: token.colorPrimary }}
-                              />
-                              <Typography.Text type="secondary">
-                                Thời gian:{" "}
-                              </Typography.Text>
+                              <CalendarOutlined style={{ color: token.colorPrimary }} />
+                              <Typography.Text type="secondary">Thời gian: </Typography.Text>
                               <Typography.Text strong>
-                                <DateField
-                                  value={plan.start_date}
-                                  format="hh:mm DD/MM/YYYY"
-                                />{" "}
-                                —{" "}
-                                <DateField
-                                  value={plan.end_date}
-                                  format="hh:mm DD/MM/YYYY"
-                                />
+                                <DateField value={plan.start_date} format="hh:mm DD/MM/YYYY" /> —{" "}
+                                <DateField value={plan.end_date} format="hh:mm DD/MM/YYYY" />
                               </Typography.Text>
                             </Flex>
 
                             {plan.complete_date && (
                               <Flex align="center" gap="small">
-                                <CheckCircleOutlined
-                                  style={{ color: token.colorSuccess }}
-                                />
+                                <CheckCircleOutlined style={{ color: token.colorSuccess }} />
                                 <Typography.Text type="secondary">
                                   Ngày hoàn thành:{" "}
                                 </Typography.Text>
-                                <Typography.Text
-                                  strong
-                                  style={{ color: token.colorSuccess }}
-                                >
+                                <Typography.Text strong style={{ color: token.colorSuccess }}>
                                   {plan?.complete_date ? (
                                     <DateField
                                       value={plan.complete_date}
@@ -376,14 +324,8 @@ export const YieldDrawerShow: React.FC<Props> = ({ onClose }) => {
                     }))}
                   />
                 ) : (
-                  <Flex
-                    justify="center"
-                    align="center"
-                    style={{ height: "100%" }}
-                  >
-                    <Typography.Text type="secondary">
-                      Chưa có lịch sử sử dụng đất
-                    </Typography.Text>
+                  <Flex justify="center" align="center" style={{ height: "100%" }}>
+                    <Typography.Text type="secondary">Chưa có lịch sử sử dụng đất</Typography.Text>
                   </Flex>
                 )}
               </Card>

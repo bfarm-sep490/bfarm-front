@@ -1,30 +1,13 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
-import axios from "axios";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-  DatePicker,
-  message,
-} from "antd";
+import { type BaseKey, useGetToPath, useGo } from "@refinedev/core";
+import { Form, Input, Select, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
 import { useParams, useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
-import { IFarmer, IFertilizer } from "@/interfaces";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
-import { before, set } from "lodash";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -97,8 +80,8 @@ export const InspectorDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        "https://api.outfit4rent.online/api/farmers/images/upload",
+      const response = await axiosInstance.post(
+        "https://api.bfarmx.space/api/farmers/images/upload",
         formData,
         {
           headers: {

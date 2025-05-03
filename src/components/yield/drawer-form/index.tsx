@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
 import { Form, Input, InputNumber, Select, Button, Modal, Spin } from "antd";
@@ -53,8 +52,7 @@ export const YieldDrawerForm = (props: Props) => {
 
   const { t } = useTranslation();
 
-  const title =
-    props.action === "edit" ? t("yield.editLand") : t("yield.addLand");
+  const title = props.action === "edit" ? t("yield.editLand") : t("yield.addLand");
 
   return (
     <Modal
@@ -69,9 +67,7 @@ export const YieldDrawerForm = (props: Props) => {
             paddingTop: 16,
           }}
         >
-          <Button onClick={props?.onClose ?? onModalClose}>
-            {t("actions.cancel")}
-          </Button>
+          <Button onClick={props?.onClose ?? onModalClose}>{t("actions.cancel")}</Button>
 
           <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
             {t("buttons.save")}
@@ -120,14 +116,9 @@ export const YieldDrawerForm = (props: Props) => {
           <Form.Item
             label={t("yield.description")}
             name="description"
-            rules={[
-              { required: true, message: t("yield.required.description") },
-            ]}
+            rules={[{ required: true, message: t("yield.required.description") }]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder={t("yield.placeholder.description")}
-            />
+            <Input.TextArea rows={3} placeholder={t("yield.placeholder.description")} />
           </Form.Item>
 
           <Form.Item
@@ -147,12 +138,8 @@ export const YieldDrawerForm = (props: Props) => {
             rules={[{ required: true, message: t("yield.required.status") }]}
           >
             <Select placeholder={t("yield.placeholder.status")}>
-              <Select.Option value="Available">
-                {t("yield.available")}
-              </Select.Option>
-              <Select.Option value="Maintenance">
-                {t("yield.maintenance")}
-              </Select.Option>
+              <Select.Option value="Available">{t("yield.available")}</Select.Option>
+              <Select.Option value="Maintenance">{t("yield.maintenance")}</Select.Option>
               <Select.Option value="In-Use">{t("yield.inUse")}</Select.Option>
             </Select>
           </Form.Item>

@@ -1,10 +1,4 @@
-/* eslint-disable prettier/prettier */
-import {
-  useList,
-  type HttpError,
-  useTranslate,
-  useBack,
-} from "@refinedev/core";
+import { useList, type HttpError, useTranslate, useBack } from "@refinedev/core";
 import {
   Avatar,
   Card,
@@ -97,11 +91,7 @@ export const RetailerDrawerShow: React.FC = () => {
   return (
     <>
       {" "}
-      <Button
-        type="text"
-        style={{ width: "40px", height: "40px" }}
-        onClick={() => back()}
-      >
+      <Button type="text" style={{ width: "40px", height: "40px" }} onClick={() => back()}>
         <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
       </Button>
       <Card
@@ -109,11 +99,7 @@ export const RetailerDrawerShow: React.FC = () => {
         bordered={false}
         className="retailer-detail-card"
       >
-        <Flex
-          justify="space-between"
-          align="center"
-          style={{ marginBottom: 24 }}
-        >
+        <Flex justify="space-between" align="center" style={{ marginBottom: 24 }}>
           <Typography.Title level={4} style={{ margin: 0 }}>
             {t("retailers.title")}
           </Typography.Title>
@@ -121,9 +107,7 @@ export const RetailerDrawerShow: React.FC = () => {
             color={retailer.is_active ? "success" : "error"}
             style={{ fontSize: "14px", padding: "4px 12px" }}
           >
-            {retailer.is_active
-              ? t("retailers.active")
-              : t("retailers.inactive")}
+            {retailer.is_active ? t("retailers.active") : t("retailers.inactive")}
           </Tag>
         </Flex>
 
@@ -153,10 +137,7 @@ export const RetailerDrawerShow: React.FC = () => {
                   }}
                 />
                 <Space direction="vertical" size={2} style={{ width: "100%" }}>
-                  <Typography.Title
-                    level={3}
-                    style={{ marginTop: 16, marginBottom: 4 }}
-                  >
+                  <Typography.Title level={3} style={{ marginTop: 16, marginBottom: 4 }}>
                     {retailer.name}
                   </Typography.Title>
 
@@ -194,10 +175,7 @@ export const RetailerDrawerShow: React.FC = () => {
                         <Typography.Text type="secondary">
                           <PhoneOutlined /> {t("retailers.phone")}
                         </Typography.Text>
-                        <Typography.Text
-                          strong
-                          style={{ fontSize: 16, marginTop: 4 }}
-                        >
+                        <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
                           {formatPhoneNumber(retailer.phone)}
                         </Typography.Text>
                       </Flex>
@@ -214,10 +192,7 @@ export const RetailerDrawerShow: React.FC = () => {
                         <Typography.Text type="secondary">
                           <CalendarOutlined /> {t("retailers.dob")}
                         </Typography.Text>
-                        <Typography.Text
-                          strong
-                          style={{ fontSize: 16, marginTop: 4 }}
-                        >
+                        <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
                           {formatDate(retailer.dob)}
                         </Typography.Text>
                       </Flex>
@@ -234,10 +209,7 @@ export const RetailerDrawerShow: React.FC = () => {
                         <Typography.Text type="secondary">
                           <ClockCircleOutlined /> {t("retailers.created_at")}
                         </Typography.Text>
-                        <Typography.Text
-                          strong
-                          style={{ fontSize: 16, marginTop: 4 }}
-                        >
+                        <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
                           {formatDate(retailer.created_at)}
                         </Typography.Text>
                       </Flex>
@@ -258,19 +230,12 @@ export const RetailerDrawerShow: React.FC = () => {
               >
                 <Row gutter={[24, 16]}>
                   <Col xs={24}>
-                    <Card
-                      size="small"
-                      bordered={false}
-                      style={{ background: "#f5f7fa" }}
-                    >
+                    <Card size="small" bordered={false} style={{ background: "#f5f7fa" }}>
                       <Flex vertical>
                         <Typography.Text type="secondary">
                           <HomeOutlined /> {t("retailers.address")}
                         </Typography.Text>
-                        <Typography.Text
-                          strong
-                          style={{ fontSize: 16, marginTop: 4 }}
-                        >
+                        <Typography.Text strong style={{ fontSize: 16, marginTop: 4 }}>
                           {retailer.address || "-"}
                         </Typography.Text>
                       </Flex>

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { IInspectingResult } from "@/interfaces";
 import { Typography, Tag } from "antd";
 
@@ -69,12 +68,7 @@ export const chemicalGroups: ChemicalCategory[] = [
   { title: "Vi sinh vật gây bệnh", keys: ["salmonella", "coliforms", "ecoli"] },
   {
     title: "Thuốc trừ sâu & tồn dư BVTV",
-    keys: [
-      "glyphosate_glufosinate",
-      "dithiocarbamate",
-      "chlorate",
-      "perchlorate",
-    ],
+    keys: ["glyphosate_glufosinate", "dithiocarbamate", "chlorate", "perchlorate"],
   },
   {
     title: "Chất xông hơi & bảo quản",

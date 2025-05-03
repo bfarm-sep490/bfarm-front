@@ -1,13 +1,5 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import axios from "axios";
+import { type BaseKey, useApiUrl, useGetToPath, useGo, useTranslate } from "@refinedev/core";
 import {
   Form,
   Input,
@@ -25,6 +17,7 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -43,28 +36,27 @@ export const FertilizerDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "fertilizers",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image) {
-            setPreviewImage(data.data.image);
-            formProps.form.setFieldsValue({
-              ...data?.data,
-              image_url: data?.data.image,
-            });
-          }
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "fertilizers",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image) {
+          setPreviewImage(data.data.image);
+          formProps.form.setFieldsValue({
+            ...data?.data,
+            image_url: data?.data.image,
+          });
+        }
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -95,13 +87,9 @@ export const FertilizerDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/fertilizers/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axiosInstance.post(`${apiUrl}/fertilizers/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -157,11 +145,7 @@ export const FertilizerDrawerForm = (props: Props) => {
                   src={previewImage || "/images/fertilizer-default-img.png"}
                   alt="Ảnh phan bón"
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
                   {uploading
                     ? t("fertilizers.fields.uploading", "Đang tải lên...")
                     : t("fertilizers.fields.upload", "Tải ảnh lên")}
@@ -176,19 +160,11 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.name_required",
-                  "Vui lòng nhập tên!"
-                ),
+                message: t("fertilizers.fields.name_required", "Vui lòng nhập tên!"),
               },
             ]}
           >
-            <Input
-              placeholder={t(
-                "fertilizers.fields.name_placeholder",
-                "Nhập tên phân bón"
-              )}
-            />
+            <Input placeholder={t("fertilizers.fields.name_placeholder", "Nhập tên phân bón")} />
           </Form.Item>
 
           <Form.Item
@@ -197,19 +173,13 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.description_required",
-                  "Vui lòng nhập mô tả!"
-                ),
+                message: t("fertilizers.fields.description_required", "Vui lòng nhập mô tả!"),
               },
             ]}
           >
             <Input.TextArea
               rows={3}
-              placeholder={t(
-                "fertilizers.fields.description_placeholder",
-                "Nhập mô tả phân bón"
-              )}
+              placeholder={t("fertilizers.fields.description_placeholder", "Nhập mô tả phân bón")}
             />
           </Form.Item>
 
@@ -219,20 +189,14 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.quantity_required",
-                  "Vui lòng nhập số lượng!"
-                ),
+                message: t("fertilizers.fields.quantity_required", "Vui lòng nhập số lượng!"),
               },
             ]}
           >
             <InputNumber
               min={0}
               style={{ width: "100%" }}
-              placeholder={t(
-                "fertilizers.fields.quantity_placeholder",
-                "Nhập số lượng"
-              )}
+              placeholder={t("fertilizers.fields.quantity_placeholder", "Nhập số lượng")}
             />
           </Form.Item>
 
@@ -242,19 +206,11 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.unit_required",
-                  "Vui lòng nhập đơn vị!"
-                ),
+                message: t("fertilizers.fields.unit_required", "Vui lòng nhập đơn vị!"),
               },
             ]}
           >
-            <Input
-              placeholder={t(
-                "fertilizers.fields.unit_placeholder",
-                "kg, lít, bao, v.v."
-              )}
-            />
+            <Input placeholder={t("fertilizers.fields.unit_placeholder", "kg, lít, bao, v.v.")} />
           </Form.Item>
 
           <Form.Item
@@ -263,19 +219,11 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.status_required",
-                  "Vui lòng chọn trạng thái!"
-                ),
+                message: t("fertilizers.fields.status_required", "Vui lòng chọn trạng thái!"),
               },
             ]}
           >
-            <Select
-              placeholder={t(
-                "fertilizers.fields.status_placeholder",
-                "Chọn trạng thái"
-              )}
-            >
+            <Select placeholder={t("fertilizers.fields.status_placeholder", "Chọn trạng thái")}>
               <Select.Option value="Available">
                 {t("fertilizers.status.available", "Đang sử dụng")}
               </Select.Option>
@@ -294,19 +242,11 @@ export const FertilizerDrawerForm = (props: Props) => {
             rules={[
               {
                 required: true,
-                message: t(
-                  "fertilizers.fields.type_required",
-                  "Vui lòng chọn loại!"
-                ),
+                message: t("fertilizers.fields.type_required", "Vui lòng chọn loại!"),
               },
             ]}
           >
-            <Select
-              placeholder={t(
-                "fertilizers.fields.type_placeholder",
-                "Chọn loại"
-              )}
-            >
+            <Select placeholder={t("fertilizers.fields.type_placeholder", "Chọn loại")}>
               <Select.Option value="Organic">
                 {t("fertilizers.type.organic", "Hữu cơ")}
               </Select.Option>
@@ -320,10 +260,7 @@ export const FertilizerDrawerForm = (props: Props) => {
           </Form.Item>
 
           <Flex justify="space-between" style={{ paddingTop: 16 }}>
-
-            <Button onClick={onDrawerClose}>
-              {t("buttons.cancel", "Hủy")}
-            </Button>
+            <Button onClick={onDrawerClose}>{t("buttons.cancel", "Hủy")}</Button>
 
             <SaveButton {...saveButtonProps} htmlType="submit" type="primary">
               {t("buttons.save", "Lưu")}

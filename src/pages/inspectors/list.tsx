@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { InspectorListTable } from "@/components/inspectors/table-list";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { CreateButton, List } from "@refinedev/antd";
@@ -16,7 +15,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
   const { createUrl } = useNavigation();
 
   const [view, setView] = useState<View>(
-    (localStorage.getItem("inspectors-view") as View) || "table"
+    (localStorage.getItem("inspectors-view") as View) || "table",
   );
 
   const handleViewChange = (value: View) => {

@@ -1,29 +1,12 @@
-/* eslint-disable prettier/prettier */
-import { SaveButton, useDrawerForm, useForm } from "@refinedev/antd";
-import {
-  type BaseKey,
-  useApiUrl,
-  useGetToPath,
-  useGo,
-  useTranslate,
-} from "@refinedev/core";
-import axios from "axios";
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-  Grid,
-  Button,
-  Flex,
-  Avatar,
-  Spin,
-} from "antd";
+import { SaveButton, useForm } from "@refinedev/antd";
+import { type BaseKey, useGetToPath, useGo, useTranslate } from "@refinedev/core";
+import { Form, Input, Upload, Grid, Button, Flex, Avatar, Spin } from "antd";
 import { useSearchParams } from "react-router";
 import { Drawer } from "../../drawer";
 import { UploadOutlined } from "@ant-design/icons";
 import { useStyles } from "./styled";
 import { useEffect, useState } from "react";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -88,14 +71,14 @@ export const ExpertDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        "https://api.outfit4rent.online/api/experts/images/upload",
+      const response = await axiosInstance.post(
+        "https://api.bfarmx.space/api/experts/images/upload",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.data.status === 200 && response.data.data?.length) {
@@ -187,18 +170,12 @@ export const ExpertDrawerForm = (props: Props) => {
               rules={[
                 {
                   required: true,
-                  message: t(
-                    "experts.validation.required_name",
-                    "Vui lòng nhập tên"
-                  ),
+                  message: t("experts.validation.required_name", "Vui lòng nhập tên"),
                 },
                 {
                   min: 6,
                   max: 50,
-                  message: t(
-                    "experts.validation.name_length",
-                    "Tên phải từ 6 đến 50 ký tự"
-                  ),
+                  message: t("experts.validation.name_length", "Tên phải từ 6 đến 50 ký tự"),
                 },
               ]}
             >
@@ -212,18 +189,12 @@ export const ExpertDrawerForm = (props: Props) => {
               rules={[
                 {
                   required: true,
-                  message: t(
-                    "experts.validation.required_phone",
-                    "Vui lòng nhập số điện thoại!"
-                  ),
+                  message: t("experts.validation.required_phone", "Vui lòng nhập số điện thoại!"),
                 },
                 {
                   min: 10,
                   max: 11,
-                  message: t(
-                    "experts.validation.invalid_phone",
-                    "Số điện thoại không hợp lệ!"
-                  ),
+                  message: t("experts.validation.invalid_phone", "Số điện thoại không hợp lệ!"),
                 },
               ]}
             >
@@ -237,37 +208,20 @@ export const ExpertDrawerForm = (props: Props) => {
               rules={[
                 {
                   required: true,
-                  message: t(
-                    "experts.validation.required_email",
-                    "Vui lòng nhập email!"
-                  ),
+                  message: t("experts.validation.required_email", "Vui lòng nhập email!"),
                 },
                 {
                   type: "email",
-                  message: t(
-                    "experts.validation.invalid_email",
-                    "Email không hợp lệ!"
-                  ),
+                  message: t("experts.validation.invalid_email", "Email không hợp lệ!"),
                 },
               ]}
             >
               <Input />
             </Form.Item>
 
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ padding: "16px 16px 0px 16px" }}
-            >
-              <Button onClick={onDrawerClose}>
-                {t("experts.form.cancel", "Hủy bỏ")}
-              </Button>
-              <SaveButton
-                {...saveButtonProps}
-                htmlType="submit"
-                type="primary"
-                icon={null}
-              >
+            <Flex align="center" justify="space-between" style={{ padding: "16px 16px 0px 16px" }}>
+              <Button onClick={onDrawerClose}>{t("experts.form.cancel", "Hủy bỏ")}</Button>
+              <SaveButton {...saveButtonProps} htmlType="submit" type="primary" icon={null}>
                 {t("experts.form.save", "Lưu")}
               </SaveButton>
             </Flex>

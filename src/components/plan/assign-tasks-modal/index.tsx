@@ -1,38 +1,9 @@
-import axios from "axios";
-import { DateField, TextField, useForm } from "@refinedev/antd";
-import { useBack, useList, useOne, useShow } from "@refinedev/core";
-import { useQueries, useQuery } from "@tanstack/react-query";
-import {
-  Avatar,
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  DatePicker,
-  Divider,
-  Drawer,
-  Flex,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Space,
-  Spin,
-  Steps,
-  Table,
-  Tabs,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
-import { DatePickerType } from "antd/es/date-picker";
-import { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
+import { useForm } from "@refinedev/antd";
+import { useBack, useList, useOne } from "@refinedev/core";
+import { Button, Flex, Modal, Spin, Steps, theme } from "antd";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { ChooseFarmers } from "@/pages/plans/approvaled-drawer/choose-farmers";
 import { AssignTasks } from "@/pages/plans/approvaled-drawer/assign-tasks";
 
 interface GainingPlan {

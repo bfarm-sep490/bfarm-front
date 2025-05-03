@@ -1,7 +1,5 @@
-/* eslint-disable prettier/prettier */
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useApiUrl, useGetToPath, useGo } from "@refinedev/core";
-import axios from "axios";
 import {
   Form,
   Input,
@@ -20,6 +18,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
+import { axiosInstance } from "@/rest-data-provider/utils";
 
 type Props = {
   id?: BaseKey;
@@ -38,29 +37,28 @@ export const ItemDrawerForm = (props: Props) => {
   const apiUrl = useApiUrl();
   const breakpoint = Grid.useBreakpoint();
 
-  const { drawerProps, formProps, close, saveButtonProps, formLoading } =
-    useDrawerForm<any>({
-      resource: "items",
-      id: props?.id,
-      action: props.action,
-      redirect: false,
-      queryOptions: {
-        enabled: props.action === "edit",
-        onSuccess: (data) => {
-          if (data?.data?.image) {
-            console.log("Fetched data:", data);
-            setPreviewImage(data.data.image);
-            formProps.form.setFieldsValue({
-              ...data?.data,
-              image_url: data?.data.image,
-            });
-          }
-        },
+  const { drawerProps, formProps, close, saveButtonProps, formLoading } = useDrawerForm<any>({
+    resource: "items",
+    id: props?.id,
+    action: props.action,
+    redirect: false,
+    queryOptions: {
+      enabled: props.action === "edit",
+      onSuccess: (data) => {
+        if (data?.data?.image) {
+          console.log("Fetched data:", data);
+          setPreviewImage(data.data.image);
+          formProps.form.setFieldsValue({
+            ...data?.data,
+            image_url: data?.data.image,
+          });
+        }
       },
-      onMutationSuccess: () => {
-        props.onMutationSuccess?.();
-      },
-    });
+    },
+    onMutationSuccess: () => {
+      props.onMutationSuccess?.();
+    },
+  });
 
   const onDrawerClose = () => {
     close();
@@ -91,13 +89,9 @@ export const ItemDrawerForm = (props: Props) => {
     formData.append("image", file);
     setUploading(true);
     try {
-      const response = await axios.post(
-        `${apiUrl}/items/images/upload`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axiosInstance.post(`${apiUrl}/items/images/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.status === 200 && response.data.data?.length) {
         const uploadedImageUrl = response.data.data[0];
@@ -155,11 +149,7 @@ export const ItemDrawerForm = (props: Props) => {
                   src={previewImage || "/images/item-default-img.png"}
                   alt={t("items.imageAlt")}
                 />
-                <Button
-                  icon={<UploadOutlined />}
-                  style={{ marginTop: 16 }}
-                  disabled={uploading}
-                >
+                <Button icon={<UploadOutlined />} style={{ marginTop: 16 }} disabled={uploading}>
                   {uploading ? t("items.uploading") : t("items.upload")}
                 </Button>
               </Flex>
@@ -177,14 +167,9 @@ export const ItemDrawerForm = (props: Props) => {
           <Form.Item
             label={t("items.description")}
             name="description"
-            rules={[
-              { required: true, message: t("items.descriptionRequired") },
-            ]}
+            rules={[{ required: true, message: t("items.descriptionRequired") }]}
           >
-            <Input.TextArea
-              rows={3}
-              placeholder={t("items.descriptionPlaceholder")}
-            />
+            <Input.TextArea rows={3} placeholder={t("items.descriptionPlaceholder")} />
           </Form.Item>
 
           <Form.Item
@@ -213,15 +198,9 @@ export const ItemDrawerForm = (props: Props) => {
             rules={[{ required: true, message: t("items.statusRequired") }]}
           >
             <Select placeholder={t("items.statusPlaceholder")}>
-              <Select.Option value="Active">
-                {t("items.statusActive")}
-              </Select.Option>
-              <Select.Option value="In-stock">
-                {t("items.statusInStock")}
-              </Select.Option>
-              <Select.Option value="Out-stock">
-                {t("items.statusOutStock")}
-              </Select.Option>
+              <Select.Option value="Active">{t("items.statusActive")}</Select.Option>
+              <Select.Option value="In-stock">{t("items.statusInStock")}</Select.Option>
+              <Select.Option value="Out-stock">{t("items.statusOutStock")}</Select.Option>
             </Select>
           </Form.Item>
 
@@ -231,15 +210,9 @@ export const ItemDrawerForm = (props: Props) => {
             rules={[{ required: true, message: t("items.typeRequired") }]}
           >
             <Select placeholder={t("items.typePlaceholder")}>
-              <Select.Option value="Packaging">
-                {t("items.typePackaging")}
-              </Select.Option>
-              <Select.Option value="Caring">
-                {t("items.typeCaring")}
-              </Select.Option>
-              <Select.Option value="Harvesting">
-                {t("items.typeHarvesting")}
-              </Select.Option>
+              <Select.Option value="Packaging">{t("items.typePackaging")}</Select.Option>
+              <Select.Option value="Caring">{t("items.typeCaring")}</Select.Option>
+              <Select.Option value="Harvesting">{t("items.typeHarvesting")}</Select.Option>
             </Select>
           </Form.Item>
 

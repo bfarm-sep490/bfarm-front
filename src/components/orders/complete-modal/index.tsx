@@ -19,6 +19,7 @@ import {
   notification,
   Spin,
   Space,
+  theme,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
@@ -37,7 +38,7 @@ type PackagedProduct = {
   id: number;
   plan_id: string;
   plan_name: string;
-  pack_quantity: number;
+  available_packs: number;
   quantity_per_pack: number;
   expired_date: string;
   packaging_date: string;
@@ -314,9 +315,9 @@ export const CompleteOrderModal = (props: Props) => {
         <TextField value={productTypeData?.data?.find((x: any) => x.id === value)?.name} />
       ),
     },
-    { title: "Số lượng", dataIndex: "pack_quantity" },
+    { title: "Số lượng thành phẩm", dataIndex: "available_packs" },
     {
-      title: "Số lượng trong mỗi gói",
+      title: "Sản lượng trong mỗi thành phẩm (kg)",
       dataIndex: "quantity_per_pack",
       render: (value: number) => <TextField value={`${value} kg`} />,
     },
@@ -353,9 +354,9 @@ export const CompleteOrderModal = (props: Props) => {
 
   const quantityColumns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Số lượng", dataIndex: "pack_quantity" },
+    { title: "Số lượng thành phẩm", dataIndex: "available_packs" },
     {
-      title: "Số lượng trong mỗi gói",
+      title: "Sản luợnng trong mỗi thành phẩm (kg)",
       dataIndex: "quantity_per_pack",
       render: (value: number) => <TextField value={`${value} kg`} />,
     },
@@ -379,14 +380,14 @@ export const CompleteOrderModal = (props: Props) => {
       ),
     },
     {
-      title: "Số lượng đã chọn",
+      title: "Số lượng thành phẩm đã chọn",
       dataIndex: "id",
       render: (id: number, record: PackagedProduct) => {
         const orderProduct = orderProducts.find((item) => item.id === id);
         return (
           <InputNumber
             min={0}
-            max={Number(record.pack_quantity)}
+            max={Number(record.available_packs)}
             value={orderProduct?.quantity || 0}
             onChange={(newValue) => handleQuantityChange(newValue, id)}
           />
@@ -450,7 +451,7 @@ export const CompleteOrderModal = (props: Props) => {
     ],
     [plant],
   );
-
+  const { token } = theme.useToken();
   const confirmationData = useMemo(() => {
     return packagedProducts
       .filter((item) => selectedIds.includes(Number(item.id)))
@@ -501,7 +502,7 @@ export const CompleteOrderModal = (props: Props) => {
             <Typography.Title level={5}>Lựa chọn sản phẩm</Typography.Title>
             <Divider />
             <Table
-              dataSource={packagedProducts}
+              dataSource={packagedProducts?.filter((item) => item?.available_packs > 0)}
               columns={selectionColumns}
               rowKey="id"
               pagination={false}
@@ -580,10 +581,6 @@ export const CompleteOrderModal = (props: Props) => {
                     <Typography.Text strong>Giá cơ bản:</Typography.Text>
                     {" " + plant?.base_price.toLocaleString()} VND/kg
                   </Typography.Text>
-                  <Typography.Text>
-                    <Typography.Text strong>Kế hoạch:</Typography.Text>
-                    {" " + order?.plan_name}
-                  </Typography.Text>
                 </Flex>
 
                 <Flex vertical={true} gap={8}>
@@ -618,8 +615,17 @@ export const CompleteOrderModal = (props: Props) => {
                   </Typography.Text>
 
                   <Typography.Text>
-                    <Typography.Text strong>Tiền phải thanh toán còn lại</Typography.Text>
-                    {" " + (amount - (order?.deposit_price || 0)).toLocaleString()} VND
+                    <Typography.Text
+                      strong
+                      style={{
+                        color: "red",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      Tiền thanh toán còn lại:{" "}
+                      {" " + (amount - (order?.deposit_price || 0)).toLocaleString()} VND
+                    </Typography.Text>
                   </Typography.Text>
                 </Flex>
               </Flex>
@@ -633,8 +639,6 @@ export const CompleteOrderModal = (props: Props) => {
                 columns={confirmationColumns}
                 rowKey="id"
               />
-
-              <Divider />
 
               <Typography.Title level={5}>Phương thức thanh toán</Typography.Title>
               <Row gutter={16} style={{ marginTop: 16 }}>
@@ -654,14 +658,15 @@ export const CompleteOrderModal = (props: Props) => {
                       <Typography.Title
                         level={5}
                         style={{
-                          color: selectedMethod === "cashPayment" ? " #33CC33" : "black",
+                          color:
+                            selectedMethod === "cashPayment" ? " #33CC33" : token?.colorBgSolid,
                         }}
                       >
                         Thanh toán bằng tiền mặt
                       </Typography.Title>
                       <MoneyCollectOutlined
                         style={{
-                          color: selectedMethod === "cashPayment" ? "#33CC33" : "black",
+                          color: selectedMethod === "cashPayment" ? "#33CC33" : token?.colorBgSolid,
                           fontSize: "50px",
                         }}
                       />
@@ -682,14 +687,14 @@ export const CompleteOrderModal = (props: Props) => {
                       <Typography.Title
                         level={5}
                         style={{
-                          color: selectedMethod === "qrPayment" ? " #33CC33" : "black",
+                          color: selectedMethod === "qrPayment" ? " #33CC33" : token?.colorBgSolid,
                         }}
                       >
                         Thanh toán bằng QR Code
                       </Typography.Title>
                       <QrcodeOutlined
                         style={{
-                          color: selectedMethod === "qrPayment" ? " #33CC33" : "black",
+                          color: selectedMethod === "qrPayment" ? " #33CC33" : token?.colorBgSolid,
                           fontSize: "50px",
                         }}
                       />{" "}

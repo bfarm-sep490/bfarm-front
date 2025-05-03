@@ -46,6 +46,8 @@ import { ChosenFarmerDashBoard } from "@/components/plan/detail/dashboard-farmer
 import HarvestingProductDashBoard from "@/components/plan/detail/dashboard-harvest-product";
 import PackagingProductDashBoard from "@/components/plan/detail/dashboard-packaging-products";
 import { OrdersListTable } from "@/components/plan/detail/orders-list-table";
+import { QRCodeModal } from "@/components/plan/qrcode-modal";
+import { set } from "lodash";
 
 interface IGeneralPlan {
   plan_id: number;
@@ -81,6 +83,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   const [completedModal, setCompletedModal] = React.useState(false);
   const [valueModal, setValueModal] = React.useState("");
   const tasksRef = React.useRef<HTMLDivElement>(null);
+  const [qrCodeOpen, setQrCodeOpen] = React.useState(false);
   const {
     data: generalData,
     isLoading: generalLoading,
@@ -90,6 +93,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
   } = useOne<IGeneralPlan, HttpError>({
     resource: "plans",
     id: `${id}/general`,
+  });
+  const { data: planDetailData } = useOne<any, HttpError>({
+    resource: "plans",
+    id: `${id}`,
   });
   const {
     data: problemsData,
@@ -395,6 +402,18 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                   </Button>
                 </Space>
               )}
+              {(general_info?.status === "Complete" || general_info?.status === "Ongoing") && (
+                <Space>
+                  <Button
+                    color="gold"
+                    variant="solid"
+                    onClick={() => {}}
+                    icon={<CheckCircleOutlined />}
+                  >
+                    QR{" "}
+                  </Button>
+                </Space>
+              )}
             </Flex>
           </Col>
         </Row>
@@ -461,7 +480,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
-                          <UserOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          <UserOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
+                          />
                           Cây trồng
                         </Typography.Text>
                         <Typography.Text>
@@ -480,7 +504,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
-                          <GoldOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          <GoldOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
+                          />
                           Khu đất
                         </Typography.Text>
                         <Typography.Text>
@@ -502,7 +531,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
                           <EnvironmentOutlined
-                            style={{ marginRight: 8, color: token.colorPrimary }}
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
                           />
                           Thời gian thực hiện
                         </Typography.Text>
@@ -532,7 +564,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
-                          <CalendarOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          <CalendarOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
+                          />
                           Ngày tạo
                         </Typography.Text>
                         <Typography.Text>
@@ -555,7 +592,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
-                          <GiftOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          <GiftOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
+                          />
                           Sản lượng dự kiến
                         </Typography.Text>
                         <Typography.Text>
@@ -575,7 +617,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex gap={8} vertical>
                         <Typography.Text strong>
-                          <GroupOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
+                          <GroupOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorPrimary,
+                            }}
+                          />
                           Chuyên gia phụ trách
                         </Typography.Text>
                         <Typography.Text>
@@ -673,7 +720,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                       borderRadius: token.borderRadiusLG,
                       height: !breakpoint.sm ? "auto" : "100%",
                     }}
-                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                    bodyStyle={{
+                      height: !breakpoint.sm ? "auto" : "100%",
+                      padding: "12px",
+                    }}
                   >
                     <Flex
                       vertical
@@ -682,7 +732,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex justify="space-between" align="center">
                         <Typography.Text strong>
-                          <BranchesOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
+                          <BranchesOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorSuccess,
+                            }}
+                          />
                           Chăm sóc
                         </Typography.Text>
                       </Flex>
@@ -690,7 +745,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         vertical
                         align="center"
                         justify="center"
-                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                        style={{
+                          flex: 1,
+                          margin: !breakpoint.sm ? "8px 0" : 0,
+                        }}
                       >
                         <Typography.Title level={2} style={{ margin: 0 }}>
                           {caring_task_dashboard?.complete_quantity || 0}/
@@ -712,7 +770,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
 
                       height: !breakpoint.sm ? "auto" : "100%",
                     }}
-                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                    bodyStyle={{
+                      height: !breakpoint.sm ? "auto" : "100%",
+                      padding: "12px",
+                    }}
                   >
                     <Flex
                       vertical
@@ -721,7 +782,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex justify="space-between" align="center">
                         <Typography.Text strong>
-                          <AuditOutlined style={{ marginRight: 8, color: token.colorWarning }} />
+                          <AuditOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorWarning,
+                            }}
+                          />
                           Kiểm định
                         </Typography.Text>
                       </Flex>
@@ -729,7 +795,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         vertical
                         align="center"
                         justify="center"
-                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                        style={{
+                          flex: 1,
+                          margin: !breakpoint.sm ? "8px 0" : 0,
+                        }}
                       >
                         <Typography.Title level={2} style={{ margin: 0 }}>
                           {inspecting_task_dashboard?.filter((x) => x.status === "Complete")
@@ -749,7 +818,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
 
                       height: !breakpoint.sm ? "auto" : "100%",
                     }}
-                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                    bodyStyle={{
+                      height: !breakpoint.sm ? "auto" : "100%",
+                      padding: "12px",
+                    }}
                   >
                     <Flex
                       vertical
@@ -758,7 +830,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex justify="space-between" align="center">
                         <Typography.Text strong>
-                          <GiftOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
+                          <GiftOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorSuccess,
+                            }}
+                          />
                           Thu hoạch
                         </Typography.Text>
                       </Flex>
@@ -766,7 +843,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         vertical
                         align="center"
                         justify="center"
-                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                        style={{
+                          flex: 1,
+                          margin: !breakpoint.sm ? "8px 0" : 0,
+                        }}
                       >
                         <Typography.Title level={2} style={{ margin: 0 }}>
                           {havesting_task_dashboard?.complete_quantity || 0}/
@@ -787,7 +867,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
 
                       height: !breakpoint.sm ? "auto" : "100%",
                     }}
-                    bodyStyle={{ height: !breakpoint.sm ? "auto" : "100%", padding: "12px" }}
+                    bodyStyle={{
+                      height: !breakpoint.sm ? "auto" : "100%",
+                      padding: "12px",
+                    }}
                   >
                     <Flex
                       vertical
@@ -796,7 +879,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     >
                       <Flex justify="space-between" align="center">
                         <Typography.Text strong>
-                          <AuditOutlined style={{ marginRight: 8, color: token.colorWarning }} />
+                          <AuditOutlined
+                            style={{
+                              marginRight: 8,
+                              color: token.colorWarning,
+                            }}
+                          />
                           Đóng gói
                         </Typography.Text>
                       </Flex>
@@ -804,7 +892,10 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                         vertical
                         align="center"
                         justify="center"
-                        style={{ flex: 1, margin: !breakpoint.sm ? "8px 0" : 0 }}
+                        style={{
+                          flex: 1,
+                          margin: !breakpoint.sm ? "8px 0" : 0,
+                        }}
                       >
                         <Typography.Title level={2} style={{ margin: 0 }}>
                           {packaging_task_dashboard?.complete_quantity || 0}/
@@ -912,6 +1003,12 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
           harvestingProductRefetch();
           problemRefetch();
         }}
+      />
+      <QRCodeModal
+        orders={orderData?.data as any[]}
+        address={planDetailData?.data?.contract_address}
+        visible={qrCodeOpen}
+        onClose={() => setQrCodeOpen(false)}
       />
       {children}
     </Show>

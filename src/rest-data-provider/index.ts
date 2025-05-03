@@ -101,6 +101,7 @@ export const dataProvider = (
       {
         headers: {
           Authorization: `Bearer ${userStr}`,
+          ...headers,
         },
       },
     );
@@ -119,7 +120,10 @@ export const dataProvider = (
     const requestMethod = (method as MethodTypesWithBody) ?? "post";
 
     const response = await httpClient[requestMethod](url, variables, {
-      headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+        ...headers,
+      },
     });
 
     const { data } = handleApiResponse(response);

@@ -35,7 +35,6 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
       enabled: visible,
     },
   });
-
   const [api, contextHolder] = notification.useNotification();
 
   const { mutate } = useCreate({
@@ -73,10 +72,15 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
     setProcessingEmail(email);
 
     mutate({
-      resource: "orders",
+      resource: "plans/qrcode-to-retailer",
       values: {
-        retailer_email: email,
-        qrcode: address || "",
+        infors: [
+          {
+            email,
+            name: retailersData?.data?.find((retailer: any) => retailer?.email === email)?.name,
+          },
+        ],
+        url: `https://bfarmx.space/qr/${address || ""}`,
       },
     });
   };

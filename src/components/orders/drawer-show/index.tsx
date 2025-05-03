@@ -459,9 +459,23 @@ export const OrderDrawerShow = () => {
         title={"Thông tin giao hàng"}
         loading={batchesLoading || batchFetching}
       >
-        <Flex justify="end" align="center" style={{ marginBottom: 16 }}>
+        <Flex justify="end" align="center" gap={10} style={{ marginBottom: 16 }}>
+          {processedPackageProducts?.filter(
+            (filter) => filter?.total_packs - filter?.received_pack_quantity > 0,
+          )?.length === 0 && (
+            <TextField
+              strong
+              style={{ color: "#52c41a" }}
+              value={"Đã bàn giao hết thành phẩm"}
+            ></TextField>
+          )}
           <Button
-            disabled={order?.status !== "Paid"}
+            disabled={
+              order?.status !== "Paid" ||
+              processedPackageProducts?.filter(
+                (filter) => filter?.total_packs - filter?.received_pack_quantity > 0,
+              )?.length === 0
+            }
             type="primary"
             onClick={() => setCreateBatchOpen(true)}
           >

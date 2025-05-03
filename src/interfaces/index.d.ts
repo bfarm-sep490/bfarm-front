@@ -171,6 +171,7 @@ export interface IInspector {
 export interface IOrder {
   id: number;
   order_id: number;
+  retailer_name: string;
   price: number;
   status: "paid" | "cancelled" | "pending" | "failed";
   address: string;

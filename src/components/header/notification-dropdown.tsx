@@ -21,7 +21,7 @@ import {
   useUpdate,
   useInvalidate,
 } from "@refinedev/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
@@ -52,9 +52,24 @@ export const NotificationDropdown = () => {
   const { data: notificationsData, isLoading } = useList<Notification>({
     resource: `owners/notifications`,
     queryOptions: {
-      refetchInterval: 30000,
+      refetchInterval: 60000,
     },
   });
+
+  useEffect(() => {
+    const handleNewNotification = () => {
+      invalidate({
+        resource: `owners/notifications`,
+        invalidates: ["list"],
+      });
+    };
+
+    window.addEventListener(`new-notification-owner-received`, handleNewNotification);
+
+    return () => {
+      window.removeEventListener(`new-notification-owner-received`, handleNewNotification);
+    };
+  }, [user?.id, invalidate]);
 
   const { mutate: markAsRead } = useUpdate();
   const { mutate: markAllAsRead } = useCustomMutation();

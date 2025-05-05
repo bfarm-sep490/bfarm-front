@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
-import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { BaseRecord, useList, useTranslate } from "@refinedev/core";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { useList, useTranslate } from "@refinedev/core";
+import { useParams } from "react-router";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 
 import {
@@ -12,10 +11,8 @@ import {
   Button,
   Card,
   Flex,
-  InputNumber,
   notification,
   Segmented,
-  Space,
   Spin,
   Table,
   Tabs,
@@ -31,13 +28,11 @@ import {
   LoadingOutlined,
   PlusSquareOutlined,
   ReloadOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
 import { StatusTag } from "@/components/caring-task/status-tag";
 import { CaringTypeTag } from "@/components/caring-task/type-tag";
-import { DateField, ShowButton, TextField } from "@refinedev/antd";
+import { DateField, TextField } from "@refinedev/antd";
 
-import { InspectionsShow } from "@/components/inspection";
 import { AssignTaskModal } from "../assign-tasks-modal";
 import TaskModal from "@/components/task-create-update";
 import GenericTaskDrawer from "@/components/task/show";

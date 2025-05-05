@@ -1,7 +1,7 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -88,6 +88,9 @@ import { ablyClient } from "./utils/ablyClient";
 import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
 import { dataProvider } from "./rest-data-provider";
 import { PlanShow } from "./pages/plans/show/show";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { notificationProvider } from "./providers/notification-provider";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -138,7 +141,7 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              notificationProvider={useNotificationProvider}
+              notificationProvider={notificationProvider}
               liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
@@ -638,6 +641,7 @@ const App: React.FC = () => {
           </RefineKbarProvider>
         </AntdApp>
       </ConfigProvider>
+      <ToastContainer />
     </BrowserRouter>
   );
 };

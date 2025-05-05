@@ -3,6 +3,7 @@ import { ConfigProvider as AntdConfigProvider, theme, type ThemeConfig } from "a
 import { ThemeProvider } from "antd-style";
 import { RefineThemes } from "@refinedev/antd";
 import "./config.css";
+import "./toast.css";
 
 type Mode = "light" | "dark";
 

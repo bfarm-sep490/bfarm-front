@@ -75,6 +75,7 @@ export const CompleteOrderModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
   const [selectedMethod, setSelectedMethod] = useState<string>("");
   const [searchParams] = useSearchParams();
+  const [total, setTotal] = useState<number>(0);
   const go = useGo();
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const { orderId } = useParams();
@@ -315,7 +316,6 @@ export const CompleteOrderModal = (props: Props) => {
         <TextField value={productTypeData?.data?.find((x: any) => x.id === value)?.name} />
       ),
     },
-    { title: "Số lượng thành phẩm", dataIndex: "available_packs" },
     {
       title: "Sản lượng trong mỗi thành phẩm (kg)",
       dataIndex: "quantity_per_pack",
@@ -341,6 +341,11 @@ export const CompleteOrderModal = (props: Props) => {
       ),
     },
     {
+      title: "Số lượng thành phẩm",
+      dataIndex: "available_packs",
+      render: (value: number) => <TextField value={`${value} thành phẩm`} />,
+    },
+    {
       title: "Lựa chọn",
       dataIndex: "id",
       render: (value: number) => (
@@ -354,7 +359,6 @@ export const CompleteOrderModal = (props: Props) => {
 
   const quantityColumns = [
     { title: "ID", dataIndex: "id" },
-    { title: "Số lượng thành phẩm", dataIndex: "available_packs" },
     {
       title: "Sản luợnng trong mỗi thành phẩm (kg)",
       dataIndex: "quantity_per_pack",
@@ -380,6 +384,12 @@ export const CompleteOrderModal = (props: Props) => {
       ),
     },
     {
+      title: "Số lượng thành phẩm",
+      dataIndex: "available_packs",
+      render: (value: number) => <TextField value={`${value} thành phẩm`} />,
+    },
+
+    {
       title: "Số lượng thành phẩm đã chọn",
       dataIndex: "id",
       render: (id: number, record: PackagedProduct) => {
@@ -389,7 +399,9 @@ export const CompleteOrderModal = (props: Props) => {
             min={0}
             max={Number(record.available_packs)}
             value={orderProduct?.quantity || 0}
-            onChange={(newValue) => handleQuantityChange(newValue, id)}
+            onChange={(newValue) => {
+              handleQuantityChange(newValue, id);
+            }}
           />
         );
       },
@@ -470,11 +482,18 @@ export const CompleteOrderModal = (props: Props) => {
       case 0:
         return (
           <>
-            <Card style={{ marginBottom: 16 }} title="Yêu cầu đơn hàng">
+            <Card style={{ marginBottom: 16 }} title="Chi tiết">
               <Flex vertical={true} justify="space-between" gap={8}>
                 <Typography.Text>
                   <Typography.Text strong>Loại bao bì: </Typography.Text>
                   {packagingType?.name}
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Số lượng thành phẩm yêu cầu:</Typography.Text>{" "}
+                  {order?.preorder_quantity && packagingType?.quantity_per_pack
+                    ? Math.ceil(order.preorder_quantity / packagingType.quantity_per_pack)
+                    : "N/A"}{" "}
+                  thành phẩm
                 </Typography.Text>
                 <Typography.Text>
                   <Typography.Text strong>Sản lượng dự kiến của đơn hàng:</Typography.Text>
@@ -513,16 +532,31 @@ export const CompleteOrderModal = (props: Props) => {
       case 1:
         return (
           <>
-            <Card style={{ marginBottom: 16 }} title="Yêu cầu đơn hàng">
+            <Card style={{ marginBottom: 16 }} title="Chi tiết">
               <Flex vertical={true} justify="space-between" gap={8}>
                 <Typography.Text>
                   <Typography.Text strong>Loại bao bì: </Typography.Text>
                   {packagingType?.name}
                 </Typography.Text>
                 <Typography.Text>
+                  <Typography.Text strong>Số lượng thành phẩm yêu cầu:</Typography.Text>{" "}
+                  {order?.preorder_quantity && packagingType?.quantity_per_pack
+                    ? Math.ceil(order.preorder_quantity / packagingType.quantity_per_pack)
+                    : "N/A"}{" "}
+                  thành phẩm
+                </Typography.Text>
+                <Typography.Text>
+                  <Typography.Text strong>Tổng số lượng thành phẩm đã chọn:</Typography.Text>{" "}
+                  {orderProducts?.length
+                    ? orderProducts.map((x) => x.quantity).reduce((acc, val) => acc + val, 0)
+                    : "N/A"}{" "}
+                  thành phẩm
+                </Typography.Text>
+                <Typography.Text>
                   <Typography.Text strong>Sản lượng dự kiến của đơn hàng:</Typography.Text>
                   {" " + order?.preorder_quantity} kg
                 </Typography.Text>
+
                 <Typography.Text>
                   <Typography.Text strong>Sản lượng đã chọn:</Typography.Text>
                   {" " + quantity} kg ({percentageFulfilled}%)
@@ -585,9 +619,24 @@ export const CompleteOrderModal = (props: Props) => {
 
                 <Flex vertical={true} gap={8}>
                   <Typography.Text>
+                    <Typography.Text strong>Số lượng thành phẩm yêu cầu:</Typography.Text>{" "}
+                    {order?.preorder_quantity && packagingType?.quantity_per_pack
+                      ? Math.ceil(order.preorder_quantity / packagingType.quantity_per_pack)
+                      : "N/A"}{" "}
+                    thành phẩm
+                  </Typography.Text>
+                  <Typography.Text>
+                    <Typography.Text strong>Tổng số lượng thành phẩm đã chọn:</Typography.Text>{" "}
+                    {orderProducts?.length
+                      ? orderProducts.map((x) => x.quantity).reduce((acc, val) => acc + val, 0)
+                      : "N/A"}{" "}
+                    thành phẩm
+                  </Typography.Text>
+                  <Typography.Text>
                     <Typography.Text strong>Sản lượng yêu cầu:</Typography.Text>
                     {" " + order?.preorder_quantity} kg
                   </Typography.Text>
+
                   <Typography.Text>
                     <Typography.Text strong>Sản lượng thực tế:</Typography.Text>
                     {" " + quantity} kg
@@ -624,7 +673,11 @@ export const CompleteOrderModal = (props: Props) => {
                       }}
                     >
                       Tiền thanh toán còn lại:{" "}
-                      {" " + (amount - (order?.deposit_price || 0)).toLocaleString()} VND
+                      {" " +
+                        (amount - (order?.deposit_price || 0) > 0
+                          ? (amount - (order?.deposit_price || 0)).toLocaleString()
+                          : 0)}{" "}
+                      VND
                     </Typography.Text>
                   </Typography.Text>
                 </Flex>
@@ -675,26 +728,43 @@ export const CompleteOrderModal = (props: Props) => {
                 </Col>
                 <Col span={12}>
                   <Card
-                    hoverable
+                    hoverable={amount - (order?.deposit_price || 0) > 0}
                     style={{
                       width: "100%",
                       border:
-                        selectedMethod === "qrPayment" ? "2px solid #33CC33" : "1px solid #d9d9d9",
+                        amount - (order?.deposit_price || 0) <= 0
+                          ? "1px solid gray"
+                          : selectedMethod === "qrPayment"
+                            ? "2px solid #33CC33"
+                            : "1px solid #d9d9d9",
                     }}
-                    onClick={() => setSelectedMethod("qrPayment")}
+                    onClick={() => {
+                      if (amount - (order?.deposit_price || 0) <= 0) return;
+                      setSelectedMethod("qrPayment");
+                    }}
                   >
                     <Flex vertical={false} justify="space-between" gap={8}>
                       <Typography.Title
                         level={5}
                         style={{
-                          color: selectedMethod === "qrPayment" ? " #33CC33" : token?.colorBgSolid,
+                          color:
+                            amount - (order?.deposit_price || 0) <= 0
+                              ? "1px solid gray"
+                              : selectedMethod === "qrPayment"
+                                ? " #33CC33"
+                                : token?.colorBgSolid,
                         }}
                       >
                         Thanh toán bằng QR Code
                       </Typography.Title>
                       <QrcodeOutlined
                         style={{
-                          color: selectedMethod === "qrPayment" ? " #33CC33" : token?.colorBgSolid,
+                          color:
+                            amount - (order?.deposit_price || 0) <= 0
+                              ? "1px solid gray"
+                              : selectedMethod === "qrPayment"
+                                ? " #33CC33"
+                                : token?.colorBgSolid,
                           fontSize: "50px",
                         }}
                       />{" "}
@@ -702,6 +772,11 @@ export const CompleteOrderModal = (props: Props) => {
                   </Card>
                 </Col>
               </Row>
+              {amount - (order?.deposit_price || 0) <= 0 && (
+                <Typography.Text type="danger">
+                  * Lưu ý: Không thể chọn phương thức QR nếu số tiền bằng 0
+                </Typography.Text>
+              )}
               <Flex justify="center" align="middle" gap={8} style={{ marginTop: 16 }}>
                 <Button
                   loading={isLoading}

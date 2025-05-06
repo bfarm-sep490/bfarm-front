@@ -343,6 +343,9 @@ export const OrderDrawerShow = () => {
                     background: token?.colorBgLayout,
                     marginBottom: 16,
                   }}
+                  onClick={() => {
+                    navigate(`/plans/${x?.id}`);
+                  }}
                 >
                   <Typography.Title
                     level={5}
@@ -462,13 +465,14 @@ export const OrderDrawerShow = () => {
         <Flex justify="end" align="center" gap={10} style={{ marginBottom: 16 }}>
           {processedPackageProducts?.filter(
             (filter) => filter?.total_packs - filter?.received_pack_quantity > 0,
-          )?.length === 0 && (
-            <TextField
-              strong
-              style={{ color: "#52c41a" }}
-              value={"Đã bàn giao hết thành phẩm"}
-            ></TextField>
-          )}
+          )?.length === 0 &&
+            (plansData?.data?.length ?? 0) > 0 && (
+              <TextField
+                strong
+                style={{ color: "#52c41a" }}
+                value={"Đã bàn giao hết thành phẩm"}
+              ></TextField>
+            )}
           <Button
             disabled={
               order?.status !== "Paid" ||

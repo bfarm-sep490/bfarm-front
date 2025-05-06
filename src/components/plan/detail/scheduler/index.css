@@ -27,7 +27,7 @@
   --event-incomplete-border: #d9d9d9;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --calendar-bg: #141414;
   --calendar-border: #303030;
   --calendar-text: #ffffff;
@@ -90,7 +90,7 @@ element.style
   border-bottom: 1px solid var(--calendar-border);
 }
 
-.rbc-day-bg + .rbc-day-bg {
+.rbc-day-bg+.rbc-day-bg {
   border-left: 1px solid var(--calendar-border);
 }
 
@@ -164,6 +164,7 @@ element.style
   border: 1px solid var(--event-incomplete-border);
 }
 
+/* Tooltip styles */
 .ant-tooltip-inner {
   background: var(--tooltip-bg) !important;
   color: var(--tooltip-text) !important;
@@ -185,8 +186,7 @@ element.style
 /* Custom scrollbar */
 .rbc-calendar {
   scrollbar-width: thin;
-  scrollbar-color: var(--calendar-scrollbar-thumb)
-    var(--calendar-scrollbar-track);
+  scrollbar-color: var(--calendar-scrollbar-thumb) var(--calendar-scrollbar-track);
 }
 
 .rbc-calendar::-webkit-scrollbar {

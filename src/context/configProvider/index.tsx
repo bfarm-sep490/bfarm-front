@@ -1,17 +1,53 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useState } from "react";
-import { ConfigProvider as AntdConfigProvider, theme, type ThemeConfig } from "antd";
-import { ThemeProvider } from "antd-style";
 import { RefineThemes } from "@refinedev/antd";
+
 import "./config.css";
+
+import { ConfigProvider as AntdConfigProvider, theme, type ThemeConfig } from "antd";
+import { createStyles, ThemeProvider } from "antd-style";
+import { createContext, type PropsWithChildren, useContext, useEffect, useState } from "react";
+import { Bounce, ToastContainer } from "react-toastify";
 
 type Mode = "light" | "dark";
 
-type ConfigProviderContext = {
+type ConfigProviderContextType = {
   mode: Mode;
   setMode: (mode: Mode) => void;
 };
 
-export const ConfigProviderContext = createContext<ConfigProviderContext | undefined>(undefined);
+const useStyle = createStyles(({ prefixCls, css }) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: "";
+        background: linear-gradient(135deg, #2ecc71, #3498db);
+        position: absolute;
+        inset: -1px;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+
+    [data-theme="dark"]
+      &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
+      &::before {
+        background: linear-gradient(135deg, #1e8449, #1f618d);
+      }
+    }
+  `,
+}));
+
+export const ConfigProviderContext = createContext<ConfigProviderContextType | undefined>(
+  undefined,
+);
 
 const defaultMode: Mode = (localStorage.getItem("theme") as Mode) || "light";
 
@@ -37,17 +73,35 @@ export const ConfigProvider = ({
     const html = document.querySelector("html");
     html?.setAttribute("data-theme", mode);
   }, []);
-
+  const { styles } = useStyle();
   return (
     <ConfigProviderContext.Provider value={{ mode, setMode: handleSetMode }}>
       <AntdConfigProvider
+        button={{
+          className: styles.linearGradientButton,
+        }}
         theme={{
           ...RefineThemes.Orange,
           algorithm: mode === "light" ? theme.defaultAlgorithm : theme.darkAlgorithm,
           ...themeFromProps,
         }}
       >
-        <ThemeProvider appearance={mode}>{children}</ThemeProvider>
+        <ThemeProvider appearance={mode}>
+          {children}{" "}
+          <ToastContainer
+            position="bottom-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme={mode == "dark" ? "dark" : "light"}
+            transition={Bounce}
+          />
+        </ThemeProvider>
       </AntdConfigProvider>
     </ConfigProviderContext.Provider>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Authenticated, IResourceItem, Refine } from "@refinedev/core";
 import { RefineKbarProvider, RefineKbar } from "@refinedev/kbar";
-import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from "@refinedev/antd";
+import { ThemedLayoutV2, ErrorComponent } from "@refinedev/antd";
 import routerProvider, {
   CatchAllNavigate,
   NavigateToResource,
@@ -23,6 +23,7 @@ import {
   TransactionOutlined,
   UserOutlined,
   WarningOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { authProvider } from "./authProvider";
 
@@ -88,6 +89,9 @@ import { ablyClient } from "./utils/ablyClient";
 import { ApprovingPlanDrawer } from "./pages/plans/approvaled-drawer";
 import { dataProvider } from "./rest-data-provider";
 import { PlanShow } from "./pages/plans/show/show";
+import "react-toastify/dist/ReactToastify.css";
+import { notificationProvider } from "./providers/notification-provider";
+import { ConfigurationList } from "./pages/configuration/list";
 
 interface TitleHandlerOptions {
   resource?: IResourceItem;
@@ -138,7 +142,7 @@ const App: React.FC = () => {
                 warnWhenUnsavedChanges: true,
                 liveMode: "auto",
               }}
-              notificationProvider={useNotificationProvider}
+              notificationProvider={notificationProvider}
               liveProvider={liveProvider(ablyClient)}
               resources={[
                 {
@@ -370,6 +374,14 @@ const App: React.FC = () => {
                     label: "Lịch sử giao hàng",
                   },
                 },
+                {
+                  name: "configuration",
+                  list: "/configuration",
+                  meta: {
+                    label: "Cấu hình",
+                    icon: <SettingOutlined />,
+                  },
+                },
               ]}
             >
               <Routes>
@@ -574,6 +586,7 @@ const App: React.FC = () => {
                     <Route path="create" element={<InspectorCreate />} />
                     <Route path="edit/:id" element={<InspectorEdit />} />
                   </Route>
+                  <Route path="/configuration" element={<ConfigurationList />} />
                 </Route>
 
                 <Route

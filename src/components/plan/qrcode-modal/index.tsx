@@ -15,6 +15,26 @@ import {
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState } from "react";
 import { useCreate, useList } from "@refinedev/core";
+import CryptoJS from "crypto-js";
+const key = "bfarmx:space:private";
+
+interface IQR {
+  contract_address: string;
+  expires_at: Date;
+  access_expires_at: Date;
+}
+
+function encryptString(address: string, secretKey: string): string {
+  const encryptedData = CryptoJS.AES.encrypt(
+    JSON.stringify({
+      a: address,
+      e: null,
+      x: null,
+    }),
+    secretKey,
+  ).toString();
+  return encryptedData.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
 
 type QRCodeModalProps = {
   orders: any[];
@@ -80,7 +100,7 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
             name: retailersData?.data?.find((retailer: any) => retailer?.email === email)?.name,
           },
         ],
-        url: `https://bfarmx.space/qr/${address || ""}`,
+        url: `https://bfarmx.space/qr/${encryptString(address, key) || ""}`,
       },
     });
   };
@@ -110,12 +130,14 @@ export const QRCodeModal = (props: QRCodeModalProps) => {
         >
           <QRCode
             size={isSmallScreen ? 200 : 250}
-            value={`https://bfarmx.space/qr/${address || ""}`}
+            value={`https://bfarmx.space/qr/${encryptString(address, key) || ""}`}
             bordered
             errorLevel="H"
           />
           <Typography.Text
-            copyable={{ text: `https://bfarmx.space/qr/${address || ""}` }}
+            copyable={{
+              text: `https://bfarmx.space/qr/${encryptString(address, key) || ""}`,
+            }}
             style={{ marginTop: 16 }}
           >
             {address ? `${address.substring(0, 8)}...${address.substring(address.length - 8)}` : ""}

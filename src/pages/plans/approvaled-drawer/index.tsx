@@ -69,7 +69,7 @@ interface GainingPlan {
 
 export const ApprovingPlanDrawer = () => {
   const { id } = useParams();
-  const [current, setCurrent] = React.useState<number>(0);
+  const [current, setCurrent] = React.useState<number>(1);
   const [productiveTasks, setProductiveTasks] = React.useState<any[]>([]);
   const [harvestingTasks, setHarvestingTasks] = React.useState<any[]>([]);
   const [inspectingTasks, setInspectingTasks] = React.useState<any[]>([]);
@@ -341,7 +341,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc chăm sóc cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -352,7 +352,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nông dân cho công việc thu hoạch cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -363,7 +363,7 @@ export const ApprovingPlanDrawer = () => {
           "Chưa chọn nhà kiểm định cho công việc kiểm định cho công việc " +
             task.name +
             " #ID: " +
-            task.id,
+            task.id
         );
         return false;
       }
@@ -403,100 +403,48 @@ export const ApprovingPlanDrawer = () => {
     formLoading,
   ]);
 
-  const steps = [
-    {
-      title: "1",
-      content: (
-        <InputGeneralPlan experts={experts} yields={yields} plants={plants} formProps={formProps} />
-      ),
-    },
-    {
-      title: "2",
-      content: (
-        <>
-          <VerifyPlanInformation
-            plants={plants}
-            yields={yields}
-            formProps={formProps}
-            experts={experts}
-            productiveTasks={productiveTasks}
-            harvestingTasks={harvestingTasks}
-            inspectingTasks={inspectingTasks}
-            inspectors={inspectors}
-            farmers={farmers}
-            packagingTasks={packagingTasks}
-          />
-        </>
-      ),
-    },
-  ];
   return (
     <Drawer
       loading={loadingForm}
       open
-      title={
-        <>
-          <Steps
-            style={{ marginTop: "20px" }}
-            current={current}
-            onChange={(value: any) => setCurrent(value)}
-          >
-            <Steps.Step key={0} title="Thông tin chung" />
-            <Steps.Step key={1} title="Xác nhận" />
-          </Steps>
-        </>
-      }
+      title={"Xác nhận kế hoạch sản xuất"}
       width={"100%"}
       height={"100%"}
       onClose={back}
       footer={
         <>
           <Flex justify="end">
-            {current > 0 && (
-              <Button
-                loading={loading || isLoading}
-                style={{ margin: "0 8px" }}
-                onClick={() => prev()}
-              >
-                Quay lại
-              </Button>
-            )}
-            {current < 1 && (
-              <Button
-                loading={loading || isLoading}
-                type="primary"
-                onClick={async () => {
-                  if (current == 2) {
-                    if (!validateAllTasks()) return;
-                  }
-                  next();
-                }}
-              >
-                Tiếp theo
-              </Button>
-            )}
-            {current === 1 && (
-              <Button
-                type="primary"
-                onClick={() =>
-                  mutate({
-                    resource: `plans`,
-                    id: `${id}/plan-approval`,
-                    values: {},
-                  })
-                }
-                loading={loading || isLoading}
-              >
-                Xác nhận kế hoạch
-              </Button>
-            )}
+            <Button
+              type="primary"
+              onClick={() =>
+                mutate({
+                  resource: `plans`,
+                  id: `${id}/plan-approval`,
+                  values: {},
+                })
+              }
+              loading={loading || isLoading}
+            >
+              Xác nhận kế hoạch
+            </Button>
           </Flex>
         </>
       }
     >
       {contextHolder}
       <Spin spinning={loadingForm}>
-        <div style={contentStyle}>{steps[current]?.content}</div>
+        <VerifyPlanInformation
+          plants={plants}
+          yields={yields}
+          formProps={formProps}
+          experts={experts}
+          productiveTasks={productiveTasks}
+          harvestingTasks={harvestingTasks}
+          inspectingTasks={inspectingTasks}
+          inspectors={inspectors}
+          farmers={farmers}
+          packagingTasks={packagingTasks}
+        />
       </Spin>
     </Drawer>
   );

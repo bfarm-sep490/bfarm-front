@@ -603,14 +603,16 @@ const App: React.FC = () => {
                         type="login"
                         formProps={{
                           initialValues: {
-                            email: "farmowner@gmail.com",
+                            email: "owner@bfarmx.space",
                             password: "1@",
                           },
                         }}
+                        registerLink={false}
+                        forgotPasswordLink={false}
                       />
                     }
                   />
-                  <Route
+                  {/* <Route
                     path="/register"
                     element={
                       <AuthPage
@@ -626,7 +628,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route path="/forgot-password" element={<AuthPage type="forgotPassword" />} />
-                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} />
+                  <Route path="/update-password" element={<AuthPage type="updatePassword" />} /> */}
                 </Route>
 
                 <Route

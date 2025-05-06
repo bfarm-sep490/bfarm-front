@@ -1,7 +1,7 @@
 {
   "pages": {
     "login": {
-      "title": "Sign in to your account",
+      "title": "Welcome to the Farm Management System",
       "signin": "Sign in",
       "signup": "Sign up",
       "divider": "or",

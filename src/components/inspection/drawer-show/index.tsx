@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { type HttpError, useOne, useTranslate } from "@refinedev/core";
-import { Button, List, Typography, Table, Drawer, Modal, Divider, theme } from "antd";
+import { Button, List, Typography, Drawer, Divider, theme, Alert } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { IInspectingForm } from "@/interfaces";
-import { InspectionDrawerForm } from "../drawer-form";
 import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
 import { useNavigate, useParams } from "react-router";
+import { getChemicalData } from "../chemical/ChemicalConstants";
+import { InspectionModals } from "../inspectionModals";
+import { InspectionDrawerForm } from "../drawer-form";
+import { IInspectingForm } from "@/interfaces";
 import dayjs from "dayjs";
-import { chemicalGroups, columns, getChemicalData } from "../chemical/ChemicalConstants";
 type InspectionShowProps = {
   visible?: boolean;
   onClose?: () => void;
@@ -16,9 +17,10 @@ type InspectionShowProps = {
   refetch?: () => void;
 };
 export const InspectionsShow = (props: InspectionShowProps) => {
-  const [isEditing, setIsEditing] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCriteriaModalVisible, setIsCriteriaModalVisible] = useState(false);
   const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { token } = theme.useToken();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,11 +51,29 @@ export const InspectionsShow = (props: InspectionShowProps) => {
   const inspection = formQueryResult?.data?.[0];
 
   const inspectionResult = resultQueryResult?.data?.[0];
+  const { data: planData } = useOne({
+    resource: "plans",
+    id: inspection?.plan_id,
+  });
+  const plan = planData?.data;
 
-  const chemicalData = getChemicalData(inspectionResult);
+  const { data: plantData } = useOne({
+    resource: "plants",
+    id: plan?.plant_information?.plant_id,
+  });
+  const plant = plantData?.data;
+
+  const chemicalData = useMemo(() => {
+    const data = getChemicalData(inspectionResult);
+    return data.map((item) => ({
+      ...item,
+      key: item.key,
+      name: item.label,
+      value: item.value !== undefined ? item.value.toString() : "N/A",
+    }));
+  }, [inspectionResult]);
 
   const handleBack = () => navigate(-1);
-
   const handleEdit = () => {
     if (inspection) {
       const formattedInspection = {
@@ -65,25 +85,24 @@ export const InspectionsShow = (props: InspectionShowProps) => {
       setIsEditing(true);
     }
   };
-
   const handleCloseDrawer = () => {
     setIsEditing(false);
     setSelectedResult(null);
   };
+
   const breakpoint = { sm: window.innerWidth > 576 };
 
   const handleOpenModal = () => setIsModalVisible(true);
   const handleCloseModal = () => setIsModalVisible(false);
+  const handleCloseCriteriaModal = () => setIsCriteriaModalVisible(false);
   useEffect(() => {
     if (props?.visible === true) {
       refetchInspectingResult();
       inspectingRefetching();
     } else {
-      setIsEditing(false);
       setIsModalVisible(false);
-      setSelectedResult(null);
     }
-  }, [props?.visible, props?.taskId, id]);
+  }, [props?.visible, props?.taskId, id, refetchInspectingResult, inspectingRefetching]);
   if (!inspection) return <Typography.Text></Typography.Text>;
 
   return (
@@ -97,10 +116,10 @@ export const InspectionsShow = (props: InspectionShowProps) => {
       open={props?.visible === true && props?.visible !== null ? props.visible : true}
       width={breakpoint?.sm ? "60%" : "100%"}
       onClose={props?.onClose ?? handleBack}
-      bodyStyle={{ padding: "24px 32px" }}
       style={{ background: token.colorBgLayout }}
-      headerStyle={{
-        background: token.colorBgContainer,
+      styles={{
+        body: { padding: "24px 32px" },
+        header: { background: token.colorBgContainer },
       }}
       title={
         <Typography.Title level={2} style={{ margin: 0 }}>
@@ -178,7 +197,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
             )}
           />
         ) : (
-          <Typography.Text type="secondary">Chưa có kết quả.</Typography.Text>
+          <Alert type="error" showIcon message="Chưa có kết quả kiểm định." />
         )}
       </div>
 
@@ -193,10 +212,11 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         <Typography.Title level={3} style={{ margin: 0 }}>
           Thông tin công việc
         </Typography.Title>
-
-        <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
-          Thay đổi
-        </Button>
+        {!inspectionResult && (
+          <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>
+            Thay đổi
+          </Button>
+        )}
       </div>
       <Divider style={{ marginTop: 0 }} />
 
@@ -305,28 +325,15 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         />
       </div>
 
-      <Modal open={isModalVisible} onCancel={handleCloseModal} footer={null} width={900}>
-        <Typography.Title level={3}>Chi tiết kết quả kiểm nghiệm</Typography.Title>
-        {chemicalGroups.map((group) => {
-          const groupData = chemicalData.filter((item) => group.keys.includes(item.key));
-          if (groupData.length === 0) return null;
-
-          return (
-            <div key={group.title} style={{ marginBottom: 24 }}>
-              <Typography.Text strong>{group.title}</Typography.Text>
-              <Table
-                rowKey="key"
-                dataSource={groupData}
-                columns={columns}
-                pagination={false}
-                bordered
-                style={{ marginTop: 8 }}
-              />
-            </div>
-          );
-        })}
-      </Modal>
-
+      <InspectionModals
+        isModalVisible={isModalVisible}
+        onCloseModal={handleCloseModal}
+        inspectionResult={inspectionResult}
+        chemicalData={chemicalData}
+        plantType={plant?.type}
+        isCriteriaModalVisible={isCriteriaModalVisible}
+        onCloseCriteriaModal={handleCloseCriteriaModal}
+      />
       {isEditing && selectedResult && (
         <InspectionDrawerForm
           id={selectedResult.id}

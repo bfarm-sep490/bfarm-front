@@ -1,6 +1,6 @@
 import { SaveButton, useDrawerForm } from "@refinedev/antd";
 import { type BaseKey, useGetToPath, useGo } from "@refinedev/core";
-import { Form, Input, DatePicker, Button, Flex, Drawer, Spin, Select } from "antd";
+import { Form, Input, DatePicker, Button, Flex, Drawer, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import dayjs from "dayjs";
@@ -47,19 +47,15 @@ export const InspectionDrawerForm = (props: Props) => {
   });
   useEffect(() => {
     if (props.open && props.initialValues) {
-      console.log("Received initialValues:", props.initialValues);
-
       const formattedData = {
         ...props.initialValues,
         start_date: props.initialValues.start_date ? dayjs(props.initialValues.start_date) : null,
         end_date: props.initialValues.end_date ? dayjs(props.initialValues.end_date) : null,
       };
 
-      console.log("Formatted Data:", formattedData);
-
       form.setFieldsValue(formattedData);
     }
-  }, [props.open, props.initialValues]);
+  }, [props.open, props.initialValues, form]);
 
   const onDrawerClose = () => {
     form.resetFields();

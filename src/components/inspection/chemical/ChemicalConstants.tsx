@@ -1,6 +1,9 @@
 import { IInspectingResult } from "@/interfaces";
 import { Typography, Tag } from "antd";
 
+export const mustBeZeroKeys = ["hydrogen_phosphide", "salmonella", "sulfur_dioxide"];
+export const getMustBeZeroKeys = (): string[] => mustBeZeroKeys;
+
 export const LIMITS: Record<string, number> = {
   arsen: 0.5,
   plumbum: 0.3,
@@ -57,26 +60,36 @@ export const columns = [
     },
   },
 ];
-
 export type ChemicalCategory = {
   title: string;
   keys: string[];
+  color: string;
 };
-
 export const chemicalGroups: ChemicalCategory[] = [
-  { title: "Kim loại nặng", keys: ["arsen", "plumbum", "cadmi", "hydragyrum"] },
-  { title: "Vi sinh vật gây bệnh", keys: ["salmonella", "coliforms", "ecoli"] },
   {
-    title: "Thuốc trừ sâu & tồn dư BVTV",
+    title: "chemicalGroups.heavyMetals",
+    keys: ["arsen", "plumbum", "cadmi", "hydrargyrum"],
+    color: "#722ed1",
+  },
+  {
+    title: "chemicalGroups.pathogens",
+    keys: ["salmonella", "coliforms", "ecoli"],
+    color: "#1890ff",
+  },
+  {
+    title: "chemicalGroups.pesticides",
     keys: ["glyphosate_glufosinate", "dithiocarbamate", "chlorate", "perchlorate"],
+    color: "#52c41a",
   },
   {
-    title: "Chất xông hơi & bảo quản",
+    title: "chemicalGroups.fumigants",
     keys: ["sulfur_dioxide", "methyl_bromide", "hydrogen_phosphide"],
+    color: "#fa8c16",
   },
   {
-    title: "Hóa chất nông nghiệp",
+    title: "chemicalGroups.agrochemicals",
     keys: ["nitrat", "nano3_kno3"],
+    color: "#722ed1",
   },
 ];
 

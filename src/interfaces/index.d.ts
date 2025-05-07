@@ -260,7 +260,7 @@ export interface IInspectingForm {
   sample_weight?: number | null;
   can_harvest: boolean;
   complete_date?: string;
-  status: "Draft" | "Pending" | "Ongoing" | "Completed" | "Cancel";
+  status: "Draft" | "Pending" | "Ongoing" | "Complete" | "Cancel" | "Incomplete";
   created_at: string;
   created_by: string;
   updated_at?: string | null;

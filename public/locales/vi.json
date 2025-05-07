@@ -113,7 +113,14 @@
     "enable": "Kích hoạt",
     "disable": "Vô hiệu hóa",
     "active": "Hoạt động",
-    "inactive": "Không hoạt động"
+    "inactive": "Không hoạt động",
+    "draft": "Nháp",
+    "pending": "Chờ duyệt",
+    "incomplete": "Chưa hoàn thành",
+    "ongoing": "Đang thực hiện",
+    "completed": "Hoàn thành",
+    "cancel": "Đã hủy",
+    "unknown": "Không xác định"
   },
   "warnWhenUnsavedChanges": "Bạn có chắc chắn muốn rời đi? Bạn có thay đổi chưa được lưu.",
   "notifications": {
@@ -236,6 +243,49 @@
     },
     "plans": {
       "name": "Kế hoạch"
+    }
+  },
+  "inspection": {
+    "title": "Thông tin giống cây kiểm nghiệm",
+    "result": "Kết quả",
+    "viewDetail": "Xem chi tiết",
+    "complete": "Hoàn Thành",
+    "beforeStart": "Chưa đến ngày kiểm nghiệm",
+    "noResult": "Chưa có kết quả kiểm nghiệm.",
+    "late": "Đã quá hạn kiểm nghiệm",
+    "invalid": "Không thể tạo kết quả trong trạng thái hiện tại",
+    "cropName": "Tên cây trồng",
+    "cropType": "Loại cây trồng",
+    "description": "Mô tả",
+    "jobTitle": "Thông tin công việc",
+    "planName": "Tên kế hoạch",
+    "center": "Trung tâm kiểm định",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "status": "Trạng thái",
+    "criteria": "Xem tiêu chí kiểm định",
+    "time": "Thời gian",
+    "completedAt": "Hoàn thành",
+    "createdAt": "Tạo lúc",
+    "createdBy": "Tạo bởi",
+    "evaluation": "Đánh giá",
+    "resultContent": "Nội dung",
+    "menu": "Phiếu kiểm định",
+    "modal": {
+      "title": "Chi tiết kết quả kiểm nghiệm",
+      "note": "(*) Các chất có dấu sao bắt buộc không được vượt mức an toàn (bắt buộc bằng 0).",
+      "conclusion": "Kết luận kiểm nghiệm:",
+      "noComment": "Không có nhận xét"
+    },
+    "table": {
+      "chemicalName": "Tên chất",
+      "value": "Giá trị",
+      "standard": "Tiêu chuẩn",
+      "limitZero": "Bắt buộc = 0",
+      "limitByCrop": "Dựa trên loại cây trồng",
+      "noData": "Không có dữ liệu",
+      "safetyLimit": "Giới hạn an toàn: {{value}}",
+      "tooltipThreshold": "Bình thường: ≤ {{warning}}, Ngưỡng nhẹ: > {{warning}}–{{danger}}, Nặng: ≥ {{danger}}"
     }
   },
   "fertilizers": {
@@ -488,7 +538,32 @@
   },
     "common": {
       "personalInfo": "Thông tin cá nhân",
-      "locationInfo": "Thông tin địa chỉ"
+      "locationInfo": "Thông tin địa chỉ",
+      "at": "lúc"
+    },
+    "chemicalGroups": {
+      "heavyMetals": "Kim loại nặng",
+      "pathogens": "Vi sinh vật gây bệnh",
+      "pesticides": "Thuốc trừ sâu & tồn dư BVTV",
+      "fumigants": "Chất xông hơi & bảo quản",
+      "agrochemicals": "Hóa chất nông nghiệp"
+    },
+    "contaminant": {
+      "title": "Tiêu chí kiểm định",
+      "plantType": "Loại cây",
+      "note": "(*) Các chất có dấu sao bắt buộc không được vượt mức an toàn (bắt buộc bằng 0).",
+      "table": {
+        "chemicalName": "Tên chất",
+        "warningLimit": "Ngưỡng nhẹ",
+        "dangerLimit": "Ngưỡng nặng",
+        "mustBeZero": "Bắt buộc = 0",
+        "thresholdTooltip": "Ngưỡng kiểm định: {{value}}",
+        "range": "Nhẹ ≤ {{warning}}, Nặng ≥ {{danger}}"
+      }
+    },
+    "mrl": {
+      "label": "MRL (Mức dư lượng tối đa)",
+      "description": "Giới hạn dư lượng tối đa cho phép tồn tại trong nông sản để đảm bảo an toàn sức khỏe."
     },
   "retailers": {
     "title": "Chi tiết Nhà mua sỉ",

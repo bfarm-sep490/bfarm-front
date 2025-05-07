@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTable } from "@refinedev/antd";
 import { getDefaultFilter, type HttpError, useGo } from "@refinedev/core";
-import { Table, Button, Input, InputNumber, Typography, theme, Space } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
+import { Table, InputNumber, Typography, theme } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { PaginationTotal } from "@/components/paginationTotal";
 import { IInspectingForm } from "@/interfaces";
 import { InspectionStatusTag } from "../status";
@@ -13,6 +13,8 @@ import { useNavigate } from "react-router";
 export const InspectionListTable: React.FC = () => {
   const { token } = theme.useToken();
   const go = useGo();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { tableProps, filters, setFilters } = useTable<IInspectingForm, HttpError>({
     resource: "inspecting-forms",
@@ -23,20 +25,17 @@ export const InspectionListTable: React.FC = () => {
       ],
     },
   });
-  const navigate = useNavigate();
-  const handleView = (id?: number) => {
-    if (id) {
-      go({
-        to: `/inspection-forms/${id}`,
-        type: "push",
-      });
-    }
-  };
 
-  const { t } = useTranslation();
+  const filteredData = useMemo(() => {
+    return (tableProps.dataSource || []).filter(
+      (item) => item.status === "Ongoing" || item.status === "Complete",
+    );
+  }, [tableProps.dataSource]);
+
   return (
     <Table
       {...tableProps}
+      dataSource={filteredData}
       rowKey="id"
       scroll={{ x: true }}
       pagination={{
@@ -78,21 +77,18 @@ export const InspectionListTable: React.FC = () => {
         dataIndex="inspector_name"
         key="inspector_name"
       />
-
       <Table.Column
         title={t("inspections.start_date")}
         dataIndex="start_date"
         key="start_date"
         render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
       />
-
       <Table.Column
         title={t("inspections.end_date")}
         dataIndex="end_date"
         key="end_date"
         render={(value: string) => dayjs(value).format("DD/MM/YYYY HH:mm")}
       />
-
       <Table.Column
         title={t("inspections.status")}
         dataIndex="status"

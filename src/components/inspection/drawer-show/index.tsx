@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { type HttpError, useOne, useTranslate } from "@refinedev/core";
 import { Button, List, Typography, Drawer, Divider, theme, Alert } from "antd";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { EditOutlined, ExperimentOutlined, EyeOutlined } from "@ant-design/icons";
 import { InspectionResultTag } from "../result";
 import { InspectionStatusTag } from "../status";
 import { useNavigate, useParams } from "react-router";
@@ -94,6 +94,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
 
   const handleOpenModal = () => setIsModalVisible(true);
   const handleCloseModal = () => setIsModalVisible(false);
+  const handleOpenCriteriaModal = () => setIsCriteriaModalVisible(true);
   const handleCloseCriteriaModal = () => setIsCriteriaModalVisible(false);
   useEffect(() => {
     if (props?.visible === true) {
@@ -122,9 +123,11 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         header: { background: token.colorBgContainer },
       }}
       title={
-        <Typography.Title level={2} style={{ margin: 0 }}>
-          #{inspection.id} - {inspection.task_name}
-        </Typography.Title>
+        <>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            #{inspection.id} - {inspection.task_name}
+          </Typography.Title>
+        </>
       }
     >
       <div
@@ -138,12 +141,20 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         <Typography.Title level={3} style={{ margin: 0 }}>
           Thông tin kết quả
         </Typography.Title>
-
-        {inspection.status !== "Cancel" && inspectionResult && (
-          <Button type="primary" icon={<EyeOutlined />} onClick={handleOpenModal}>
-            Xem chi tiết
-          </Button>
-        )}
+        <Button
+          type="primary"
+          icon={<ExperimentOutlined />}
+          onClick={handleOpenCriteriaModal}
+          style={{
+            borderRadius: token.borderRadiusSM,
+            backgroundColor: token.colorPrimary,
+            borderColor: token.colorPrimary,
+            padding: "8px 16px",
+            fontSize: 16,
+          }}
+        >
+          {t("inspection.criteria")}
+        </Button>
       </div>
 
       <Divider style={{ marginTop: 0 }} />
@@ -162,39 +173,14 @@ export const InspectionsShow = (props: InspectionShowProps) => {
             Đợt kiểm nghiệm đã bị hủy. Không thể tạo kết quả.
           </Typography.Text>
         ) : inspectionResult ? (
-          <List
-            dataSource={[
-              {
-                label: "Đánh giá",
-                value: <InspectionResultTag value={inspectionResult.evaluated_result} />,
-              },
-              {
-                label: "Nội dung",
-                value: inspectionResult.result_content || "N/A",
-              },
-              {
-                label: "Ảnh kết quả",
-                value:
-                  Array.isArray(inspectionResult.inspect_images) &&
-                  inspectionResult.inspect_images.length > 0
-                    ? "Có"
-                    : "Không có",
-              },
-            ]}
-            renderItem={(data) => (
-              <List.Item>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  <Typography.Text strong>{data.label}</Typography.Text>
-                  <Typography.Text>{data.value}</Typography.Text>
-                </div>
-              </List.Item>
-            )}
+          <InspectionModals
+            isModalVisible={isModalVisible}
+            onCloseModal={handleCloseModal}
+            inspectionResult={inspectionResult}
+            chemicalData={chemicalData}
+            plantType={plant?.type}
+            isCriteriaModalVisible={isCriteriaModalVisible}
+            onCloseCriteriaModal={handleCloseCriteriaModal}
           />
         ) : (
           <Alert type="error" showIcon message="Chưa có kết quả kiểm định." />
@@ -324,16 +310,6 @@ export const InspectionsShow = (props: InspectionShowProps) => {
           )}
         />
       </div>
-
-      <InspectionModals
-        isModalVisible={isModalVisible}
-        onCloseModal={handleCloseModal}
-        inspectionResult={inspectionResult}
-        chemicalData={chemicalData}
-        plantType={plant?.type}
-        isCriteriaModalVisible={isCriteriaModalVisible}
-        onCloseCriteriaModal={handleCloseCriteriaModal}
-      />
       {isEditing && selectedResult && (
         <InspectionDrawerForm
           id={selectedResult.id}

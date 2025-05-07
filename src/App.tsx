@@ -516,7 +516,7 @@ const App: React.FC = () => {
                       </InspectionsList>
                     }
                   >
-                    <Route path=":id" element={<InspectionShow />} />
+                    <Route path=":taskId" element={<InspectionShow />} />
                   </Route>
                   <Route path="/inspection-forms/edit/:id" element={<InspectionEdit />} />
                   <Route path="/plants/create" element={<PlantCreate />} />

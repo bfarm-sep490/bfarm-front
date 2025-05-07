@@ -133,8 +133,7 @@ export const InspectionModals: React.FC<InspectionModalsProps> = ({
         </Card>
 
         <div>
-          <Typography.Title level={5}>Tài liệu kiểm định</Typography.Title>
-          {imageUrls.length > 0 ? (
+          {fileUrls.length > 0 ? (
             <Flex wrap="wrap" gap={16}>
               {imageUrls.map((url, index) => (
                 <div

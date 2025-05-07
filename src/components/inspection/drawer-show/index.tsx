@@ -22,7 +22,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
   const [selectedResult, setSelectedResult] = useState<IInspectingForm | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const { token } = theme.useToken();
-  const { id } = useParams();
+  const { taskId } = useParams();
   const navigate = useNavigate();
   const t = useTranslate();
 
@@ -33,8 +33,8 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     isFetching: inspectingFetching,
   } = useOne<any, HttpError>({
     resource: "inspecting-forms",
-    id: props?.taskId ?? id,
-    queryOptions: { enabled: !!(props?.taskId || id) },
+    id: props?.taskId ?? taskId,
+    queryOptions: { enabled: !!(props?.taskId || taskId) },
   });
 
   const {
@@ -44,8 +44,8 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     isFetching: inspectingResultFetching,
   } = useOne<any, HttpError>({
     resource: "inspecting-results",
-    id: props?.taskId ?? id,
-    queryOptions: { enabled: !!(props?.taskId || id) },
+    id: props?.taskId ?? taskId,
+    queryOptions: { enabled: !!(props?.taskId || taskId) },
   });
 
   const inspection = formQueryResult?.data?.[0];
@@ -103,7 +103,7 @@ export const InspectionsShow = (props: InspectionShowProps) => {
     } else {
       setIsModalVisible(false);
     }
-  }, [props?.visible, props?.taskId, id, refetchInspectingResult, inspectingRefetching]);
+  }, [props?.visible, props?.taskId, taskId, refetchInspectingResult, inspectingRefetching]);
   if (!inspection) return <Typography.Text></Typography.Text>;
 
   return (
@@ -114,7 +114,11 @@ export const InspectionsShow = (props: InspectionShowProps) => {
         inspectingFetching ||
         inspectingResultLoading
       }
-      open={props?.visible === true && props?.visible !== null ? props.visible : true}
+      open={
+        props?.visible === true && props?.visible !== null
+          ? props.visible
+          : taskId !== null && taskId !== undefined
+      }
       width={breakpoint?.sm ? "60%" : "100%"}
       onClose={props?.onClose ?? handleBack}
       style={{ background: token.colorBgLayout }}

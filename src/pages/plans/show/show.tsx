@@ -31,6 +31,7 @@ import {
   BarChartOutlined,
   ShoppingOutlined,
   ArrowDownOutlined,
+  QrcodeOutlined,
 } from "@ant-design/icons";
 import { DateField, Show } from "@refinedev/antd";
 import { HttpError, useList, useOne, useGo } from "@refinedev/core";
@@ -410,7 +411,7 @@ export const PlanShow = ({ children }: PropsWithChildren<{}>) => {
                     onClick={() => {
                       setQrCodeOpen(true);
                     }}
-                    icon={<CheckCircleOutlined />}
+                    icon={<QrcodeOutlined />}
                   >
                     QR{" "}
                   </Button>

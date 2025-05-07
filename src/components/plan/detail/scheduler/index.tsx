@@ -36,6 +36,7 @@ import { DateField, TextField } from "@refinedev/antd";
 import { AssignTaskModal } from "../assign-tasks-modal";
 import TaskModal from "@/components/task-create-update";
 import GenericTaskDrawer from "@/components/task/show";
+import { InspectionsShow } from "@/components/inspection";
 const locales = {
   vi,
 };
@@ -791,15 +792,15 @@ export const ScheduleComponent = (props: ScheduleComponentProps) => {
         visible={showTask && taskId !== null && taskType !== "Inspecting"}
         taskId={taskId as number}
       />
-      {/* <InspectionsShow
+      <InspectionsShow
         onClose={() => {
           setShowTask(false);
           setTaskId(null);
           setTaskType(null);
         }}
-        visible={showTask && taskId !== null && taskType === "Inspecting"}
+        visible={showTask == true && taskId !== null && taskType === "Inspecting"}
         taskId={taskId as number}
-      /> */}
+      />
       <AssignTaskModal
         api={api}
         planId={id ? parseInt(id, 10) : undefined}

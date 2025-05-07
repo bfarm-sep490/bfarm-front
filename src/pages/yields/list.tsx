@@ -28,7 +28,7 @@ export const YieldsList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.yield.name", "Khu đất")}
+      title={t("yield.yield")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

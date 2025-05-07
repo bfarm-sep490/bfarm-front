@@ -31,7 +31,7 @@ export const PaginationTotal: FC<PaginationTotalProps> = ({ total, entityName })
           color: token.colorTextTertiary,
         }}
       >
-        {t(`${entityName}.${entityName}`)} {t("table.inTotal")}
+        {t(`${entityName}`)} {t("table.inTotal")}
       </Typography.Text>
     </div>
   );

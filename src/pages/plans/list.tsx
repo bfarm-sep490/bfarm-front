@@ -24,7 +24,7 @@ export const PlanList = () => {
   const go = useGo();
 
   return (
-    <List>
+    <List breadcrumb={false} title={translate("plans.plans")}>
       <Table
         onRow={(row) => ({
           onClick: () => {

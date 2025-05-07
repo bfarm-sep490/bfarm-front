@@ -28,7 +28,7 @@ export const FarmerList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.farmers.name", "Nông dân")}
+      title={t("farmers.farmers")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

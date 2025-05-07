@@ -28,7 +28,7 @@ export const ExpertList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.experts.name", "Chuyên gia")}
+      title={t("experts.experts")}
       headerButtons={(props: any) => [
         <Segmented<View>
           key="view"

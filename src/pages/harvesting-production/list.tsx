@@ -1,22 +1,14 @@
-import { FarmerListTable } from "@/components/farmer";
-import { FarmerListTableInPlan } from "@/components/plan/farmers/list";
 import { HarvestingProductList } from "@/components/production/harvesting/list";
-import { PackagedProductList } from "@/components/production/packaging/list";
-import { AppstoreOutlined, ArrowLeftOutlined, UnorderedListOutlined } from "@ant-design/icons";
-import { CreateButton, List } from "@refinedev/antd";
-import { useBack, useGo, useNavigation } from "@refinedev/core";
-import { Button, Segmented, Typography } from "antd";
-import { type PropsWithChildren, useState } from "react";
-import { useLocation } from "react-router";
+import { List } from "@refinedev/antd";
+import { useTranslate } from "@refinedev/core";
+import { type PropsWithChildren } from "react";
 
 export const HarvestingProductionListPage = ({ children }: PropsWithChildren) => {
+  const translate = useTranslate();
   return (
-    <>
-      <Typography.Title level={4} style={{ marginBottom: 16 }}>
-        Danh sách sản phẩm thu hoạch
-      </Typography.Title>
+    <List breadcrumb={false} title={translate("harvesting-products.harvesting-products")}>
       <HarvestingProductList />
       {children}
-    </>
+    </List>
   );
 };

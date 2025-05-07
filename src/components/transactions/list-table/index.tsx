@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { DateField, useTable } from "@refinedev/antd";
-import { type HttpError, getDefaultFilter, useTranslate } from "@refinedev/core";
-import { Table, Avatar, Button, Input, InputNumber, Typography, theme } from "antd";
+import { type HttpError, useTranslate } from "@refinedev/core";
+import { Table, Typography, theme } from "antd";
 
 export const TransactionListTable: React.FC = () => {
   const { token } = theme.useToken();

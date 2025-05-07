@@ -1,6 +1,6 @@
 import { useForm } from "@refinedev/antd";
 import { Card, Form, Input, InputNumber, Button, message } from "antd";
-import { useGetIdentity } from "@refinedev/core";
+import { useGetIdentity, useTranslate } from "@refinedev/core";
 import { useEffect } from "react";
 
 interface IConfiguration {
@@ -22,13 +22,15 @@ export const ConfigurationList: React.FC = () => {
     },
   });
 
+  const translate = useTranslate();
+
   const { data: user } = useGetIdentity();
 
   useEffect(() => {}, []);
 
   return (
     <Card
-      title="Cấu hình hệ thống"
+      title={translate("configuration.configuration")}
       style={{
         maxWidth: "800px",
         margin: "0 auto",

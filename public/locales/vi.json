@@ -1,7 +1,7 @@
 {
   "pages": {
     "login": {
-      "title": "Chào mừng bạn đến với hệ thống quản lý trang trại",
+      "title": "Chào mừng đến với Hệ thống Quản lý Nông trại",
       "signin": "Đăng nhập",
       "signup": "Đăng ký",
       "divider": "hoặc",
@@ -16,11 +16,11 @@
         "submit": "Đăng nhập",
         "forgotPassword": "Quên mật khẩu?",
         "noAccount": "Chưa có tài khoản?",
-        "rememberMe": "Ghi nhớ đăng nhập"
+        "rememberMe": "Ghi nhớ tôi"
       }
     },
     "forgotPassword": {
-      "title": "Bạn quên mật khẩu?",
+      "title": "Quên mật khẩu của bạn?",
       "fields": {
         "email": "Email"
       },
@@ -28,7 +28,7 @@
         "validEmail": "Địa chỉ email không hợp lệ"
       },
       "buttons": {
-        "submit": "Gửi hướng dẫn đặt lại mật khẩu"
+        "submit": "Gửi hướng dẫn đặt lại"
       }
     },
     "register": {
@@ -59,23 +59,23 @@
       }
     },
     "error": {
-      "404": "Xin lỗi, trang bạn tìm kiếm không tồn tại.",
-      "info": "Có thể bạn quên thêm thành phần {{action}} vào tài nguyên {{resource}}.",
-      "resource404": "Bạn chắc chắn đã tạo tài nguyên {{resource}}?",
-      "backHome": "Quay lại trang chủ"
+      "404": "Xin lỗi, trang bạn truy cập không tồn tại.",
+      "info": "Bạn có thể đã quên thêm thành phần {{action}} vào tài nguyên {{resource}}.",
+      "resource404": "Bạn có chắc đã tạo tài nguyên {{resource}} chưa?",
+      "backHome": "Quay về Trang chủ"
     }
   },
   "actions": {
     "list": "Danh sách",
-    "create": "Tạo mới",
+    "create": "Tạo",
     "edit": "Chỉnh sửa",
-    "show": "Xem",
+    "show": "Hiển thị",
     "delete": "Xóa",
     "cancel": "Hủy"
   },
   "buttons": {
     "add": "Thêm",
-    "create": "Tạo mới",
+    "create": "Tạo",
     "save": "Lưu",
     "logout": "Đăng xuất",
     "delete": "Xóa",
@@ -83,13 +83,13 @@
     "cancel": "Hủy",
     "confirm": "Bạn có chắc không?",
     "filter": "Lọc",
-    "clear": "Xóa",
+    "clear": "Xóa bỏ",
     "refresh": "Làm mới",
     "show": "Hiển thị",
     "undo": "Hoàn tác",
-    "import": "Nhập khẩu",
-    "export": "Xuất khẩu",
-    "clone": "Nhân bản",
+    "import": "Nhập",
+    "export": "Xuất",
+    "clone": "Sao chép",
     "accept": "Chấp nhận",
     "acceptAll": "Chấp nhận tất cả",
     "reject": "Từ chối",
@@ -99,7 +99,7 @@
   },
   "loading": "Đang tải",
   "tags": {
-    "clone": "Nhân bản"
+    "clone": "Sao chép"
   },
   "table": {
     "actions": "Hành động",
@@ -122,13 +122,13 @@
     "cancel": "Đã hủy",
     "unknown": "Không xác định"
   },
-  "warnWhenUnsavedChanges": "Bạn có chắc chắn muốn rời đi? Bạn có thay đổi chưa được lưu.",
+  "warnWhenUnsavedChanges": "Bạn có chắc muốn rời đi? Bạn có những thay đổi chưa lưu.",
   "notifications": {
     "success": "Thành công",
     "error": "Lỗi (mã trạng thái: {{statusCode}})",
     "undoable": "Bạn có {{seconds}} giây để hoàn tác",
     "createSuccess": "Đã tạo thành công {{resource}}",
-    "createError": "Lỗi khi tạo {{resource}} (mã trạng thái: {{statusCode}})",
+    "createError": "Có lỗi khi tạo {{resource}} (mã trạng thái: {{statusCode}})",
     "deleteSuccess": "Đã xóa thành công {{resource}}",
     "deleteError": "Lỗi khi xóa {{resource}} (mã trạng thái: {{statusCode}})",
     "editSuccess": "Đã chỉnh sửa thành công {{resource}}",
@@ -152,6 +152,7 @@
     }
   },
   "dashboard": {
+    "dashboard": "Bảng điều khiển",
     "title": "Bảng điều khiển",
     "overview": {
       "title": "Tổng quan"
@@ -190,122 +191,90 @@
       "orderStatuses": {
         "pending": "Đang chuẩn bị đơn hàng",
         "ready": "Đơn hàng đã sẵn sàng",
-        "on the way": "Đơn hàng đang được giao",
-        "delivered": "Đơn hàng đã giao",
-        "cancelled": "Đơn hàng đã hủy"
+        "on the way": "Đơn hàng đang trên đường",
+        "delivered": "Đơn hàng đã được giao",
+        "cancelled": "Đơn hàng đã bị hủy"
       }
     },
     "recentOrders": {
       "title": "Đơn hàng gần đây"
     },
     "trendingMenus": {
-      "title": "Thực đơn nổi bật hàng ngày"
+      "title": "Thực đơn xu hướng hàng ngày"
     },
     "trendingProducts": {
-      "title": "Sản phẩm nổi bật"
+      "title": "Sản phẩm xu hướng"
     },
     "quickStats": {
       "title": "Thống kê nhanh",
       "activeSeasons": "Mùa vụ hoạt động",
       "cultivatedArea": "Diện tích canh tác",
-      "estimatedYield": "Sản lượng ước tính",
+      "estimatedYield": "Ước tính sản lượng",
       "qualityInspections": "Kiểm tra chất lượng",
       "value": "Giá trị"
     }
   },
-  "resources": {
-    "pesticides": {
-      "name": "Thuốc trừ sâu"
-    },
-    "yield": {
-      "name": "Khu đất"
-    },
-    "plants": {
-      "name": "Cây trồng"
-    },
-    "items": {
-      "name": "Vật tư"
-    },
-    "fertilizers": {
-      "name": "Phân bón"
-    },
-    "farmers": {
-      "name": "Nông dân"
-    },
-    "experts": {
-      "name": "Chuyên gia"
-    },
-    "inspection-forms": {
-      "name": "Đơn kiểm định"
-    },
-    "inspectors": {
-      "name": "Nhà kiểm định"
-    },
-    "plans": {
-      "name": "Kế hoạch"
-    }
+  "plants": {
+    "plants": "Cây trồng"
   },
-  "inspection": {
-    "title": "Thông tin giống cây kiểm nghiệm",
-    "result": "Kết quả",
-    "viewDetail": "Xem chi tiết",
-    "complete": "Hoàn Thành",
-    "beforeStart": "Chưa đến ngày kiểm nghiệm",
-    "noResult": "Chưa có kết quả kiểm nghiệm.",
-    "late": "Đã quá hạn kiểm nghiệm",
-    "invalid": "Không thể tạo kết quả trong trạng thái hiện tại",
-    "cropName": "Tên cây trồng",
-    "cropType": "Loại cây trồng",
-    "description": "Mô tả",
-    "jobTitle": "Thông tin công việc",
-    "planName": "Tên kế hoạch",
-    "center": "Trung tâm kiểm định",
-    "startDate": "Ngày bắt đầu",
-    "endDate": "Ngày kết thúc",
-    "status": "Trạng thái",
-    "criteria": "Xem tiêu chí kiểm định",
-    "time": "Thời gian",
-    "completedAt": "Hoàn thành",
-    "createdAt": "Tạo lúc",
-    "createdBy": "Tạo bởi",
-    "evaluation": "Đánh giá",
-    "resultContent": "Nội dung",
-    "menu": "Phiếu kiểm định",
-    "modal": {
-      "title": "Chi tiết kết quả kiểm nghiệm",
-      "note": "(*) Các chất có dấu sao bắt buộc không được vượt mức an toàn (bắt buộc bằng 0).",
-      "conclusion": "Kết luận kiểm nghiệm:",
-      "noComment": "Không có nhận xét"
-    },
-    "table": {
-      "chemicalName": "Tên chất",
-      "value": "Giá trị",
-      "standard": "Tiêu chuẩn",
-      "limitZero": "Bắt buộc = 0",
-      "limitByCrop": "Dựa trên loại cây trồng",
-      "noData": "Không có dữ liệu",
-      "safetyLimit": "Giới hạn an toàn: {{value}}",
-      "tooltipThreshold": "Bình thường: ≤ {{warning}}, Ngưỡng nhẹ: > {{warning}}–{{danger}}, Nặng: ≥ {{danger}}"
-    }
+  "farmers": {
+    "farmers": "Nông dân"
+  },
+  "inspection-forms": {
+    "inspection-forms": "Biểu mẫu kiểm tra"
+  },
+  "plans": {
+    "plans": "Kế hoạch"
+  },
+  "orders": {
+    "orders": "Đơn hàng"
+  },
+  "products": {
+    "products": "Sản phẩm"
+  },
+  "harvesting-products": {
+    "harvesting-products": "Sản phẩm thu hoạch"
+  },
+  "packaging-products": {
+    "packaging-products": "Sản phẩm đóng gói"
+  },
+  "problems": {
+    "problems": "Vấn đề"
+  },
+  "material": {
+    "material": "Vật liệu"
+  },
+  "employees": {
+    "employees": "Nhân viên"
+  },
+  "transactions": {
+    "transactions": "Giao dịch"
+  },
+  "batches": {
+    "batches": "Lịch sử bàn giao"
+  },
+  "configuration": {
+    "configuration": "Cấu hình"
   },
   "fertilizers": {
+    "fertilizers": "Phân bón",
     "entity": "phân bón",
     "tableTitle": "Danh sách phân bón",
     "actions": "Hành động",
     "filters": {
-      "id": "Tìm ID",
-      "name": "Tìm tên",
-      "quantity": "Tìm số lượng"
+      "id": "Tìm kiếm ID",
+      "name": "Tìm kiếm tên",
+      "quantity": "Tìm kiếm số lượng"
     },
     "buttons": {
-      "create": "Thêm Phân Bón"
+      "create": "Thêm phân bón"
     },
     "fields": {
       "id": "ID",
       "image": "Hình ảnh",
-      "imageAlt": "Ảnh phân bón",
+      "imageAlt": "Hình ảnh phân bón",
       "uploading": "Đang tải lên...",
-      "upload": "Tải ảnh lên",
+      "upload": "Tải lên hình ảnh",
       "name": "Tên phân bón",
       "name_required": "Vui lòng nhập tên!",
       "name_placeholder": "Nhập tên phân bón",
@@ -326,37 +295,38 @@
       "type_placeholder": "Chọn loại"
     },
     "status": {
-      "available": "Đang sử dụng",
+      "available": "Có sẵn",
       "out": "Hết hàng",
-      "limited": "Còn ít"
+      "limited": "Hạn chế"
     },
     "type": {
       "organic": "Hữu cơ",
       "chemical": "Hóa học",
-      "mineral": "Khoáng"
+      "mineral": "Khoáng chất"
     }
   },
   "title": {
-    "edit": "Chỉnh Sửa",
-    "create": "Thêm"
+    "edit": "Chỉnh sửa",
+    "create": "Thêm "
   },
   "pesticides": {
-    "imageAlt": "Ảnh thuốc trừ sâu",
+    "pesticides": "Thuốc trừ sâu",
+    "imageAlt": "Hình ảnh thuốc trừ sâu",
     "uploading": "Đang tải lên...",
-    "upload": "Tải ảnh lên",
+    "upload": "Tải lên hình ảnh",
     "actions": "Hành động",
     "fields": {
       "id": "ID",
-      "image": "Ảnh",
-      "name": "Tên thuốc",
+      "image": "Hình ảnh",
+      "name": "Tên thuốc trừ sâu",
       "description": "Mô tả",
       "quantity": "Số lượng",
       "unit": "Đơn vị",
       "type": "Loại",
       "status": "Trạng thái",
-      "searchById": "Tìm ID",
-      "searchByName": "Tìm tên thuốc",
-      "searchByQuantity": "Tìm theo số lượng"
+      "searchById": "Tìm kiếm ID",
+      "searchByName": "Tìm kiếm theo tên",
+      "searchByQuantity": "Tìm kiếm theo số lượng"
     },
     "placeholders": {
       "name": "Nhập tên thuốc trừ sâu",
@@ -379,25 +349,26 @@
       "mineral": "Khoáng chất"
     },
     "status": {
-      "limited": "Còn ít",
+      "limited": "Tồn kho hạn chế",
       "out": "Hết hàng",
       "available": "Có sẵn"
     }
   },
   "items": {
+    "items": "Mặt hàng",
     "id": "ID",
-    "image": "Ảnh",
+    "image": "Hình ảnh",
     "edit": "Chỉnh sửa",
-    "add": "Thêm Vật Tư",
-    "imageAlt": "Ảnh vật tư",
+    "add": "Thêm mặt hàng",
+    "imageAlt": "Hình ảnh mặt hàng",
     "uploading": "Đang tải lên...",
-    "upload": "Tải ảnh lên",
-    "name": "Tên vật tư",
+    "upload": "Tải lên hình ảnh",
+    "name": "Tên mặt hàng",
     "nameRequired": "Vui lòng nhập tên!",
-    "namePlaceholder": "Nhập tên vật phẩm",
+    "namePlaceholder": "Nhập tên mặt hàng",
     "description": "Mô tả",
     "descriptionRequired": "Vui lòng nhập mô tả!",
-    "descriptionPlaceholder": "Nhập mô tả vật phẩm",
+    "descriptionPlaceholder": "Nhập mô tả mặt hàng",
     "quantity": "Số lượng",
     "quantityRequired": "Vui lòng nhập số lượng!",
     "quantityPlaceholder": "Nhập số lượng",
@@ -407,7 +378,7 @@
     "status": "Trạng thái",
     "statusRequired": "Vui lòng chọn trạng thái!",
     "statusPlaceholder": "Chọn trạng thái",
-    "statusActive": "Đang hoạt động",
+    "statusActive": "Hoạt động",
     "statusInStock": "Còn hàng",
     "statusOutStock": "Hết hàng",
     "type": "Loại",
@@ -416,38 +387,39 @@
     "typePackaging": "Đóng gói",
     "typeCaring": "Chăm sóc",
     "typeHarvesting": "Thu hoạch",
+    "searchId": "Tìm kiếm ID",
+    "searchName": "Tìm kiếm tên",
+    "searchQuantity": "Tìm kiếm số lượng",
     "actions": "Hành động",
-    "searchId": "Tìm ID",
-    "searchName": "Tìm tên",
-    "searchQuantity": "Tìm số lượng",
     "buttons": {
-      "create": "Thêm Vật Tư"
+      "create": "Thêm mặt hàng"
     }
   },
   "inspections": {
-    "search_id": "Tìm ID",
+    "inspections": "Kiểm tra",
+    "search_id": "Tìm kiếm ID",
     "edit": "Chỉnh sửa",
     "add": "Thêm",
-    "task_name": "Tên công việc",
+    "task_name": "Tên nhiệm vụ",
     "inspector_name": "Người kiểm tra",
     "plan_name": "Tên kế hoạch",
     "status": "Trạng thái",
     "result_info": "Thông tin kết quả",
     "view_details": "Xem chi tiết",
-    "cancelled_warning": "Đợt kiểm nghiệm đã bị hủy. Không thể tạo kết quả.",
+    "cancelled_warning": "Kiểm tra đã bị hủy. Không thể tạo kết quả.",
     "evaluation": "Đánh giá",
     "content": "Nội dung",
-    "result_image": "Ảnh kết quả",
+    "result_image": "Hình ảnh kết quả",
     "no_result": "Chưa có kết quả.",
     "job_info": "Thông tin công việc",
-    "inspector_center": "Trung tâm kiểm định",
-    "can_harvest": "Cho thu hoạch",
+    "inspector_center": "Trung tâm kiểm tra",
+    "can_harvest": "Có thể thu hoạch",
     "time_info": "Thời gian",
     "created_at": "Tạo lúc",
     "created_by": "Tạo bởi",
-    "completed_at": "Hoàn thành",
-    "updated_at": "Cập nhật",
-    "result_detail": "Chi tiết kết quả kiểm nghiệm",
+    "completed_at": "Hoàn thành lúc",
+    "updated_at": "Cập nhật lúc",
+    "result_detail": "Chi tiết kết quả kiểm tra",
     "task_name_required": "Vui lòng nhập tên kế hoạch!",
     "task_name_placeholder": "Nhập tên kế hoạch",
     "description": "Mô tả",
@@ -464,39 +436,40 @@
     "updated_by_placeholder": "Nhập tên người cập nhật",
     "yes": "Có",
     "no": "Không",
-    "create": "Thay đổi",
+    "create": "Cập nhật",
     "categories": {
       "heavy_metals": "Kim loại nặng",
       "pathogens": "Vi sinh vật gây bệnh",
-      "pesticides": "Thuốc trừ sâu & tồn dư BVTV",
-      "fumigants": "Chất xông hơi & bảo quản",
+      "pesticides": "Thuốc trừ sâu & dư lượng",
+      "fumigants": "Chất xông hơi & chất bảo quản",
       "agrochemicals": "Hóa chất nông nghiệp"
     }
   },
   "inspectors": {
-    "title": "Nhà kiểm định",
+    "inspectors": "Người kiểm tra",
+    "title": "Người kiểm tra",
     "avatar": "Ảnh đại diện",
     "name": "Tên",
     "address": "Địa chỉ",
     "phone": "Số điện thoại",
     "email": "Email",
     "status": "Trạng thái",
-    "created_at": "Ngày tạo",
-    "updated_at": "Ngày cập nhật",
-    "actions": "Thao tác",
-    "search_id": "Tìm theo ID",
-    "search_name": "Tìm theo tên",
-    "search_email": "Tìm theo email",
+    "created_at": "Tạo lúc",
+    "updated_at": "Cập nhật lúc",
+    "actions": "Hành động",
+    "search_id": "Tìm kiếm theo ID",
+    "search_name": "Tìm kiếm theo tên",
+    "search_email": "Tìm kiếm theo email",
     "filter_status": "Lọc theo trạng thái",
     "not_updated": "Chưa cập nhật",
     "uploading": "Đang tải lên...",
-    "uploadImage": "Tải ảnh lên",
-    "create": "Thêm nhà kiểm định"
+    "uploadImage": "Tải lên hình ảnh",
+    "create": "Thêm người kiểm tra"
   },
   "plant": {
-    "edit": "Chỉnh Sửa",
-    "add": "Thêm Cây Trồng",
-    "imageAlt": "Ảnh",
+    "edit": "Chỉnh sửa",
+    "add": "Thêm cây trồng",
+    "imageAlt": "Hình ảnh",
     "name": "Tên cây trồng",
     "nameRequired": "Vui lòng nhập tên cây trồng!",
     "namePlaceholder": "Nhập tên cây trồng",
@@ -511,62 +484,38 @@
     "basePricePlaceholder": "Nhập giá cơ bản",
     "type": "Loại",
     "typeRequired": "Vui lòng chọn loại!",
-    "typePlaceholder": "Chọn loại cây",
-    "estimatedPerUnit": "Ước lượng theo một đơn vị",
-    "estimatedPerUnitPlaceholder": "Nhập lượng ước tính mỗi đơn vị",
-    "preservationDay": "Số ngày bảo quản",
+    "typePlaceholder": "Chọn loại cây trồng",
+    "estimatedPerUnit": "Ước tính trên mỗi đơn vị",
+    "estimatedPerUnitPlaceholder": "Nhập ước tính trên mỗi đơn vị",
+    "preservationDay": "Ngày bảo quản",
     "preservationDayPlaceholder": "Nhập số ngày bảo quản",
-    "deltaOne": "Tỉ giá loại 1",
-    "deltaOnePlaceholder": "Nhập Tỉ giá loại 1",
-    "deltaTwo": "Tỉ giá loại 2",
-    "deltaTwoPlaceholder": "Nhập Tỉ giá loại 2",
-    "deltaThree": "Tỉ giá loại 3",
-    "deltaThreePlaceholder": "Nhập Tỉ giá loại 3",
+    "deltaOne": "Tỷ lệ loại 1",
+    "deltaOnePlaceholder": "Nhập tỷ lệ loại 1",
+    "deltaTwo": "Tỷ lệ loại 2",
+    "deltaTwoPlaceholder": "Nhập tỷ lệ loại 2",
+    "deltaThree": "Tỷ lệ loại 3",
+    "deltaThreePlaceholder": "Nhập tỷ lệ loại 3",
     "status": "Trạng thái",
     "statusRequired": "Vui lòng chọn trạng thái!",
     "statusPlaceholder": "Chọn trạng thái",
     "statusAvailable": "Có sẵn",
     "statusOutOfStock": "Hết hàng",
-    "statusLimited": "Còn ít",
-    "upload": "Tải ảnh lên",
+    "statusLimited": "Tồn kho hạn chế",
+    "upload": "Tải lên hình ảnh",
     "uploading": "Đang tải lên...",
     "title": "Chi tiết giống cây trồng",
-    "plantRatioTitle": "Tỉ lệ giá cây trồng",
-    "suitableSoilList": "Danh sách đất trồng phù hợp",
+    "plantRatioTitle": "Tỷ lệ giá cây trồng",
+    "suitableSoilList": "Danh sách đất phù hợp",
     "day": "ngày",
-    "create": "Thêm Giống Cây"
+    "create": "Thêm cây trồng"
   },
-    "common": {
-      "personalInfo": "Thông tin cá nhân",
-      "locationInfo": "Thông tin địa chỉ",
-      "at": "lúc"
-    },
-    "chemicalGroups": {
-      "heavyMetals": "Kim loại nặng",
-      "pathogens": "Vi sinh vật gây bệnh",
-      "pesticides": "Thuốc trừ sâu & tồn dư BVTV",
-      "fumigants": "Chất xông hơi & bảo quản",
-      "agrochemicals": "Hóa chất nông nghiệp"
-    },
-    "contaminant": {
-      "title": "Tiêu chí kiểm định",
-      "plantType": "Loại cây",
-      "note": "(*) Các chất có dấu sao bắt buộc không được vượt mức an toàn (bắt buộc bằng 0).",
-      "table": {
-        "chemicalName": "Tên chất",
-        "warningLimit": "Ngưỡng nhẹ",
-        "dangerLimit": "Ngưỡng nặng",
-        "mustBeZero": "Bắt buộc = 0",
-        "thresholdTooltip": "Ngưỡng kiểm định: {{value}}",
-        "range": "Nhẹ ≤ {{warning}}, Nặng ≥ {{danger}}"
-      }
-    },
-    "mrl": {
-      "label": "MRL (Mức dư lượng tối đa)",
-      "description": "Giới hạn dư lượng tối đa cho phép tồn tại trong nông sản để đảm bảo an toàn sức khỏe."
-    },
+  "common": {
+    "personalInfo": "Thông tin cá nhân",
+    "locationInfo": "Thông tin địa chỉ"
+  },
   "retailers": {
-    "title": "Chi tiết Nhà mua sỉ",
+    "retailers": "Nhà bán lẻ",
+    "title": "Chi tiết nhà bán lẻ",
     "id": "ID",
     "avatar": "Ảnh đại diện",
     "name": "Tên",
@@ -577,28 +526,29 @@
     "location": "Vị trí (Kinh độ, Vĩ độ)",
     "status": "Trạng thái",
     "is_active": "Trạng thái hoạt động",
-    "actions": "Thao tác",
+    "actions": "Hành động",
     "created_at": "Ngày tạo",
     "active": "Hoạt động",
     "inactive": "Không hoạt động",
-    "searchId": "Tìm theo ID",
-    "searchName": "Tìm theo tên"
+    "searchId": "Tìm kiếm theo ID",
+    "searchName": "Tìm kiếm theo tên"
   },
   "yield": {
-    "landName": "Tên khu đất",
+    "yield": "Sản lượng",
+    "landName": "Tên đất",
     "area": "Diện tích",
     "areaUnit": "Đơn vị diện tích",
     "description": "Mô tả",
     "soilType": "Loại đất",
     "status": "Trạng thái",
-    "editLand": "Chỉnh Sửa",
-    "addLand": "Thêm Khu Đất",
-    "available": "Sẵn sàng",
+    "editLand": "Chỉnh sửa sản lượng",
+    "addLand": "Thêm sản lượng",
+    "available": "Có sẵn",
     "maintenance": "Bảo trì",
     "inUse": "Đang sử dụng",
     "suitablePlants": "Cây trồng phù hợp",
     "loading": "Đang tải...",
-    "create": "Thêm khu đất",
+    "create": "Thêm sản lượng",
     "soilTypes": {
       "gray": "Đất xám",
       "sandy": "Đất cát",
@@ -609,7 +559,7 @@
       "organic": "Đất hữu cơ"
     },
     "required": {
-      "landName": "Vui lòng nhập tên khu đất!",
+      "landName": "Vui lòng nhập tên đất!",
       "area": "Vui lòng nhập diện tích!",
       "areaUnit": "Vui lòng nhập đơn vị diện tích!",
       "description": "Vui lòng nhập mô tả!",
@@ -617,9 +567,9 @@
       "status": "Vui lòng chọn trạng thái!"
     },
     "placeholder": {
-      "landName": "Nhập tên khu đất",
+      "landName": "Nhập tên đất",
       "area": "Nhập diện tích",
-      "areaUnit": "Ví dụ: m², hecta",
+      "areaUnit": "ví dụ: m², hecta",
       "description": "Nhập mô tả",
       "soilType": "Chọn loại đất",
       "status": "Chọn trạng thái"
@@ -628,56 +578,49 @@
   "form": {
     "edit_farmer": "Chỉnh sửa nông dân",
     "create_farmer": "Tạo nông dân",
-    "cancel": "Hủy bỏ",
+    "cancel": "Hủy",
     "save": "Lưu"
   },
   "images": {
-    "upload": "Tải ảnh lên",
-    "uploading": "Đang tải ảnh lên..."
+    "upload": "Tải lên hình ảnh",
+    "uploading": "Đang tải lên..."
   },
   "farmer_name": "Tên nông dân",
   "farmer": {
     "phone": "Số điện thoại",
     "email": "Email",
     "status": "Trạng thái",
-    "created_at": "Ngày tạo",
-    "updated_at": "Ngày cập nhật",
-    "actions": "Thao tác",
-    "search_id": "Tìm theo ID",
-    "search_name": "Tìm theo tên",
-    "search_email": "Tìm theo email",
-    "filter_status": "Lọc theo trạng thái",
+    "created_at": "Tạo lúc",
+    "updated_at": "Cập nhật lúc",
     "not_updated": "Chưa cập nhật",
-    "uploading": "Đang tải...",
-    "uploadImage": "Tải ảnh lên",
-    "create": "Thêm nhà kiểm định",
-    "avatar": "Ảnh đại diện",
-    "add_farmer": "Tạo mới"
+    "avatar": "Hình ảnh",
+    "add_farmer": "Thêm nông dân"
   },
   "validation": {
     "name_required": "Vui lòng nhập tên!",
-    "name_length": "Tên có độ dài 6 đến 50 kí tự!",
-    "phone_required": "Vui lòng nhập số điện thoại",
-    "phone_invalid": "Không phải định dạng số điện thoại",
-    "email_required": "Vui lòng nhập email!",
-    "email_invalid": "Định dạng email không hợp lệ!"
+    "name_length": "Tên phải có từ 6 đến 50 ký tự!",
+    "phone_required": "Vui lòng nhập số điện thoại!",
+    "phone_invalid": "Định dạng số điện thoại không hợp lệ!",
+    "email_required": "Vui lòng nhập email của bạn!",
+    "email_invalid": "Email nhập vào không hợp lệ!"
   },
   "experts": {
+    "experts": "Chuyên gia",
     "form": {
       "edit": "Chỉnh sửa chuyên gia",
       "add": "Thêm chuyên gia",
-      "cancel": "Hủy bỏ",
+      "cancel": "Hủy",
       "save": "Lưu",
-      "add_expert": "Tạo mới"
+      "add_expert": "Thêm chuyên gia"
     },
     "fields": {
       "name": "Tên chuyên gia",
-      "phone": "Điện thoại",
+      "phone": "Số điện thoại",
       "email": "Email",
       "status": "Trạng thái",
-      "avatar": "Ảnh đại diện",
-      "created_at": "Ngày tạo",
-      "updated_at": "Ngày cập nhật",
+      "avatar": "Hình ảnh",
+      "created_at": "Tạo lúc",
+      "updated_at": "Cập nhật lúc",
       "not_updated": "Chưa cập nhật"
     },
     "status": {
@@ -685,29 +628,29 @@
       "inactive": "Không hoạt động"
     },
     "upload": {
-      "uploading": "Đang tải ảnh lên...",
-      "button": "Tải ảnh lên"
+      "uploading": "Đang tải lên...",
+      "button": "Tải lên hình ảnh"
     },
     "validation": {
       "required_name": "Vui lòng nhập tên",
-      "name_length": "Tên phải từ 6 đến 50 ký tự",
+      "name_length": "Tên phải có từ 6 đến 50 ký tự",
       "required_phone": "Vui lòng nhập số điện thoại!",
-      "invalid_phone": "Số điện thoại không hợp lệ!",
+      "invalid_phone": "Số điện thoại nhập vào không hợp lệ!",
       "required_email": "Vui lòng nhập email!",
-      "invalid_email": "Email không hợp lệ!"
+      "invalid_email": "Email nhập vào không hợp lệ!"
     },
     "common": {
-      "search_id": "Tìm ID",
-      "search_name": "Tìm tên",
-      "search_email": "Tìm email",
+      "search_id": "Tìm kiếm ID",
+      "search_name": "Tìm kiếm tên",
+      "search_email": "Tìm kiếm email",
       "filter_by_status": "Lọc theo trạng thái"
     }
   },
   "enum": {
     "orderStatuses": {
-      "Pending": "Đang chờ xử lý",
+      "Pending": "Đang chờ",
       "Ready": "Sẵn sàng",
-      "On The Way": "Đang vận chuyển",
+      "On The Way": "Đang trên đường",
       "Delivered": "Đã giao",
       "Cancelled": "Đã hủy"
     }
@@ -716,14 +659,14 @@
     "users": "Khách hàng",
     "titles": {
       "edit": "Chỉnh sửa khách hàng",
-      "list": "Danh sách khách hàng",
+      "list": "Khách hàng",
       "show": "Chi tiết khách hàng"
     },
     "fields": {
       "id": "ID",
       "avatar": {
         "label": "Ảnh đại diện",
-        "description": "Nhấp hoặc kéo ảnh đại diện vào đây để tải lên."
+        "description": "Nhấp hoặc kéo hình ảnh đại diện vào khu vực này để tải lên."
       },
       "firstName": "Tên",
       "lastName": "Họ",
@@ -734,7 +677,7 @@
         "Female": "Nữ"
       },
       "gsm": "Số điện thoại",
-      "createdAt": "Ngày tạo",
+      "createdAt": "Tạo lúc",
       "addresses": "Địa chỉ",
       "isActive": {
         "label": "Trạng thái",
@@ -761,11 +704,11 @@
         "placeholder": "Tên, họ, số điện thoại, v.v."
       },
       "createdAt": {
-        "label": "Ngày tạo"
+        "label": "Tạo lúc"
       },
       "gender": {
         "label": "Giới tính",
-        "placeholder": "Chọn giới tính",
+        "placeholder": "Giới tính",
         "male": "Nam",
         "female": "Nữ"
       },
@@ -775,7 +718,7 @@
         "true": "Có",
         "false": "Không"
       },
-      "submit": "Áp dụng"
+      "submit": "Lọc"
     },
     "addresses": {
       "addresses": "Địa chỉ",

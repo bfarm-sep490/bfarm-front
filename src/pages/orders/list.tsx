@@ -1,17 +1,17 @@
 import { OrderListTable } from "@/components/orders/list-table.tsx";
-import { OrderAssignedModal } from "@/components/plan/order-assigned-modal";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { useBack, useGo, useNavigation, useTranslate } from "@refinedev/core";
-import { Button, Flex, Typography } from "antd";
-import { type PropsWithChildren, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { List } from "@refinedev/antd";
+import { useBack, useTranslate } from "@refinedev/core";
+import { Button } from "antd";
+import { type PropsWithChildren } from "react";
+import { useParams } from "react-router";
 
 export const OrdersList = ({ children }: PropsWithChildren) => {
   const { id } = useParams();
   const back = useBack();
-  const navigate = useNavigate();
+  const translate = useTranslate();
   return (
-    <>
+    <List canCreate={false} breadcrumb={false} title={translate("orders.orders")}>
       {id && (
         <Button
           type="text"
@@ -21,18 +21,8 @@ export const OrdersList = ({ children }: PropsWithChildren) => {
           <ArrowLeftOutlined style={{ width: "50px", height: "50px" }} />
         </Button>
       )}
-      <div>
-        <Typography.Title level={4} style={{ marginBottom: 20 }}>
-          {id ? `Đơn hàng của kế hoạch #${id}` : `Đơn hàng của trang trại `}
-        </Typography.Title>
-        {id && (
-          <Flex justify="end" align="center" style={{ marginBottom: 20 }}>
-            <Button onClick={() => navigate("create")}>Thêm đơn hàng mới</Button>
-          </Flex>
-        )}
-        <OrderListTable />
-      </div>
+      <OrderListTable />
       {children}
-    </>
+    </List>
   );
 };

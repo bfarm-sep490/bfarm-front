@@ -27,7 +27,7 @@ export const InspectionsList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.inspection-forms.name", "Đơn kiểm định")}
+      title={t("inspection-forms.inspection-forms")}
       headerButtons={() => [
         <Segmented<View>
           key="view"

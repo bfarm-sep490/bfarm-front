@@ -30,7 +30,7 @@ export const InspectorList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.inspectors.name", "Nhà kiểm định")}
+      title={t("inspectors.inspectors")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

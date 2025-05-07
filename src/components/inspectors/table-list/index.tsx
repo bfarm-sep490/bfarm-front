@@ -62,7 +62,9 @@ export const InspectorListTable: React.FC = () => {
       scroll={{ x: true }}
       pagination={{
         ...tableProps.pagination,
-        showTotal: (total) => <PaginationTotal total={total} entityName={t("inspectors.title")} />,
+        showTotal: (total) => (
+          <PaginationTotal total={total} entityName={t("inspectors.inspectors")} />
+        ),
       }}
       onRow={(record) => ({
         onClick: () => {

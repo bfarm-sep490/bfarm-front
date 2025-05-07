@@ -30,7 +30,7 @@ export const PesticidesList = ({ children }: PropsWithChildren) => {
   return (
     <List
       breadcrumb={false}
-      title={t("resources.pesticides.name", "Thuốc trừ sâu")}
+      title={t("pesticides.pesticides")}
       headerButtons={(props) => [
         <Segmented<View>
           key="view"

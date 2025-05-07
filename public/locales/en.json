@@ -15,7 +15,7 @@
       "buttons": {
         "submit": "Login",
         "forgotPassword": "Forgot password?",
-        "noAccount": "Don’t have an account?",
+        "noAccount": "Don't have an account?",
         "rememberMe": "Remember me"
       }
     },
@@ -152,6 +152,7 @@
     }
   },
   "dashboard": {
+    "dashboard": "Dashboard",
     "title": "Dashboard",
     "overview": {
       "title": "Overview"
@@ -213,83 +214,50 @@
       "value": "Value"
     }
   },
-  "resources": {
-    "pesticides": {
-      "name": "Pesticides"
-    },
-    "yield": {
-      "name": "Yield"
-    },
     "plants": {
-      "name": "Plants"
-    },
-    "items": {
-      "name": "Items"
-    },
-    "fertilizers": {
-      "name": "Fertilizers"
+      "plants": "Plants"
     },
     "farmers": {
-      "name": "Farmers"
-    },
-    "experts": {
-      "name": "Experts"
+      "farmers": "Farmers"
     },
     "inspection-forms": {
-      "name": "Inspection Forms"
-    },
-    "inspectors": {
-      "name": "Inspectors"
+      "inspection-forms": "Inspection Forms"
     },
     "plans": {
-      "name": "Plans"
-    }
-  },
-  "inspection": {
-    "title": "Inspection Information",
-    "result": "Result",
-    "viewDetail": "View Details",
-    "complete": "Complete",
-    "beforeStart": "Not yet the inspection date",
-    "noResult": "No result yet. ",
-    "late": "Inspection overdue",
-    "invalid": "Cannot create result in current status",
-    "cropName": "Plant Name",
-    "cropType": "Plant Type",
-    "description": "Description",
-    "jobTitle": "Job Information",
-    "planName": "Plan Name",
-    "center": "Inspection Center",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "status": "Status",
-    "criteria": "View Inspection Criteria",
-    "time": "Time",
-    "completedAt": "Completed At",
-    "createdAt": "Created At",
-    "createdBy": "Created By",
-    "evaluation": "Evaluation",
-    "resultContent": "Content",
-    "menu": "Inspecting Forms",
-    "inspection": "Inspection",
-    "modal": {
-      "title": "Inspection Result Details",
-      "note": "(*) Substances marked with an asterisk must not exceed the safety limit (must be zero).",
-      "conclusion": "Inspection Conclusion:",
-      "noComment": "No comment"
+      "plans": "Plans"
     },
-    "table": {
-      "chemicalName": "Chemical Name",
-      "value": "Value",
-      "standard": "Standard",
-      "limitZero": "Must be zero",
-      "limitByCrop": "Based on crop type",
-      "noData": "No data available",
-      "safetyLimit": "Safety limit: {{value}}",
-      "tooltipThreshold": "Normal: ≤ {{warning}}, Light: > {{warning}}–{{danger}}, Heavy: ≥ {{danger}}"
-    }
-  },
+    "orders": {
+      "orders": "Orders"
+    },
+    "products": {
+      "products": "Products"
+    },
+    "harvesting-products": {
+      "harvesting-products": "Harvesting Products"
+    },
+    "packaging-products": {
+      "packaging-products": "Packaging Products"
+    },
+    "problems": {
+      "problems": "Problems"
+    },
+    "material": {
+      "material": "Material"
+    },
+    "employees": {
+      "employees": "Employees"
+    },
+    "transactions": {
+      "transactions": "Transactions"
+    },
+    "batches": {
+      "batches": "Batches"
+    },
+    "configuration": {
+      "configuration": "Configuration"
+    },
   "fertilizers": {
+    "fertilizers": "Fertilizer",
     "entity": "fertilizers",
     "tableTitle": "Fertilizer List",
     "actions": "Actions",
@@ -342,6 +310,7 @@
     "create": "Add "
   },
   "pesticides": {
+    "pesticides": "Pesticide",
     "imageAlt": "Pesticide image",
     "uploading": "Uploading...",
     "upload": "Upload Image",
@@ -386,6 +355,7 @@
     }
   },
   "items": {
+    "items": "Items",
     "id": "ID",
     "image": "Image",
     "edit": "Edit",
@@ -426,6 +396,7 @@
     }
   },
   "inspections": {
+    "inspections": "Inspection",
     "search_id": "Search ID",
     "edit": "Edit",
     "add": "Add",
@@ -475,6 +446,7 @@
     }
   },
   "inspectors": {
+    "inspectors": "Inspector",
     "title": "Inspector",
     "avatar": "Avatar",
     "name": "Name",
@@ -567,6 +539,7 @@
   "description": "Maximum allowed residue level in agricultural products to ensure health safety."
 },
   "retailers": {
+    "retailers": "Retailers",
     "title": "Retailer Details",
     "id": "ID",
     "avatar": "Avatar",
@@ -586,6 +559,7 @@
     "searchName": "Search by Name"
   },
   "yield": {
+    "yield": "Yield",
     "landName": "Land Name",
     "area": "Area",
     "areaUnit": "Area Unit",
@@ -656,6 +630,7 @@
     "email_invalid": "The input is not valid E-mail!"
   },
   "experts": {
+    "experts": "Experts",
     "form": {
       "edit": "Edit Expert",
       "add": "Add Expert",

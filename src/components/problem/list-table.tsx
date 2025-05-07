@@ -1,20 +1,8 @@
-import React, { PropsWithChildren } from "react";
-import { BaseRecord, useBack, useTranslate } from "@refinedev/core";
-import {
-  useTable,
-  List,
-  EditButton,
-  ShowButton,
-  ImageField,
-  TagField,
-  EmailField,
-  DateField,
-  TextField,
-} from "@refinedev/antd";
-import { Table, Space, Radio, Button, Breadcrumb, Typography, TableProps, Flex } from "antd";
-import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { ProblemTypeTag } from "./type-tag";
+import { PropsWithChildren } from "react";
+import { BaseRecord, useTranslate } from "@refinedev/core";
+import { DateField, TextField } from "@refinedev/antd";
+import { Table, Typography, TableProps, Flex } from "antd";
+import { useNavigate, useParams } from "react-router";
 import { ProblemStatusTag } from "./status-tag";
 
 type TableProblemProps = {
@@ -33,7 +21,7 @@ export const ProblemListTable = ({
 
   return (
     <Flex gap={16} vertical>
-      <Typography.Title level={3}>Danh sách vấn đề</Typography.Title>
+      <Typography.Title level={3}>{translate("problems.problems")}</Typography.Title>
       <Table
         onRow={(row) => ({
           onClick: () => {

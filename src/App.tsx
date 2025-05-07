@@ -149,7 +149,7 @@ const App: React.FC = () => {
                   name: "dashboard",
                   list: "/",
                   meta: {
-                    label: "Bảng điều khiển",
+                    label: "Dashboard",
                     icon: <DashboardOutlined />,
                   },
                 },
@@ -160,7 +160,6 @@ const App: React.FC = () => {
                   edit: "/orders/edit/:id",
                   show: "/orders/:orderId",
                   meta: {
-                    label: "Đơn hàng",
                     icon: <ExceptionOutlined />,
                   },
                 },
@@ -170,7 +169,6 @@ const App: React.FC = () => {
                   list: "/retailers",
                   show: "/retailers/:retailerId",
                   meta: {
-                    label: "Nhà mua sỉ",
                     icon: <ShopOutlined />,
                   },
                 },
@@ -179,14 +177,12 @@ const App: React.FC = () => {
                   list: "/retailers",
                   show: "/retailers/:retailerId",
                   meta: {
-                    label: "Nhà mua sỉ",
                     icon: <ShopOutlined />,
                   },
                 },
                 {
                   name: "products",
                   meta: {
-                    label: "Sản phẩm",
                     icon: <ProductOutlined />,
                   },
                 },
@@ -196,7 +192,6 @@ const App: React.FC = () => {
                   list: "/harvesting-products",
                   show: "/harvesting-products/:id",
                   meta: {
-                    label: "Thu hoạch",
                     parent: "products",
                     canDelete: true,
                   },
@@ -206,7 +201,6 @@ const App: React.FC = () => {
                   list: "/packaging-products",
                   show: "/packaging-products/:id",
                   meta: {
-                    label: "Đóng gói",
                     parent: "products",
                     canDelete: true,
                   },
@@ -216,7 +210,6 @@ const App: React.FC = () => {
                   list: "/plans",
                   show: "/plans/:id",
                   meta: {
-                    label: "Kế hoạch",
                     icon: <CalendarOutlined />,
                     route: "/plans",
                   },
@@ -226,7 +219,6 @@ const App: React.FC = () => {
                   list: "/problems",
                   show: "/problems/:id",
                   meta: {
-                    label: "Vấn đề",
                     icon: <WarningOutlined />,
                     route: "/problems",
                   },
@@ -235,7 +227,6 @@ const App: React.FC = () => {
                   name: "inspections",
                   list: "/inspections",
                   meta: {
-                    label: "Kiểm định",
                     icon: <ScheduleOutlined />,
                   },
                 },
@@ -246,7 +237,6 @@ const App: React.FC = () => {
                   show: "/inspection-forms/show/:id",
                   meta: {
                     parent: "inspections",
-                    label: "Đơn kiểm định",
                     canDelete: true,
                   },
                 },
@@ -258,14 +248,12 @@ const App: React.FC = () => {
                   show: "/inspectors/:id",
                   meta: {
                     parent: "inspections",
-                    label: "Nhà kiểm định",
                     canDelete: true,
                   },
                 },
                 {
                   name: "material",
                   meta: {
-                    label: "Nguyên liệu",
                     icon: <GoldOutlined />,
                   },
                 },
@@ -276,7 +264,6 @@ const App: React.FC = () => {
                   edit: "/fertilizers/edit/:id",
                   show: "/fertilizers/:id",
                   meta: {
-                    label: "Phân bón",
                     parent: "material",
                     canDelete: true,
                   },
@@ -288,7 +275,6 @@ const App: React.FC = () => {
                   edit: "/pesticides/edit/:id",
                   show: "/pesticides/:id",
                   meta: {
-                    label: "Thuốc trừ sâu",
                     parent: "material",
                     canDelete: true,
                   },
@@ -300,7 +286,6 @@ const App: React.FC = () => {
                   edit: "/items/edit/:id",
                   show: "/items/:id",
                   meta: {
-                    label: "Vật tư",
                     parent: "material",
                     canDelete: true,
                   },
@@ -312,7 +297,6 @@ const App: React.FC = () => {
                   edit: "/plants/edit/:id",
                   show: "/plants/:id",
                   meta: {
-                    label: "Cây trồng",
                     icon: <EnvironmentOutlined />,
                   },
                 },
@@ -323,14 +307,12 @@ const App: React.FC = () => {
                   edit: "/yield/edit/:id",
                   show: "/yield/show/:id",
                   meta: {
-                    label: "Khu đất",
                     icon: <GoldOutlined />,
                   },
                 },
                 {
                   name: "employees",
                   meta: {
-                    label: "Nhân sự",
                     icon: <UserOutlined />,
                   },
                 },
@@ -341,7 +323,6 @@ const App: React.FC = () => {
                   edit: "/farmers/edit/:id",
                   show: "/farmers/:id",
                   meta: {
-                    label: "Nông dân",
                     parent: "employees",
                     canDelete: true,
                   },
@@ -353,7 +334,6 @@ const App: React.FC = () => {
                   edit: "/experts/edit/:id",
                   show: "/experts/:id",
                   meta: {
-                    label: "Chuyên gia",
                     parent: "employees",
                     canDelete: true,
                   },
@@ -363,7 +343,6 @@ const App: React.FC = () => {
                   list: "/transactions",
                   meta: {
                     icon: <TransactionOutlined />,
-                    label: "Giao dịch",
                   },
                 },
                 {
@@ -371,14 +350,12 @@ const App: React.FC = () => {
                   list: "/batches",
                   meta: {
                     icon: <HistoryOutlined />,
-                    label: "Lịch sử giao hàng",
                   },
                 },
                 {
                   name: "configuration",
                   list: "/configuration",
                   meta: {
-                    label: "Cấu hình",
                     icon: <SettingOutlined />,
                   },
                 },

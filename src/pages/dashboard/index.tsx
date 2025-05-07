@@ -1,13 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Card, Flex, Progress, Table, theme, Typography, Image, Empty } from "antd";
-import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
+import React, { useState } from "react";
+import { Flex, theme } from "antd";
 import { useList } from "@refinedev/core";
-import { DateField, TextField } from "@refinedev/antd";
-import InfiniteScroll from "react-infinite-scroll-component";
 
-import { StatusTag } from "@/components/caring-task/status-tag";
-import { OrderStatusTag } from "@/components/orders/order-status";
 import { DashboardPieOrders } from "@/components/dashboard/dashboard-pie-orders";
 import { RemainingProductsTable } from "@/components/dashboard/table-remaining-products";
 import { DashboardOrdersTracking } from "@/components/dashboard/dashboard-orders-tracking";
